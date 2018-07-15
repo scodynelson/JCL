@@ -334,7 +334,7 @@ public interface IntegerStruct extends RationalStruct {
 	 *
 	 * @return true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, false
 	 */
-	boolean logBitP(final IntegerStruct index);
+	BooleanStruct logBitP(final IntegerStruct index);
 
 	/**
 	 * Computes and returns the number of bits in the two's-complement binary representation of this IntegerStruct that
@@ -355,7 +355,7 @@ public interface IntegerStruct extends RationalStruct {
 	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided
 	 * IntegerStruct; otherwise, false.
 	 */
-	boolean logTest(final IntegerStruct integer);
+	BooleanStruct logTest(final IntegerStruct integer);
 
 	/**
 	 * Returns the number of bits needed to represent this IntegerStruct in binary two's-complement format.
@@ -369,16 +369,14 @@ public interface IntegerStruct extends RationalStruct {
 	 *
 	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
 	 */
-	boolean evenp();
+	BooleanStruct evenp();
 
 	/**
 	 * Returns true if this IntegerStruct is odd (not divisible by two); otherwise, returns false.
 	 *
 	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
 	 */
-	default boolean oddp() {
-		return !evenp();
-	}
+	BooleanStruct oddp();
 
 	/**
 	 * Returns the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root.

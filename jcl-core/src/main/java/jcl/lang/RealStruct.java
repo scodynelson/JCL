@@ -35,23 +35,23 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '<'} comparison provided RealStruct objects
 	 */
-	static boolean isLessThan(final RealStruct... reals) {
-		if (reals.length == 0) {
+	static BooleanStruct isLessThan(final List<RealStruct> reals) {
+		if (reals.isEmpty()) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
 
-		RealStruct previousReal = reals[0];
+		RealStruct previousReal = reals.get(0);
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (int i = 1; i < reals.size(); i++) {
+			final RealStruct currentReal = reals.get(i);
 			result = previousReal.isLessThan(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -73,23 +73,23 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '>'} comparison provided RealStruct objects
 	 */
-	static boolean isGreaterThan(final RealStruct... reals) {
-		if (reals.length == 0) {
+	static BooleanStruct isGreaterThan(final List<RealStruct> reals) {
+		if (reals.isEmpty()) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
 
-		RealStruct previousReal = reals[0];
+		RealStruct previousReal = reals.get(0);
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (int i = 1; i < reals.size(); i++) {
+			final RealStruct currentReal = reals.get(i);
 			result = previousReal.isGreaterThan(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -111,23 +111,23 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '<='} comparison provided RealStruct objects
 	 */
-	static boolean isLessThanOrEqualTo(final RealStruct... reals) {
-		if (reals.length == 0) {
+	static BooleanStruct isLessThanOrEqualTo(final List<RealStruct> reals) {
+		if (reals.isEmpty()) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
 
-		RealStruct previousReal = reals[0];
+		RealStruct previousReal = reals.get(0);
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (int i = 1; i < reals.size(); i++) {
+			final RealStruct currentReal = reals.get(i);
 			result = previousReal.isLessThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -149,23 +149,23 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return the {@literal '>='} comparison provided RealStruct objects
 	 */
-	static boolean isGreaterThanOrEqualTo(final RealStruct... reals) {
-		if (reals.length == 0) {
+	static BooleanStruct isGreaterThanOrEqualTo(final List<RealStruct> reals) {
+		if (reals.isEmpty()) {
 			throw new ErrorException("At least one real required to test equality.");
 		}
 
-		RealStruct previousReal = reals[0];
+		RealStruct previousReal = reals.get(0);
 
 		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
+		for (int i = 1; i < reals.size(); i++) {
+			final RealStruct currentReal = reals.get(i);
 			result = previousReal.isGreaterThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
 			}
 			previousReal = currentReal;
 		}
-		return result;
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -173,14 +173,14 @@ public interface RealStruct extends NumberStruct {
 	 *
 	 * @return {@code true} if this RealStruct is positive; false otherwise
 	 */
-	boolean plusp();
+	BooleanStruct plusp();
 
 	/**
 	 * Returns {@code true} if this RealStruct is negative; false otherwise.
 	 *
 	 * @return {@code true} if this RealStruct is negative; false otherwise
 	 */
-	boolean minusp();
+	BooleanStruct minusp();
 
 	/**
 	 * Returns the most positive value when comparing the value of this RealStruct and the provided RealStruct.
@@ -327,6 +327,13 @@ public interface RealStruct extends NumberStruct {
 	 */
 	QuotientRemainder floor(RealStruct divisor);
 
+	static LispStruct floor(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.floor(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
+
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct. The resulting
 	 * 'quotient' will be a {@link FloatStruct}.
@@ -346,6 +353,13 @@ public interface RealStruct extends NumberStruct {
 	 */
 	QuotientRemainder ffloor(RealStruct divisor);
 
+	static LispStruct ffloor(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.ffloor(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
+
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct.
 	 *
@@ -363,6 +377,13 @@ public interface RealStruct extends NumberStruct {
 	 * @return the {@link QuotientRemainder} for the 'CEILING' operation with the provided RealStruct divisor
 	 */
 	QuotientRemainder ceiling(RealStruct divisor);
+
+	static LispStruct ceiling(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.ceiling(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'CEILING' operation for this RealStruct. The resulting
@@ -383,6 +404,13 @@ public interface RealStruct extends NumberStruct {
 	 */
 	QuotientRemainder fceiling(RealStruct divisor);
 
+	static LispStruct fceiling(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.fceiling(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
+
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct.
 	 *
@@ -400,6 +428,13 @@ public interface RealStruct extends NumberStruct {
 	 * @return the {@link QuotientRemainder} for the 'TRUNCATE' operation with the provided RealStruct divisor
 	 */
 	QuotientRemainder truncate(RealStruct divisor);
+
+	static LispStruct truncate(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.truncate(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'TRUNCATE' operation for this RealStruct. The resulting
@@ -420,6 +455,13 @@ public interface RealStruct extends NumberStruct {
 	 */
 	QuotientRemainder ftruncate(RealStruct divisor);
 
+	static LispStruct ftruncate(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.ftruncate(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
+
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct.
 	 *
@@ -437,6 +479,13 @@ public interface RealStruct extends NumberStruct {
 	 * @return the {@link QuotientRemainder} for the 'ROUND' operation with the provided RealStruct divisor
 	 */
 	QuotientRemainder round(RealStruct divisor);
+
+	static LispStruct round(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.round(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
 
 	/**
 	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct. The resulting
@@ -456,6 +505,13 @@ public interface RealStruct extends NumberStruct {
 	 * @return the {@link QuotientRemainder} for the 'ROUND' operation with the provided RealStruct divisor
 	 */
 	QuotientRemainder fround(RealStruct divisor);
+
+	static LispStruct fround(final RealStruct real, final RealStruct divisor) {
+		final QuotientRemainder fround = real.fround(divisor);
+		final RealStruct quotient = fround.getQuotient();
+		final RealStruct remainder = fround.getRemainder();
+		return ValuesStruct.valueOf(quotient, remainder);
+	}
 
 	/**
 	 * Returns the 'Inverse tangent' of this RealStruct divided by the provided RealStruct.

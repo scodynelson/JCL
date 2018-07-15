@@ -5,6 +5,7 @@ import java.util.Arrays;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.lang.BooleanStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.NumberStruct;
@@ -98,8 +99,8 @@ public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStru
 	}
 
 	@Override
-	public boolean zerop() {
-		return Apcomplex.ZERO.equals(apcomplex);
+	public BooleanStruct zerop() {
+		return BooleanStruct.toLispBoolean(Apcomplex.ZERO.equals(apcomplex));
 	}
 
 	@Override

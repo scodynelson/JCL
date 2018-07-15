@@ -11,6 +11,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BignumStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -69,7 +70,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 
 	@Override
 	public IntegerStruct ash(final IntegerStruct count) {
-		if (count.zerop()) {
+		if (count.zerop().toJavaPBoolean()) {
 			return this;
 		}
 		final int countInt = count.toJavaInt();
@@ -148,9 +149,9 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	}
 
 	@Override
-	public boolean logBitP(final IntegerStruct index) {
+	public BooleanStruct logBitP(final IntegerStruct index) {
 		final int indexInt = index.toJavaInt();
-		return value.testBit(indexInt);
+		return BooleanStruct.toLispBoolean(value.testBit(indexInt));
 	}
 
 	@Override
@@ -160,10 +161,10 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	}
 
 	@Override
-	public boolean logTest(final IntegerStruct integer) {
+	public BooleanStruct logTest(final IntegerStruct integer) {
 		final BigInteger bigInteger = integer.toJavaBigInteger();
 		final BigInteger and = value.and(bigInteger);
-		return and.signum() != 0;
+		return BooleanStruct.toLispBoolean(and.signum() != 0);
 	}
 
 	@Override
@@ -173,13 +174,13 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	}
 
 	@Override
-	public boolean evenp() {
-		return !value.testBit(0);
+	public BooleanStruct evenp() {
+		return BooleanStruct.toLispBoolean(!value.testBit(0));
 	}
 
 	@Override
-	public boolean oddp() {
-		return value.testBit(0);
+	public BooleanStruct oddp() {
+		return BooleanStruct.toLispBoolean(value.testBit(0));
 	}
 
 	@Override
@@ -285,13 +286,13 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	}
 
 	@Override
-	public boolean plusp() {
-		return value.signum() > 0;
+	public BooleanStruct plusp() {
+		return BooleanStruct.toLispBoolean(value.signum() > 0);
 	}
 
 	@Override
-	public boolean minusp() {
-		return value.signum() < 0;
+	public BooleanStruct minusp() {
+		return BooleanStruct.toLispBoolean(value.signum() < 0);
 	}
 
 	@Override
@@ -555,8 +556,8 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	}
 
 	@Override
-	public boolean zerop() {
-		return value.signum() == 0;
+	public BooleanStruct zerop() {
+		return BooleanStruct.toLispBoolean(value.signum() == 0);
 	}
 
 	@Override

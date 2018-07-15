@@ -14,7 +14,7 @@ public interface FloatStruct extends RealStruct {
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
-	DecodeFloatResult decodeFloat();
+	LispStruct decodeFloat();
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
@@ -24,7 +24,7 @@ public interface FloatStruct extends RealStruct {
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
-	DecodeFloatResult integerDecodeFloat();
+	LispStruct integerDecodeFloat();
 
 	/**
 	 * Returns (* float (expt (float b float) scale)), where b is the radix of the floating-point representation.
@@ -83,8 +83,8 @@ public interface FloatStruct extends RealStruct {
 	 * same absolute value
 	 */
 	default FloatStruct floatSign(final FloatStruct float2) {
-		if (minusp()) {
-			if (float2.minusp()) {
+		if (minusp().toJavaPBoolean()) {
+			if (float2.minusp().toJavaPBoolean()) {
 				return float2;
 			} else {
 				return float2.negation();

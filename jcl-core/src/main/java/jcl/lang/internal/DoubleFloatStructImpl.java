@@ -10,16 +10,18 @@ import com.google.common.math.DoubleMath;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.lang.BooleanStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.LongFloatStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.lang.number.DecodeFloatResult;
 import jcl.lang.number.QuotientRemainder;
 import jcl.lang.statics.ReaderVariables;
 import jcl.type.DoubleFloatType;
@@ -64,7 +66,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	}
 
 	@Override
-	public DecodeFloatResult decodeFloat() {
+	public LispStruct decodeFloat() {
 		final long bits = Double.doubleToRawLongBits(value);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
@@ -81,11 +83,11 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 		final int sign = decodedDouble.getSign();
 		final FloatStruct signFloat = (sign == 1) ? DoubleFloatStruct.ONE : DoubleFloatStruct.MINUS_ONE;
 
-		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
+		return ValuesStruct.valueOf(significandFloat, exponentInteger, signFloat);
 	}
 
 	@Override
-	public DecodeFloatResult integerDecodeFloat() {
+	public LispStruct integerDecodeFloat() {
 		final long bits = Double.doubleToRawLongBits(value);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
@@ -100,7 +102,7 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 		final int sign = decodedDouble.getSign();
 		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
 
-		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
+		return ValuesStruct.valueOf(significandInteger, exponentInteger, signInteger);
 	}
 
 	@Override
@@ -229,13 +231,13 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	}
 
 	@Override
-	public boolean plusp() {
-		return Double.compare(value, 0.0D) > 0;
+	public BooleanStruct plusp() {
+		return BooleanStruct.toLispBoolean(Double.compare(value, 0.0D) > 0);
 	}
 
 	@Override
-	public boolean minusp() {
-		return Double.compare(value, 0.0D) < 0;
+	public BooleanStruct minusp() {
+		return BooleanStruct.toLispBoolean(Double.compare(value, 0.0D) < 0);
 	}
 
 	@Override
@@ -521,8 +523,8 @@ public class DoubleFloatStructImpl extends BuiltInClassStruct implements DoubleF
 	}
 
 	@Override
-	public boolean zerop() {
-		return Double.compare(value, 0.0D) == 0;
+	public BooleanStruct zerop() {
+		return BooleanStruct.toLispBoolean(Double.compare(value, 0.0D) == 0);
 	}
 
 	@Override

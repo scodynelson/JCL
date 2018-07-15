@@ -9,6 +9,7 @@ import com.google.common.math.IntMath;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.lang.BooleanStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.FloatStruct;
@@ -88,7 +89,7 @@ public final class FixnumStructImpl extends IntegerStructImpl implements FixnumS
 
 	@Override
 	public IntegerStruct ash(final IntegerStruct count) {
-		if (count.zerop()) {
+		if (count.zerop().toJavaPBoolean()) {
 			return this;
 		}
 		final int countInt = count.toJavaInt();
@@ -238,10 +239,10 @@ public final class FixnumStructImpl extends IntegerStructImpl implements FixnumS
 	}
 
 	@Override
-	public boolean logBitP(final IntegerStruct index) {
+	public BooleanStruct logBitP(final IntegerStruct index) {
 		final BigInteger bigInteger = BigInteger.valueOf(value);
 		final int indexInt = index.toJavaInt();
-		return bigInteger.testBit(indexInt);
+		return BooleanStruct.toLispBoolean(bigInteger.testBit(indexInt));
 	}
 
 	@Override
@@ -252,11 +253,11 @@ public final class FixnumStructImpl extends IntegerStructImpl implements FixnumS
 	}
 
 	@Override
-	public boolean logTest(final IntegerStruct integer) {
+	public BooleanStruct logTest(final IntegerStruct integer) {
 		final BigInteger bigInteger1 = BigInteger.valueOf(value);
 		final BigInteger bigInteger2 = integer.toJavaBigInteger();
 		final BigInteger and = bigInteger1.and(bigInteger2);
-		return and.signum() != 0;
+		return BooleanStruct.toLispBoolean(and.signum() != 0);
 	}
 
 	@Override
@@ -267,13 +268,13 @@ public final class FixnumStructImpl extends IntegerStructImpl implements FixnumS
 	}
 
 	@Override
-	public boolean evenp() {
-		return (value & 0x01) == 0;
+	public BooleanStruct evenp() {
+		return BooleanStruct.toLispBoolean((value & 0x01) == 0);
 	}
 
 	@Override
-	public boolean oddp() {
-		return (value & 0x01) != 0;
+	public BooleanStruct oddp() {
+		return BooleanStruct.toLispBoolean((value & 0x01) != 0);
 	}
 
 	@SuppressWarnings("NumericCastThatLosesPrecision")
@@ -404,13 +405,13 @@ public final class FixnumStructImpl extends IntegerStructImpl implements FixnumS
 	}
 
 	@Override
-	public boolean plusp() {
-		return value > 0;
+	public BooleanStruct plusp() {
+		return BooleanStruct.toLispBoolean(value > 0);
 	}
 
 	@Override
-	public boolean minusp() {
-		return value < 0;
+	public BooleanStruct minusp() {
+		return BooleanStruct.toLispBoolean(value < 0);
 	}
 
 	@Override
@@ -686,8 +687,8 @@ public final class FixnumStructImpl extends IntegerStructImpl implements FixnumS
 	}
 
 	@Override
-	public boolean zerop() {
-		return value == 0;
+	public BooleanStruct zerop() {
+		return BooleanStruct.toLispBoolean(value == 0);
 	}
 
 	@Override

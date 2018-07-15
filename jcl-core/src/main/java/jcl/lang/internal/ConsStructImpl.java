@@ -140,7 +140,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public LispStruct nth(final FixnumStruct index) {
-		if (index.minusp()) {
+		if (index.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 		final int indexInt = index.toJavaInt();
@@ -164,7 +164,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public LispStruct setNth(final FixnumStruct index, final LispStruct newValue) {
-		if (index.minusp()) {
+		if (index.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 		final int indexInt = index.toJavaInt();
@@ -192,7 +192,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public ListStruct nthCdr(final FixnumStruct index) {
-		if (index.minusp()) {
+		if (index.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 		final int indexInt = index.toJavaInt();
@@ -323,7 +323,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public LispStruct last(final FixnumStruct n) {
-		if (n.minusp()) {
+		if (n.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
@@ -350,7 +350,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public ListStruct butLast(final FixnumStruct n) {
-		if (n.minusp()) {
+		if (n.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
@@ -380,7 +380,7 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 
 	@Override
 	public ListStruct nButLast(final FixnumStruct n) {
-		if (n.minusp()) {
+		if (n.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 

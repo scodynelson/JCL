@@ -8,6 +8,7 @@ import com.google.common.math.DoubleMath;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.lang.BooleanStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -148,13 +149,13 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 	}
 
 	@Override
-	public boolean plusp() {
-		return BigFraction.ZERO.compareTo(value) > 0;
+	public BooleanStruct plusp() {
+		return BooleanStruct.toLispBoolean(BigFraction.ZERO.compareTo(value) > 0);
 	}
 
 	@Override
-	public boolean minusp() {
-		return BigFraction.ZERO.compareTo(value) < 0;
+	public BooleanStruct minusp() {
+		return BooleanStruct.toLispBoolean(BigFraction.ZERO.compareTo(value) < 0);
 	}
 
 	@Override
@@ -437,8 +438,8 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 	}
 
 	@Override
-	public boolean zerop() {
-		return BigFraction.ZERO.compareTo(value) == 0;
+	public BooleanStruct zerop() {
+		return BooleanStruct.toLispBoolean(BigFraction.ZERO.compareTo(value) == 0);
 	}
 
 	@Override
@@ -770,5 +771,14 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 		                   RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
 		                   RATIONAL_TO_LISP_RATIONAL_METHOD_DESC,
 		                   true);
+	}
+
+	/*
+		ToString
+	 */
+
+	@Override
+	public String toString() {
+		return numerator + "/" + denominator;
 	}
 }

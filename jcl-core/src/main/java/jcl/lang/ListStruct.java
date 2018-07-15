@@ -72,7 +72,7 @@ public interface ListStruct extends SequenceStruct {
 	 * @return a list of length given by size, each of the elements of which is initial-element
 	 */
 	static ListStruct makeList(final FixnumStruct size, final LispStruct initialElement) {
-		if (size.minusp()) {
+		if (size.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("Size must be a non-negative integer.");
 		}
 

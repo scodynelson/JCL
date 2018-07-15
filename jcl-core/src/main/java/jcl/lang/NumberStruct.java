@@ -33,7 +33,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return {@code true} if this NumberStruct is zero; false otherwise
 	 */
-	boolean zerop();
+	BooleanStruct zerop();
 
 	/**
 	 * Performs the addition operation on this NumberStruct to the provided NumberStruct.
@@ -160,23 +160,23 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the {@literal '=='} comparison provided NumberStruct objects
 	 */
-	static boolean isEqualTo(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
+	static BooleanStruct isEqualTo(final List<NumberStruct> numbers) {
+		if (numbers.isEmpty()) {
 			throw new ErrorException("At least one number required to test equality.");
 		}
 
-		NumberStruct previousNumber = numbers[0];
+		NumberStruct previousNumber = numbers.get(0);
 
 		boolean result = true;
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
+		for (int i = 1; i < numbers.size(); i++) {
+			final NumberStruct currentNumber = numbers.get(i);
 			result = previousNumber.isEqualTo(currentNumber);
 			if (!result) {
 				break;
 			}
 			previousNumber = currentNumber;
 		}
-		return result;
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**
@@ -200,23 +200,23 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the {@literal '!='} comparison provided NumberStruct objects
 	 */
-	static boolean isNotEqualTo(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
+	static BooleanStruct isNotEqualTo(final List<NumberStruct> numbers) {
+		if (numbers.isEmpty()) {
 			throw new ErrorException("At least one number required to test equality.");
 		}
 
-		NumberStruct previousNumber = numbers[0];
+		NumberStruct previousNumber = numbers.get(0);
 
 		boolean result = true;
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
+		for (int i = 1; i < numbers.size(); i++) {
+			final NumberStruct currentNumber = numbers.get(i);
 			result = previousNumber.isNotEqualTo(currentNumber);
 			if (!result) {
 				break;
 			}
 			previousNumber = currentNumber;
 		}
-		return result;
+		return BooleanStruct.toLispBoolean(result);
 	}
 
 	/**

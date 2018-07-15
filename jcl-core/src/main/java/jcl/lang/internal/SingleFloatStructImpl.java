@@ -10,16 +10,18 @@ import com.google.common.math.DoubleMath;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.lang.BooleanStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.ShortFloatStruct;
 import jcl.lang.SingleFloatStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.lang.number.DecodeFloatResult;
 import jcl.lang.number.QuotientRemainder;
 import jcl.lang.statics.ReaderVariables;
 import jcl.type.DoubleFloatType;
@@ -69,7 +71,7 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 	}
 
 	@Override
-	public DecodeFloatResult decodeFloat() {
+	public LispStruct decodeFloat() {
 		final int bits = Float.floatToRawIntBits(value);
 		final DecodedFloat decodedFloat = getDecodedFloat(bits);
 
@@ -86,11 +88,11 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 		final int sign = decodedFloat.getSign();
 		final FloatStruct signFloat = (sign == 1) ? SingleFloatStruct.ONE : SingleFloatStruct.MINUS_ONE;
 
-		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
+		return ValuesStruct.valueOf(significandFloat, exponentInteger, signFloat);
 	}
 
 	@Override
-	public DecodeFloatResult integerDecodeFloat() {
+	public LispStruct integerDecodeFloat() {
 		final int bits = Float.floatToRawIntBits(value);
 		final DecodedFloat decodedFloat = getDecodedFloat(bits);
 
@@ -105,7 +107,7 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 		final int sign = decodedFloat.getSign();
 		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
 
-		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
+		return ValuesStruct.valueOf(significandInteger, exponentInteger, signInteger);
 	}
 
 	@Override
@@ -232,13 +234,13 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 	}
 
 	@Override
-	public boolean plusp() {
-		return Float.compare(value, 0.0F) > 0;
+	public BooleanStruct plusp() {
+		return BooleanStruct.toLispBoolean(Float.compare(value, 0.0F) > 0);
 	}
 
 	@Override
-	public boolean minusp() {
-		return Float.compare(value, 0.0F) < 0;
+	public BooleanStruct minusp() {
+		return BooleanStruct.toLispBoolean(Float.compare(value, 0.0F) < 0);
 	}
 
 	@Override
@@ -539,8 +541,8 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 	}
 
 	@Override
-	public boolean zerop() {
-		return Float.compare(value, 0.0F) == 0;
+	public BooleanStruct zerop() {
+		return BooleanStruct.toLispBoolean(Float.compare(value, 0.0F) == 0);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -209,8 +210,8 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	}
 
 	@Override
-	public boolean hasValue() {
-		return !lexicalValueStack.isEmpty() || !dynamicValueStack.isEmpty();
+	public BooleanStruct hasValue() {
+		return BooleanStruct.toLispBoolean(!lexicalValueStack.isEmpty() || !dynamicValueStack.isEmpty());
 	}
 
 	//	/**
@@ -571,13 +572,13 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @return whether or not the property was removed
 	 */
 	@Override
-	public boolean removeProperty(final LispStruct indicator) {
+	public BooleanStruct removeProperty(final LispStruct indicator) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
 			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
-		return properties.remf(indicator);
+		return BooleanStruct.toLispBoolean(properties.remf(indicator));
 	}
 
 	/**
@@ -589,8 +590,8 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * @return the newly copied symbol
 	 */
 	@Override
-	public SymbolStruct copySymbol(final boolean copyProperties) {
-		if (copyProperties) {
+	public SymbolStruct copySymbol(final BooleanStruct copyProperties) {
+		if (copyProperties.toJavaPBoolean()) {
 			final SymbolStructImpl newSymbol = new SymbolStructImpl(name);
 			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
 			newSymbol.dynamicValueStack.addAll(dynamicValueStack);

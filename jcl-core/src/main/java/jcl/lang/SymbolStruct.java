@@ -4,6 +4,7 @@ import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.internal.SymbolStructImpl;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
@@ -16,6 +17,15 @@ public interface SymbolStruct extends LispStruct {
 	 * @return symbol name value
 	 */
 	String getName();
+
+	default StringStruct getLispName() {
+		return StringStruct.toLispString(getName());
+	}
+
+	default LispStruct getPackage() {
+		final PackageStruct symbolPackage = getSymbolPackage();
+		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
+	}
 
 	/**
 	 * Getter for symbol {@link PackageStruct} property.
@@ -32,7 +42,7 @@ public interface SymbolStruct extends LispStruct {
 	 */
 	void setSymbolPackage(final PackageStruct symbolPackage);
 
-	boolean hasValue();
+	BooleanStruct hasValue();
 
 	//	/**
 //	 * Getter for symbol {@link #value} property.
@@ -199,7 +209,7 @@ public interface SymbolStruct extends LispStruct {
 	 *
 	 * @return whether or not the property was removed
 	 */
-	boolean removeProperty(final LispStruct indicator);
+	BooleanStruct removeProperty(final LispStruct indicator);
 
 	/**
 	 * Copies the symbol and possibly its {@link ListStruct} properties.
@@ -209,5 +219,14 @@ public interface SymbolStruct extends LispStruct {
 	 *
 	 * @return the newly copied symbol
 	 */
-	SymbolStruct copySymbol(final boolean copyProperties);
+	SymbolStruct copySymbol(final BooleanStruct copyProperties);
+
+	static SymbolStruct toLispSymbol(final StringStruct struct) {
+		return SymbolStructImpl.valueOf(struct.toJavaString());
+	}
+
+	default SymbolStruct makunbound() {
+		setValue(null);
+		return this;
+	}
 }

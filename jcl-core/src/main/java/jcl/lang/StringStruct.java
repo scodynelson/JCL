@@ -68,6 +68,15 @@ public interface StringStruct extends VectorStruct {
 	 */
 	CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index);
 
+	default StringStruct stringUpcase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
+		return stringUpcase(context);
+	}
+
 	/**
 	 * Returns a new string with the contents upper-cased according to the provided {@link StringIntervalOpContext}.
 	 *
@@ -77,6 +86,15 @@ public interface StringStruct extends VectorStruct {
 	 * @return a new string with the contents upper-cased
 	 */
 	StringStruct stringUpcase(final StringIntervalOpContext context);
+
+	default StringStruct stringDowncase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
+		return stringDowncase(context);
+	}
 
 	/**
 	 * Returns a new string with the contents lower-cased according to the provided {@link StringIntervalOpContext}.
@@ -88,6 +106,15 @@ public interface StringStruct extends VectorStruct {
 	 */
 	StringStruct stringDowncase(final StringIntervalOpContext context);
 
+	default StringStruct stringCapitalize(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
+		return stringCapitalize(context);
+	}
+
 	/**
 	 * Returns a new string with the contents capitalized according to the provided {@link StringIntervalOpContext}.
 	 *
@@ -97,6 +124,15 @@ public interface StringStruct extends VectorStruct {
 	 * @return a new string with the contents capitalized
 	 */
 	StringStruct stringCapitalize(final StringIntervalOpContext context);
+
+	default StringStruct nStringUpcase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
+		return nStringUpcase(context);
+	}
 
 	/**
 	 * Destructively modifies this string with the contents upper-cased according to the provided {@link
@@ -109,6 +145,15 @@ public interface StringStruct extends VectorStruct {
 	 */
 	StringStruct nStringUpcase(final StringIntervalOpContext context);
 
+	default StringStruct nStringDowncase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
+		return nStringDowncase(context);
+	}
+
 	/**
 	 * Destructively modifies this string with the contents lower-cased according to the provided {@link
 	 * StringIntervalOpContext}.
@@ -119,6 +164,15 @@ public interface StringStruct extends VectorStruct {
 	 * @return this string with the contents lower-cased
 	 */
 	StringStruct nStringDowncase(final StringIntervalOpContext context);
+
+	default StringStruct nStringCapitalize(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
+		return nStringCapitalize(context);
+	}
 
 	/**
 	 * Destructively modifies this string with the contents capitalized according to the provided {@link
@@ -163,6 +217,22 @@ public interface StringStruct extends VectorStruct {
 	 */
 	StringStruct stringRightTrim(final SequenceStruct characterBag);
 
+	default BooleanStruct stringEqual(final StringStruct string2,
+	                                  final IntegerStruct start1,
+	                                  final IntegerStruct end1,
+	                                  final IntegerStruct start2,
+	                                  final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		final boolean result = stringEqual(context);
+		return BooleanStruct.toLispBoolean(result);
+	}
+
 	/**
 	 * Determines equality of strings according to the provided {@link StringEqualityContext}. Case is accounted for.
 	 *
@@ -173,6 +243,21 @@ public interface StringStruct extends VectorStruct {
 	 */
 	boolean stringEqual(final StringEqualityContext context);
 
+	default LispStruct stringNotEqual(final StringStruct string2,
+	                                  final IntegerStruct start1,
+	                                  final IntegerStruct end1,
+	                                  final IntegerStruct start2,
+	                                  final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringNotEqual(context);
+	}
+
 	/**
 	 * Determines inequality of strings according to the provided {@link StringEqualityContext}. Case is accounted for.
 	 *
@@ -182,6 +267,21 @@ public interface StringStruct extends VectorStruct {
 	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
 	 */
 	LispStruct stringNotEqual(final StringEqualityContext context);
+
+	default LispStruct stringLessThan(final StringStruct string2,
+	                                  final IntegerStruct start1,
+	                                  final IntegerStruct end1,
+	                                  final IntegerStruct start2,
+	                                  final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringLessThan(context);
+	}
 
 	/**
 	 * Determines less-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
@@ -195,6 +295,21 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringLessThan(final StringEqualityContext context);
 
+	default LispStruct stringGreaterThan(final StringStruct string2,
+	                                     final IntegerStruct start1,
+	                                     final IntegerStruct end1,
+	                                     final IntegerStruct start2,
+	                                     final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringGreaterThan(context);
+	}
+
 	/**
 	 * Determines greater-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
 	 * accounted for.
@@ -206,6 +321,21 @@ public interface StringStruct extends VectorStruct {
 	 * strings differ otherwise
 	 */
 	LispStruct stringGreaterThan(final StringEqualityContext context);
+
+	default LispStruct stringLessThanOrEqualTo(final StringStruct string2,
+	                                           final IntegerStruct start1,
+	                                           final IntegerStruct end1,
+	                                           final IntegerStruct start2,
+	                                           final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringLessThanOrEqualTo(context);
+	}
 
 	/**
 	 * Determines less-than-or-equal-to inequality of strings according to the provided {@link StringEqualityContext}.
@@ -219,6 +349,21 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringLessThanOrEqualTo(final StringEqualityContext context);
 
+	default LispStruct stringGreaterThanOrEqualTo(final StringStruct string2,
+	                                              final IntegerStruct start1,
+	                                              final IntegerStruct end1,
+	                                              final IntegerStruct start2,
+	                                              final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringGreaterThanOrEqualTo(context);
+	}
+
 	/**
 	 * Determines greater-than-or-equal-to inequality of strings according to the provided {@link
 	 * StringEqualityContext}. Case is accounted for.
@@ -231,6 +376,22 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
 
+	default BooleanStruct stringEqualIgnoreCase(final StringStruct string2,
+	                                            final IntegerStruct start1,
+	                                            final IntegerStruct end1,
+	                                            final IntegerStruct start2,
+	                                            final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		final boolean result = stringEqualIgnoreCase(context);
+		return BooleanStruct.toLispBoolean(result);
+	}
+
 	/**
 	 * Determines equality of strings according to the provided {@link StringEqualityContext}. Case is ignored.
 	 *
@@ -241,6 +402,21 @@ public interface StringStruct extends VectorStruct {
 	 */
 	boolean stringEqualIgnoreCase(final StringEqualityContext context);
 
+	default LispStruct stringNotEqualIgnoreCase(final StringStruct string2,
+	                                            final IntegerStruct start1,
+	                                            final IntegerStruct end1,
+	                                            final IntegerStruct start2,
+	                                            final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringNotEqualIgnoreCase(context);
+	}
+
 	/**
 	 * Determines inequality of strings according to the provided {@link StringEqualityContext}. Case is ignored.
 	 *
@@ -250,6 +426,21 @@ public interface StringStruct extends VectorStruct {
 	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
 	 */
 	LispStruct stringNotEqualIgnoreCase(final StringEqualityContext context);
+
+	default LispStruct stringLessThanIgnoreCase(final StringStruct string2,
+	                                            final IntegerStruct start1,
+	                                            final IntegerStruct end1,
+	                                            final IntegerStruct start2,
+	                                            final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringLessThanIgnoreCase(context);
+	}
 
 	/**
 	 * Determines less-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
@@ -263,6 +454,21 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringLessThanIgnoreCase(final StringEqualityContext context);
 
+	default LispStruct stringGreaterThanIgnoreCase(final StringStruct string2,
+	                                               final IntegerStruct start1,
+	                                               final IntegerStruct end1,
+	                                               final IntegerStruct start2,
+	                                               final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringGreaterThanIgnoreCase(context);
+	}
+
 	/**
 	 * Determines greater-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
 	 * ignored.
@@ -275,6 +481,21 @@ public interface StringStruct extends VectorStruct {
 	 */
 	LispStruct stringGreaterThanIgnoreCase(final StringEqualityContext context);
 
+	default LispStruct stringLessThanOrEqualToIgnoreCase(final StringStruct string2,
+	                                                     final IntegerStruct start1,
+	                                                     final IntegerStruct end1,
+	                                                     final IntegerStruct start2,
+	                                                     final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringLessThanOrEqualToIgnoreCase(context);
+	}
+
 	/**
 	 * Determines less-than-or-equal-to inequality of strings according to the provided {@link StringEqualityContext}.
 	 * Case is ignored.
@@ -286,6 +507,21 @@ public interface StringStruct extends VectorStruct {
 	 * where the strings differ otherwise
 	 */
 	LispStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context);
+
+	default LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringStruct string2,
+	                                                        final IntegerStruct start1,
+	                                                        final IntegerStruct end1,
+	                                                        final IntegerStruct start2,
+	                                                        final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1)
+				                     .end1(end1)
+				                     .start2(start2)
+				                     .end2(end2)
+				                     .build();
+		return stringGreaterThanOrEqualToIgnoreCase(context);
+	}
 
 	/**
 	 * Determines greater-than-or-equal-to inequality of strings according to the provided {@link

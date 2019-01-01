@@ -68,7 +68,8 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/symbols/symbols.lisp",
 				"jcl-application/src/main/lisp/jcl/lists/lists.lisp",
 				"jcl-application/src/main/lisp/jcl/numbers/numbers.lisp",
-				"jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp"
+				"jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp",
+				"jcl-application/src/main/lisp/jcl/strings/strings.lisp"
 		);
 	}
 
@@ -154,6 +155,11 @@ public class JCL implements ApplicationRunner {
 
 		CompileForm.OUTPUT_FILE = false;
 		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/strings/strings.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 	}

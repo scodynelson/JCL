@@ -5,7 +5,7 @@ dependencies {
 	compile("commons-io:commons-io")
 	compile("com.google.guava:guava")
 //	compile("io.javaslang:javaslang")
-	compile("org.ow2.asm:asm-all")
+	compile("org.ow2.asm:asm")
 	compile("org.apache.commons:commons-lang3")
 	compile("org.apache.commons:commons-text")
 	compile("org.apache.commons:commons-math3")

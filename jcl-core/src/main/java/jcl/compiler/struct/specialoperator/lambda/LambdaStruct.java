@@ -29,12 +29,10 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
 /**
@@ -94,11 +92,6 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	                                       final int closureArgStore) {
 		// Do Nothing.
 	}
-
-	/**
-	 * Constant {@link String} containing the description for the {@link Component} annotation.
-	 */
-	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#initLambdaListBindings()}
@@ -265,9 +258,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 *
 	 * import Closure;
 	 * import CompiledFunctionStruct;
-	 * import org.springframework.stereotype.Component;
 	 *
-	 * {@literal @}Component
 	 * public class Lambda_1 extends CompiledFunctionStruct {
 	 *
 	 *      public Lambda_1() {
@@ -306,7 +297,6 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
-		generateComponentAnnotation(cw);
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(generatorState, className, cw);
 
@@ -338,18 +328,6 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
 			                           false);
 		}
-	}
-
-	/**
-	 * Private method for generating the class level {@link Component} annotation on the generated lambda class object
-	 * being written to via the provided {@link ClassWriter}.
-	 *
-	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the annotation code for
-	 */
-	private static void generateComponentAnnotation(final ClassWriter cw) {
-		final AnnotationVisitor av = cw.visitAnnotation(COMPONENT_ANNOTATION_DESC, true);
-		av.visitEnd();
 	}
 
 	/**

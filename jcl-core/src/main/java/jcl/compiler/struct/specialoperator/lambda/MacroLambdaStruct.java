@@ -33,12 +33,10 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
 /**
@@ -95,11 +93,6 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	public Environment getLambdaEnvironment() {
 		return lambdaEnvironment;
 	}
-
-	/**
-	 * Constant {@link String} containing the description for the {@link Component} annotation.
-	 */
-	private static final String COMPONENT_ANNOTATION_DESC = Type.getDescriptor(Component.class);
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#initLambdaListBindings()}
@@ -313,9 +306,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 *
 	 * import Closure;
 	 * import CompiledMacroFunctionExpander;
-	 * import org.springframework.stereotype.Component;
 	 *
-	 * {@literal @}Component
 	 * public class MacroLambda_1 extends CompiledMacroFunctionExpander<LispStruct> {
 	 *
 	 *      public MacroLambda_1() {
@@ -353,7 +344,6 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
-		generateComponentAnnotation(cw);
 		generateNoArgConstructor(generatorState, className, cw);
 		generateClosureArgConstructor(generatorState, className, cw);
 
@@ -410,18 +400,6 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
 	                                       final int closureArgStore) {
 		// Do Nothing.
-	}
-
-	/**
-	 * Private method for generating the class level {@link Component} annotation on the generated macro-lambda class
-	 * object being written to via the provided {@link ClassWriter}.
-	 *
-	 * @param cw
-	 * 		the current {@link ClassWriter} to generate the annotation code for
-	 */
-	private static void generateComponentAnnotation(final ClassWriter cw) {
-		final AnnotationVisitor av = cw.visitAnnotation(COMPONENT_ANNOTATION_DESC, true);
-		av.visitEnd();
 	}
 
 	/**

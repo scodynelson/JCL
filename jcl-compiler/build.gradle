@@ -5,7 +5,8 @@ dependencies {
 
 	compile("commons-io:commons-io")
 	compile("org.apfloat:apfloat")
-	compile("org.ow2.asm:asm-all")
+	compile("org.ow2.asm:asm")
+	compile("org.ow2.asm:asm-util")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")

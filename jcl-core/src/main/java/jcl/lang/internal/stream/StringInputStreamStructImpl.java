@@ -39,7 +39,7 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	 * @param inputString
 	 * 		the input to create a StringInputStreamStruct from
 	 */
-	private StringInputStreamStructImpl(final String inputString) {
+	public StringInputStreamStructImpl(final String inputString) {
 		this(false, inputString);
 	}
 
@@ -51,7 +51,7 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	 * @param inputString
 	 * 		the input to create a StringInputStreamStruct from
 	 */
-	private StringInputStreamStructImpl(final boolean interactive, final String inputString) {
+	public StringInputStreamStructImpl(final boolean interactive, final String inputString) {
 		this(interactive, inputString, 0, inputString.length());
 	}
 
@@ -65,7 +65,7 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	 * @param end
 	 * 		the ending position to read up to in the string
 	 */
-	private StringInputStreamStructImpl(final String inputString, final int current, final int end) {
+	public StringInputStreamStructImpl(final String inputString, final int current, final int end) {
 		this(false, inputString, current, end);
 	}
 
@@ -81,7 +81,7 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	 * @param end
 	 * 		the ending position to read up to in the string
 	 */
-	private StringInputStreamStructImpl(final boolean interactive, final String inputString, final int current, final int end) {
+	public StringInputStreamStructImpl(final boolean interactive, final String inputString, final int current, final int end) {
 		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
 
 		if (inputString == null) {
@@ -91,22 +91,6 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 
 		this.end = end;
 		this.current = current;
-	}
-
-	public static StringInputStreamStructImpl valueOf(final String inputString) {
-		return new StringInputStreamStructImpl(inputString);
-	}
-
-	public static StringInputStreamStructImpl valueOf(final boolean interactive, final String inputString) {
-		return new StringInputStreamStructImpl(interactive, inputString);
-	}
-
-	public static StringInputStreamStructImpl valueOf(final String inputString, final int current, final int end) {
-		return new StringInputStreamStructImpl(inputString, current, end);
-	}
-
-	public static StringInputStreamStructImpl valueOf(final boolean interactive, final String inputString, final int current, final int end) {
-		return new StringInputStreamStructImpl(interactive, inputString, current, end);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public abstract class StreamStructImpl extends BuiltInClassStruct implements Str
 	/**
 	 * Whether or not the StreamStruct is interactive.
 	 */
-	private final boolean interactive;
+	private boolean interactive;
 
 	/**
 	 * The {@link LispType} of the elements in the StreamStruct.
@@ -90,6 +90,14 @@ public abstract class StreamStructImpl extends BuiltInClassStruct implements Str
 	@Override
 	public boolean isInteractive() {
 		return !closed && interactive;
+	}
+
+	@Override
+	public void setInteractive(final boolean interactive) {
+		if (closed) {
+			throw new IllegalStateException("Cannot modify the state of a closed stream.");
+		}
+		this.interactive = interactive;
 	}
 
 	@Override

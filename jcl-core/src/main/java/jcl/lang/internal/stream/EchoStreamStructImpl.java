@@ -34,7 +34,7 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	 * @param outputStreamStruct
 	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
 	 */
-	private EchoStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public EchoStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		this(false, inputStreamStruct, outputStreamStruct);
 	}
 
@@ -48,16 +48,8 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	 * @param outputStreamStruct
 	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
 	 */
-	private EchoStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public EchoStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		super(EchoStreamType.INSTANCE, interactive, inputStreamStruct, outputStreamStruct);
-	}
-
-	public static EchoStreamStructImpl valueOf(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		return new EchoStreamStructImpl(inputStreamStruct, outputStreamStruct);
-	}
-
-	public static EchoStreamStructImpl valueOf(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		return new EchoStreamStructImpl(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
 	@Override

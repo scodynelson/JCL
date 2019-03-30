@@ -54,9 +54,10 @@ public class JCL implements ApplicationRunner {
 		BootstrapSymbols.bootstrap();
 
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
-			final JavaStreamStruct characterStream = LispStructFactory.toJavaStream(System.in, loggerOutputStream);
+			final JavaStreamStruct characterStream = JavaStreamStruct.toJavaStream(System.in, loggerOutputStream);
 
-			final TwoWayStreamStruct terminalIoStream = LispStructFactory.toTwoWayStream(true, characterStream, characterStream);
+			// TODO: Constructing stream directly from Impl
+			final TwoWayStreamStruct terminalIoStream = TwoWayStreamStruct.toTwoWayStream(true, characterStream, characterStream);
 			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
 		}
 		
@@ -65,6 +66,7 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/compiler/macros.lisp",
 				"jcl-application/src/main/lisp/jcl/iterators/iterators.lisp",
 				"jcl-application/src/main/lisp/jcl/characters/characters.lisp",
+				"jcl-application/src/main/lisp/jcl/streams/streams.lisp",
 				"jcl-application/src/main/lisp/jcl/symbols/symbols.lisp",
 				"jcl-application/src/main/lisp/jcl/packages/packages.lisp",
 				"jcl-application/src/main/lisp/jcl/lists/lists.lisp",
@@ -136,6 +138,11 @@ public class JCL implements ApplicationRunner {
 
 		CompileForm.OUTPUT_FILE = false;
 		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/characters/characters.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/streams/streams.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 

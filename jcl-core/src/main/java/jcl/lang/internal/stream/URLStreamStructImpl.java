@@ -52,7 +52,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 * @param url
 	 * 		the {@link URL} to create a URLStreamStruct from
 	 */
-	private URLStreamStructImpl(final URL url) {
+	public URLStreamStructImpl(final URL url) {
 		this(false, url);
 	}
 
@@ -64,7 +64,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 * @param url
 	 * 		the {@link URL} to create a URLStreamStruct from
 	 */
-	private URLStreamStructImpl(final boolean interactive, final URL url) {
+	public URLStreamStructImpl(final boolean interactive, final URL url) {
 		// TODO: Character Type Stream???
 		super(FileStreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
@@ -75,14 +75,6 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 		} catch (final IOException ioe) {
 			throw new ErrorException("Failed to open provided url.", ioe);
 		}
-	}
-
-	public static URLStreamStructImpl valueOf(final URL url) {
-		return new URLStreamStructImpl(url);
-	}
-
-	public static URLStreamStructImpl valueOf(final boolean interactive, final URL url) {
-		return new URLStreamStructImpl(interactive, url);
 	}
 
 	@Override

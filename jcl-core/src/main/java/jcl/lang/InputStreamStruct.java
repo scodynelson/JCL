@@ -4,6 +4,7 @@
 
 package jcl.lang;
 
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadLineResult;
 import jcl.lang.stream.ReadPeekResult;
@@ -27,6 +28,15 @@ public interface InputStreamStruct extends StreamStruct {
 	 */
 	ReadPeekResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
+	default LispStruct readChar(final BooleanStruct eofErrorP,
+	                            final LispStruct eofValue,
+	                            final BooleanStruct recursiveP) {
+
+		final ReadPeekResult readPeekResult = readChar(eofErrorP.toJavaPBoolean(), eofValue,
+		                                               recursiveP.toJavaPBoolean());
+		return readPeekResult.isEof() ? eofValue : CharacterStruct.toLispCharacter(readPeekResult.getResult());
+	}
+
 	/**
 	 * Reads a byte from the stream.
 	 *
@@ -38,6 +48,11 @@ public interface InputStreamStruct extends StreamStruct {
 	 * @return the byte read from the stream
 	 */
 	ReadPeekResult readByte(boolean eofErrorP, LispStruct eofValue);
+
+	default LispStruct readByte(final BooleanStruct eofErrorP, final LispStruct eofValue) {
+		final ReadPeekResult readPeekResult = readByte(eofErrorP.toJavaPBoolean(), eofValue);
+		return readPeekResult.isEof() ? eofValue : IntegerStruct.toLispInteger(readPeekResult.getResult());
+	}
 
 	/**
 	 * Peeks at the next available character in the stream.
@@ -55,6 +70,28 @@ public interface InputStreamStruct extends StreamStruct {
 	 */
 	ReadPeekResult peekChar(PeekType peekType, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
+	default LispStruct peekChar(final SymbolStruct peekTypeSymbol,
+	                            final BooleanStruct eofErrorP,
+	                            final LispStruct eofValue,
+	                            final BooleanStruct recursiveP) {
+
+		final PeekType peekType;
+		if (TStruct.INSTANCE.eq(peekTypeSymbol)) {
+			peekType = PeekType.T_PEEK_TYPE;
+		} else if (NILStruct.INSTANCE.eq(peekTypeSymbol)) {
+			peekType = PeekType.NIL_PEEK_TYPE;
+		} else if (peekTypeSymbol instanceof CharacterStruct) {
+			final CharacterStruct character = (CharacterStruct) peekTypeSymbol;
+			peekType = PeekType.getCharacterPeekType(character.toUnicodeCodePoint());
+		} else {
+			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
+		}
+
+		final ReadPeekResult readPeekResult = peekChar(peekType, eofErrorP.toJavaPBoolean(), eofValue,
+		                                               recursiveP.toJavaPBoolean());
+		return readPeekResult.isEof() ? eofValue : CharacterStruct.toLispCharacter(readPeekResult.getResult());
+	}
+
 	/**
 	 * Un-reads a character from the stream.
 	 *
@@ -65,10 +102,21 @@ public interface InputStreamStruct extends StreamStruct {
 	 */
 	Integer unreadChar(Integer codePoint);
 
+	default CharacterStruct unreadChar(final CharacterStruct character) {
+		unreadChar(character.toUnicodeCodePoint());
+		return character;
+	}
+
 	/**
 	 * Clears the input from the stream.
 	 */
 	void clearInput();
+
+	default LispStruct clearInput1() {
+		// TODO: Fix method name
+		clearInput();
+		return NILStruct.INSTANCE;
+	}
 
 	/**
 	 * Listens on the stream to determine if there is any data left to read.
@@ -76,6 +124,11 @@ public interface InputStreamStruct extends StreamStruct {
 	 * @return whether or not there is data left to read from the stream
 	 */
 	boolean listen();
+
+	default BooleanStruct listen1() {
+		final boolean listen = listen();
+		return BooleanStruct.toLispBoolean(listen);
+	}
 
 	@Override
 	default boolean isInputStream() {
@@ -96,5 +149,16 @@ public interface InputStreamStruct extends StreamStruct {
 		}
 		final String resultString = stringBuilder.toString();
 		return new ReadLineResult(resultString, readPeekResult.isEof());
+	}
+
+	default LispStruct readLine(final BooleanStruct eofErrorP,
+	                            final LispStruct eofValue,
+	                            final BooleanStruct recursiveP) {
+
+		final ReadLineResult readLineResult = readLine(eofErrorP.toJavaPBoolean(), eofValue,
+		                                               recursiveP.toJavaPBoolean());
+		final String result = readLineResult.getResult();
+		final boolean eof = readLineResult.isEof();
+		return ValuesStruct.valueOf(StringStruct.toLispString(result), BooleanStruct.toLispBoolean(eof));
 	}
 }

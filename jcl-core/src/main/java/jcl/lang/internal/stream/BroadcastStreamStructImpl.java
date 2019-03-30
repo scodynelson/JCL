@@ -30,7 +30,7 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	 * @param outputStreamStructs
 	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
 	 */
-	private BroadcastStreamStructImpl(final Deque<OutputStreamStruct> outputStreamStructs) {
+	public BroadcastStreamStructImpl(final Deque<OutputStreamStruct> outputStreamStructs) {
 		this(false, outputStreamStructs);
 	}
 
@@ -42,17 +42,9 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	 * @param outputStreamStructs
 	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
 	 */
-	private BroadcastStreamStructImpl(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
+	public BroadcastStreamStructImpl(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
 		super(BroadcastStreamType.INSTANCE, null, null, interactive, getElementType2(outputStreamStructs));
 		this.outputStreamStructs = new ArrayDeque<>(outputStreamStructs);
-	}
-
-	public static BroadcastStreamStructImpl valueOf(final Deque<OutputStreamStruct> outputStreamStructs) {
-		return new BroadcastStreamStructImpl(outputStreamStructs);
-	}
-
-	public static BroadcastStreamStructImpl valueOf(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
-		return new BroadcastStreamStructImpl(interactive, outputStreamStructs);
 	}
 
 	/**

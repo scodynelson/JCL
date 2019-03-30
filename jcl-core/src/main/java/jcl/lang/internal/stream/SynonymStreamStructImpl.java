@@ -33,7 +33,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @param variable
 	 * 		the variable to create a SynonymStreamStruct from
 	 */
-	private SynonymStreamStructImpl(final VariableStructImpl<?> variable) {
+	public SynonymStreamStructImpl(final VariableStructImpl<?> variable) {
 		this(false, variable);
 	}
 
@@ -43,7 +43,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	private SynonymStreamStructImpl(final SymbolStruct symbol) {
+	public SynonymStreamStructImpl(final SymbolStruct symbol) {
 		this(false, symbol);
 	}
 
@@ -55,7 +55,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	private SynonymStreamStructImpl(final boolean interactive, final SymbolStruct symbol) {
+	public SynonymStreamStructImpl(final boolean interactive, final SymbolStruct symbol) {
 		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
@@ -73,18 +73,6 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 			throw new ErrorException("Provided Symbol must not be null.");
 		}
 		return ((StreamStructImpl) symbol.getValue()).getElementType();
-	}
-
-	public static SynonymStreamStructImpl valueOf(final VariableStructImpl<?> variable) {
-		return new SynonymStreamStructImpl(variable);
-	}
-
-	public static SynonymStreamStructImpl valueOf(final SymbolStruct symbol) {
-		return new SynonymStreamStructImpl(symbol);
-	}
-
-	public static SynonymStreamStructImpl valueOf(final boolean interactive, final SymbolStruct symbol) {
-		return new SynonymStreamStructImpl(interactive, symbol);
 	}
 
 	/**

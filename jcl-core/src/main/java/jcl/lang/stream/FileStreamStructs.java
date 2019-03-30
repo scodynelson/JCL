@@ -24,7 +24,7 @@ public final class FileStreamStructs {
 
 		final Path filePath = pathname.getPath();
 
-		final FileStreamStructImpl fileStream = FileStreamStructImpl.valueOf(filePath);
+		final FileStreamStructImpl fileStream = new FileStreamStructImpl(filePath);
 		if (directionType == DirectionType.PROBE) {
 			fileStream.close();
 		}

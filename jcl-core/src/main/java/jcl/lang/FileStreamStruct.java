@@ -2,6 +2,7 @@ package jcl.lang;
 
 import java.nio.file.Path;
 
+import jcl.lang.internal.stream.FileStreamStructImpl;
 import jcl.lang.stream.ExternalFormat;
 
 /**
@@ -17,4 +18,12 @@ public interface FileStreamStruct extends IOStreamStruct {
 	Path getPath();
 
 	ExternalFormat getExternalFormat();
+
+	default ExternalFormat streamExternalFormat() {
+		return getExternalFormat();
+	}
+
+	static FileStreamStruct toFileStream(final Path path) {
+		return new FileStreamStructImpl(path);
+	}
 }

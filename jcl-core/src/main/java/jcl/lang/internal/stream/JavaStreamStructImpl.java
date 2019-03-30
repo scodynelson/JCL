@@ -52,7 +52,7 @@ public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	private JavaStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
+	public JavaStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -66,7 +66,7 @@ public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
-	private JavaStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public JavaStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();
@@ -76,14 +76,6 @@ public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl i
 
 	public PrintWriter getOutputStream() {
 		return outputStream;
-	}
-
-	public static JavaStreamStructImpl valueOf(final InputStream inputStream, final OutputStream outputStream) {
-		return new JavaStreamStructImpl(inputStream, outputStream);
-	}
-
-	public static JavaStreamStructImpl valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		return new JavaStreamStructImpl(interactive, inputStream, outputStream);
 	}
 
 	@Override

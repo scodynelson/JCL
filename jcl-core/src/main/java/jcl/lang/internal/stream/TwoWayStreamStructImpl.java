@@ -25,7 +25,7 @@ public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl i
 	 * @param outputStreamStruct
 	 * 		the {@link OutputStreamStruct} to create a TwoWayStreamStruct from
 	 */
-	private TwoWayStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public TwoWayStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		this(false, inputStreamStruct, outputStreamStruct);
 	}
 
@@ -39,16 +39,8 @@ public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl i
 	 * @param outputStreamStruct
 	 * 		the {@link OutputStreamStruct} to create a TwoWayStreamStruct from
 	 */
-	private TwoWayStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	public TwoWayStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		super(TwoWayStreamType.INSTANCE, interactive, inputStreamStruct, outputStreamStruct);
-	}
-
-	public static TwoWayStreamStructImpl valueOf(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		return new TwoWayStreamStructImpl(inputStreamStruct, outputStreamStruct);
-	}
-
-	public static TwoWayStreamStructImpl valueOf(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		return new TwoWayStreamStructImpl(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
 	@Override

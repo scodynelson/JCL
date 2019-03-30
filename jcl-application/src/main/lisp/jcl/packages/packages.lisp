@@ -8,24 +8,6 @@
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
-#|
-(defun abs (number)
-  "Returns the absolute value of number."
-  (declare (system::%java-class-name "jcl.numbers.functions.Abs"))
-  ($abs number))
-
-(defun max (real &rest reals)
-  "Returns the real that is greatest (closest to positive infinity)"
-  (declare (system::%java-class-name "jcl.numbers.functions.Max"))
-  (ext:jinvoke-static
-    (ext:jmethod "max" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "java.util.List"))
-    real
-    (ext:jinvoke (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
-                 reals)))
-|#
-;;;;;;;;;;;;;;;;;;;;;;
 
 (defun list-all-packages ()
   "Returns a fresh list of all registered packages."
@@ -235,8 +217,6 @@
   (let* ((package (find-package package))
          (symbol-names (string-listify symbol-names)))
     ($shadow package symbol-names)))
-
-;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

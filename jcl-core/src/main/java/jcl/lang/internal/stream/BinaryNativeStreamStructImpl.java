@@ -42,7 +42,7 @@ public final class BinaryNativeStreamStructImpl extends AbstractNativeStreamStru
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
-	private BinaryNativeStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
+	public BinaryNativeStreamStructImpl(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -56,19 +56,11 @@ public final class BinaryNativeStreamStructImpl extends AbstractNativeStreamStru
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
-	private BinaryNativeStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	public BinaryNativeStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(StreamType.INSTANCE, interactive, UnsignedByteType.INSTANCE);
 
 		this.inputStream = new BufferedInputStream(inputStream);
 		this.outputStream = new BufferedOutputStream(outputStream);
-	}
-
-	public static BinaryNativeStreamStructImpl valueOf(final InputStream inputStream, final OutputStream outputStream) {
-		return new BinaryNativeStreamStructImpl(inputStream, outputStream);
-	}
-
-	public static BinaryNativeStreamStructImpl valueOf(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		return new BinaryNativeStreamStructImpl(interactive, inputStream, outputStream);
 	}
 
 	@Override

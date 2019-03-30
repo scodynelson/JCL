@@ -14,7 +14,7 @@
   (declare (system::%java-class-name "jcl.characters.functions.Character"))
   (ext:jinvoke-static
     (ext:jmethod "toLispCharacter" (ext:jclass "jcl.lang.CharacterStruct")
-             (ext:jclass "jcl.lang.LispStruct"))
+                 (ext:jclass "jcl.lang.LispStruct"))
     character))
 
 (defun char-name (character)

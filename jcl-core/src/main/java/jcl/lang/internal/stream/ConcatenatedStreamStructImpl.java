@@ -34,7 +34,7 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	 * @param inputStreamStructs
 	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
 	 */
-	private ConcatenatedStreamStructImpl(final Deque<InputStreamStruct> inputStreamStructs) {
+	public ConcatenatedStreamStructImpl(final Deque<InputStreamStruct> inputStreamStructs) {
 		this(false, inputStreamStructs);
 	}
 
@@ -46,7 +46,7 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	 * @param inputStreamStructs
 	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
 	 */
-	private ConcatenatedStreamStructImpl(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
+	public ConcatenatedStreamStructImpl(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
 		super(ConcatenatedStreamType.INSTANCE, null, null, interactive, getElementType2(inputStreamStructs));
 		this.inputStreamStructs = new ArrayDeque<>(inputStreamStructs);
 	}
@@ -81,14 +81,6 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 
 		final InputStreamStruct last = inputStreamStructs.getLast();
 		return last.getElementType();
-	}
-
-	public static ConcatenatedStreamStructImpl valueOf(final Deque<InputStreamStruct> inputStreamStructs) {
-		return new ConcatenatedStreamStructImpl(inputStreamStructs);
-	}
-
-	public static ConcatenatedStreamStructImpl valueOf(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
-		return new ConcatenatedStreamStructImpl(interactive, inputStreamStructs);
 	}
 
 	@Override

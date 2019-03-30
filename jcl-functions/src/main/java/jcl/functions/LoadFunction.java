@@ -144,7 +144,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 				return loadCompiledCode(filespecPath, verbose, print);
 			} else if (StringUtils.endsWithIgnoreCase(filespecNamestring, ".lsp") || StringUtils.endsWithIgnoreCase(filespecNamestring, ".lisp")) {
 				if (filespecFileStream == null) {
-					filespecFileStream = LispStructFactory.toFileStream(filespecPath);
+					filespecFileStream = FileStreamStruct.toFileStream(filespecPath);
 				}
 				return loadSourceCode(filespecFileStream, filespecPath, verbose, print);
 			} else {

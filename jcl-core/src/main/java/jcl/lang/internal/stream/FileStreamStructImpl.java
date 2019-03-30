@@ -52,7 +52,7 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 * @param path
 	 * 		the file to create a FileStreamStruct from
 	 */
-	private FileStreamStructImpl(final Path path) {
+	public FileStreamStructImpl(final Path path) {
 		this(false, path);
 	}
 
@@ -64,7 +64,7 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 * @param path
 	 * 		the {@link Path} to create a FileStreamStruct from
 	 */
-	private FileStreamStructImpl(final boolean interactive, final Path path) {
+	public FileStreamStructImpl(final boolean interactive, final Path path) {
 		super(FileStreamType.INSTANCE, interactive, getElementType2(path));
 
 		this.path = path;
@@ -91,14 +91,6 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 		} catch (final IOException ioe) {
 			throw new ErrorException("Failed to open provided file.", ioe);
 		}
-	}
-
-	public static FileStreamStructImpl valueOf(final Path path) {
-		return new FileStreamStructImpl(path);
-	}
-
-	public static FileStreamStructImpl valueOf(final boolean interactive, final Path path) {
-		return new FileStreamStructImpl(interactive, path);
 	}
 
 	/**

@@ -23,7 +23,7 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	/**
 	 * Public constructor.
 	 */
-	private StringOutputStreamStructImpl() {
+	public StringOutputStreamStructImpl() {
 		this(false);
 	}
 
@@ -33,7 +33,7 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 */
-	private StringOutputStreamStructImpl(final boolean interactive) {
+	public StringOutputStreamStructImpl(final boolean interactive) {
 		this(interactive, BaseCharType.INSTANCE);
 	}
 
@@ -43,7 +43,7 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	private StringOutputStreamStructImpl(final LispType elementType) {
+	public StringOutputStreamStructImpl(final LispType elementType) {
 		this(false, elementType);
 	}
 
@@ -55,24 +55,8 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	private StringOutputStreamStructImpl(final boolean interactive, final LispType elementType) {
+	public StringOutputStreamStructImpl(final boolean interactive, final LispType elementType) {
 		super(StringStreamType.INSTANCE, null, null, interactive, elementType);
-	}
-
-	public static StringOutputStreamStructImpl valueOf() {
-		return new StringOutputStreamStructImpl();
-	}
-
-	public static StringOutputStreamStructImpl valueOf(final boolean interactive) {
-		return new StringOutputStreamStructImpl(interactive);
-	}
-
-	public static StringOutputStreamStructImpl valueOf(final LispType elementType) {
-		return new StringOutputStreamStructImpl(elementType);
-	}
-
-	public static StringOutputStreamStructImpl valueOf(final boolean interactive, final LispType elementType) {
-		return new StringOutputStreamStructImpl(interactive, elementType);
 	}
 
 	@Override

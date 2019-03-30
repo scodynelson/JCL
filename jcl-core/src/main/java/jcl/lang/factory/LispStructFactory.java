@@ -1,44 +1,25 @@
 package jcl.lang.factory;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.lang.ArrayStruct;
-import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.BitVectorStruct;
-import jcl.lang.BroadcastStreamStruct;
-import jcl.lang.CharacterNativeStreamStruct;
-import jcl.lang.ConcatenatedStreamStruct;
-import jcl.lang.EchoStreamStruct;
-import jcl.lang.EmptyStreamStruct;
-import jcl.lang.FileStreamStruct;
-import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.JavaStreamStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
-import jcl.lang.OutputStreamStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.StringInputStreamStruct;
-import jcl.lang.StringOutputStreamStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.SynonymStreamStruct;
-import jcl.lang.TwoWayStreamStruct;
-import jcl.lang.URLStreamStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
@@ -48,22 +29,8 @@ import jcl.lang.internal.MultiArrayStructImpl;
 import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
-import jcl.lang.internal.VariableStructImpl;
 import jcl.lang.internal.VectorStructImpl;
 import jcl.lang.internal.readtable.ReadtableStructImpl;
-import jcl.lang.internal.stream.BinaryNativeStreamStructImpl;
-import jcl.lang.internal.stream.BroadcastStreamStructImpl;
-import jcl.lang.internal.stream.CharacterNativeStreamStructImpl;
-import jcl.lang.internal.stream.ConcatenatedStreamStructImpl;
-import jcl.lang.internal.stream.EchoStreamStructImpl;
-import jcl.lang.internal.stream.EmptyStreamStructImpl;
-import jcl.lang.internal.stream.FileStreamStructImpl;
-import jcl.lang.internal.stream.JavaStreamStructImpl;
-import jcl.lang.internal.stream.StringInputStreamStructImpl;
-import jcl.lang.internal.stream.StringOutputStreamStructImpl;
-import jcl.lang.internal.stream.SynonymStreamStructImpl;
-import jcl.lang.internal.stream.TwoWayStreamStructImpl;
-import jcl.lang.internal.stream.URLStreamStructImpl;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
@@ -75,7 +42,6 @@ import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.readtable.ReadtableCase;
-import jcl.type.LispType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,21 +65,6 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * BinaryNativeStream
-	 */
-
-	public static BinaryNativeStreamStruct toBinaryNativeStream(final InputStream inputStream,
-	                                                            final OutputStream outputStream) {
-		return BinaryNativeStreamStructImpl.valueOf(inputStream, outputStream);
-	}
-
-	public static BinaryNativeStreamStruct toBinaryNativeStream(final boolean interactive,
-	                                                            final InputStream inputStream,
-	                                                            final OutputStream outputStream) {
-		return BinaryNativeStreamStructImpl.valueOf(interactive, inputStream, outputStream);
-	}
-
-	/*
 	 * BitVector
 	 */
 
@@ -123,82 +74,6 @@ public final class LispStructFactory {
 
 	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
 		return BitVectorStructImpl.valueOfCont(contents);
-	}
-
-	/*
-	 * BroadcastStream
-	 */
-
-	public static BroadcastStreamStruct toBroadcastStream(final Deque<OutputStreamStruct> outputStreamStructs) {
-		return BroadcastStreamStructImpl.valueOf(outputStreamStructs);
-	}
-
-	public static BroadcastStreamStruct toBroadcastStream(final boolean interactive,
-	                                                      final Deque<OutputStreamStruct> outputStreamStructs) {
-		return BroadcastStreamStructImpl.valueOf(interactive, outputStreamStructs);
-	}
-
-	/*
-	 * CharacterNativeStream
-	 */
-
-	public static CharacterNativeStreamStruct toCharacterNativeStream(final InputStream inputStream,
-	                                                                  final OutputStream outputStream) {
-		return CharacterNativeStreamStructImpl.valueOf(inputStream, outputStream);
-	}
-
-	public static CharacterNativeStreamStruct toCharacterNativeStream(final boolean interactive,
-	                                                                  final InputStream inputStream,
-	                                                                  final OutputStream outputStream) {
-		return CharacterNativeStreamStructImpl.valueOf(interactive, inputStream, outputStream);
-	}
-
-	/*
-	 * ConcatenatedStream
-	 */
-
-	public static ConcatenatedStreamStruct toConcatenatedStream(final Deque<InputStreamStruct> inputStreamStructs) {
-		return ConcatenatedStreamStructImpl.valueOf(inputStreamStructs);
-	}
-
-	public static ConcatenatedStreamStruct toConcatenatedStream(final boolean interactive,
-	                                                            final Deque<InputStreamStruct> inputStreamStructs) {
-		return ConcatenatedStreamStructImpl.valueOf(interactive, inputStreamStructs);
-	}
-
-	/*
-	 * EchoStream
-	 */
-
-	public static EchoStreamStruct toEchoStream(final InputStreamStruct inputStreamStruct,
-	                                            final OutputStreamStruct outputStreamStruct) {
-		return EchoStreamStructImpl.valueOf(inputStreamStruct, outputStreamStruct);
-	}
-
-	public static EchoStreamStruct toEchoStream(final boolean interactive,
-	                                            final InputStreamStruct inputStreamStruct,
-	                                            final OutputStreamStruct outputStreamStruct) {
-		return EchoStreamStructImpl.valueOf(interactive, inputStreamStruct, outputStreamStruct);
-	}
-
-	/*
-	 * EmptyStream
-	 */
-
-	public static EmptyStreamStruct toEmptyStream() {
-		return EmptyStreamStructImpl.INSTANCE;
-	}
-
-	/*
-	 * FileStream
-	 */
-
-	public static FileStreamStruct toFileStream(final Path path) {
-		return FileStreamStructImpl.valueOf(path);
-	}
-
-	public static FileStreamStruct toFileStream(final boolean interactive, final Path path) {
-		return FileStreamStructImpl.valueOf(interactive, path);
 	}
 
 	/*
@@ -219,8 +94,8 @@ public final class LispStructFactory {
 	 */
 
 	public static Method toJavaReflectionMethod(final String methodName,
-	                                           final Class<?> javaClass,
-	                                           final Class<?>... parameterTypes) {
+	                                            final Class<?> javaClass,
+	                                            final Class<?>... parameterTypes) {
 		final String javaClassName = javaClass.getName();
 		final Method[] methods = javaClass.getMethods();
 
@@ -293,20 +168,6 @@ public final class LispStructFactory {
 			LOGGER.error(message, ex);
 			throw new ErrorException(message, ex);
 		}
-	}
-
-	/*
-	 * JavaStream
-	 */
-
-	public static JavaStreamStruct toJavaStream(final InputStream inputStream, final OutputStream outputStream) {
-		return JavaStreamStructImpl.valueOf(inputStream, outputStream);
-	}
-
-	public static JavaStreamStruct toJavaStream(final boolean interactive,
-	                                            final InputStream inputStream,
-	                                            final OutputStream outputStream) {
-		return JavaStreamStructImpl.valueOf(interactive, inputStream, outputStream);
 	}
 
 	/*
@@ -399,99 +260,11 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * StringInputStream
-	 */
-
-	public static StringInputStreamStruct toStringInputStream(final String inputString) {
-		return StringInputStreamStructImpl.valueOf(inputString);
-	}
-
-	public static StringInputStreamStruct toStringInputStream(final boolean interactive, final String inputString) {
-		return StringInputStreamStructImpl.valueOf(interactive, inputString);
-	}
-
-	public static StringInputStreamStruct toStringInputStream(final String inputString,
-	                                                          final int current,
-	                                                          final int end) {
-		return StringInputStreamStructImpl.valueOf(inputString, current, end);
-	}
-
-	public static StringInputStreamStruct toStringInputStream(final boolean interactive,
-	                                                          final String inputString,
-	                                                          final int current,
-	                                                          final int end) {
-		return StringInputStreamStructImpl.valueOf(interactive, inputString, current, end);
-	}
-
-	/*
-	 * StringOutputStream
-	 */
-
-	public static StringOutputStreamStruct toStringOutputStream() {
-		return StringOutputStreamStructImpl.valueOf();
-	}
-
-	public static StringOutputStreamStruct toStringOutputStream(final boolean interactive) {
-		return StringOutputStreamStructImpl.valueOf(interactive);
-	}
-
-	public static StringOutputStreamStruct toStringOutputStream(final LispType elementType) {
-		return StringOutputStreamStructImpl.valueOf(elementType);
-	}
-
-	public static StringOutputStreamStruct toStringOutputStream(final boolean interactive, final LispType elementType) {
-		return StringOutputStreamStructImpl.valueOf(interactive, elementType);
-	}
-
-	/*
 	 * Symbol
 	 */
 
 	public static SymbolStruct toSymbol(final String name) {
 		return SymbolStructImpl.valueOf(name);
-	}
-
-	/*
-	 * SynonymStream
-	 */
-
-	public static SynonymStreamStruct toSynonymStream(final VariableStructImpl<?> variable) {
-		return SynonymStreamStructImpl.valueOf(variable);
-	}
-
-	public static SynonymStreamStruct toSynonymStream(final SymbolStruct symbol) {
-		return SynonymStreamStructImpl.valueOf(symbol);
-	}
-
-	public static SynonymStreamStruct toSynonymStream(final boolean interactive, final SymbolStruct symbol) {
-		return SynonymStreamStructImpl.valueOf(interactive, symbol);
-	}
-
-	/*
-	 * TwoWayStream
-	 */
-
-	public static TwoWayStreamStruct toTwoWayStream(final InputStreamStruct inputStreamStruct,
-	                                                final OutputStreamStruct outputStreamStruct) {
-		return TwoWayStreamStructImpl.valueOf(inputStreamStruct, outputStreamStruct);
-	}
-
-	public static TwoWayStreamStruct toTwoWayStream(final boolean interactive,
-	                                                final InputStreamStruct inputStreamStruct,
-	                                                final OutputStreamStruct outputStreamStruct) {
-		return TwoWayStreamStructImpl.valueOf(interactive, inputStreamStruct, outputStreamStruct);
-	}
-
-	/*
-	 * URLStream
-	 */
-
-	public static URLStreamStruct toURLStream(final URL url) {
-		return URLStreamStructImpl.valueOf(url);
-	}
-
-	public static URLStreamStruct toURLStream(final boolean interactive, final URL url) {
-		return URLStreamStructImpl.valueOf(interactive, url);
 	}
 
 	/*

@@ -1,7 +1,6 @@
 package jcl.system.repl;
 
 import jcl.functions.EvalFunction;
-import jcl.functions.readtable.ReadFunction;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -15,7 +14,7 @@ import jcl.lang.statics.REPLVariables;
 import jcl.lang.statics.StreamVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.printer.Printer;
-import jcl.reader.Reader;
+import jcl.reader.InternalRead;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +27,10 @@ public class ReadEvalPrint {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadEvalPrint.class);
 
 	@Autowired
-	private ReadFunction readFunction;
+	private InternalRead internalRead;
 
 	@Autowired
 	private EvalFunction evalFunction;
-
-	@Autowired
-	private Reader reader;
 
 	@Autowired
 	private Printer printer;
@@ -66,7 +62,7 @@ public class ReadEvalPrint {
 					LOGGER.info("{}: {}> ", currentPackageName, counter++);
 
 					// READ --------------
-					final LispStruct whatRead = readFunction.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
+					final LispStruct whatRead = internalRead.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
 					REPLVariables.DASH.setValue(whatRead);

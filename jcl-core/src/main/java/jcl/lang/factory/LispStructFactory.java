@@ -18,7 +18,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
-import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -30,7 +29,6 @@ import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.internal.VectorStructImpl;
-import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
@@ -41,7 +39,6 @@ import jcl.lang.pathname.PathnameHost;
 import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
-import jcl.lang.readtable.ReadtableCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -245,18 +242,6 @@ public final class LispStructFactory {
 	                                        final PathnameType type,
 	                                        final PathnameVersion version) {
 		return PathnameStructImpl.valueOf(host, device, directory, name, type, version);
-	}
-
-	/*
-	 * Readtable
-	 */
-
-	public static ReadtableStruct toReadtable() {
-		return ReadtableStructImpl.valueOf();
-	}
-
-	public static ReadtableStruct toReadtable(final ReadtableCase readtableCase) {
-		return ReadtableStructImpl.valueOf(readtableCase);
 	}
 
 	/*

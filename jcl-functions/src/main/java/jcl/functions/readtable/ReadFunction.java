@@ -14,8 +14,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
-import jcl.reader.Reader;
-import jcl.reader.ReaderContextHolder;
+import jcl.reader.InternalRead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,7 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 	private static final String RECURSIVE_P_ARGUMENT = "RECURSIVE-P";
 
 	@Autowired
-	private Reader reader;
+	private InternalRead internalRead;
 
 	public ReadFunction() {
 		super("Parses the printed representation of an object from input-stream and builds such an object.",
@@ -61,22 +60,6 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		return read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
-	}
-
-	public LispStruct read(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
-	                       final BooleanStruct recursiveP) {
-
-		return read(inputStreamStruct, eofErrorP.toJavaPBoolean(), eofValue, recursiveP.toJavaPBoolean());
-	}
-
-	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
-	                       final boolean recursiveP) {
-
-		try {
-			return reader.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
-		} finally {
-			ReaderContextHolder.clearContext();
-		}
+		return internalRead.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 }

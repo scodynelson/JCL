@@ -20,10 +20,8 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings("all")
-@Component
 public class TestLambdaGenerator extends CompiledFunctionStruct {
 
 	public TestLambdaGenerator() {

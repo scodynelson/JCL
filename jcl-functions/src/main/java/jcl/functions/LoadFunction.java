@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import jcl.compiler.classloaders.LoaderClassLoader;
 import jcl.compiler.function.InternalEval;
 import jcl.functions.pathname.MergePathnamesFunction;
-import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.FunctionStruct;
@@ -32,6 +31,7 @@ import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.PathnameVariables;
 import jcl.lang.statics.ReaderVariables;
+import jcl.reader.InternalRead;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoadFunction.class);
 
 	@Autowired
-	private ReadFunction readFunction;
+	private InternalRead internalRead;
 
 	@Autowired
 	private InternalEval internalEval;
@@ -168,7 +168,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 		LispStruct form;
 		do {
-			form = readFunction.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+			form = internalRead.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 			if (form == null) {
 				continue;
 			}

@@ -24,7 +24,6 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.pathname.PathnameFunction;
-import jcl.functions.readtable.ReadFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
@@ -46,6 +45,7 @@ import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
+import jcl.reader.InternalRead;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -68,7 +68,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 	private static final Pattern VALID_FILE_CLASS_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
 
 	@Autowired
-	private ReadFunction readFunction;
+	private InternalRead internalRead;
 
 	@Autowired
 	private SemanticAnalyzer semanticAnalyzer;
@@ -168,7 +168,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 			LispStruct form;
 			do {
-				form = readFunction.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+				form = internalRead.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 
 				if (form instanceof ListStruct) {
 					forms.add(form);

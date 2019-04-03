@@ -66,6 +66,7 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/compiler/macros.lisp",
 				"jcl-application/src/main/lisp/jcl/iterators/iterators.lisp",
 				"jcl-application/src/main/lisp/jcl/characters/characters.lisp",
+				"jcl-application/src/main/lisp/jcl/reader/reader.lisp",
 				"jcl-application/src/main/lisp/jcl/streams/streams.lisp",
 				"jcl-application/src/main/lisp/jcl/symbols/symbols.lisp",
 				"jcl-application/src/main/lisp/jcl/packages/packages.lisp",
@@ -138,6 +139,11 @@ public class JCL implements ApplicationRunner {
 
 		CompileForm.OUTPUT_FILE = false;
 		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/characters/characters.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/reader/reader.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 

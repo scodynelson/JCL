@@ -10,7 +10,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.TStruct;
 import jcl.lang.internal.VariableStructImpl;
-import jcl.lang.internal.readtable.ReadtableStructImpl;
 import jcl.type.FloatType;
 import jcl.type.SingleFloatType;
 
@@ -42,5 +41,5 @@ public interface ReaderVariables {
 	/**
 	 * The global {@link ReadtableStruct} denoting the default readtable to be used throughout the JCL system.
 	 */
-	VariableStructImpl<ReadtableStruct> READTABLE = VariableStructImpl.valueOf("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStructImpl.valueOf());
+	VariableStructImpl<ReadtableStruct> READTABLE = VariableStructImpl.valueOf("*READTABLE*", GlobalPackageStruct.COMMON_LISP, ReadtableStruct.toReadtable());
 }

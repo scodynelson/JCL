@@ -51,7 +51,7 @@ public final class ReadtableStructImpl extends BuiltInClassStruct implements Rea
 	/**
 	 * Public constructor.
 	 */
-	private ReadtableStructImpl() {
+	public ReadtableStructImpl() {
 		this(ReadtableCase.UPCASE);
 	}
 
@@ -61,17 +61,9 @@ public final class ReadtableStructImpl extends BuiltInClassStruct implements Rea
 	 * @param readtableCase
 	 * 		the readtable case
 	 */
-	private ReadtableStructImpl(final ReadtableCase readtableCase) {
+	public ReadtableStructImpl(final ReadtableCase readtableCase) {
 		super(ReadtableType.INSTANCE, null, null);
 		this.readtableCase = readtableCase;
-	}
-
-	public static ReadtableStruct valueOf() {
-		return new ReadtableStructImpl();
-	}
-
-	public static ReadtableStruct valueOf(final ReadtableCase readtableCase) {
-		return new ReadtableStructImpl(readtableCase);
 	}
 
 	@Override

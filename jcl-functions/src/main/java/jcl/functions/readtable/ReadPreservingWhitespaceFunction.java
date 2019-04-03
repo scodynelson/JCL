@@ -14,8 +14,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
-import jcl.reader.Reader;
-import jcl.reader.ReaderContextHolder;
+import jcl.reader.InternalRead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,7 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 	private static final String RECURSIVE_P_ARGUMENT = "RECURSIVE-P";
 
 	@Autowired
-	private Reader reader;
+	private InternalRead internalRead;
 
 	public ReadPreservingWhitespaceFunction() {
 		super("Parses the printed representation of an object from input-stream and builds such an object preserving any whitespace character that delimits the printed representation of the object.",
@@ -61,22 +60,6 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		return readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
-	}
-
-	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final BooleanStruct eofErrorP, final LispStruct eofValue,
-	                                           final BooleanStruct recursiveP) {
-
-		return readPreservingWhitespace(inputStreamStruct, eofErrorP.toJavaPBoolean(), eofValue, recursiveP.toJavaPBoolean());
-	}
-
-	public LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue,
-	                                           final boolean recursiveP) {
-
-		try {
-			return reader.readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
-		} finally {
-			ReaderContextHolder.clearContext();
-		}
+		return internalRead.readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 }

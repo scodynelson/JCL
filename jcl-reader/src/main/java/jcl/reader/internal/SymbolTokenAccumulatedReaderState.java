@@ -14,7 +14,6 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
@@ -179,7 +178,7 @@ final class SymbolTokenAccumulatedReaderState {
 		if (foundSymbol == null) {
 			final boolean isKeyword = GlobalPackageStruct.KEYWORD.eq(symbolPackage);
 			if (isKeyword) {
-				return LispStructFactory.toKeyword(symbolName);
+				return KeywordStruct.toLispKeyword(symbolName);
 			}
 			return symbolPackage.intern(symbolName).getSymbol();
 		} else {

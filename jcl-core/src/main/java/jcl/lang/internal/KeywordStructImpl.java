@@ -23,13 +23,9 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 	 * @param name
 	 * 		the symbol name
 	 */
-	private KeywordStructImpl(final String name) {
+	public KeywordStructImpl(final String name) {
 		super(KeywordType.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
-	}
-
-	public static KeywordStruct valueOf(final String name) {
-		return new KeywordStructImpl(name);
 	}
 
 	/**

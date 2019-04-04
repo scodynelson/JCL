@@ -152,6 +152,15 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 		return false;
 	}
 
+	static VectorStruct toLispVector(final List<LispStruct> contents) {
+		return new VectorStructImpl(SimpleVectorType.INSTANCE,
+		                            contents.size(),
+		                            TType.INSTANCE,
+		                            contents,
+		                            false,
+		                            null);
+	}
+
 	static VectorStruct.Builder builder(final IntegerStruct size) {
 		return new VectorStruct.Builder(size);
 	}

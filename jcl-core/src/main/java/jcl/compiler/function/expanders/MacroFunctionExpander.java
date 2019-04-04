@@ -20,7 +20,6 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 
 public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> implements MacroFunctionExpanderInter {
@@ -67,11 +66,11 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	}
 
 	protected WholeParameter getWholeBinding() {
-		return new WholeParameter(LispStructFactory.toSymbol("temp_whole_" + System.nanoTime()));
+		return new WholeParameter(SymbolStruct.toLispSymbol("temp_whole_" + System.nanoTime()));
 	}
 
 	protected EnvironmentParameter getEnvironmentBinding() {
-		return new EnvironmentParameter(LispStructFactory.toSymbol("temp_environment_" + System.nanoTime()));
+		return new EnvironmentParameter(SymbolStruct.toLispSymbol("temp_environment_" + System.nanoTime()));
 	}
 
 	protected BodyParameter getBodyBinding() {

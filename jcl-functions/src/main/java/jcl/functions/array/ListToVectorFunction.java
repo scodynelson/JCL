@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import jcl.functions.SystemBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.VectorStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.springframework.stereotype.Component;
@@ -33,6 +33,6 @@ public final class ListToVectorFunction extends SystemBuiltInFunctionStructBase 
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
 		final List<LispStruct> collect = list.stream().collect(Collectors.toList());
-		return LispStructFactory.toVector(collect);
+		return VectorStruct.toLispVector(collect);
 	}
 }

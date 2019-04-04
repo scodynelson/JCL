@@ -16,7 +16,6 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,7 +50,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		// NOTE: We don't care about adding this to the TagbodyStack since it is generated just for us here and will
 		//       will never be used as a real transfer of control point.
 		if (!forms.isEmpty() && !isTagbodyTag(forms.get(0))) {
-			final SymbolStruct defaultFormsTag = LispStructFactory.toSymbol("Tag-" + UUID.randomUUID());
+			final SymbolStruct defaultFormsTag = SymbolStruct.toLispSymbol("Tag-" + UUID.randomUUID());
 			forms.push(defaultFormsTag);
 		}
 

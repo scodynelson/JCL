@@ -1,11 +1,9 @@
 package jcl.lang;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.internal.CharacterStructImpl;
 import jcl.lang.statics.CharacterConstants;
 import jcl.util.CodePointConstants;
@@ -468,7 +466,7 @@ public class CharacterStructCharacterTest {
 	 */
 	@Test
 	public void test_nameChar_Symbol() {
-		final SymbolStruct symbol = LispStructFactory.toSymbol("SPACE");
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol("SPACE");
 		final LispStruct result = CharacterStruct.nameChar(symbol);
 		Assert.assertThat(result, is(CharacterConstants.SPACE_CHAR));
 	}
@@ -479,7 +477,7 @@ public class CharacterStructCharacterTest {
 	 */
 	@Test
 	public void test_nameChar_Symbol_CLGraphic() {
-		final SymbolStruct symbol = LispStructFactory.toSymbol("^@");
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol("^@");
 		final LispStruct result = CharacterStruct.nameChar(symbol);
 		Assert.assertThat(result, is(CharacterConstants.NULL_CHAR));
 	}
@@ -490,7 +488,7 @@ public class CharacterStructCharacterTest {
 	 */
 	@Test
 	public void test_nameChar_Symbol_NoCharacterByName() {
-		final SymbolStruct symbol = LispStructFactory.toSymbol("FOO");
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol("FOO");
 		final LispStruct result = CharacterStruct.nameChar(symbol);
 		Assert.assertThat(result, is(NILStruct.INSTANCE));
 	}
@@ -639,7 +637,7 @@ public class CharacterStructCharacterTest {
 	 */
 	@Test
 	public void test_toLispCharacter_LispStruct_Symbol() {
-		final SymbolStruct symbol = LispStructFactory.toSymbol("A");
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol("A");
 		final LispStruct result = CharacterStruct.toLispCharacter(symbol);
 		Assert.assertThat(result, is(CharacterConstants.LATIN_CAPITAL_LETTER_A_CHAR));
 	}
@@ -653,7 +651,7 @@ public class CharacterStructCharacterTest {
 		thrown.expect(SimpleErrorException.class);
 		thrown.expectMessage("Symbol name is not of length one: ");
 
-		final SymbolStruct symbol = LispStructFactory.toSymbol("FOO");
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol("FOO");
 		CharacterStruct.toLispCharacter(symbol);
 	}
 

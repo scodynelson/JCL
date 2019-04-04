@@ -28,7 +28,6 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.TType;
@@ -794,7 +793,7 @@ public class LambdaListParser {
 
 		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
 		if (symbol == null) {
-			return LispStructFactory.toKeyword(symbolName);
+			return KeywordStruct.toLispKeyword(symbolName);
 		}
 		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
 		//       this type of symbol.

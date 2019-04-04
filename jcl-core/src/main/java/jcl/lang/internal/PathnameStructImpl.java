@@ -989,8 +989,8 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 		mv.visitVarInsn(Opcodes.ALOAD, uriStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.PATHNAME_STRUCT_NAME,
-		                   GenerationConstants.PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME,
-		                   GenerationConstants.PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC,
+		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME,
+		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_DESC,
 		                   true);
 	}
 

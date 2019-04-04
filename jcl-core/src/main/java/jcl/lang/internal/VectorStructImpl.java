@@ -24,8 +24,6 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.PrinterVariables;
 import jcl.type.LispType;
-import jcl.type.SimpleVectorType;
-import jcl.type.TType;
 import jcl.type.VectorType;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -98,19 +96,6 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 		this(vectorType, size, elementType, isAdjustable, fillPointer);
 		this.displacedTo = displacedTo;
 		this.displacedIndexOffset = displacedIndexOffset;
-	}
-
-	/*
-		Old Builders
-	 */
-
-	public static VectorStruct valueOf(final List<LispStruct> contents) {
-		return new VectorStructImpl(SimpleVectorType.INSTANCE,
-		                            contents.size(),
-		                            TType.INSTANCE,
-		                            contents,
-		                            false,
-		                            null);
 	}
 
 	/*
@@ -508,10 +493,10 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_DESC,
-		                   false);
+		                   GenerationConstants.VECTOR_STRUCT_NAME,
+		                   GenerationConstants.VECTOR_STRUCT_TO_VECTOR_METHOD_NAME,
+		                   GenerationConstants.VECTOR_STRUCT_TO_VECTOR_METHOD_DESC,
+		                   true);
 	}
 
 	/*

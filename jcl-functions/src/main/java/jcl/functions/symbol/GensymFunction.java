@@ -8,8 +8,8 @@ import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.SymbolVariables;
@@ -51,6 +51,6 @@ public final class GensymFunction extends CommonLispBuiltInFunctionStructBase {
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix;
-		return LispStructFactory.toSymbol(symbolName);
+		return SymbolStruct.toLispSymbol(symbolName);
 	}
 }

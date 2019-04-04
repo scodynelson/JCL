@@ -177,8 +177,8 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
 			                   true);
 		} else {
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
@@ -188,8 +188,8 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 			                  GenerationConstants.NIL_STRUCT_DESC);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
 			                   true);
 		}
 		final int previousConsStore = methodBuilder.getNextAvailableStore();
@@ -207,8 +207,8 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, previousConsStore);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
 			                   true);
 			mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 		}

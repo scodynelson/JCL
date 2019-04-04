@@ -27,7 +27,6 @@ import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.type.CompiledFunctionType;
@@ -56,7 +55,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		this.closure = closure;
 	}
 
-	private static final SymbolStruct DUMMY_SYMBOL = LispStructFactory.toSymbol("dummySymbol");
+	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.toLispSymbol("dummySymbol");
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

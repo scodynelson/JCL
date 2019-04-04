@@ -222,7 +222,11 @@ public interface SymbolStruct extends LispStruct {
 	SymbolStruct copySymbol(final BooleanStruct copyProperties);
 
 	static SymbolStruct toLispSymbol(final StringStruct struct) {
-		return SymbolStructImpl.valueOf(struct.toJavaString());
+		return new SymbolStructImpl(struct.toJavaString());
+	}
+
+	static SymbolStruct toLispSymbol(final String name) {
+		return new SymbolStructImpl(name);
 	}
 
 	default SymbolStruct makunbound() {

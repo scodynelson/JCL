@@ -18,6 +18,8 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.generator.GoException;
 import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
+import jcl.lang.ArrayStruct;
+import jcl.lang.BitVectorStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.ConsStruct;
@@ -36,6 +38,7 @@ import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
 import org.objectweb.asm.Label;
@@ -43,7 +46,7 @@ import org.objectweb.asm.Label;
 @SuppressWarnings("all")
 public class TestGround {
 
-	private SymbolStruct UNINTERNED_SYMBOL = LispStructFactory.toSymbol("FOO");
+	private SymbolStruct UNINTERNED_SYMBOL = SymbolStruct.toLispSymbol("FOO");
 
 	private Object javaMethodCall(final Closure currentClosure) throws Exception {
 		final String methodName = "ADD";
@@ -218,7 +221,7 @@ public class TestGround {
 		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
-		return LispStructFactory.toBitVector(contents);
+		return BitVectorStruct.toLispBitVector(contents);
 	}
 
 	private Object vectorGen() {
@@ -226,7 +229,7 @@ public class TestGround {
 		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
-		return LispStructFactory.toVector(contents);
+		return VectorStruct.toLispVector(contents);
 	}
 
 	private Object arrayGen() {
@@ -238,7 +241,7 @@ public class TestGround {
 		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
-		return LispStructFactory.toArray(dimensions, contents);
+		return ArrayStruct.toLispArray(dimensions, contents);
 	}
 
 	private Object unwindProtectGen(final Closure currentClosure) {

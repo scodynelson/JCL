@@ -149,9 +149,9 @@ public abstract class ArrayStructImpl extends AbstractArrayStructImpl {
 		mv.visitVarInsn(Opcodes.ALOAD, dimensionsStore);
 		mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_DESC,
-		                   false);
+		                   GenerationConstants.ARRAY_STRUCT_NAME,
+		                   GenerationConstants.ARRAY_STRUCT_TO_ARRAY_METHOD_NAME,
+		                   GenerationConstants.ARRAY_STRUCT_TO_ARRAY_METHOD_DESC,
+		                   true);
 	}
 }

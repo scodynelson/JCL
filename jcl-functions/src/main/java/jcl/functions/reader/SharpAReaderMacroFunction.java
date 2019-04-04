@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jcl.lang.ArrayStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
@@ -70,9 +70,9 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final SequenceStruct contents = (SequenceStruct) token;
 			final List<Integer> dimensions = getDimensions(numberArgumentValue, contents);
 			final List<LispStruct> initialContents = contents.stream().collect(Collectors.toList());
-			return LispStructFactory.toArray(dimensions, initialContents);
+			return ArrayStruct.toLispArray(dimensions, initialContents);
 		} else {
-			return LispStructFactory.toArray(Collections.emptyList(), Collections.singletonList(token));
+			return ArrayStruct.toLispArray(Collections.emptyList(), Collections.singletonList(token));
 		}
 	}
 

@@ -144,6 +144,14 @@ public interface ArrayStruct extends LispStruct {
 	 */
 	List<Integer> getDimensions();
 
+	static ArrayStruct toLispArray(final List<Integer> dimensions, final List<LispStruct> contents) {
+		// TODO: Fix me
+		final List<IntegerStruct> dimensionStructs = dimensions.stream()
+		                                                       .map(IntegerStruct::toLispInteger)
+		                                                       .collect(Collectors.toList());
+		return MultiArrayStructImpl.valueOf(dimensionStructs, contents);
+	}
+
 	/**
 	 * Determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for the provided
 	 * {@code contentsToCheck}.

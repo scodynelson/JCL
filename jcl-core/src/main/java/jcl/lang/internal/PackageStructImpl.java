@@ -27,9 +27,9 @@ import jcl.type.PackageType;
  */
 public class PackageStructImpl extends BuiltInClassStruct implements PackageStruct {
 
-	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStructImpl.valueOf("INTERNAL");
-	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStructImpl.valueOf("EXTERNAL");
-	public static final KeywordStruct INHERITED_KEYWORD = KeywordStructImpl.valueOf("INHERITED");
+	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStruct.toLispKeyword("INTERNAL");
+	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStruct.toLispKeyword("EXTERNAL");
+	public static final KeywordStruct INHERITED_KEYWORD = KeywordStruct.toLispKeyword("INHERITED");
 
 	/**
 	 * The {@link List} of {@link PackageStruct}s that the package uses.
@@ -375,7 +375,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 
 			final SymbolStruct nonInheritedSymbol;
 			if (nonInheritedPackageSymbol == null) {
-				nonInheritedSymbol = SymbolStructImpl.valueOf(symbolName);
+				nonInheritedSymbol = SymbolStruct.toLispSymbol(symbolName);
 				internalSymbols.put(symbolName, nonInheritedSymbol);
 				nonInheritedSymbol.setSymbolPackage(this);
 			} else {
@@ -392,7 +392,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 			return foundPackageSymbol;
 		}
 
-		final SymbolStruct symbolStruct = SymbolStructImpl.valueOf(symbolName);
+		final SymbolStruct symbolStruct = SymbolStruct.toLispSymbol(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);

@@ -10,14 +10,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.type.LispType;
 
 @SuppressWarnings("all")
 public class FooStructureClass extends StructureClassStruct {
 
 	public static final FooStructureClass INSTANCE
-			= new FooStructureClass(LispStructFactory.toSymbol("MAKE-FOO"), null, null, null);
+			= new FooStructureClass(SymbolStruct.toLispSymbol("MAKE-FOO"), null, null, null);
 
 	protected FooStructureClass(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
@@ -27,7 +26,7 @@ public class FooStructureClass extends StructureClassStruct {
 	protected FooStructureClass(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
-		LispStructFactory.toSymbol("FOO").setStructureClass(INSTANCE);
+		SymbolStruct.toLispSymbol("FOO").setStructureClass(INSTANCE);
 	}
 
 	@Override

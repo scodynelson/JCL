@@ -5,20 +5,20 @@
 package testground.structures;
 
 import jcl.lang.NILStruct;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.SymbolStruct;
 import jcl.lang.internal.StructureObjectStructImpl;
 
 @SuppressWarnings("all")
 public class FooStructureObject extends StructureObjectStructImpl {
 
 	public FooStructureObject() {
-		super(FooStructureClass.INSTANCE, LispStructFactory.toSymbol("FOO"), null);
+		super(FooStructureClass.INSTANCE, SymbolStruct.toLispSymbol("FOO"), null);
 		initSlotsMap();
 	}
 
 	private void initSlotsMap() {
-		slots.put(LispStructFactory.toSymbol("A"), NILStruct.INSTANCE);
-		slots.put(LispStructFactory.toSymbol("B"), NILStruct.INSTANCE);
-		slots.put(LispStructFactory.toSymbol("C"), NILStruct.INSTANCE);
+		slots.put(SymbolStruct.toLispSymbol("A"), NILStruct.INSTANCE);
+		slots.put(SymbolStruct.toLispSymbol("B"), NILStruct.INSTANCE);
+		slots.put(SymbolStruct.toLispSymbol("C"), NILStruct.INSTANCE);
 	}
 }

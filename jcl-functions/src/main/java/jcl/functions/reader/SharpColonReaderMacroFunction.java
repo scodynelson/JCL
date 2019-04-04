@@ -10,8 +10,8 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.springframework.context.annotation.DependsOn;
@@ -48,6 +48,6 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (extendedToken.isHasPackageDelimiter()) {
 			throw new ReaderErrorException("Symbol following #: contains a package marker: " + tokenString);
 		}
-		return LispStructFactory.toSymbol(tokenString);
+		return SymbolStruct.toLispSymbol(tokenString);
 	}
 }

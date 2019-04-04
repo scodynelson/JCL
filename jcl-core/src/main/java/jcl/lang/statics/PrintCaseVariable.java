@@ -6,7 +6,6 @@ import java.util.Set;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +16,9 @@ final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
 	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
-	private static final KeywordStruct UPCASE_KEYWORD = KeywordStructImpl.valueOf("UPCASE");
-	private static final KeywordStruct DOWNCASE_KEYWORD = KeywordStructImpl.valueOf("DOWNCASE");
-	private static final KeywordStruct CAPITALIZE_KEYWORD = KeywordStructImpl.valueOf("CAPITALIZE");
+	private static final KeywordStruct UPCASE_KEYWORD = KeywordStruct.toLispKeyword("UPCASE");
+	private static final KeywordStruct DOWNCASE_KEYWORD = KeywordStruct.toLispKeyword("DOWNCASE");
+	private static final KeywordStruct CAPITALIZE_KEYWORD = KeywordStruct.toLispKeyword("CAPITALIZE");
 
 
 	static {

@@ -3,7 +3,6 @@ package jcl.lang.statics;
 import jcl.lang.KeywordStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.DeclarationStructImpl;
-import jcl.lang.internal.KeywordStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 
 public interface CommonLispSymbols {
@@ -1006,92 +1005,92 @@ public interface CommonLispSymbols {
 	SymbolStruct BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
 	// Standard Keywords
-	KeywordStruct ELEMENT_TYPE_KEYWORD = KeywordStructImpl.valueOf("ELEMENT-TYPE");
-	KeywordStruct INITIAL_ELEMENT_KEYWORD = KeywordStructImpl.valueOf("INITIAL-ELEMENT");
-	KeywordStruct INITIAL_CONTENTS_KEYWORD = KeywordStructImpl.valueOf("INITIAL-CONTENTS");
+	KeywordStruct ELEMENT_TYPE_KEYWORD = KeywordStruct.toLispKeyword("ELEMENT-TYPE");
+	KeywordStruct INITIAL_ELEMENT_KEYWORD = KeywordStruct.toLispKeyword("INITIAL-ELEMENT");
+	KeywordStruct INITIAL_CONTENTS_KEYWORD = KeywordStruct.toLispKeyword("INITIAL-CONTENTS");
 
 	// Package Keywords
-	KeywordStruct INTERNAL_KEYWORD = KeywordStructImpl.valueOf("INTERNAL");
-	KeywordStruct EXTERNAL_KEYWORD = KeywordStructImpl.valueOf("EXTERNAL");
-	KeywordStruct INHERITED_KEYWORD = KeywordStructImpl.valueOf("INHERITED");
+	KeywordStruct INTERNAL_KEYWORD = KeywordStruct.toLispKeyword("INTERNAL");
+	KeywordStruct EXTERNAL_KEYWORD = KeywordStruct.toLispKeyword("EXTERNAL");
+	KeywordStruct INHERITED_KEYWORD = KeywordStruct.toLispKeyword("INHERITED");
 
 	// Stream Keywords
-	KeywordStruct DEFAULT_KEYWORD = KeywordStructImpl.valueOf("DEFAULT");
-	KeywordStruct ABORT_KEYWORD = KeywordStructImpl.valueOf("ABORT");
-	KeywordStruct START_KEYWORD = KeywordStructImpl.valueOf("START");
-	KeywordStruct END_KEYWORD = KeywordStructImpl.valueOf("END");
-	KeywordStruct DIRECTION_KEYWORD = KeywordStructImpl.valueOf("DIRECTION");
-	KeywordStruct INPUT_KEYWORD = KeywordStructImpl.valueOf("INPUT");
-	KeywordStruct OUTPUT_KEYWORD = KeywordStructImpl.valueOf("OUTPUT");
-	KeywordStruct IO_KEYWORD = KeywordStructImpl.valueOf("IO");
-	KeywordStruct PROBE_KEYWORD = KeywordStructImpl.valueOf("PROBE");
-	KeywordStruct IF_EXISTS_KEYWORD = KeywordStructImpl.valueOf("IF-EXISTS");
-	KeywordStruct ERROR_KEYWORD = KeywordStructImpl.valueOf("ERROR");
-	KeywordStruct NEW_VERSION_KEYWORD = KeywordStructImpl.valueOf("NEW-VERSION");
-	KeywordStruct RENAME_KEYWORD = KeywordStructImpl.valueOf("RENAME");
-	KeywordStruct RENAME_AND_DELETE_KEYWORD = KeywordStructImpl.valueOf("RENAME-AND-DELETE");
-	KeywordStruct OVERWRITE_KEYWORD = KeywordStructImpl.valueOf("OVERWRITE");
-	KeywordStruct APPEND_KEYWORD = KeywordStructImpl.valueOf("APPEND");
-	KeywordStruct SUPERSEDE_KEYWORD = KeywordStructImpl.valueOf("SUPERSEDE");
-	KeywordStruct CREATE_KEYWORD = KeywordStructImpl.valueOf("CREATE");
+	KeywordStruct DEFAULT_KEYWORD = KeywordStruct.toLispKeyword("DEFAULT");
+	KeywordStruct ABORT_KEYWORD = KeywordStruct.toLispKeyword("ABORT");
+	KeywordStruct START_KEYWORD = KeywordStruct.toLispKeyword("START");
+	KeywordStruct END_KEYWORD = KeywordStruct.toLispKeyword("END");
+	KeywordStruct DIRECTION_KEYWORD = KeywordStruct.toLispKeyword("DIRECTION");
+	KeywordStruct INPUT_KEYWORD = KeywordStruct.toLispKeyword("INPUT");
+	KeywordStruct OUTPUT_KEYWORD = KeywordStruct.toLispKeyword("OUTPUT");
+	KeywordStruct IO_KEYWORD = KeywordStruct.toLispKeyword("IO");
+	KeywordStruct PROBE_KEYWORD = KeywordStruct.toLispKeyword("PROBE");
+	KeywordStruct IF_EXISTS_KEYWORD = KeywordStruct.toLispKeyword("IF-EXISTS");
+	KeywordStruct ERROR_KEYWORD = KeywordStruct.toLispKeyword("ERROR");
+	KeywordStruct NEW_VERSION_KEYWORD = KeywordStruct.toLispKeyword("NEW-VERSION");
+	KeywordStruct RENAME_KEYWORD = KeywordStruct.toLispKeyword("RENAME");
+	KeywordStruct RENAME_AND_DELETE_KEYWORD = KeywordStruct.toLispKeyword("RENAME-AND-DELETE");
+	KeywordStruct OVERWRITE_KEYWORD = KeywordStruct.toLispKeyword("OVERWRITE");
+	KeywordStruct APPEND_KEYWORD = KeywordStruct.toLispKeyword("APPEND");
+	KeywordStruct SUPERSEDE_KEYWORD = KeywordStruct.toLispKeyword("SUPERSEDE");
+	KeywordStruct CREATE_KEYWORD = KeywordStruct.toLispKeyword("CREATE");
 
 	// Readtable Keywords
-//	KeywordStruct UPCASE_KEYWORD = KeywordStructImpl.valueOf("UPCASE");
-//	KeywordStruct DOWNCASE_KEYWORD = KeywordStructImpl.valueOf("DOWNCASE");
-	KeywordStruct PRESERVE_KEYWORD = KeywordStructImpl.valueOf("PRESERVE");
-	KeywordStruct INVERT_KEYWORD = KeywordStructImpl.valueOf("INVERT");
+//	KeywordStruct UPCASE_KEYWORD = KeywordStruct.toLispKeyword("UPCASE");
+//	KeywordStruct DOWNCASE_KEYWORD = KeywordStruct.toLispKeyword("DOWNCASE");
+	KeywordStruct PRESERVE_KEYWORD = KeywordStruct.toLispKeyword("PRESERVE");
+	KeywordStruct INVERT_KEYWORD = KeywordStruct.toLispKeyword("INVERT");
 
 	// Features Keywords
 	/**
 	 * NOT {@link KeywordStruct} for processing features that should 'not' be included.
 	 */
-	KeywordStruct NOT_KEYWORD = KeywordStructImpl.valueOf("NOT");
+	KeywordStruct NOT_KEYWORD = KeywordStruct.toLispKeyword("NOT");
 
 	/**
 	 * AND {@link KeywordStruct} for processing features that should be included via 'and' operation.
 	 */
-	KeywordStruct AND_KEYWORD = KeywordStructImpl.valueOf("AND");
+	KeywordStruct AND_KEYWORD = KeywordStruct.toLispKeyword("AND");
 
 	/**
 	 * OR {@link KeywordStruct} for processing features that should be included via 'or' operation.
 	 */
-	KeywordStruct OR_KEYWORD = KeywordStructImpl.valueOf("OR");
+	KeywordStruct OR_KEYWORD = KeywordStruct.toLispKeyword("OR");
 
 	// Eval-When Keywords
-	KeywordStruct COMPILE_TOPLEVEL = KeywordStructImpl.valueOf("COMPILE-TOPLEVEL");
-	KeywordStruct LOAD_TOPLEVEL = KeywordStructImpl.valueOf("LOAD-TOPLEVEL");
-	KeywordStruct EXECUTE = KeywordStructImpl.valueOf("EXECUTE");
+	KeywordStruct COMPILE_TOPLEVEL = KeywordStruct.toLispKeyword("COMPILE-TOPLEVEL");
+	KeywordStruct LOAD_TOPLEVEL = KeywordStruct.toLispKeyword("LOAD-TOPLEVEL");
+	KeywordStruct EXECUTE = KeywordStruct.toLispKeyword("EXECUTE");
 
 	// Print-Case Keywords
-	KeywordStruct UPCASE_KEYWORD = KeywordStructImpl.valueOf("UPCASE");
-	KeywordStruct DOWNCASE_KEYWORD = KeywordStructImpl.valueOf("DOWNCASE");
-	KeywordStruct CAPITALIZE_KEYWORD = KeywordStructImpl.valueOf("CAPITALIZE");
+	KeywordStruct UPCASE_KEYWORD = KeywordStruct.toLispKeyword("UPCASE");
+	KeywordStruct DOWNCASE_KEYWORD = KeywordStruct.toLispKeyword("DOWNCASE");
+	KeywordStruct CAPITALIZE_KEYWORD = KeywordStruct.toLispKeyword("CAPITALIZE");
 
 	// Pathname Keywords
-	KeywordStruct WILD_KEYWORD = KeywordStructImpl.valueOf("WILD");
-	KeywordStruct WILD_INFERIORS_KEYWORD = KeywordStructImpl.valueOf("WILD-INFERIORS");
-	KeywordStruct UNSPECIFIC_KEYWORD = KeywordStructImpl.valueOf("UNSPECIFIC");
-	KeywordStruct COMMON_KEYWORD = KeywordStructImpl.valueOf("COMMON");
-	KeywordStruct LOCAL_KEYWORD = KeywordStructImpl.valueOf("LOCAL");
-	KeywordStruct RELATIVE_KEYWORD = KeywordStructImpl.valueOf("RELATIVE");
-	KeywordStruct ABSOLUTE_KEYWORD = KeywordStructImpl.valueOf("ABSOLUTE");
-	KeywordStruct BACK_KEYWORD = KeywordStructImpl.valueOf("BACK");
-	KeywordStruct UP_KEYWORD = KeywordStructImpl.valueOf("UP");
-	KeywordStruct NEWEST_KEYWORD = KeywordStructImpl.valueOf("NEWEST");
-	KeywordStruct OLDEST_KEYWORD = KeywordStructImpl.valueOf("OLDEST");
-	KeywordStruct CASE_KEYWORD = KeywordStructImpl.valueOf("CASE");
+	KeywordStruct WILD_KEYWORD = KeywordStruct.toLispKeyword("WILD");
+	KeywordStruct WILD_INFERIORS_KEYWORD = KeywordStruct.toLispKeyword("WILD-INFERIORS");
+	KeywordStruct UNSPECIFIC_KEYWORD = KeywordStruct.toLispKeyword("UNSPECIFIC");
+	KeywordStruct COMMON_KEYWORD = KeywordStruct.toLispKeyword("COMMON");
+	KeywordStruct LOCAL_KEYWORD = KeywordStruct.toLispKeyword("LOCAL");
+	KeywordStruct RELATIVE_KEYWORD = KeywordStruct.toLispKeyword("RELATIVE");
+	KeywordStruct ABSOLUTE_KEYWORD = KeywordStruct.toLispKeyword("ABSOLUTE");
+	KeywordStruct BACK_KEYWORD = KeywordStruct.toLispKeyword("BACK");
+	KeywordStruct UP_KEYWORD = KeywordStruct.toLispKeyword("UP");
+	KeywordStruct NEWEST_KEYWORD = KeywordStruct.toLispKeyword("NEWEST");
+	KeywordStruct OLDEST_KEYWORD = KeywordStruct.toLispKeyword("OLDEST");
+	KeywordStruct CASE_KEYWORD = KeywordStruct.toLispKeyword("CASE");
 
 	// Compile-File/Load Keywords
-	KeywordStruct OUTPUT_FILE_KEYWORD = KeywordStructImpl.valueOf("OUTPUT-FILE");
-	KeywordStruct VERBOSE_KEYWORD = KeywordStructImpl.valueOf("VERBOSE");
-	KeywordStruct PRINT_KEYWORD = KeywordStructImpl.valueOf("PRINT");
-	KeywordStruct IF_DOES_NOT_EXIST_KEYWORD = KeywordStructImpl.valueOf("IF-DOES-NOT-EXIST");
-	KeywordStruct EXTERNAL_FORMAT_KEYWORD = KeywordStructImpl.valueOf("EXTERNAL-FORMAT");
+	KeywordStruct OUTPUT_FILE_KEYWORD = KeywordStruct.toLispKeyword("OUTPUT-FILE");
+	KeywordStruct VERBOSE_KEYWORD = KeywordStruct.toLispKeyword("VERBOSE");
+	KeywordStruct PRINT_KEYWORD = KeywordStruct.toLispKeyword("PRINT");
+	KeywordStruct IF_DOES_NOT_EXIST_KEYWORD = KeywordStruct.toLispKeyword("IF-DOES-NOT-EXIST");
+	KeywordStruct EXTERNAL_FORMAT_KEYWORD = KeywordStruct.toLispKeyword("EXTERNAL-FORMAT");
 
 	// Make-Package Keywords
-	KeywordStruct NICKNAMES_KEYWORD = KeywordStructImpl.valueOf("NICKNAMES");
-	KeywordStruct USE_KEYWORD = KeywordStructImpl.valueOf("USE");
+	KeywordStruct NICKNAMES_KEYWORD = KeywordStruct.toLispKeyword("NICKNAMES");
+	KeywordStruct USE_KEYWORD = KeywordStruct.toLispKeyword("USE");
 
 	// Lambda List Keywords
-	KeywordStruct ALLOW_OTHER_KEYS = KeywordStructImpl.valueOf("ALLOW-OTHER-KEYS");
+	KeywordStruct ALLOW_OTHER_KEYS = KeywordStruct.toLispKeyword("ALLOW-OTHER-KEYS");
 }

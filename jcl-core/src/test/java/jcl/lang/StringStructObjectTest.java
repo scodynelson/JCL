@@ -1,6 +1,5 @@
 package jcl.lang;
 
-import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.NILArrayStructImpl;
 import jcl.type.CharacterType;
 import org.junit.Assert;
@@ -430,7 +429,7 @@ public class StringStructObjectTest {
 	@Test
 	public void test_equalp_false_bit_vector() {
 		final StringStruct string = StringStruct.toLispString("101");
-		final BitVectorStruct bitVector = BitVectorStructImpl.valueOf("101");
+		final BitVectorStruct bitVector = BitVectorStruct.toLispBitVector("101");
 		final boolean result = string.equalp(bitVector);
 		Assert.assertThat(result, is(false));
 	}

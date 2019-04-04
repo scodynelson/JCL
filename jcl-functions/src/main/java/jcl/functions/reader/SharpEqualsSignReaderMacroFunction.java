@@ -17,7 +17,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
@@ -71,7 +70,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		}
 
 		final String labelTagName = UUID.randomUUID().toString();
-		final SymbolStruct labelTag = LispStructFactory.toSymbol(labelTagName);
+		final SymbolStruct labelTag = SymbolStruct.toLispSymbol(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
 		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);

@@ -631,8 +631,8 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 		mv.visitVarInsn(Opcodes.ALOAD, cdrStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.CONS_STRUCT_NAME,
-		                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME,
-		                   GenerationConstants.CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC,
+		                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
+		                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
 		                   true);
 	}
 

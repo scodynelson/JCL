@@ -5,7 +5,6 @@
 package jcl.compiler.icg.generator;
 
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +27,8 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
+import jcl.lang.ArrayStruct;
+import jcl.lang.BitVectorStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.FunctionStruct;
@@ -41,6 +42,7 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.VectorStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.factory.LispStructFactory;
@@ -51,8 +53,6 @@ import jcl.type.LispType;
 import jcl.type.TypeBaseClass;
 import jcl.type.TypeFactory;
 import jcl.type.typespecifier.AtomicTypeSpecifier;
-import org.apfloat.Apcomplex;
-import org.apfloat.Aprational;
 import org.objectweb.asm.Type;
 
 public interface GenerationConstants {
@@ -145,10 +145,6 @@ public interface GenerationConstants {
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_DESC = CodeGenerators.getMethodDescription(Integer.class, JAVA_INTEGER_VALUE_OF_METHOD_NAME, int.class);
 
-	String JAVA_BIG_DECIMAL_NAME = Type.getInternalName(BigDecimal.class);
-
-	String JAVA_BIG_DECIMAL_INIT_DESC = CodeGenerators.getConstructorDescription(BigDecimal.class, String.class);
-
 	String JAVA_URI_NAME = Type.getInternalName(URI.class);
 
 	String JAVA_URI_CREATE_METHOD_NAME = "create";
@@ -189,39 +185,33 @@ public interface GenerationConstants {
 
 	String CONS_STRUCT_NAME = Type.getInternalName(ConsStruct.class);
 
-	String CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME = "toLispCons";
+	String CONS_STRUCT_TO_CONS_METHOD_NAME = "toLispCons";
 
-	String CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME, LispStruct.class, LispStruct.class);
+	String CONS_STRUCT_TO_CONS_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_TO_CONS_METHOD_NAME, LispStruct.class, LispStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME = "toBitVector";
+	String BIT_VECTOR_STRUCT_NAME = Type.getInternalName(BitVectorStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME, List.class);
+	String BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME = "toLispBitVector";
 
-	String LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME = "toArray";
+	String BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(BitVectorStruct.class, BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME, List.class);
 
-	String LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_ARRAY_METHOD_NAME, List.class, List.class);
+	String ARRAY_STRUCT_NAME = Type.getInternalName(ArrayStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME = "toVector";
+	String ARRAY_STRUCT_TO_ARRAY_METHOD_NAME = "toLispArray";
 
-	String LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_VECTOR_METHOD_NAME, List.class);
+	String ARRAY_STRUCT_TO_ARRAY_METHOD_DESC = CodeGenerators.getMethodDescription(ArrayStruct.class, ARRAY_STRUCT_TO_ARRAY_METHOD_NAME, List.class, List.class);
+
+	String VECTOR_STRUCT_NAME = Type.getInternalName(VectorStruct.class);
+
+	String VECTOR_STRUCT_TO_VECTOR_METHOD_NAME = "toLispVector";
+
+	String VECTOR_STRUCT_TO_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(VectorStruct.class, VECTOR_STRUCT_TO_VECTOR_METHOD_NAME, List.class);
 
 	String STRING_STRUCT_NAME = Type.getInternalName(StringStruct.class);
 
 	String STRING_STRUCT_TO_LISP_STRING_METHOD_NAME = "toLispString";
 
 	String STRING_STRUCT_TO_LISP_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, String.class);
-
-	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME = "toComplex";
-
-	String LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_COMPLEX_METHOD_NAME, Apcomplex.class);
-
-	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME = "toRatio";
-
-	String LISP_STRUCT_FACTORY_TO_RATIO_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_RATIO_METHOD_NAME, Aprational.class);
-
-	String LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME = "toSymbol";
-
-	String LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME, String.class);
 
 	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME = "toJavaName";
 
@@ -234,6 +224,10 @@ public interface GenerationConstants {
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 
 	String SYMBOL_STRUCT_DESC = Type.getDescriptor(SymbolStruct.class);
+
+	String SYMBOL_STRUCT_TO_SYMBOL_METHOD_NAME = "toLispSymbol";
+
+	String SYMBOL_STRUCT_TO_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_TO_SYMBOL_METHOD_NAME, String.class);
 
 	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME = "getLexicalValue";
 
@@ -335,9 +329,9 @@ public interface GenerationConstants {
 
 	String PATHNAME_STRUCT_NAME = Type.getInternalName(PathnameStruct.class);
 
-	String PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
+	String PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
 
-	String PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(PathnameStruct.class, PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME, URI.class);
+	String PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(PathnameStruct.class, PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME, URI.class);
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 

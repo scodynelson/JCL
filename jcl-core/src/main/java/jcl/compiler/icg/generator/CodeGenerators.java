@@ -126,10 +126,10 @@ public final class CodeGenerators {
 				mv.visitVarInsn(Opcodes.ALOAD, 0); // '0' is always 'this'
 				mv.visitLdcInsn(symbolName);
 				mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-				                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-				                   GenerationConstants.LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_NAME,
-				                   GenerationConstants.LISP_STRUCT_FACTORY_TO_SYMBOL_METHOD_DESC,
-				                   false);
+				                   GenerationConstants.SYMBOL_STRUCT_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_TO_SYMBOL_METHOD_NAME,
+				                   GenerationConstants.SYMBOL_STRUCT_TO_SYMBOL_METHOD_DESC,
+				                   true);
 				mv.visitFieldInsn(Opcodes.PUTFIELD,
 				                  className,
 				                  symbolNameWithHashCode,

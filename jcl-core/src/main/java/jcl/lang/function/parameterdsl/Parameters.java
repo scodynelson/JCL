@@ -13,7 +13,6 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ObjectArrayIterator;
 
@@ -21,7 +20,7 @@ import static java.util.stream.Collectors.toMap;
 
 public final class Parameters {
 
-	public static final KeywordStruct ALLOW_OTHER_KEYS = LispStructFactory.toKeyword("ALLOW-OTHER-KEYS");
+	public static final KeywordStruct ALLOW_OTHER_KEYS = KeywordStruct.toLispKeyword("ALLOW-OTHER-KEYS");
 
 	private final String functionName;
 

@@ -4,22 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import jcl.lang.ArrayStruct;
-import jcl.lang.BitVectorStruct;
-import jcl.lang.IntegerStruct;
-import jcl.lang.KeywordStruct;
-import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
-import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.internal.BitVectorStructImpl;
-import jcl.lang.internal.KeywordStructImpl;
-import jcl.lang.internal.MultiArrayStructImpl;
-import jcl.lang.internal.SymbolStructImpl;
-import jcl.lang.internal.VectorStructImpl;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
@@ -32,30 +18,6 @@ public final class LispStructFactory {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LispStructFactory.class);
 
 	private LispStructFactory() {
-	}
-
-	/*
-	 * Array
-	 */
-
-	public static ArrayStruct toArray(final List<Integer> dimensions, final List<LispStruct> contents) {
-		// TODO: Fix me
-		final List<IntegerStruct> dimensionStructs = dimensions.stream()
-		                                                       .map(IntegerStruct::toLispInteger)
-		                                                       .collect(Collectors.toList());
-		return MultiArrayStructImpl.valueOf(dimensionStructs, contents);
-	}
-
-	/*
-	 * BitVector
-	 */
-
-	public static BitVectorStruct toBitVector(final String bitString) {
-		return BitVectorStructImpl.valueOf(bitString);
-	}
-
-	public static BitVectorStruct toBitVector(final List<IntegerStruct> contents) {
-		return BitVectorStructImpl.valueOfCont(contents);
 	}
 
 	/*
@@ -150,29 +112,5 @@ public final class LispStructFactory {
 			LOGGER.error(message, ex);
 			throw new ErrorException(message, ex);
 		}
-	}
-
-	/*
-	 * Keyword
-	 */
-
-	public static KeywordStruct toKeyword(final String name) {
-		return KeywordStructImpl.valueOf(name);
-	}
-
-	/*
-	 * Symbol
-	 */
-
-	public static SymbolStruct toSymbol(final String name) {
-		return SymbolStructImpl.valueOf(name);
-	}
-
-	/*
-	 * Vector
-	 */
-
-	public static VectorStruct toVector(final List<LispStruct> contents) {
-		return VectorStructImpl.valueOf(contents);
 	}
 }

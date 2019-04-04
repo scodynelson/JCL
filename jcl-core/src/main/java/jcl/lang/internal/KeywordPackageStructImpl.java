@@ -43,7 +43,7 @@ public final class KeywordPackageStructImpl extends PackageStructImpl {
 			return foundPackageSymbol;
 		}
 
-		final KeywordStruct symbolStruct = KeywordStructImpl.valueOf(symbolName);
+		final KeywordStruct symbolStruct = KeywordStruct.toLispKeyword(symbolName);
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);

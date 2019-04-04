@@ -10,7 +10,6 @@ import java.nio.file.Path;
 
 import jcl.compiler.classloaders.LoaderClassLoader;
 import jcl.compiler.function.InternalEval;
-import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.FunctionStruct;
@@ -21,7 +20,6 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameVersion;
@@ -56,9 +54,6 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Autowired
 	private InternalEval internalEval;
-
-	@Autowired
-	private MergePathnamesFunction mergePathnamesFunction;
 
 	@Autowired
 	private ConfigurableApplicationContext applicationContext;
@@ -110,11 +105,12 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 		if (filespec instanceof FileStreamStruct) {
 			filespecFileStream = (FileStreamStruct) filespec;
 			filespecPath = filespecFileStream.getPath();
-			filespecPathname = LispStructFactory.toPathname(filespecPath);
+			filespecPathname = PathnameStruct.toPathname(filespecPath);
 		} else {
+			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
 			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
-			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
+			filespecPathname = PathnameStruct.mergePathnames(filespecAsPathname, defaultPathspec, nilVersion);
 			final File pathnameFile = new File(filespecPathname.getNamestring());
 			filespecPath = pathnameFile.toPath();
 		}
@@ -132,7 +128,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
 		final Path filespecAbsolutePath = filespecPath.toAbsolutePath();
-		final PathnameStruct filespecTruename = LispStructFactory.toPathname(filespecAbsolutePath);
+		final PathnameStruct filespecTruename = PathnameStruct.toPathname(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();

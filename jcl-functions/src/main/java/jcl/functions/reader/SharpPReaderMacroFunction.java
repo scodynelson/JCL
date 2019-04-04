@@ -10,10 +10,10 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
@@ -56,7 +56,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (token instanceof StringStruct) {
 			final StringStruct pathnameString = (StringStruct) token;
 			final String namestring = pathnameString.toJavaString();
-			return LispStructFactory.toPathname(namestring);
+			return PathnameStruct.toPathname(namestring);
 		} else {
 			throw new ReaderErrorException("The value " + token + " is not of expected type STRING in argument to #P.");
 		}

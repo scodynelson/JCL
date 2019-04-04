@@ -37,6 +37,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
@@ -192,10 +193,6 @@ public interface GenerationConstants {
 
 	String CONS_STRUCT_FACTORY_TO_CONS_METHOD_DESC = CodeGenerators.getMethodDescription(ConsStruct.class, CONS_STRUCT_FACTORY_TO_CONS_METHOD_NAME, LispStruct.class, LispStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
-
-	String LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME, URI.class);
-
 	String LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME = "toBitVector";
 
 	String LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_BIT_VECTOR_LIST_METHOD_NAME, List.class);
@@ -335,6 +332,12 @@ public interface GenerationConstants {
 	String COMPILED_MACRO_FUNCTION_EXPANDER_NAME = Type.getInternalName(CompiledMacroFunctionExpander.class);
 
 	String COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE = "Ljcl/compiler/function/expanders/CompiledMacroFunctionExpander<Ljcl/lang/LispStruct;>;";
+
+	String PATHNAME_STRUCT_NAME = Type.getInternalName(PathnameStruct.class);
+
+	String PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
+
+	String PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(PathnameStruct.class, PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME, URI.class);
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 

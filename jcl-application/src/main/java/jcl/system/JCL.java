@@ -8,12 +8,10 @@ import jcl.compiler.function.CompileForm;
 import jcl.functions.CompileFileFunction;
 import jcl.functions.FuncallFunction;
 import jcl.functions.LoadFunction;
-import jcl.functions.pathname.MergePathnamesFunction;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CompilerVariables;
@@ -40,9 +38,6 @@ public class JCL implements ApplicationRunner {
 	private ReadEvalPrint readEvalPrint;
 
 	@Autowired
-	private MergePathnamesFunction mergePathnamesFunction;
-
-	@Autowired
 	private LoadFunction loadFunction;
 
 	@Autowired
@@ -66,6 +61,7 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/compiler/macros.lisp",
 				"jcl-application/src/main/lisp/jcl/iterators/iterators.lisp",
 				"jcl-application/src/main/lisp/jcl/characters/characters.lisp",
+				"jcl-application/src/main/lisp/jcl/pathnames/pathnames.lisp",
 				"jcl-application/src/main/lisp/jcl/reader/reader.lisp",
 				"jcl-application/src/main/lisp/jcl/streams/streams.lisp",
 				"jcl-application/src/main/lisp/jcl/symbols/symbols.lisp",
@@ -104,14 +100,14 @@ public class JCL implements ApplicationRunner {
 		final String destDir = args.getOptionValues("compileFileDestDir").get(0);
 
 		for (final String fileName : sourceFiles) {
-			final PathnameStruct sourceFile = LispStructFactory.toPathname(fileName);
+			final PathnameStruct sourceFile = PathnameStruct.toPathname(fileName);
 
 			final PathnameName pathnameName = sourceFile.getPathnameName();
 			final PathnameType pathnameType = new PathnameType("jar");
-			final PathnameStruct tempPathname = LispStructFactory.toPathname(null, null, null, pathnameName, pathnameType, null);
+			final PathnameStruct tempPathname = PathnameStruct.toPathname(null, null, null, pathnameName, pathnameType, null);
 
-			final PathnameStruct destDirectory = LispStructFactory.toPathname(destDir);
-			final PathnameStruct newSourceFile = mergePathnamesFunction.mergePathnames(destDirectory, tempPathname);
+			final PathnameStruct destDirectory = PathnameStruct.toPathname(destDir);
+			final PathnameStruct newSourceFile = PathnameStruct.mergePathnames(destDirectory, tempPathname);
 
 			compileFileFunction.compileFile(sourceFile, newSourceFile, true, true);
 		}
@@ -119,66 +115,71 @@ public class JCL implements ApplicationRunner {
 
 	private void loadLispFiles() {
 //		for (final String lispFileToLoad : lispFilesToLoad) {
-//			final PathnameStruct pathname = LispStructFactory.toPathname(lispFileToLoad);
+//			final PathnameStruct pathname = PathnameStruct.toPathname(lispFileToLoad);
 //			loadFunction.load(pathname, false, false, true);
 //		}
 		CompileForm.OUTPUT_FILE = false;
-		PathnameStruct pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/compiler/base-macro-lambdas.lisp");
+		PathnameStruct pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/compiler/base-macro-lambdas.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/compiler/macros.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/compiler/macros.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/iterators/iterators.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/iterators/iterators.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/characters/characters.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/characters/characters.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/reader/reader.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/pathnames/pathnames.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/streams/streams.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/reader/reader.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/symbols/symbols.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/streams/streams.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/packages/packages.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/symbols/symbols.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/lists/lists.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/packages/packages.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/numbers/numbers.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/lists/lists.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/numbers/numbers.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
-		pathname = LispStructFactory.toPathname("jcl-application/src/main/lisp/jcl/strings/strings.lisp");
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/strings/strings.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 	}

@@ -28,6 +28,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.PathnameStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
@@ -205,7 +206,7 @@ public class TestGround {
 
 	private Object pathnameGen() {
 		final URI uri = URI.create("");
-		return LispStructFactory.toPathname(uri);
+		return PathnameStruct.toPathname(uri);
 	}
 
 	private Object stringGen() {

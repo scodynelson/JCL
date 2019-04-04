@@ -176,22 +176,6 @@ public final class LispStructFactory {
 	}
 
 	/*
-	 * Logical Pathname
-	 */
-
-	public static LogicalPathnameStruct toLogicalPathname(final String pathname) {
-		return LogicalPathnameStructImpl.valueOf(pathname);
-	}
-
-	public static LogicalPathnameStruct toLogicalPathname(final PathnameHost host,
-	                                                      final PathnameDirectory directory,
-	                                                      final PathnameName name,
-	                                                      final PathnameType type,
-	                                                      final PathnameVersion version) {
-		return LogicalPathnameStructImpl.valueOf(host, directory, name, type, version);
-	}
-
-	/*
 	 * Package
 	 */
 
@@ -213,35 +197,6 @@ public final class LispStructFactory {
 	                                      final List<String> nicknames,
 	                                      final List<PackageStruct> useList) {
 		return PackageStructImpl.valueOf(name, nicknames, useList);
-	}
-
-	/*
-	 * Pathname
-	 */
-
-	public static PathnameStruct toPathname(final Path path) {
-		return PathnameStructImpl.valueOf(path);
-	}
-
-	public static PathnameStruct toPathname(final File file) {
-		return PathnameStructImpl.valueOf(file);
-	}
-
-	public static PathnameStruct toPathname(final String pathname) {
-		return PathnameStructImpl.valueOf(pathname);
-	}
-
-	public static PathnameStruct toPathname(final URI uri) {
-		return PathnameStructImpl.valueOf(uri);
-	}
-
-	public static PathnameStruct toPathname(final PathnameHost host,
-	                                        final PathnameDevice device,
-	                                        final PathnameDirectory directory,
-	                                        final PathnameName name,
-	                                        final PathnameType type,
-	                                        final PathnameVersion version) {
-		return PathnameStructImpl.valueOf(host, device, directory, name, type, version);
 	}
 
 	/*

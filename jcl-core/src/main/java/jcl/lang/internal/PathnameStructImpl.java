@@ -146,7 +146,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param path
 	 * 		the path to parse into the pathname object elements
 	 */
-	private PathnameStructImpl(final Path path) {
+	public PathnameStructImpl(final Path path) {
 		// TODO: This doesn't work correctly!!!
 		this(path.toUri());
 	}
@@ -157,7 +157,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param file
 	 * 		the file to parse into the pathname object elements
 	 */
-	private PathnameStructImpl(final File file) {
+	public PathnameStructImpl(final File file) {
 		// TODO: This doesn't work correctly!!!
 		this(file.toURI());
 	}
@@ -168,7 +168,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname object elements
 	 */
-	private PathnameStructImpl(final String pathname) {
+	public PathnameStructImpl(final String pathname) {
 		this(getURIFromPathname(pathname));
 //		init(pathnameString);
 	}
@@ -179,7 +179,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param uri
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
-	private PathnameStructImpl(final URI uri) {
+	public PathnameStructImpl(final URI uri) {
 		this(jcl.type.PathnameType.INSTANCE, getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
 	}
 
@@ -199,7 +199,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param version
 	 * 		the pathname version
 	 */
-	private PathnameStructImpl(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	public PathnameStructImpl(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                           final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		this(jcl.type.PathnameType.INSTANCE, host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
 	}
@@ -224,7 +224,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param uri
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
-	protected PathnameStructImpl(final jcl.type.PathnameType pathnameType,
+	public PathnameStructImpl(final jcl.type.PathnameType pathnameType,
 	                             final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                             final PathnameName name, final PathnameType type, final PathnameVersion version,
 	                             final URI uri) {
@@ -236,27 +236,6 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 		this.type = type;
 		this.version = version;
 		this.uri = uri;
-	}
-
-	public static PathnameStruct valueOf(final Path path) {
-		return new PathnameStructImpl(path);
-	}
-
-	public static PathnameStruct valueOf(final File file) {
-		return new PathnameStructImpl(file);
-	}
-
-	public static PathnameStruct valueOf(final String pathname) {
-		return new PathnameStructImpl(pathname);
-	}
-
-	public static PathnameStruct valueOf(final URI uri) {
-		return new PathnameStructImpl(uri);
-	}
-
-	public static PathnameStruct valueOf(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		return new PathnameStructImpl(host, device, directory, name, type, version);
 	}
 
 	@Override
@@ -1009,9 +988,9 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 
 		mv.visitVarInsn(Opcodes.ALOAD, uriStore);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC,
+		                   GenerationConstants.PATHNAME_STRUCT_NAME,
+		                   GenerationConstants.PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME,
+		                   GenerationConstants.PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC,
 		                   false);
 	}
 

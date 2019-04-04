@@ -4,19 +4,15 @@
 
 package jcl.functions;
 
-import jcl.functions.pathname.MergePathnamesFunction;
-import jcl.functions.pathname.TranslateLogicalPathnameFunction;
 import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PathnameVariables;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,12 +20,6 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 
 	private static final String FUNCTION_NAME = "COMPILE-FILE-PATHNAME";
 	private static final String INPUT_FILE_ARGUMENT = "INPUT-FILE";
-
-	@Autowired
-	private MergePathnamesFunction mergePathnamesFunction;
-
-	@Autowired
-	private TranslateLogicalPathnameFunction translateLogicalPathnameFunction;
 
 	public CompileFilePathnameFunction() {
 		super("Returns the pathname that compile-file would write into, if given the same arguments.",
@@ -56,16 +46,17 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 	public PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 
+		final PathnameStruct inputFilePathname = PathnameStruct.toPathname(inputFile);
 		final PathnameStruct defaultPathnameDefaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
-		final PathnameStruct mergedInputFile = mergePathnamesFunction.mergePathnames(inputFile, defaultPathnameDefaults);
+		final PathnameStruct mergedInputFile = PathnameStruct.mergePathnames(inputFilePathname, defaultPathnameDefaults);
 
 		final PathnameType outputPathnameType = new PathnameType("jar");
 
 		final boolean isLogicalInputFile = mergedInputFile instanceof LogicalPathnameStruct;
 
 		if ((outputFile == null) && isLogicalInputFile) {
-			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
-			return LispStructFactory.toLogicalPathname(
+			final PathnameStruct translatedMergedInputFile = PathnameStruct.translateLogicalPathname(mergedInputFile);
+			return LogicalPathnameStruct.toLogicalPathname(
 					translatedMergedInputFile.getPathnameHost(),
 					translatedMergedInputFile.getPathnameDirectory(),
 					translatedMergedInputFile.getPathnameName(),
@@ -73,9 +64,10 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 					translatedMergedInputFile.getPathnameVersion()
 			);
 		} else if (isLogicalInputFile) {
-			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
-			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFile, translatedMergedInputFile);
-			return LispStructFactory.toPathname(
+			final PathnameStruct outputFilePathname = PathnameStruct.toPathname(outputFile);
+			final PathnameStruct translatedMergedInputFile = PathnameStruct.translateLogicalPathname(mergedInputFile);
+			final PathnameStruct mergedOutputFile = PathnameStruct.mergePathnames(outputFilePathname, translatedMergedInputFile);
+			return PathnameStruct.toPathname(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
 					mergedOutputFile.getPathnameDirectory(),
@@ -84,7 +76,7 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 					mergedOutputFile.getPathnameVersion()
 			);
 		} else if (outputFile == null) {
-			return LispStructFactory.toPathname(
+			return PathnameStruct.toPathname(
 					mergedInputFile.getPathnameHost(),
 					mergedInputFile.getPathnameDevice(),
 					mergedInputFile.getPathnameDirectory(),
@@ -93,8 +85,9 @@ public final class CompileFilePathnameFunction extends CommonLispBuiltInFunction
 					mergedInputFile.getPathnameVersion()
 			);
 		} else {
-			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFile, mergedInputFile);
-			return LispStructFactory.toPathname(
+			final PathnameStruct outputFilePathname = PathnameStruct.toPathname(outputFile);
+			final PathnameStruct mergedOutputFile = PathnameStruct.mergePathnames(outputFilePathname, mergedInputFile);
+			return PathnameStruct.toPathname(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
 					mergedOutputFile.getPathnameDirectory(),

@@ -43,7 +43,7 @@ public final class OpenFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final PathnameStruct pathname = FunctionHelpers.asPathname(arguments.getRequiredArgument(FILESPEC_ARGUMENT));
+		final PathnameStruct pathname = PathnameStruct.toPathname(arguments.getRequiredArgument(FILESPEC_ARGUMENT));
 
 		final SymbolStruct directionSymbol = arguments.getKeyArgument(CommonLispSymbols.DIRECTION_KEYWORD, SymbolStruct.class);
 		final DirectionType directionType = DirectionType.fromValue(directionSymbol);

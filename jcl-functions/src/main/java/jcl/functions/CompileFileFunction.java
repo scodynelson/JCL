@@ -23,7 +23,6 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.functions.pathname.PathnameFunction;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
@@ -36,7 +35,6 @@ import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.FileErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.internal.DeclarationStructImpl;
@@ -75,9 +73,6 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 	@Autowired
 	private IntermediateCodeGenerator intermediateCodeGenerator;
-
-	@Autowired
-	private PathnameFunction pathnameFunction;
 
 	@Autowired
 	private CompileFilePathnameFunction compileFilePathnameFunction;
@@ -119,7 +114,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 	public LispStruct compileFile(final LispStruct inputFile, final LispStruct outputFile, final boolean verbose, final boolean print) {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 
-		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
+		final PathnameStruct inputFilePathname = PathnameStruct.toPathname(inputFile);
 		final File inputFilePathnameFile = new File(inputFilePathname.getNamestring());
 		final Path inputFilePath = inputFilePathnameFile.toPath();
 
@@ -154,7 +149,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
 		final Path outputFileAbsolutePath = outputFilePath.toAbsolutePath();
-		final PathnameStruct outputFileTruename = LispStructFactory.toPathname(outputFileAbsolutePath);
+		final PathnameStruct outputFileTruename = PathnameStruct.toPathname(outputFileAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();

@@ -4,6 +4,9 @@
 
 package jcl.lang.pathname;
 
+import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
 
 /**
@@ -72,5 +75,24 @@ public final class PathnameVersion {
 	 */
 	public PathnameVersionComponentType getComponentType() {
 		return componentType;
+	}
+
+	public static PathnameVersion getPathnameVersion(final LispStruct defaultVersion) {
+
+		final PathnameVersionComponentType componentType = PathnameVersionComponentType.fromValue(defaultVersion);
+		if (componentType == null) {
+			if (defaultVersion instanceof IntegerStruct) {
+				final IntegerStruct integer = (IntegerStruct) defaultVersion;
+				final int intValue = integer.toJavaInt();
+				if (intValue < 0) {
+					throw new ErrorException("Integer versions must be non-negative. Got: " + integer);
+				}
+				return new PathnameVersion(intValue);
+			} else {
+				throw new ErrorException("Pathname versions must be either a non-negative integer, :WILD, :NEWEST, :UNSPECIFIC, or NIL. Got: " + defaultVersion);
+			}
+		}
+
+		return new PathnameVersion(componentType);
 	}
 }

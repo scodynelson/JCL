@@ -4,6 +4,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; Not
+
+(defun not (object)
+  "Returns T if x is false; otherwise, returns NIL."
+  (declare (system::%java-class-name "jcl.compiler.functions.Not"))
+  (null object))
+
 ;; Define-Compiler-Macro
 
 ;; Define-Symbol-Macro

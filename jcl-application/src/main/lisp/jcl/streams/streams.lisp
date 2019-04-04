@@ -9,6 +9,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: def-var: *terminal-io* *debug-io* *query-io*
+;; TODO: def-var: *standard-input*
+;; TODO: def-var: *standard-output* *error-output* *trace-output*
+
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defun make-broadcast-stream (&rest output-streams)
   "Returns a broadcast stream that has the indicated output-streams initially associated with it."
   (declare (system::%java-class-name "jcl.streams.functions.MakeBroadcastStream"))
@@ -310,7 +316,33 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(make-broadcast-stream make-concatenated-stream
+;; TODO: stream-error-stream
+#|
+(defun stream-error-stream (condition)
+  "Returns the offending stream in the situation represented by the condition."
+  (declare (system::%java-class-name "jcl.streams.functions.StreamErrorStream"))
+
+  ;; StreamErrorException streamErrorException = (StreamErrorException) condition;
+  ;; return streamErrorException.getStreamWithError();
+
+  nil)
+|#
+;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: with-open-stream
+;; TODO: with-open-file
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: with-input-from-string
+;; TODO: with-output-to-string
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+(export '(*terminal-io* *debug-io* *query-io*
+          *standard-input*
+          *standard-output* *error-output* *trace-output*
+          make-broadcast-stream make-concatenated-stream
           make-echo-stream make-two-way-stream
           make-string-input-stream make-string-output-stream
           make-synonym-stream
@@ -331,5 +363,8 @@
           echo-stream-input-stream echo-stream-output-stream
           two-way-stream-input-stream two-way-stream-output-stream
           synonym-stream-symbol
-          get-output-stream-string)
+          get-output-stream-string
+          stream-error-stream
+          with-open-stream with-open-file
+          with-input-from-string with-output-to-string)
         "COMMON-LISP")

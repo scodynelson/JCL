@@ -25,7 +25,7 @@
                             form (car body))
                       (go top))
                   (return-from parse-body (values body decls doc)))
-              (if (not (if (consp form) (symbolp (car form))))
+              (if (null (if (consp form) (symbolp (car form))))
                   (return-from parse-body (values body decls doc))
                 (if (eq (car form) 'declare)
                     (progn
@@ -42,7 +42,7 @@
     (if (symbolp function-name)
         nil
       (if (consp function-name)
-          (if (equal (car function-name) 'setf)
+          (if (eq (car function-name) 'setf)
               (if (consp (cdr function-name))
                   (if (symbolp (car (cdr function-name)))
                       (if (null (cdr (cdr function-name)))

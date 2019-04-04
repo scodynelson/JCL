@@ -9,6 +9,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: def-var: *read-base* *read-default-float-format* *read-eval* *read-suppress* *readtable*
+
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defun copy-readtable (&optional (from-readtable *readtable*) to-readtable)
   "Copies from-readtable."
   (declare (system::%java-class-name "jcl.reader.functions.CopyReadtable"))
@@ -41,6 +45,8 @@
   (declare (system::%java-class-name "jcl.reader.functions.ReadtableCase"))
   ($readtableCase readtable))
 
+;; TODO: setf-readtable-case
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get-dispatch-macro-character (disp-char sub-char &optional (readtable *readtable*))
@@ -71,7 +77,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(copy-readtable
+(export '(*read-base* *read-default-float-format* *read-eval* *read-suppress*
+          *readtable*
+          copy-readtable
           make-dispatch-macro-character
           read read-preserving-whitespace
           read-delimited-list

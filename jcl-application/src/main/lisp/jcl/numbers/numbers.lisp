@@ -9,6 +9,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: most-positive-fixnum
+;; TODO: most-negative-fixnum
+
+;; TODO: float most-positive/most-negative constants
+;; TODO: float epsilon constants
+
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defun abs (number)
   "Returns the absolute value of number."
   (declare (system::%java-class-name "jcl.numbers.functions.Abs"))
@@ -290,6 +298,10 @@
                  (ext:jclass "java.util.List"))
     (ext:jinvoke (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
                  (cons number numbers))))
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: def-constant pi
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -581,7 +593,12 @@
   (- number 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: incf, decf
+
+;;;;;;;;;;;;;;;;;;;;;;
 #|
+;; TODO
 (defun byte (size position)
   (cons size position))
 
@@ -591,6 +608,7 @@
 (defun byte-position (bytespec)
   (cdr bytespec))
 
+;; TODO: setf-ldb
 (defun ldb (bytespec integer)
   (logand (ash integer (- (byte-position bytespec)))
           (1- (ash 1 (byte-size bytespec)))))
@@ -604,9 +622,14 @@
          (mask (1- (ash 1 size))))
     (logior (logand integer (lognot (ash mask position)))
 	        (ash (logand newbyte mask) position))))
+
+;; TODO: deposit-field
+;; TODO: mask-field
+;; TODO: setf-mask-field
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
+;; TODO
 (defun phase (number)
   "Returns the angle part of the polar representation of a complex number.
    For complex numbers, this is (atan (imagpart number) (realpart number)).
@@ -628,6 +651,8 @@
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
+;; TODO: boole constants
+;; TODO: boole function
 (defun boole (op n1 n2)
   (unless (and (integerp n1) (integerp n2))
     (error 'type-error
@@ -657,6 +682,7 @@
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
+;; TODO
 (defun parse-integer-error (string)
   (error 'parse-error "not an integer string: ~S" string))
 
@@ -711,6 +737,7 @@
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
+;; TODO
 (defun upgraded-complex-part-type (typespec &optional environment)
   (declare (ignore environment))
   (if (subtypep typespec 'REAL)
@@ -721,14 +748,83 @@
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(abs conjugate exp expt log signum sqrt complex cis max min mod rem rational rationalize
+;; TODO: def-var *random-state*
+;; TODO: make-random-state
+
+(defun random (limit &optional (random-state *random-state*))
+  "Returns a pseudo-random number that is a non-negative number less than limit and of the same type as limit."
+  (declare (system::%java-class-name "jcl.numbers.functions.Random"))
+  ($random random-state limit))
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: arithmetic-error-operands
+;; TODO: arithmetic-error-operation
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+(export '(most-positive-fixnum most-negative-fixnum
+
+          most-positive-short-float least-positive-short-float least-positive-normalized-short-float
+          most-negative-short-float least-negative-short-float least-negative-normalized-short-float
+
+          most-positive-single-float least-positive-single-float least-positive-normalized-single-float
+          most-negative-single-float least-negative-single-float least-negative-normalized-single-float
+
+          most-positive-double-float least-positive-double-float least-positive-normalized-double-float
+          most-negative-double-float least-negative-double-float least-negative-normalized-double-float
+
+          most-positive-long-float least-positive-long-float least-positive-normalized-long-float
+          most-negative-long-float least-negative-long-float least-negative-normalized-long-float
+
+          short-float-epsilon short-float-negative-epsilon
+          single-float-epsilon single-float-negative-epsilon
+          double-float-epsilon double-float-negative-epsilon
+          long-float-epsilon long-float-negative-epsilon
+
+          abs conjugate exp expt log signum sqrt
+          complex
+          cis max min mod rem rational rationalize
+
           decode-float integer-decode-float float float-digits float-precision float-sign scale-float
+
           ash gcd lcm integer-length isqrt
-          + - * / = /= < > <= >=
+
+          + - * /
+          = /= < > <= >=
+
+          pi
           sin cos tan asin acos atan sinh cosh tanh asinh acosh atanh
-          evenp oddp realpart imagpart numerator denominator
+
+          evenp oddp
+          realpart imagpart
+          numerator denominator
+
           logand logandc1 logandc2 logeqv logior lognand lognor lognot logorc1 logorc2 logxor logbitp logcount logtest
+
           floor ffloor ceiling fceiling truncate ftruncate round fround
+
           zerop plusp minusp
-          1+ 1-)
+
+          1+ 1-
+          incf decf
+
+          byte byte-size byte-position ldb ldb-test dpb deposit-field mask-field
+
+          phase
+
+          boole
+          boole-1 boole-2 boole-and boole-andc1 boole-andc2 boole-c1 boole-c2 boole-clr boole-eqv boole-ior
+          boole-nand boole-nor boole-orc1 boole-orc2 boole-set boole-xor
+
+          parse-integer
+
+          upgraded-complex-part-type
+
+          *random-state*
+          make-random-state
+          random
+
+          arithmetic-error-operands
+          arithmetic-error-operation)
         "COMMON-LISP")

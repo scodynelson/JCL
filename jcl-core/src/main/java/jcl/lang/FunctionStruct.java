@@ -6,4 +6,6 @@ package jcl.lang;
 public interface FunctionStruct extends LispStruct {
 
 	LispStruct apply(LispStruct... lispStructs);
+
+	void afterPropertiesSet() throws Exception;
 }

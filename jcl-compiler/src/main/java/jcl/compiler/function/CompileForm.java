@@ -26,12 +26,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,9 +41,6 @@ public class CompileForm {
 
 	@Autowired
 	private IntermediateCodeGenerator intermediateCodeGenerator;
-
-	@Autowired
-	private ConfigurableApplicationContext applicationContext;
 
 	public CompileResult compile(final LispStruct form) {
 
@@ -90,16 +82,10 @@ public class CompileForm {
 			try {
 				final boolean isFunctionStruct = FunctionStruct.class.isAssignableFrom(classLoaded);
 				if (isFunctionStruct) {
-					final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(classLoaded);
-					final DefaultListableBeanFactory factory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
-
-					final String beanName = classLoaded.getSimpleName();
-					final BeanDefinition beanDefinition = builder.getBeanDefinition();
-					factory.registerBeanDefinition(beanName, beanDefinition);
-
-					function = (FunctionStruct) applicationContext.getBean(classLoaded);
+					function = (FunctionStruct) classLoaded.getDeclaredConstructor().newInstance();
+					function.afterPropertiesSet();
 				}
-			} catch (BeansException | IllegalStateException ex) {
+			} catch (final Exception ex) {
 				LOGGER.error("Error compiling definition.", ex);
 				compiledWithWarnings = true;
 				failedToCompile = true;

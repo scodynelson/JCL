@@ -3,11 +3,13 @@ package jcl.system;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import jcl.compiler.function.CompileForm;
 import jcl.functions.CompileFileFunction;
 import jcl.functions.FuncallFunction;
 import jcl.functions.LoadFunction;
+import jcl.lang.FunctionStruct;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.TwoWayStreamStruct;
@@ -30,6 +32,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class JCL implements ApplicationRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JCL.class);
+
+	@Autowired
+	private ConfigurableApplicationContext context;
 
 	@Autowired
 	private CompileFileFunction compileFileFunction;
@@ -81,6 +86,8 @@ public class JCL implements ApplicationRunner {
 
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
+		initializeLispFunctions();
+
 		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);
 
 		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
@@ -92,6 +99,13 @@ public class JCL implements ApplicationRunner {
 		} else {
 			loadLispFiles();
 			readEvalPrint.funcall(args);
+		}
+	}
+
+	private void initializeLispFunctions() throws Exception {
+		final Map<String, FunctionStruct> functionBeans = context.getBeansOfType(FunctionStruct.class);
+		for (final FunctionStruct function : functionBeans.values()) {
+			function.afterPropertiesSet();
 		}
 	}
 

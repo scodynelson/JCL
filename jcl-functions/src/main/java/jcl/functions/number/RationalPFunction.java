@@ -6,7 +6,6 @@ package jcl.functions.number;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.BooleanStruct;
-import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.function.parameterdsl.Arguments;

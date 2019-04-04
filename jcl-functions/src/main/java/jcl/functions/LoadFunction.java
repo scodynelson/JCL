@@ -33,12 +33,7 @@ import jcl.reader.InternalRead;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -54,9 +49,6 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Autowired
 	private InternalEval internalEval;
-
-	@Autowired
-	private ConfigurableApplicationContext applicationContext;
 
 	public LoadFunction() {
 		super("Loads the file named by filespec into the Lisp environment.",
@@ -187,20 +179,14 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 			if (classLoaded == null) {
 				return NILStruct.INSTANCE;
 			} else {
-				final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(classLoaded);
-				final DefaultListableBeanFactory factory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
-
-				final String beanName = classLoaded.getSimpleName();
-				final BeanDefinition beanDefinition = builder.getBeanDefinition();
-				factory.registerBeanDefinition(beanName, beanDefinition);
-
-				final FunctionStruct function = (FunctionStruct) applicationContext.getBean(classLoaded);
+				final FunctionStruct function = (FunctionStruct) classLoaded.getDeclaredConstructor().newInstance();
+				function.afterPropertiesSet();
 				return function.apply();
 			}
 		} catch (final FileErrorException fee) {
 			LOGGER.error(fee.getMessage(), fee.getCause());
 			return NILStruct.INSTANCE;
-		} catch (BeansException | IllegalStateException ex) {
+		} catch (Exception ex) {
 			LOGGER.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
 			return NILStruct.INSTANCE;
 		}

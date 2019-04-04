@@ -8,12 +8,11 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.FunctionType;
 import jcl.type.LispType;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
  */
-public abstract class FunctionStructImpl extends BuiltInClassStruct implements FunctionStruct, InitializingBean {
+public abstract class FunctionStructImpl extends BuiltInClassStruct implements FunctionStruct {
 
 	protected FunctionStructImpl(final String documentation) {
 		this(documentation, FunctionType.INSTANCE);

@@ -76,7 +76,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 	 * @param name
 	 * 		the package name
 	 */
-	protected PackageStructImpl(final String name) {
+	public PackageStructImpl(final String name) {
 		this(name, new ArrayList<>());
 	}
 
@@ -88,7 +88,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 	 * @param nicknames
 	 * 		the package nicknames
 	 */
-	private PackageStructImpl(final String name, final List<String> nicknames) {
+	public PackageStructImpl(final String name, final List<String> nicknames) {
 		this(name, nicknames, new ArrayList<>());
 	}
 
@@ -102,7 +102,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	private PackageStructImpl(final String name, final List<String> nicknames, final PackageStruct... useList) {
+	public PackageStructImpl(final String name, final List<String> nicknames, final PackageStruct... useList) {
 		this(name, nicknames, new ArrayList<>(Arrays.asList(useList)));
 	}
 
@@ -116,7 +116,7 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
-	private PackageStructImpl(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
+	public PackageStructImpl(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		super(PackageType.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
@@ -136,22 +136,6 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 		for (final String nickname : nicknames) {
 			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
 		}
-	}
-
-	public static PackageStruct valueOf(final String name) {
-		return new PackageStructImpl(name);
-	}
-
-	public static PackageStruct valueOf(final String name, final List<String> nicknames) {
-		return new PackageStructImpl(name, nicknames);
-	}
-
-	public static PackageStruct valueOf(final String name, final List<String> nicknames, final PackageStruct... useList) {
-		return new PackageStructImpl(name, nicknames, useList);
-	}
-
-	public static PackageStruct valueOf(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
-		return new PackageStructImpl(name, nicknames, useList);
 	}
 
 	@Override

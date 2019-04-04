@@ -991,7 +991,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 		                   GenerationConstants.PATHNAME_STRUCT_NAME,
 		                   GenerationConstants.PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_NAME,
 		                   GenerationConstants.PATHNAME_STRUCT_FACTORY_TO_PATHNAME_URI_METHOD_DESC,
-		                   false);
+		                   true);
 	}
 
 	/*

@@ -9,6 +9,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: defvar char-code-limit
+
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defun character (character)
   "Returns the character denoted by the character designator."
   (declare (system::%java-class-name "jcl.characters.functions.Character"))
@@ -16,6 +20,8 @@
     (ext:jmethod "toLispCharacter" (ext:jclass "jcl.lang.CharacterStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     character))
+
+;;;;;;;;;;;;;;;;;;;;;;
 
 (defun char-name (character)
   "Returns a string that is the name of the character, or nil if the character has no name."
@@ -56,8 +62,8 @@
   (declare (system::%java-class-name "jcl.characters.functions.DigitChar"))
   (ext:jinvoke-static
     (ext:jmethod "digitChar" (ext:jclass "jcl.lang.CharacterStruct")
-             (ext:jclass "jcl.lang.IntegerStruct")
-             (ext:jclass "jcl.lang.IntegerStruct"))
+                 (ext:jclass "jcl.lang.IntegerStruct")
+                 (ext:jclass "jcl.lang.IntegerStruct"))
     weight radix))
 
 (defun digit-char-p (character &optional (radix 10))
@@ -187,7 +193,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(character char-name name-char char-code code-char char-int digit-char digit-char-p char-upcase char-downcase
+(export '(char-code-limit
+          character
+          char-name name-char char-code code-char char-int digit-char digit-char-p
+          char-upcase char-downcase
           alpha-char-p alphanumericp graphic-char-p standard-char-p upper-case-p lower-case-p both-case-p
           char= char/= char< char> char<= char>=
           char-equal char-not-equal char-lessp char-greaterp char-not-greaterp char-not-lessp)

@@ -5,7 +5,6 @@
 package jcl.functions.stream;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.functions.FunctionHelpers;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;

@@ -253,7 +253,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 		                   GenerationConstants.CHARACTER_STRUCT_NAME,
 		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME,
 		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC,
-		                   false);
+		                   true);
 	}
 
 	/*

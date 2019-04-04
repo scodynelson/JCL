@@ -1,11 +1,8 @@
 package jcl.lang.factory;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,30 +12,18 @@ import jcl.lang.BitVectorStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.LogicalPathnameStruct;
-import jcl.lang.PackageStruct;
-import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
 import jcl.lang.internal.KeywordStructImpl;
-import jcl.lang.internal.LogicalPathnameStructImpl;
 import jcl.lang.internal.MultiArrayStructImpl;
-import jcl.lang.internal.PackageStructImpl;
-import jcl.lang.internal.PathnameStructImpl;
 import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.internal.VectorStructImpl;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
-import jcl.lang.pathname.PathnameDevice;
-import jcl.lang.pathname.PathnameDirectory;
-import jcl.lang.pathname.PathnameHost;
-import jcl.lang.pathname.PathnameName;
-import jcl.lang.pathname.PathnameType;
-import jcl.lang.pathname.PathnameVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,30 +158,6 @@ public final class LispStructFactory {
 
 	public static KeywordStruct toKeyword(final String name) {
 		return KeywordStructImpl.valueOf(name);
-	}
-
-	/*
-	 * Package
-	 */
-
-	public static PackageStruct toPackage(final String name) {
-		return PackageStructImpl.valueOf(name);
-	}
-
-	public static PackageStruct toPackage(final String name, final List<String> nicknames) {
-		return PackageStructImpl.valueOf(name, nicknames);
-	}
-
-	public static PackageStruct toPackage(final String name,
-	                                      final List<String> nicknames,
-	                                      final PackageStruct... useList) {
-		return PackageStructImpl.valueOf(name, nicknames, useList);
-	}
-
-	public static PackageStruct toPackage(final String name,
-	                                      final List<String> nicknames,
-	                                      final List<PackageStruct> useList) {
-		return PackageStructImpl.valueOf(name, nicknames, useList);
 	}
 
 	/*

@@ -9,6 +9,32 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: stringp, simple-string-p
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+(defun string (string)
+  "Returns a string described by the provided object."
+  (declare (system::%java-class-name "jcl.strings.functions.String"))
+  (ext:jinvoke-static
+    (ext:jmethod "toLispString" (ext:jclass "jcl.lang.StringStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    string))
+
+;;;;;;;;;;;;;;;;;;;;;;
+
+(defun make-string (size &key (initial-element #\NULL) (element-type 'character))
+  "Returns a simple string of length size whose elements have been initialized to initial-element."
+  (declare (system::%java-class-name "jcl.strings.functions.String"))
+  (ext:jinvoke-static
+    (ext:jmethod "makeString" (ext:jclass "jcl.lang.StringStruct")
+                 (ext:jclass "jcl.lang.IntegerStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.SymbolStruct"))
+    size initial-element element-type))
+
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defun char (string index)
   "Char accesses the element of string specified by index."
   (declare (system::%java-class-name "jcl.strings.functions.Char"))
@@ -24,19 +50,19 @@
 (defun string-trim (character-bag string)
   "Returns a substring of string, with all characters in character-bag stripped off the beginning and end."
   (declare (system::%java-class-name "jcl.strings.functions.StringTrim"))
-  (let* ((string (string string)))
+  (let ((string (string string)))
     ($stringTrim string character-bag)))
 
 (defun string-left-trim (character-bag string)
   "Returns a substring of string, with all characters in character-bag stripped off the beginning."
   (declare (system::%java-class-name "jcl.strings.functions.StringLeftTrim"))
-  (let* ((string (string string)))
+  (let ((string (string string)))
     ($stringLeftTrim string character-bag)))
 
 (defun string-right-trim (character-bag string)
   "Returns a substring of string, with all characters in character-bag stripped off the end."
   (declare (system::%java-class-name "jcl.strings.functions.StringRightTrim"))
-  (let* ((string (string string)))
+  (let ((string (string string)))
     ($stringRightTrim string character-bag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -204,7 +230,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(char schar string-trim string-left-trim string-right-trim string-upcase string-downcase string-capitalize
-          nstring-upcase nstring-downcase nstring-capitalize string= string/= string< string> string<= string>=
+(export '(stringp simple-string-p
+          string
+          make-string
+          char schar
+          string-trim string-left-trim string-right-trim
+          string-upcase string-downcase string-capitalize
+          nstring-upcase nstring-downcase nstring-capitalize
+          string= string/= string< string> string<= string>=
           string-equal string-not-equal string-lessp string-greaterp string-not-greaterp string-not-lessp)
         "COMMON-LISP")

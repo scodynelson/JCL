@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jcl.lang.condition.exception.PackageErrorException;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.PackageStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 
 /**
@@ -352,6 +355,32 @@ public interface PackageStruct extends LispStruct {
 		return ListStruct.toLispList(findAllSymbols(symbolName.toJavaString()));
 	}
 
+	static LispStruct findPackage(final LispStruct packageDesignator) {
+		final PackageStruct aPackage = toLispPackage(packageDesignator);
+		return (aPackage == null) ? NILStruct.INSTANCE : aPackage;
+	}
+
+	static LispStruct makePackage(final StringStruct packageName, final ListStruct nicknamesList,
+	                              final ListStruct usePackagesList) {
+
+		if (findPackage(packageName) != null) {
+			throw new ProgramErrorException("Package name " + packageName + " is already in use.");
+		}
+
+		final List<String> realNicknames
+				= nicknamesList.stream()
+				               .map(StringStruct.class::cast)
+				               .map(StringStruct::toJavaString)
+				               .collect(Collectors.toList());
+
+		final List<PackageStruct> realUsePackages
+				= usePackagesList.stream()
+				                 .map(PackageStruct.class::cast)
+				                 .collect(Collectors.toList());
+
+		return toLispPackage(packageName.toJavaString(), realNicknames, realUsePackages);
+	}
+
 	/**
 	 * Lists all current packages existent in the {@link GlobalPackageStruct#ALL_PACKAGES} map.
 	 *
@@ -363,5 +392,37 @@ public interface PackageStruct extends LispStruct {
 
 	static ListStruct listAllPackages1() { // TODO: fix method name
 		return ListStruct.toLispList(listAllPackages());
+	}
+
+	static PackageStruct toLispPackage(final String name) {
+		return new PackageStructImpl(name);
+	}
+
+	static PackageStruct toLispPackage(final String name, final List<String> nicknames, final PackageStruct... useList) {
+		return new PackageStructImpl(name, nicknames, useList);
+	}
+
+	static PackageStruct toLispPackage(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
+		return new PackageStructImpl(name, nicknames, useList);
+	}
+
+	static PackageStruct toLispPackage(final LispStruct lispStruct) {
+		if (lispStruct instanceof PackageStruct) {
+			return (PackageStruct) lispStruct;
+		} else if (lispStruct instanceof SymbolStruct) {
+			final SymbolStruct symbolStruct = (SymbolStruct) lispStruct;
+			final String name = symbolStruct.getName();
+			return findPackage(name);
+		} else if (lispStruct instanceof CharacterStruct) {
+			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
+			final String packageName = characterStruct.toJavaCharacter().toString();
+			return findPackage(packageName);
+		} else if (lispStruct instanceof StringStruct) {
+			final StringStruct stringStruct = (StringStruct) lispStruct;
+			final String packageName = stringStruct.toJavaString();
+			return findPackage(packageName);
+		} else {
+			throw new TypeErrorException("Type cannot be converted to Package.");
+		}
 	}
 }

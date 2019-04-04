@@ -22,6 +22,8 @@
                  (ext:jclass "jcl.lang.FloatStruct"))
     test size rehash-threshold))
 
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defun hash-table-test (hash-table)
   "Returns the test used for comparing keys in hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableTest"))
@@ -46,6 +48,8 @@
   "Returns the number of entries in the hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableCount"))
   ($count hash-table))
+
+;;;;;;;;;;;;;;;;;;;;;;
 
 (defun gethash (key hash-table &optional default)
   "Retrieve the value in the hash-table whose key is the same as the key under the hash-table's equivalence test.
@@ -84,6 +88,8 @@
   (declare (system::%java-class-name "jcl.hashtables.functions.MapHash"))
   ($mapHash hash-table function))
 
+;;;;;;;;;;;;;;;;;;;;;;
+
 (defmacro with-hash-table-iterator ((name hash-table) &body body)
   "Has within the lexical scope of the body, a name which is defined via macrolet such that successive invocations
    of (name) return the items, one by one, from the hash table that is obtained by evaluating hash-table only once.
@@ -103,6 +109,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(make-hash-table hash-table-test hash-table-size hash-table-rehash-size hash-table-rehash-threshold hash-table-count
-          gethash remhash clrhash sxhash maphash with-hash-table-iterator)
+(export '(make-hash-table
+          hash-table-test hash-table-size hash-table-rehash-size hash-table-rehash-threshold hash-table-count
+          gethash remhash clrhash sxhash maphash
+          with-hash-table-iterator)
         "COMMON-LISP")

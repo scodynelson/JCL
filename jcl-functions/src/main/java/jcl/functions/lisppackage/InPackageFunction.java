@@ -5,9 +5,9 @@
 package jcl.functions.lisppackage;
 
 import jcl.functions.CommonLispBuiltInFunctionStructBase;
-import jcl.functions.FunctionHelpers;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
@@ -47,7 +47,7 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final String name = FunctionHelpers.asString(lispStruct).toJavaString();
+		final String name = StringStruct.toLispString(lispStruct).toJavaString();
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
 		if (newCurrentPackage == null) {

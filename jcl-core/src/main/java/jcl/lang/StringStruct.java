@@ -581,6 +581,34 @@ public interface StringStruct extends VectorStruct {
 		return new SimpleStringStructImpl(str);
 	}
 
+	static StringStruct toLispString(final LispStruct lispStruct) {
+		if (lispStruct instanceof StringStruct) {
+			return (StringStruct) lispStruct;
+		} else if (lispStruct instanceof SymbolStruct) {
+			final SymbolStruct symbolStruct = (SymbolStruct) lispStruct;
+			final String name = symbolStruct.getName();
+			return toLispString(name);
+		} else if (lispStruct instanceof CharacterStruct) {
+			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
+			return toLispString(characterStruct.toJavaCharacter().toString());
+		} else {
+			throw new TypeErrorException("Type cannot be converted to String.");
+		}
+	}
+
+	static StringStruct makeString(final IntegerStruct size, final CharacterStruct initialElement,
+	                               final SymbolStruct elementType) {
+		final StringStruct.Builder builder = builder(size);
+
+		builder.initialElement(initialElement);
+
+		// TODO: elementType currently ignored!!
+		final CharacterType characterType = CharacterType.INSTANCE;
+		builder.elementType(characterType);
+
+		return builder.build();
+	}
+
 	/**
 	 * Returns a new {@link StringStruct.Builder} to be used in constructing a new StringStruct.
 	 *

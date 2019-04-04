@@ -5,8 +5,10 @@
 package jcl.lang.java;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.condition.exception.ErrorException;
 
 public class JavaMethodStruct extends BuiltInClassStruct {
 
@@ -18,11 +20,60 @@ public class JavaMethodStruct extends BuiltInClassStruct {
 		this.javaMethod = javaMethod;
 	}
 
-	public static JavaMethodStruct valueOf(final Method javaMethod) {
+	public Method getJavaMethod() {
+		return javaMethod;
+	}
+
+	public static JavaMethodStruct toJavaMethod(final Method javaMethod) {
 		return new JavaMethodStruct(javaMethod);
 	}
 
-	public Method getJavaMethod() {
-		return javaMethod;
+	public static JavaMethodStruct toJavaMethod(final String methodName,
+	                                            final Class<?> javaClass,
+	                                            final Class<?>... parameterTypes) {
+		final Method javaMethod = toJavaReflectionMethod(methodName, javaClass, parameterTypes);
+		return new JavaMethodStruct(javaMethod);
+	}
+
+	public static Method toJavaReflectionMethod(final String methodName,
+	                                            final Class<?> javaClass,
+	                                            final Class<?>... parameterTypes) {
+		final String javaClassName = javaClass.getName();
+		final Method[] methods = javaClass.getMethods();
+
+		Method matchingMethod = null;
+
+		for (final Method method : methods) {
+			final String currentMethodName = method.getName();
+			if (!currentMethodName.equals(methodName)) {
+				continue;
+			}
+			final Class<?>[] currentParamTypes = method.getParameterTypes();
+			if (currentParamTypes.length != parameterTypes.length) {
+				continue;
+			}
+
+			boolean matches = true;
+			for (int i = 0; i < currentParamTypes.length; i++) {
+				final Class<?> currentParamType = currentParamTypes[i];
+				final Class<?> expectedParamType = parameterTypes[i];
+
+				if (!currentParamType.isAssignableFrom(expectedParamType)) {
+					matches = false;
+				}
+			}
+			if (matches) {
+				matchingMethod = method;
+				break;
+			}
+		}
+		if (matchingMethod == null) {
+			throw new ErrorException(
+					"Java Class '" + javaClassName +
+							"' does not have the method '" + methodName +
+							"' with parameter types '" + Arrays.toString(parameterTypes) +
+							"'.");
+		}
+		return matchingMethod;
 	}
 }

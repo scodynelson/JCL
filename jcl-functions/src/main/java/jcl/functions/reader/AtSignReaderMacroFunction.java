@@ -10,8 +10,8 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.java.JavaClassStruct;
+import jcl.lang.java.JavaObjectStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
@@ -54,7 +54,7 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return null;
 		}
 
-		final JavaClassStruct javaClass = LispStructFactory.toJavaClass(tokenString);
-		return LispStructFactory.toJavaObject(javaClass.getJavaClass());
+		final JavaClassStruct javaClass = JavaClassStruct.toJavaClass(tokenString);
+		return JavaObjectStruct.toJavaObject(javaClass.getJavaClass());
 	}
 }

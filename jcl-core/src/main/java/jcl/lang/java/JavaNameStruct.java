@@ -21,10 +21,6 @@ public class JavaNameStruct extends BuiltInClassStruct {
 		this.javaName = javaName;
 	}
 
-	public static JavaNameStruct valueOf(final String javaName) {
-		return new JavaNameStruct(javaName);
-	}
-
 	public String getJavaName() {
 		return javaName;
 	}
@@ -40,9 +36,9 @@ public class JavaNameStruct extends BuiltInClassStruct {
 
 		mv.visitLdcInsn(javaName);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME,
-		                   GenerationConstants.LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_DESC,
+		                   GenerationConstants.JAVA_NAME_STRUCT_NAME,
+		                   GenerationConstants.JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_NAME,
+		                   GenerationConstants.JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_DESC,
 		                   false);
 	}
 
@@ -53,5 +49,9 @@ public class JavaNameStruct extends BuiltInClassStruct {
 	@Override
 	public String toString() {
 		return javaName;
+	}
+
+	public static JavaNameStruct toJavaName(final String javaName) {
+		return new JavaNameStruct(javaName);
 	}
 }

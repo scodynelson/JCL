@@ -6,10 +6,10 @@ package jcl.functions.java;
 
 import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
+import jcl.lang.java.JavaObjectStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,6 +30,6 @@ public final class JNew extends ExtensionsBuiltInFunctionStructBase {
 	public LispStruct apply(final Arguments arguments) {
 		final JavaClassStruct javaClassStruct = arguments.getRequiredArgument(JAVA_CLASS_ARGUMENT, JavaClassStruct.class);
 		final Class<?> javaClass = javaClassStruct.getJavaClass();
-		return LispStructFactory.toJavaObject(javaClass);
+		return JavaObjectStruct.toJavaObject(javaClass);
 	}
 }

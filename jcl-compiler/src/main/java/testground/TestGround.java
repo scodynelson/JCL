@@ -40,7 +40,7 @@ import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
+import jcl.lang.java.JavaMethodStruct;
 import org.objectweb.asm.Label;
 
 @SuppressWarnings("all")
@@ -62,7 +62,7 @@ public class TestGround {
 
 		final LispStruct javaObject = CharacterStruct.toLispCharacter(97);
 		final Method javaMethod
-				= LispStructFactory.toJavaReflectionMethod(methodName, javaObject.getClass(), methodArgTypes);
+				= JavaMethodStruct.toJavaReflectionMethod(methodName, javaObject.getClass(), methodArgTypes);
 		final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
 
 //		if (methodResult instanceof LispStruct) {

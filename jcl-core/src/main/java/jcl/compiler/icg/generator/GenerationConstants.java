@@ -45,9 +45,10 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.internal.StructureObjectStructImpl;
+import jcl.lang.java.JavaMethodStruct;
+import jcl.lang.java.JavaNameStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.LispType;
 import jcl.type.TypeBaseClass;
@@ -165,8 +166,6 @@ public interface GenerationConstants {
 
 	String JAVA_STRING_BUILDER_TO_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringBuilder.class, JAVA_STRING_BUILDER_TO_STRING_METHOD_NAME);
 
-	String LISP_STRUCT_FACTORY_NAME = Type.getInternalName(LispStructFactory.class);
-
 	String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStruct.class);
 
 	String CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME = "toLispCharacter";
@@ -213,13 +212,17 @@ public interface GenerationConstants {
 
 	String STRING_STRUCT_TO_LISP_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, String.class);
 
-	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME = "toJavaName";
+	String JAVA_NAME_STRUCT_NAME = Type.getInternalName(JavaNameStruct.class);
 
-	String LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_JAVA_NAME_METHOD_NAME, String.class);
+	String JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_NAME = "toJavaName";
 
-	String LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_NAME = "toJavaReflectionMethod";
+	String JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_DESC = CodeGenerators.getMethodDescription(JavaNameStruct.class, JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_NAME, String.class);
 
-	String LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(LispStructFactory.class, LISP_STRUCT_FACTORY_TO_JAVA_REFLECTION_METHOD_METHOD_NAME, String.class, Class.class, Class[].class);
+	String JAVA_METHOD_STRUCT_NAME = Type.getInternalName(JavaMethodStruct.class);
+
+	String JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_NAME = "toJavaReflectionMethod";
+
+	String JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(JavaMethodStruct.class, JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_NAME, String.class, Class.class, Class[].class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

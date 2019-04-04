@@ -24,8 +24,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.factory.LispStructFactory;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
@@ -169,7 +167,7 @@ public class InternalEval {
 				methodParamTypes[i] = evaluatedArgument.getClass();
 			}
 
-			final JavaMethodStruct javaMethodStruct = LispStructFactory.toJavaMethod(methodName.getJavaName(),
+			final JavaMethodStruct javaMethodStruct = JavaMethodStruct.toJavaMethod(methodName.getJavaName(),
 			                                                                         actualJavaObject.getClass(),
 			                                                                         methodParamTypes);
 			final Method javaMethod = javaMethodStruct.getJavaMethod();
@@ -235,7 +233,7 @@ public class InternalEval {
 			if (methodResult instanceof LispStruct) {
 				return (LispStruct) methodResult;
 			}
-			return JavaObjectStruct.valueOf(methodResult);
+			return JavaObjectStruct.toJavaObject(methodResult);
 		} catch (final InvocationTargetException | IllegalAccessException ex) {
 			String message = "Java Method '" + javaMethodName + "' could not be properly invoked";
 

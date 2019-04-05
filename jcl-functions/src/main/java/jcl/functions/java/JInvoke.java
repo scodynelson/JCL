@@ -2,12 +2,13 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions;
+package jcl.functions.java;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 import jcl.compiler.function.InternalEval;
+import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;

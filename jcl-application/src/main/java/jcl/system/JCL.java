@@ -50,8 +50,9 @@ public class JCL implements ApplicationRunner {
 
 	private final List<String> lispFilesToLoad;
 
-	public JCL() throws IOException {
+	public JCL() throws Exception {
 		BootstrapSymbols.bootstrap();
+		BootstrapFunctions.bootstrap();
 
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
 			final JavaStreamStruct characterStream = JavaStreamStruct.toJavaStream(System.in, loggerOutputStream);

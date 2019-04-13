@@ -4,23 +4,20 @@ import java.util.List;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
+import jcl.compiler.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
 import jcl.compiler.struct.specialoperator.LetStarStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetStarVar> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
-
-	protected LetStarExpander() {
-		super("LET*");
+	public LetStarExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander) {
+		super(formAnalyzer, declareExpander, "LET*");
 	}
 
 	@Override

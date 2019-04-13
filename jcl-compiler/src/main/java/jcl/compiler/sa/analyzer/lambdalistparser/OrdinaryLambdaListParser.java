@@ -15,6 +15,7 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
+import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -24,6 +25,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class OrdinaryLambdaListParser extends LambdaListParser {
+
+	public OrdinaryLambdaListParser(final DestructuringLambdaListParser destructuringLambdaListParser,
+	                                final FormAnalyzer formAnalyzer) {
+		super(destructuringLambdaListParser, formAnalyzer);
+	}
 
 	public OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                  final DeclareStruct declareElement) {

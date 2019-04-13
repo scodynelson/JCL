@@ -23,17 +23,18 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.type.TType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacroletStruct> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private final FormAnalyzer formAnalyzer;
+	private final DeclareExpander declareExpander;
 
-	@Autowired
-	private DeclareExpander declareExpander;
+	public SymbolMacroletExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander) {
+		this.formAnalyzer = formAnalyzer;
+		this.declareExpander = declareExpander;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

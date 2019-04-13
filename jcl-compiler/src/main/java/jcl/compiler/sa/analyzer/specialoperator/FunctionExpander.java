@@ -18,17 +18,18 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStruct> {
 
-	@Autowired
-	private LambdaExpander lambdaExpander;
+	private final LambdaExpander lambdaExpander;
+	private final MacroLambdaExpander macroLambdaExpander;
 
-	@Autowired
-	private MacroLambdaExpander macroLambdaExpander;
+	public FunctionExpander(final LambdaExpander lambdaExpander, final MacroLambdaExpander macroLambdaExpander) {
+		this.lambdaExpander = lambdaExpander;
+		this.macroLambdaExpander = macroLambdaExpander;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

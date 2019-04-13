@@ -11,18 +11,13 @@ import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.type.LispType;
 import jcl.type.StreamType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The {@link AbstractNativeStreamStructImpl} is an abstraction for native stream types.
  */
+@Slf4j
 abstract class AbstractNativeStreamStructImpl extends StreamStructImpl implements IOStreamStruct {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNativeStreamStructImpl.class);
 
 	/**
 	 * Protected constructor.
@@ -45,14 +40,10 @@ abstract class AbstractNativeStreamStructImpl extends StreamStructImpl implement
 			final ReadPeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
 			return !peekResult.isEof();
 		} catch (final EndOfFileException eofe) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
-			}
+			log.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
 			return false;
 		} catch (final StreamErrorException see) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Stream error occurred.", see);
-			}
+			log.warn("Stream error occurred.", see);
 			return false;
 		}
 	}

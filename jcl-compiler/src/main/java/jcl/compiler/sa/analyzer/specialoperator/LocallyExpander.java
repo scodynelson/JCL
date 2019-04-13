@@ -19,17 +19,18 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private final FormAnalyzer formAnalyzer;
+	private final DeclareExpander declareExpander;
 
-	@Autowired
-	private DeclareExpander declareExpander;
+	public LocallyExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander) {
+		this.formAnalyzer = formAnalyzer;
+		this.declareExpander = declareExpander;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

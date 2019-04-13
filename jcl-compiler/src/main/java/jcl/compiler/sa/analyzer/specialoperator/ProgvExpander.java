@@ -15,14 +15,16 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private final FormAnalyzer formAnalyzer;
+
+	public ProgvExpander(final FormAnalyzer formAnalyzer) {
+		this.formAnalyzer = formAnalyzer;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

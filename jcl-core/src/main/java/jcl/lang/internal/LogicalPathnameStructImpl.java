@@ -24,12 +24,12 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
 import jcl.type.LogicalPathnameType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The {@link LogicalPathnameStructImpl} is the object representation of a Lisp 'logical-pathname' type.
  */
+@Slf4j
 public final class LogicalPathnameStructImpl extends PathnameStructImpl implements LogicalPathnameStruct {
 
 	/**
@@ -76,11 +76,6 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 	 * {@link Pattern} used to parse pathname directories.
 	 */
 	private static final Pattern DIRECTORY_PATTERN = Pattern.compile(String.valueOf(DIRECTORY_MARKER));
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogicalPathnameStructImpl.class);
 
 	/**
 	 * Public constructor.
@@ -332,9 +327,7 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 				throw new TypeErrorException("Version number must be a positive integer: " + pathnameVersion);
 			}
 		} catch (final NumberFormatException nfe) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Provided version cannot be parsed as an integer: {}", pathnameVersion, nfe);
-			}
+			log.warn("Provided version cannot be parsed as an integer: {}", pathnameVersion, nfe);
 		}
 
 		throw new TypeErrorException("Version did not match either '*', ':NEWEST', or a positive integer: " + pathnameVersion);

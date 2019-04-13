@@ -30,19 +30,17 @@ import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.PathnameVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LOAD";
 	private static final String FILESPEC_ARGUMENT = "FILESPEC";
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoadFunction.class);
 
 	@Autowired
 	private InternalRead internalRead;
@@ -151,7 +149,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 	                                  final boolean verbose, final boolean print) {
 
 		if (verbose) {
-			LOGGER.info("; Loading '{}'", filespecPath);
+			log.info("; Loading '{}'", filespecPath);
 		}
 
 		LispStruct form;
@@ -163,7 +161,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 			final LispStruct evaluatedForm = internalEval.eval(form);
 			if (print) {
-				LOGGER.info("; {}", evaluatedForm);
+				log.info("; {}", evaluatedForm);
 			}
 		} while (form != null);
 
@@ -184,10 +182,10 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 				return function.apply();
 			}
 		} catch (final FileErrorException fee) {
-			LOGGER.error(fee.getMessage(), fee.getCause());
+			log.error(fee.getMessage(), fee.getCause());
 			return NILStruct.INSTANCE;
 		} catch (Exception ex) {
-			LOGGER.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
+			log.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
 			return NILStruct.INSTANCE;
 		}
 	}

@@ -9,19 +9,14 @@ import jcl.lang.LispStruct;
 import jcl.lang.TStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public final class GC extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GC";
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(GC.class);
 
 	public GC() {
 		super("Manually invokes the Java runtime garbage collection.",
@@ -36,7 +31,11 @@ public final class GC extends ExtensionsBuiltInFunctionStructBase {
 		final long freeMemoryBefore = Runtime.getRuntime().freeMemory();
 		Runtime.getRuntime().gc();
 		final long freeMemoryAfter = Runtime.getRuntime().freeMemory();
-		LOGGER.debug("; {} bytes of garbage removed, current free memory is {} bytes.", freeMemoryAfter - freeMemoryBefore, freeMemoryAfter);
+
+		if (log.isDebugEnabled()) {
+			final long bytesRemoved = freeMemoryAfter - freeMemoryBefore;
+			log.debug("; {} bytes of garbage removed, current free memory is {} bytes.", bytesRemoved, freeMemoryAfter);
+		}
 
 		return TStruct.INSTANCE;
 	}

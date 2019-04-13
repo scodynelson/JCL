@@ -7,9 +7,9 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
@@ -27,8 +27,6 @@ final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 		CASE_KEYWORDS.add(CAPITALIZE_KEYWORD);
 	}
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PrintCaseVariable.class);
-
 	private PrintCaseVariable() {
 		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, UPCASE_KEYWORD);
 	}
@@ -44,7 +42,7 @@ final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 		if (CASE_KEYWORDS.contains(variableValue)) {
 			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", variableValue);
+			log.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", variableValue);
 
 			super.setValue(UPCASE_KEYWORD);
 		}

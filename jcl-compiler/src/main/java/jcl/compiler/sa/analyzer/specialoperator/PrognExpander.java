@@ -13,14 +13,16 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private final FormAnalyzer formAnalyzer;
+
+	public PrognExpander(final FormAnalyzer formAnalyzer) {
+		this.formAnalyzer = formAnalyzer;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

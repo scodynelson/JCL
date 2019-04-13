@@ -19,7 +19,6 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,8 +36,11 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.EVAL);
 	}
 
-	@Autowired
-	private InternalEval internalEval;
+	private final InternalEval internalEval;
+
+	public EvalWhenExpander(final InternalEval internalEval) {
+		this.internalEval = internalEval;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

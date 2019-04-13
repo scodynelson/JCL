@@ -9,19 +9,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.readtable.SyntaxType;
 import jcl.util.CodePointConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Represents a lookup table for {@link SyntaxType}s matching {@link Integer} code points.
  */
+@Slf4j
 @SuppressWarnings("all")
 class SyntaxTable {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SyntaxTable.class);
 
 	/**
 	 * The internal mapping of character code points to {@link SyntaxType}s.
@@ -184,13 +179,13 @@ class SyntaxTable {
 					&& !Character.isIdentifierIgnorable(codePoint)) {
 				return SyntaxType.CONSTITUENT;
 			} else {
-				LOGGER.warn("Defined but illegal: {}", codePoint);
+				log.warn("Defined but illegal: {}", codePoint);
 				return SyntaxType.INVALID;
 			}
 		}
 
 		if (codePoint != CodePointConstants.EXIT_CHAR) {
-			LOGGER.error("Not defined and illegal: {}", codePoint);
+			log.error("Not defined and illegal: {}", codePoint);
 		}
 		return SyntaxType.INVALID;
 	}

@@ -49,7 +49,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
 	}
 
-	private GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
+	private static GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
 
 		final Stack<List<GoStruct<?>>> tagbodyStack = environment.getTagbodyStack();
 		final ListIterator<List<GoStruct<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());

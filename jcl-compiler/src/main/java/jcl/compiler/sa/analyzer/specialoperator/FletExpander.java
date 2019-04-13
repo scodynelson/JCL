@@ -6,7 +6,9 @@ import java.util.Stack;
 
 import jcl.compiler.StackUtils;
 import jcl.compiler.environment.Environment;
+import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
+import jcl.compiler.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
@@ -16,17 +18,14 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FletExpander extends InnerLambdaExpander {
 
-	@Autowired
-	private FunctionExpander functionExpander;
-
-	protected FletExpander() {
-		super("FLET");
+	public FletExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
+	                    final FunctionExpander functionExpander) {
+		super(formAnalyzer, declareExpander, functionExpander, "FLET");
 	}
 
 	@Override

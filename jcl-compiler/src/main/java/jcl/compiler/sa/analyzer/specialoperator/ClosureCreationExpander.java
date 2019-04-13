@@ -27,19 +27,17 @@ import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private DeclareExpander declareExpander;
-
+	protected final FormAnalyzer formAnalyzer;
+	private final DeclareExpander declareExpander;
 	private final String expanderName;
 
-	protected ClosureCreationExpander(final String expanderName) {
+	protected ClosureCreationExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
+	                                  final String expanderName) {
+		this.formAnalyzer = formAnalyzer;
+		this.declareExpander = declareExpander;
 		this.expanderName = expanderName;
 	}
 

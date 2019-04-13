@@ -13,14 +13,16 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleValueProg1Struct> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private final FormAnalyzer formAnalyzer;
+
+	public MultipleValueProg1Expander(final FormAnalyzer formAnalyzer) {
+		this.formAnalyzer = formAnalyzer;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

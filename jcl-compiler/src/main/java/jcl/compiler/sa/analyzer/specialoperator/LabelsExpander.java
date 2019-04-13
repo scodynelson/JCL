@@ -5,24 +5,23 @@ import java.util.Stack;
 
 import jcl.compiler.StackUtils;
 import jcl.compiler.environment.Environment;
+import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
+import jcl.compiler.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LabelsExpander extends InnerLambdaExpander {
 
-	@Autowired
-	private FunctionExpander functionExpander;
-
-	protected LabelsExpander() {
-		super("LABELS");
+	public LabelsExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
+	                    final FunctionExpander functionExpander) {
+		super(formAnalyzer, declareExpander, functionExpander, "LABELS");
 	}
 
 	@Override

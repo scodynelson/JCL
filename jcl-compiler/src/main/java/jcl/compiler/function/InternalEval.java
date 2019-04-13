@@ -28,21 +28,20 @@ import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
 import jcl.lang.statics.CompilerVariables;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class InternalEval {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(InternalEval.class);
+	private final CompileForm compileForm;
+	private final FormAnalyzer formAnalyzer;
 
-	@Autowired
-	private CompileForm compileForm;
-
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	public InternalEval(final CompileForm compileForm, final FormAnalyzer formAnalyzer) {
+		this.compileForm = compileForm;
+		this.formAnalyzer = formAnalyzer;
+	}
 
 	public LispStruct eval(final LispStruct originalExp) {
 
@@ -243,7 +242,7 @@ public class InternalEval {
 			}
 			message += '.';
 
-			LOGGER.error(message, ex);
+			log.error(message, ex);
 			throw new ErrorException(message, ex);
 		}
 	}

@@ -10,12 +10,10 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 class ProperListVariable extends VariableStructImpl<ListStruct> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProperListVariable.class);
 
 	ProperListVariable(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage, NILStruct.INSTANCE);
@@ -32,7 +30,7 @@ class ProperListVariable extends VariableStructImpl<ListStruct> {
 		if (variableValue.isProper()) {
 			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
+			log.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
 			super.setValue(NILStruct.INSTANCE);
 		}

@@ -22,8 +22,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,13 +30,9 @@ import org.springframework.stereotype.Component;
  * Reader Macro Function for handling the reading of *features* in the system, handling whether or not those specific
  * features should be hidden or not (aka. the token is read in but ignored).
  */
+@Slf4j
 @Component
 final class FeaturesReaderMacroFunction {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReaderMacroFunction.class);
 
 	private final Reader reader;
 
@@ -72,8 +67,8 @@ final class FeaturesReaderMacroFunction {
 				reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Error occurred when reading feature.", ree);
+			if (log.isDebugEnabled()) {
+				log.debug("Error occurred when reading feature.", ree);
 			}
 		} finally {
 			PackageVariables.PACKAGE.setValue(previousPackage);

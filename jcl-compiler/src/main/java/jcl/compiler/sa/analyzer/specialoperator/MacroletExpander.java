@@ -30,25 +30,24 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.type.TType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MacroletExpander.class);
+	private final FormAnalyzer formAnalyzer;
+	private final DeclareExpander declareExpander;
+	private final FunctionExpander functionExpander;
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private DeclareExpander declareExpander;
-
-	@Autowired
-	private FunctionExpander functionExpander;
+	public MacroletExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
+	                        final FunctionExpander functionExpander) {
+		this.formAnalyzer = formAnalyzer;
+		this.declareExpander = declareExpander;
+		this.functionExpander = functionExpander;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -130,7 +129,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
-				LOGGER.warn("MACROLET: Multiple bindings of {} in MACROLET form.", functionName.getName());
+				log.warn("MACROLET: Multiple bindings of {} in MACROLET form.", functionName.getName());
 			}
 			functionNames.add(functionName);
 		}

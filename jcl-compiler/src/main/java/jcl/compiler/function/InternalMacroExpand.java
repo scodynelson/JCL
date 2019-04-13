@@ -12,8 +12,10 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.statics.CompilerVariables;
+import lombok.experimental.UtilityClass;
 
-public class InternalMacroExpand {
+@UtilityClass
+public final class InternalMacroExpand {
 
 	public static MacroExpandResult macroExpand(final LispStruct element, final Environment environment) {
 		LispStruct tempElement = element;

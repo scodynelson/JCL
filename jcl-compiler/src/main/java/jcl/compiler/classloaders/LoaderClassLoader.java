@@ -14,14 +14,12 @@ import java.util.jar.Manifest;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class LoaderClassLoader extends ClassLoader {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoaderClassLoader.class);
 
 	private final Map<String, Class<?>> classes = new ConcurrentHashMap<>();
 
@@ -43,10 +41,10 @@ public class LoaderClassLoader extends ClassLoader {
 
 			final String jarFileName = jarFile.getName();
 			if (verbose) {
-				LOGGER.info("; Loading '{}'", jarFileName);
+				log.info("; Loading '{}'", jarFileName);
 			}
 			if (print) {
-				LOGGER.info("");
+				log.info("");
 			}
 			loadJarEntries(jarFileName);
 		} catch (final IOException ex) {
@@ -70,17 +68,17 @@ public class LoaderClassLoader extends ClassLoader {
 					resolveClass(entryClass);
 
 					if (print) {
-						LOGGER.info("; '{}' defined", fileName);
+						log.info("; '{}' defined", fileName);
 					}
 					classes.put(fileName, entryClass);
 				} catch (final IOException ioe) {
-					LOGGER.error("Error reading the class {} from JAR file {}", fileName, jarFileName, ioe);
+					log.error("Error reading the class {} from JAR file {}", fileName, jarFileName, ioe);
 				}
 			}
 		}
 
 		if (print) {
-			LOGGER.info("");
+			log.info("");
 		}
 	}
 
@@ -90,7 +88,7 @@ public class LoaderClassLoader extends ClassLoader {
 		final String jarFileName = jarFile.getName();
 		try {
 			if (verbose) {
-				LOGGER.info("; Loading main class: '{}'\n", jarFileName);
+				log.info("; Loading main class: '{}'\n", jarFileName);
 			}
 
 			manifest = jarFile.getManifest();

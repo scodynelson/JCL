@@ -89,7 +89,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		return declareElement;
 	}
 
-	private JavaClassNameDeclarationStruct saJavaClassNameDeclaration(final List<LispStruct> declSpecBody) {
+	private static JavaClassNameDeclarationStruct saJavaClassNameDeclaration(final List<LispStruct> declSpecBody) {
 
 		final int declSpecBodySize = declSpecBody.size();
 		if (declSpecBodySize != 1) {
@@ -104,7 +104,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		return new JavaClassNameDeclarationStruct(javaClassNameString.toJavaString());
 	}
 
-	private LispNameDeclarationStruct saLispNameDeclaration(final List<LispStruct> declSpecBody) {
+	private static LispNameDeclarationStruct saLispNameDeclaration(final List<LispStruct> declSpecBody) {
 
 		final int declSpecBodySize = declSpecBody.size();
 		if (declSpecBodySize != 1) {
@@ -146,7 +146,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		return new LispNameDeclarationStruct(lispNameClassName);
 	}
 
-	private List<SpecialDeclarationStruct> saSpecialDeclaration(final List<LispStruct> declSpecBody) {
+	private static List<SpecialDeclarationStruct> saSpecialDeclaration(final List<LispStruct> declSpecBody) {
 
 		final List<SpecialDeclarationStruct> specialDeclarationElements = new ArrayList<>(declSpecBody.size());
 

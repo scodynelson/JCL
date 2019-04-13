@@ -7,12 +7,10 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 class NonNegNilVariable extends VariableStructImpl<IntegerStruct> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(NonNegNilVariable.class);
 
 	NonNegNilVariable(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage, null);
@@ -31,7 +29,7 @@ class NonNegNilVariable extends VariableStructImpl<IntegerStruct> {
 		if (bigIntegerValue.compareTo(BigInteger.ZERO) >= 0) {
 			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
+			log.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
 			// TODO: check this set here...
 			super.setValue(null);

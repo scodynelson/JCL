@@ -23,8 +23,7 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This interface defines a set of anonymous classes that comprise the states of the Reader state machine as defined in
@@ -48,12 +47,8 @@ import org.slf4j.LoggerFactory;
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
+@Slf4j
 class ReaderProcessor {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReaderProcessor.class);
 
 	/**
 	 * Private constructor.
@@ -110,8 +105,8 @@ class ReaderProcessor {
 		}
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", token);
+			if (log.isDebugEnabled()) {
+				log.debug("{} suppressed.", token);
 			}
 			return NILStruct.INSTANCE;
 		}
@@ -215,8 +210,8 @@ class ReaderProcessor {
 		);
 
 		if (token instanceof CommentStruct) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace(((CommentStruct) token).getCommentString());
+			if (log.isTraceEnabled()) {
+				log.trace(((CommentStruct) token).getCommentString());
 			}
 			return read(tokenBuilder);
 		} else if (token == null) {

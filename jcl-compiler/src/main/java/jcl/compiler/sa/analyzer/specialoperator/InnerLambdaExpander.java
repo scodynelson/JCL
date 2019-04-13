@@ -32,24 +32,22 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+@Slf4j
 public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(InnerLambdaExpander.class);
-
-	@Autowired
-	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private DeclareExpander declareExpander;
-
+	private final FormAnalyzer formAnalyzer;
+	private final DeclareExpander declareExpander;
+	protected final FunctionExpander functionExpander;
 	private final String expanderName;
 
-	protected InnerLambdaExpander(final String expanderName) {
+	protected InnerLambdaExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
+	                              final FunctionExpander functionExpander, final String expanderName) {
+		this.formAnalyzer = formAnalyzer;
+		this.declareExpander = declareExpander;
+		this.functionExpander = functionExpander;
 		this.expanderName = expanderName;
 	}
 
@@ -144,7 +142,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
-				LOGGER.warn("{}: Multiple bindings of {} in {} form.", expanderName, functionName.getName(), expanderName);
+				log.warn("{}: Multiple bindings of {} in {} form.", expanderName, functionName.getName(), expanderName);
 			}
 			functionNames.add(functionName);
 		}

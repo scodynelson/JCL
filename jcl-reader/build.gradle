@@ -3,5 +3,6 @@ description = "JCL Reader"
 dependencies {
 	compile(project(":jcl-core"))
 
+	compileOnly("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
 }

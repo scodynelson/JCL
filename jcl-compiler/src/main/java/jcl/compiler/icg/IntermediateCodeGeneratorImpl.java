@@ -4,10 +4,8 @@ import java.util.Deque;
 
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
-import org.springframework.stereotype.Component;
 
-@Component
-class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
+public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
 
 	@Override
 	public Deque<JavaClassBuilder> generate(final LambdaStruct lambdaStruct) {

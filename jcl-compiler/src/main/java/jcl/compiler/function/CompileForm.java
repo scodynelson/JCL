@@ -21,26 +21,26 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class CompileForm {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CompileForm.class);
-
 	public static boolean OUTPUT_FILE = true;
 
-	@Autowired
-	private SemanticAnalyzer semanticAnalyzer;
+	private final SemanticAnalyzer semanticAnalyzer;
+	private final IntermediateCodeGenerator intermediateCodeGenerator;
 
-	@Autowired
-	private IntermediateCodeGenerator intermediateCodeGenerator;
+	public CompileForm(final SemanticAnalyzer semanticAnalyzer,
+	                   final IntermediateCodeGenerator intermediateCodeGenerator) {
+		this.semanticAnalyzer = semanticAnalyzer;
+		this.intermediateCodeGenerator = intermediateCodeGenerator;
+	}
 
 	public CompileResult compile(final LispStruct form) {
 
@@ -63,7 +63,7 @@ public class CompileForm {
 				try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
 					outputStream.write(byteArray);
 				} catch (final IOException ioe) {
-					LOGGER.info("Error writing class file.", ioe);
+					log.info("Error writing class file.", ioe);
 				}
 			}
 
@@ -86,7 +86,7 @@ public class CompileForm {
 					function.afterPropertiesSet();
 				}
 			} catch (final Exception ex) {
-				LOGGER.error("Error compiling definition.", ex);
+				log.error("Error compiling definition.", ex);
 				compiledWithWarnings = true;
 				failedToCompile = true;
 			}

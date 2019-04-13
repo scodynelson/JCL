@@ -7,8 +7,10 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import lombok.experimental.UtilityClass;
 
-public class BodyWithDeclaresAnalyzer {
+@UtilityClass
+public final class BodyWithDeclaresAnalyzer {
 
 	public static BodyProcessingResult analyze(final List<LispStruct> input) {
 

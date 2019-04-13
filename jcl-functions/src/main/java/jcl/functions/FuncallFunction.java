@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 
-//	private static final Logger LOGGER = LoggerFactory.getLogger(FuncallFunction.class);
-
 	private static final String FUNCTION_NAME = "FUNCALL";
 	private static final String FN_ARGUMENT = "FN";
 
@@ -38,14 +36,6 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		/* TRACING FUNCALL */
-//		final String collect =
-//				Arrays.stream(lispStructs)
-//				      .map(lispStruct -> printer.print(lispStruct))
-//				      .collect(Collectors.joining(" "));
-//		LOGGER.error("0> Calling (FUNCALL {}", collect);
-		/* TRACING FUNCALL */
-
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
 
 		FunctionStruct functionStruct = null;
@@ -69,12 +59,6 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 		final Parameters parameters = applyFunction.getParameters();
 		final Arguments applyArguments = parameters.build(argumentsArrays);
 
-		final LispStruct result = applyFunction.apply(applyArguments);
-
-		/* TRACING FUNCALL */
-//		LOGGER.error("<0 FUNCALL returned {}", printer.print(result));
-		/* TRACING FUNCALL */
-
-		return result;
+		return applyFunction.apply(applyArguments);
 	}
 }

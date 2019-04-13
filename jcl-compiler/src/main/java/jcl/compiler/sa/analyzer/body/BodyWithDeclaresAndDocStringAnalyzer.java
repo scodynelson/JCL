@@ -8,8 +8,10 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import lombok.experimental.UtilityClass;
 
-public class BodyWithDeclaresAndDocStringAnalyzer {
+@UtilityClass
+public final class BodyWithDeclaresAndDocStringAnalyzer {
 
 	public static BodyProcessingResult analyze(final List<LispStruct> input) {
 

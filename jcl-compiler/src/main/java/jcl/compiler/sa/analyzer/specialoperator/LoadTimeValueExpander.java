@@ -12,17 +12,18 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private final FormAnalyzer formAnalyzer;
+	private final InternalEval internalEval;
 
-	@Autowired
-	private InternalEval internalEval;
+	public LoadTimeValueExpander(final FormAnalyzer formAnalyzer, final InternalEval internalEval) {
+		this.formAnalyzer = formAnalyzer;
+		this.internalEval = internalEval;
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

@@ -7,10 +7,10 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Range;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 
 	private static final int lowerBound = 2;
@@ -18,8 +18,6 @@ public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 	private static final int upperBound = 32;
 
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(lowerBound), BigInteger.valueOf(upperBound));
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
 	public RadixVariable(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage, IntegerStruct.TEN);
@@ -38,7 +36,7 @@ public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
 			super.setValue(variableValue);
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, variableValue);
+			log.warn("Error: {} had illegal value {}. Reset to 10", name, variableValue);
 
 			super.setValue(IntegerStruct.TEN);
 		}

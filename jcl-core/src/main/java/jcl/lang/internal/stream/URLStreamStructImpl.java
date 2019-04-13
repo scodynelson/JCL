@@ -18,18 +18,13 @@ import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.type.CharacterType;
 import jcl.type.FileStreamType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The {@link URLStreamStructImpl} is the object representation of a Lisp 'url-stream' type.
  */
+@Slf4j
 public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl implements URLStreamStruct {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(URLStreamStructImpl.class);
 
 	/**
 	 * The {@link URL} of the http resource that the {@link #urlConnection} interacts with.
@@ -198,9 +193,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 			inputStream.mark(0);
 			inputStream.reset();
 		} catch (final IOException ioe) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("IO exception occurred.", ioe);
-			}
+			log.warn("IO exception occurred.", ioe);
 		}
 	}
 

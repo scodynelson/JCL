@@ -11,21 +11,16 @@ import jcl.compiler.sa.analyzer.LambdaExpander;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-class SemanticAnalyzerImpl implements SemanticAnalyzer {
+@Slf4j
+public class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
+	private final LambdaExpander lambdaExpander;
 
-	@Autowired
-	private LambdaExpander lambdaExpander;
+	public SemanticAnalyzerImpl(final LambdaExpander lambdaExpander) {
+		this.lambdaExpander = lambdaExpander;
+	}
 
 	@Override
 	public LambdaStruct analyze(final ListStruct form) {
@@ -45,6 +40,6 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	}
 
 	private void unknownFunctionWarning(final SymbolStruct undefinedFunction) {
-		LOGGER.warn("Warning: no function or macro function defined for: {}", undefinedFunction);
+		log.warn("Warning: no function or macro function defined for: {}", undefinedFunction);
 	}
 }

@@ -31,15 +31,17 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.TType;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public class LambdaListParser {
+public abstract class LambdaListParser {
 
-	@Autowired
-	private DestructuringLambdaListParser destructuringLambdaListParser;
+	private final DestructuringLambdaListParser destructuringLambdaListParser;
+	private final FormAnalyzer formAnalyzer;
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
+	protected LambdaListParser(final DestructuringLambdaListParser destructuringLambdaListParser,
+	                           final FormAnalyzer formAnalyzer) {
+		this.destructuringLambdaListParser = destructuringLambdaListParser;
+		this.formAnalyzer = formAnalyzer;
+	}
 
 	protected WholeParseResult parseWholeBinding(final Environment environment, final Iterator<LispStruct> iterator,
 	                                             final DeclareStruct declareElement) {

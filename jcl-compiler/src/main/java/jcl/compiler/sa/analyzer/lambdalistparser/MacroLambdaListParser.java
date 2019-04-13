@@ -18,20 +18,22 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
+import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CompilerConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class MacroLambdaListParser extends LambdaListParser {
 
-	@Autowired
-	private DestructuringLambdaListParser destructuringLambdaListParser;
+	public MacroLambdaListParser(final DestructuringLambdaListParser destructuringLambdaListParser,
+	                             final FormAnalyzer formAnalyzer) {
+		super(destructuringLambdaListParser, formAnalyzer);
+	}
 
 	public MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                            final DeclareStruct declareElement) {

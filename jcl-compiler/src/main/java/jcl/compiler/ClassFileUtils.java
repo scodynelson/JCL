@@ -1,4 +1,4 @@
-package jcl.functions.environment;
+package jcl.compiler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,89 +9,30 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.function.parameterdsl.Arguments;
-import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.internal.stream.JavaStreamStructImpl;
 import jcl.lang.statics.StreamVariables;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.benf.cfr.reader.api.CfrDriver;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.api.OutputSinkFactory;
 import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
 import org.objectweb.asm.Type;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public final class DisassembleFunction extends CommonLispBuiltInFunctionStructBase {
+@UtilityClass
+public final class ClassFileUtils {
 
 	/**
 	 * The size of the temporary byte array used to read class input streams chunk by chunk.
 	 */
 	private static final int INPUT_STREAM_DATA_CHUNK_SIZE = 4096;
 
-	private static final String FUNCTION_NAME = "DISASSEMBLE";
-	private static final String FN_ARGUMENT = "FN";
-
-	/**
-	 * Public constructor passing the documentation string.
-	 */
-	public DisassembleFunction() {
-		super("Returns true if object is of type keyword; otherwise, returns false.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
-		                .requiredParameter(FN_ARGUMENT)
-		);
-	}
-
-	@Override
-	public LispStruct apply(final Arguments arguments) {
-		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
-
-		FunctionStruct function = null;
-		if (functionDesignator instanceof SymbolStruct) {
-			final SymbolStruct functionSymbol = (SymbolStruct) functionDesignator;
-			if (functionSymbol.hasFunction()) {
-				function = functionSymbol.getFunction();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getMacroFunctionExpander();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getSymbolMacroExpander();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getCompilerMacroFunctionExpander();
-			}
-		} else if (functionDesignator instanceof ListStruct) {
-			final SymbolStruct functionSymbol
-					= (SymbolStruct) ((ListStruct) ((ListStruct) functionDesignator).cdr()).car();
-			if (functionSymbol.hasFunction()) {
-				function = functionSymbol.getFunction();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getMacroFunctionExpander();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getSymbolMacroExpander();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getCompilerMacroFunctionExpander();
-			}
-		} else if (functionDesignator instanceof FunctionStruct) {
-			function = (FunctionStruct) functionDesignator;
-		} else {
-			throw new TypeErrorException("Unsupported Function Designator.");
-		}
-
+	public static LispStruct disassemble(final FunctionStruct function) {
 		if (function == null) {
 			throw new ErrorException("Undefined function.");
 		}
@@ -104,6 +45,7 @@ public final class DisassembleFunction extends CommonLispBuiltInFunctionStructBa
 		final byte[] classBytes = readBytes(classLoader, fullClassName);
 		final ClassFileSource source = new DisassembledClassFileSource(classBytes);
 
+		// TODO: Should be STANDARD_OUTPUT
 		final JavaStreamStructImpl standardOutput
 				= (JavaStreamStructImpl) StreamVariables.TERMINAL_IO.getVariableValue()
 				                                                    .getOutputStreamStruct();

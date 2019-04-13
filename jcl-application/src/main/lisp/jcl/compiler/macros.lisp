@@ -157,15 +157,15 @@
 
 (defun handle-most-clauses (clauses key-fn key-test last-clause-callback)
     (let ((key-form (car (car clauses))))
-      (when (and (rest clauses) (or (eq key-form t) (eq key-form 'otherwise)))
+      (when (and (cdr clauses) (or (eq key-form t) (eq key-form 'otherwise)))
         (error "T and OTHERWISE are not permitted in other than the last clause"))
       ;; handle the clauses
       (let ((pnc (parse-normal-clause (car clauses) key-fn key-test)))
         (if pnc
-          (if (rest clauses)
-            (append pnc (list (handle-most-clauses (rest clauses) key-fn key-test last-clause-callback)))
+          (if (cdr clauses)
+            (append pnc (list (handle-most-clauses (cdr clauses) key-fn key-test last-clause-callback)))
             (funcall last-clause-callback (car clauses)))
-          (handle-most-clauses (rest clauses) key-fn key-test last-clause-callback)))))
+          (handle-most-clauses (cdr clauses) key-fn key-test last-clause-callback)))))
 
 (defun handle-normal-clauses (clauses key-fn key-test)
   (handle-most-clauses clauses key-fn key-test

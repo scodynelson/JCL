@@ -16,6 +16,7 @@
     <orderEntry type="module" module-name="jcl-core_main" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apfloat:apfloat:1.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.benf:cfr:0.141" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-util:7.1" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-analysis:7.1" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-tree:7.1" level="project" />

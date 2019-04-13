@@ -13,9 +13,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class ListToVectorFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LIST-TO-VECTOR";

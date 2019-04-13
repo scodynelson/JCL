@@ -5,6 +5,7 @@ dependencies {
 
 	compile("commons-io:commons-io")
 	compile("org.apfloat:apfloat")
+	compile("org.benf:cfr")
 	compile("org.ow2.asm:asm")
 	compile("org.ow2.asm:asm-util")
 	compileOnly("org.projectlombok:lombok")

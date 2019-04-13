@@ -4,12 +4,22 @@ import java.util.Arrays;
 import java.util.List;
 
 import jcl.functions.PredicateFunctions;
+import jcl.functions.array.ListToVectorFunction;
+import jcl.functions.condition.ErrorFunction;
+import jcl.functions.java.JClass;
+import jcl.functions.java.JInvoke;
+import jcl.functions.java.JInvokeStatic;
+import jcl.functions.java.JMethod;
+import jcl.functions.java.JNew;
 import jcl.lang.FunctionStruct;
 
 class BootstrapFunctions {
 
 	static void bootstrap() throws Exception {
 		bootstrapPredicateFunctions();
+		bootstrapArrayFunctions();
+		bootstrapConditionFunctions();
+		bootstrapJavaFunctions();
 	}
 
 	private static void bootstrapPredicateFunctions() throws Exception {
@@ -43,7 +53,40 @@ class BootstrapFunctions {
 				new PredicateFunctions.VectorPFunction(),
 
 				new PredicateFunctions.KeywordPFunction()
+		);		for (final FunctionStruct function : functions) {
+			function.afterPropertiesSet();
+		}
+	}
+
+	private static void bootstrapArrayFunctions() throws Exception {
+		final List<FunctionStruct> functions = Arrays.asList(
+				new ListToVectorFunction()
 		);
+
+		for (final FunctionStruct function : functions) {
+			function.afterPropertiesSet();
+		}
+	}
+
+	private static void bootstrapConditionFunctions() throws Exception {
+		final List<FunctionStruct> functions = Arrays.asList(
+				new ErrorFunction()
+		);
+
+		for (final FunctionStruct function : functions) {
+			function.afterPropertiesSet();
+		}
+	}
+
+	private static void bootstrapJavaFunctions() throws Exception {
+		final List<FunctionStruct> functions = Arrays.asList(
+				new JClass(),
+				new JInvoke(),
+				new JInvokeStatic(),
+				new JMethod(),
+				new JNew()
+		);
+
 		for (final FunctionStruct function : functions) {
 			function.afterPropertiesSet();
 		}

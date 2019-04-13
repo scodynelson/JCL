@@ -208,6 +208,152 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: Previously done in Java
+
+(defun acons (key datum alist)
+  "Creates a fresh cons, the cdr of which is alist and the car of which is another fresh cons, the car of which is key
+  and the cdr of which is datum."
+  (declare (system::%java-class-name "jcl.lists.functions.ACons"))
+  (ext:jinvoke-static
+    (ext:jmethod "acons" (ext:jclass "jcl.lang.ConsStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.ListStruct"))
+    key datum alist))
+
+(defun last (list &optional (n 1))
+  "Returns the last n conses (not the last n elements) of list)."
+  (declare (system::%java-class-name "jcl.lists.functions.Last"))
+  ($last list n))
+
+(defun butlast (list &optional (n 1))
+  "Returns a copy of list from which the last n conses have been omitted."
+  (declare (system::%java-class-name "jcl.lists.functions.ButLast"))
+  ($butLast list n))
+
+(defun nbutlast (list &optional (n 1))
+  "Returns a list from which the last n conses have been omitted. The provided list may be modified."
+  (declare (system::%java-class-name "jcl.lists.functions.NButLast"))
+  ($nButLast list n))
+
+(defun copy-list (list)
+  "Returns a copy of list."
+  (declare (system::%java-class-name "jcl.lists.functions.CopyList"))
+  ($copyList list))
+
+(defun copy-alist (alist)
+  "Returns a copy of alist."
+  (declare (system::%java-class-name "jcl.lists.functions.CopyAList"))
+  ($copyAlist alist))
+
+(defun copy-tree (list)
+  "Creates a copy of a tree of conses."
+  (declare (system::%java-class-name "jcl.lists.functions.CopyTree"))
+  ($copyTree list))
+
+(defun endp (list)
+  "Returns true if list is the empty list. Returns false if list is a cons."
+  (declare (system::%java-class-name "jcl.lists.functions.EndP"))
+  ($endP1 list))
+
+(defun tailp (object list)
+  "If object is the same as some tail of list, returns true; otherwise, returns false."
+  (declare (system::%java-class-name "jcl.lists.functions.TailP"))
+  ($tailP1 list object))
+
+(defun getf (plist indicator &optional default)
+  "Finds a property on the property list whose property indicator is identical to indicator, and returns its corresponding
+  property value."
+  (declare (system::%java-class-name "jcl.lists.functions.Getf"))
+  ($getf plist indicator default))
+
+(defun (setf getf) (plist indicator value &optional default)
+  "Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding
+  property value with the new-value provided."
+  (declare (system::%java-class-name "jcl.lists.functions.SetfGetf")
+           (ignore default))
+  ($putf plist indicator value))
+
+(defun get-properties (plist indicator-list)
+  "Used to look up any of several property list entries all at once."
+  (declare (system::%java-class-name "jcl.lists.functions.GetProperties"))
+  ($getProperties plist indicator-list))
+
+(defun list-length (list)
+  "Returns the length of list if list is a proper list. Returns nil if list is a circular list."
+  (declare (system::%java-class-name "jcl.lists.functions.ListLength"))
+  ($listLength1 list))
+
+(defun nth (index list)
+  "Locates the nth element of list, where the car of the list is the ``zeroth'' element."
+  (declare (system::%java-class-name "jcl.lists.functions.Nth"))
+  ($nth list index))
+
+(defun (setf getf) (plist indicator value &optional default)
+  "Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding
+  property value with the new-value provided."
+  (declare (system::%java-class-name "jcl.lists.functions.SetfNth"))
+  ($putf plist indicator value))
+
+(defun nthcdr (n list)
+  "Returns the tail of list that would be obtained by calling cdr n times in succession."
+  (declare (system::%java-class-name "jcl.lists.functions.NthCdr"))
+  ($nthCdr list n))
+
+(defun make-list (size &key initial-element)
+  "Returns a list of length given by size, each of the elements of which is initial-element."
+  (declare (system::%java-class-name "jcl.lists.functions.MakeList"))
+  (ext:jinvoke-static
+    (ext:jmethod "makeList" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    size initial-element))
+
+(defun ldiff (list object)
+  "If object is the same as some tail of list, returns a fresh list of the elements of list that precede object in the
+  list structure of list; otherwise, it returns a copy of list."
+  (declare (system::%java-class-name "jcl.lists.functions.Ldiff"))
+  ($ldiff list object))
+
+(defun pairlis (keys datums &optional alist)
+  "Returns an association list that associates elements of keys to corresponding elements of data."
+  (declare (system::%java-class-name "jcl.lists.functions.Pairlis"))
+  (ext:jinvoke-static
+    (ext:jmethod "pairlis" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.ListStruct"))
+    keys datums alist))
+
+(defun rplaca (cons object)
+  "Replaces the car of the cons with object."
+  (declare (system::%java-class-name "jcl.lists.functions.Rplaca"))
+  ($rplaca cons object))
+
+(defun rplacd (cons object)
+  "Replaces the cdr of the cons with object."
+  (declare (system::%java-class-name "jcl.lists.functions.Rplacd"))
+  ($rplacd cons object))
+
+(defun revappend (list tail)
+  "Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that
+  reversed list and returns the result."
+  (declare (system::%java-class-name "jcl.lists.functions.Revappend"))
+  ($revAppend list tail))
+
+(defun nreconc (list tail)
+  "Reverses the order of elements in list (as if by nreverse). It then appends (as if by nconc) the tail to that
+  reversed list and returns the result."
+  (declare (system::%java-class-name "jcl.lists.functions.Nreconc"))
+  ($nReconc list tail))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmacro apply-key (key element)
   `(if ,key
        (funcall ,key ,element)
@@ -1442,12 +1588,12 @@
       (multiple-value-bind (temps vals stores store-form access-form)
                            (get-setf-expansion result env)
         (cond ((cdr stores)
-               (let ((g (mapcar #'(lambda (x) (declare (ignore x)) (gensym)) (rest value))))
+               (let ((g (mapcar #'(lambda (x) (declare (ignore x)) (gensym)) (cdr value))))
                  `(multiple-value-bind ,g ,value
                     (let* (,@(mapcar #'list temps vals))
                       (multiple-value-bind ,stores
                                            (values ,@(mapcar #'(lambda (a b) `(adjoin ,a ,b ,@keys))
-                                                             g (rest access-form)))
+                                                             g (cdr access-form)))
                         ,store-form)))))
 	      (t (let ((g (gensym)))
                    `(let* ((,g ,value)
@@ -1633,14 +1779,14 @@
 	   (let ((g (mapcar #'(lambda (x)
 				(declare (ignore x))
 				(gensym))
-			    (rest obj))))
+			    (cdr obj))))
 	     `(multiple-value-bind ,g
 		  ,obj
 		(let* (,@(mapcar #'list dummies vals))
 		  (multiple-value-bind ,newval
 		      (values ,@(mapcar #'(lambda (a b)
 					     (list 'cons a b))
-					 g (rest getter)))
+					 g (cdr getter)))
 		    ,setter)))))
 	  (t
 	   ;; A single value
@@ -1665,14 +1811,14 @@
 	   (let ((g (mapcar #'(lambda (x)
 				(declare (ignore x))
 				(gensym))
-			    (rest obj))))
+			    (cdr obj))))
 	     `(multiple-value-bind ,g
 		  ,obj
 		(let* (,@(mapcar #'list vars vals))
 		  (multiple-value-bind ,stores
 		      (values ,@(mapcar #'(lambda (a b)
 					    `(adjoin ,a ,b ,@keys))
-					g (rest getter)))
+					g (cdr getter)))
 		  ,setter)))))
 	  (t
 	   ;; Single value
@@ -1745,9 +1891,34 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (export '(caar cadr cdar cddr caaar caadr cadar cdaar caddr cdadr cddar cdddr caaaar caaadr caadar caaddr cadaar cadadr
-          caddar cadddr cdaaar cdaadr cdadar cdaddr cddaar cddadr cdddar cddddr first second third fourth fifth sixth
-          seventh eighth ninth tenth rest tree-equal member member-if member-if-not adjoin assoc assoc-if assoc-if-not
-          rassoc rassoc-if rassoc-if-not mapc mapcar mapcan mapl maplist mapcon intersection nintersection union nunion
-          set-difference nset-difference set-exclusive-or nset-exclusive-or subsetp subst subst-if subst-if-not nsubst
-          nsubst-if nsubst-if-not sublis nsublis push pushnew pop remf)
+          caddar cadddr cdaaar cdaadr cdadar cdaddr cddaar cddadr cdddar cddddr
+          first second third fourth fifth sixthseventh eighth ninth tenth rest
+          acons
+          last butlast nbutlast
+          copy-list copy-alist copy-tree
+          endp tailp
+          getf get-properties
+          list-length
+          nth nthcdr
+          make-list
+          ldiff
+          pairlis
+          rplaca rplacd
+          revappend nreconc
+          tree-equal
+          member member-if member-if-not
+          adjoin
+          assoc assoc-if assoc-if-not
+          rassoc rassoc-if rassoc-if-not
+          mapc mapcar mapcan mapl maplist mapcon
+          intersection nintersection
+          union nunion
+          set-difference nset-difference
+          set-exclusive-or nset-exclusive-or
+          subsetp
+          subst subst-if subst-if-not
+          nsubst nsubst-if nsubst-if-not
+          sublis nsublis
+          push pushnew pop
+          remf)
         "COMMON-LISP")

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JInvokeStatic extends ExtensionsBuiltInFunctionStructBase {
+public final class JInvokeStatic extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JINVOKE-STATIC";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";

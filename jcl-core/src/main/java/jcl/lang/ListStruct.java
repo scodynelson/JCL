@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.util.ClassUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -60,6 +61,14 @@ public interface ListStruct extends SequenceStruct {
 	 * a circular-list
 	 */
 	FixnumStruct listLength();
+
+	default LispStruct listLength1() {
+		final IntegerStruct lispStruct = listLength();
+		if (IntegerStruct.MINUS_ONE.eql(lispStruct)) {
+			return NILStruct.INSTANCE;
+		}
+		return lispStruct;
+	}
 
 	/**
 	 * Returns a list of length given by size, each of the elements of which is initial-element.
@@ -121,6 +130,16 @@ public interface ListStruct extends SequenceStruct {
 	 * @return true if the list is the empty list; false if the list is a cons
 	 */
 	boolean endP();
+
+	/**
+	 * Returns true if the list is the empty list. Returns false if the list is a cons.
+	 *
+	 * @return true if the list is the empty list; false if the list is a cons
+	 */
+	default BooleanStruct endP1() {
+		final boolean endP = endP();
+		return BooleanStruct.toLispBoolean(endP);
+	}
 
 	static LispStruct append(final LispStruct... args) {
 		final int size = args.length;
@@ -295,7 +314,35 @@ public interface ListStruct extends SequenceStruct {
 
 	ListStruct ldiff(final LispStruct object);
 
+	static ListStruct pairlis(final ListStruct keys, final ListStruct datums, final ListStruct alist) {
+
+		final long keysLength = keys.length().toJavaPLong();
+		final long datumsLength = datums.length().toJavaPLong();
+		if (keysLength != datumsLength) {
+			throw new SimpleErrorException("The lists of keys and datums are not the same length.");
+		}
+
+		final LispStruct[] keysArray = keys.toArray();
+		final LispStruct[] datumsArray = datums.toArray();
+
+		ListStruct theAlist = alist;
+
+		for (int i = 0; i < keysLength; i++) {
+			final LispStruct key = keysArray[i];
+			final LispStruct datum = datumsArray[i];
+			final ConsStruct pair = ConsStruct.toLispCons(key, datum);
+			theAlist = ConsStruct.toLispCons(pair, theAlist);
+		}
+
+		return theAlist;
+	}
+
 	boolean tailp(final LispStruct object);
+
+	default BooleanStruct tailp1(final LispStruct object) {
+		final boolean tailp = tailp(object);
+		return BooleanStruct.toLispBoolean(tailp);
+	}
 
 	// TODO: Fast-Member???
 

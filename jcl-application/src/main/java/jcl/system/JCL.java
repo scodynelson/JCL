@@ -1,6 +1,5 @@
 package jcl.system;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +63,8 @@ public class JCL implements ApplicationRunner {
 		
 		lispFilesToLoad = Arrays.asList(
 				"jcl-application/src/main/lisp/jcl/compiler/base-macro-lambdas.lisp",
+				"jcl-application/src/main/lisp/jcl/sequences/sequences.lisp",
+				"jcl-application/src/main/lisp/jcl/lists/base-lists.lisp",
 				"jcl-application/src/main/lisp/jcl/compiler/macros.lisp",
 				"jcl-application/src/main/lisp/jcl/iterators/iterators.lisp",
 				"jcl-application/src/main/lisp/jcl/characters/characters.lisp",
@@ -75,7 +76,9 @@ public class JCL implements ApplicationRunner {
 				"jcl-application/src/main/lisp/jcl/lists/lists.lisp",
 				"jcl-application/src/main/lisp/jcl/numbers/numbers.lisp",
 				"jcl-application/src/main/lisp/jcl/hashtables/hashtables.lisp",
-				"jcl-application/src/main/lisp/jcl/strings/strings.lisp"
+				"jcl-application/src/main/lisp/jcl/strings/strings.lisp",
+				"jcl-application/src/main/lisp/jcl/environment/environment.lisp",
+				"jcl-application/src/main/lisp/jcl/structures/structures.lisp"
 		);
 	}
 
@@ -139,6 +142,16 @@ public class JCL implements ApplicationRunner {
 		CompileForm.OUTPUT_FILE = true;
 
 		CompileForm.OUTPUT_FILE = false;
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/sequences/sequences.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/lists/base-lists.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
 		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/compiler/macros.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
@@ -195,6 +208,16 @@ public class JCL implements ApplicationRunner {
 
 		CompileForm.OUTPUT_FILE = false;
 		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/strings/strings.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/environment/environment.lisp");
+		loadFunction.load(pathname, false, false, true);
+		CompileForm.OUTPUT_FILE = true;
+
+		CompileForm.OUTPUT_FILE = false;
+		pathname = PathnameStruct.toPathname("jcl-application/src/main/lisp/jcl/structures/structures.lisp");
 		loadFunction.load(pathname, false, false, true);
 		CompileForm.OUTPUT_FILE = true;
 	}

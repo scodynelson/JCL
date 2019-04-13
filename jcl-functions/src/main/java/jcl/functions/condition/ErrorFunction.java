@@ -6,10 +6,8 @@ import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ErrorFunction extends CommonLispBuiltInFunctionStructBase {
+public final class ErrorFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "ERROR";
 	private static final String DATUM_ARGUMENT = "DATUM";

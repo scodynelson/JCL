@@ -10,9 +10,7 @@ import jcl.lang.StringStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class JClass extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JCLASS";

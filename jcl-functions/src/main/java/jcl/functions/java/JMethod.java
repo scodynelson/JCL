@@ -13,9 +13,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaMethodStruct;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class JMethod extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JMETHOD";

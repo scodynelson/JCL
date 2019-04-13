@@ -207,7 +207,20 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: open
+;; TODO: Clean up `open`??
+
+(defun open (filespec &key (direction :input) element-type if-exists if-does-not-exist (external-format :default))
+  "Writes the characters of the sub-sequence of string bounded by start and end to output-stream."
+  (declare (system::%java-class-name "jcl.streams.functions.Open"))
+  (ext:jinvoke-static
+    (ext:jmethod "open" (ext:jclass "jcl.lang.stream.FileStreamStructs")
+                 (ext:jclass "jcl.lang.PathnameStruct")
+                 (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.SymbolStruct"))
+    filespec direction element-type if-exists if-does-not-exist external-format))
 
 (defun close (stream &key (abort nil))
   "Closes Stream."

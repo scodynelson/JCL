@@ -6,8 +6,11 @@ package jcl.lang.stream;
 
 import java.nio.file.Path;
 
+import jcl.lang.LispStruct;
 import jcl.lang.PathnameStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.internal.stream.FileStreamStructImpl;
+import jcl.type.CharacterType;
 import jcl.type.LispType;
 
 /**
@@ -29,6 +32,17 @@ public final class FileStreamStructs {
 			fileStream.close();
 		}
 		return fileStream;
+	}
+
+	public static FileStreamStructImpl open(final PathnameStruct pathname, final SymbolStruct directionSymbol, final LispStruct elementType,
+	                                        final SymbolStruct ifExistsSymbol, final SymbolStruct ifDoesNotExistSymbol,
+	                                        final SymbolStruct externalFormat) {
+
+		final DirectionType directionType = DirectionType.fromValue(directionSymbol);
+		final IfExistsType ifExistsType = IfExistsType.fromValue(ifExistsSymbol);
+		final IfDoesNotExistType ifDoesNotExistType = IfDoesNotExistType.fromValue(ifDoesNotExistSymbol);
+
+		return open(pathname, directionType, CharacterType.INSTANCE, ifExistsType, ifDoesNotExistType, ExternalFormat.DEFAULT);
 	}
 }
 

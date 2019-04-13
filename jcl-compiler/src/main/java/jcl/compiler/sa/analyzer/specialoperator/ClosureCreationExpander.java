@@ -37,9 +37,6 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 	@Autowired
 	private DeclareExpander declareExpander;
 
-	@Autowired
-	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
-
 	private final String expanderName;
 
 	protected ClosureCreationExpander(final String expanderName) {
@@ -66,7 +63,7 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, closureEnvironment);

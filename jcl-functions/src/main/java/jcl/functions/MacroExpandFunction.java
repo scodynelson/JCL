@@ -14,7 +14,6 @@ import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,9 +22,6 @@ public final class MacroExpandFunction extends CommonLispBuiltInFunctionStructBa
 	private static final String FUNCTION_NAME = "MACROEXPAND";
 	private static final String FORM_ARGUMENT = "FORM";
 	private static final String ENVIRONMENT_ARGUMENT = "ENVIRONMENT";
-
-	@Autowired
-	private InternalMacroExpand internalMacroExpand;
 
 	public MacroExpandFunction() {
 		super("Repeatedly expands form until it is no longer a macro form.",
@@ -45,7 +41,7 @@ public final class MacroExpandFunction extends CommonLispBuiltInFunctionStructBa
 			environment = arguments.getOptionalArgument(ENVIRONMENT_ARGUMENT, Environment.class);
 		}
 
-		final MacroExpandResult macroExpandResult = internalMacroExpand.macroExpand(form, environment);
+		final MacroExpandResult macroExpandResult = InternalMacroExpand.macroExpand(form, environment);
 		final LispStruct expandedForm = macroExpandResult.getExpandedForm();
 		final boolean wasExpanded = macroExpandResult.wasExpanded();
 		final BooleanStruct wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;

@@ -48,12 +48,6 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 	private DeclareExpander declareExpander;
 
 	@Autowired
-	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
-
-	@Autowired
-	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
-
-	@Autowired
 	private FunctionExpander functionExpander;
 
 	@Override
@@ -84,7 +78,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
@@ -186,7 +180,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
 		final StringStruct docString = ObjectUtils.defaultIfNull(bodyProcessingResult.getDocString(), StringStruct.EMPTY_STRING);

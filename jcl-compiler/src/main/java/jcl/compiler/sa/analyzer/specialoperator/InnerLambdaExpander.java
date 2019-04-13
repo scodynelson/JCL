@@ -47,12 +47,6 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 	@Autowired
 	private DeclareExpander declareExpander;
 
-	@Autowired
-	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
-
-	@Autowired
-	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
-
 	private final String expanderName;
 
 	protected InnerLambdaExpander(final String expanderName) {
@@ -82,7 +76,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, innerLambdaEnvironment);
@@ -191,7 +185,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
 		final StringStruct docString = ObjectUtils.defaultIfNull(bodyProcessingResult.getDocString(), StringStruct.EMPTY_STRING);

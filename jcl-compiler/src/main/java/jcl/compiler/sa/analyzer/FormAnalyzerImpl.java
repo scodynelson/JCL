@@ -18,15 +18,12 @@ import org.springframework.stereotype.Component;
 public class FormAnalyzerImpl implements FormAnalyzer {
 
 	@Autowired
-	private InternalMacroExpand internalMacroExpand;
-
-	@Autowired
 	private ConsAnalyzer consAnalyzer;
 
 	@Override
 	public LispStruct analyze(final LispStruct input, final Environment environment) {
 
-		final MacroExpandResult macroExpandReturn = internalMacroExpand.macroExpand(input, environment);
+		final MacroExpandResult macroExpandReturn = InternalMacroExpand.macroExpand(input, environment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 		if (expandedForm instanceof SymbolStruct) {

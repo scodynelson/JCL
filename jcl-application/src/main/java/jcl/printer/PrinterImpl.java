@@ -5,9 +5,7 @@
 package jcl.printer;
 
 import jcl.lang.LispStruct;
-import org.springframework.stereotype.Component;
 
-@Component
 public class PrinterImpl implements Printer {
 
 	@Override

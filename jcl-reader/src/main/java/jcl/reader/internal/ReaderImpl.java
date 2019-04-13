@@ -14,13 +14,11 @@ import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
-import org.springframework.stereotype.Component;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
-@Component
-class ReaderImpl implements Reader {
+public class ReaderImpl implements Reader {
 
 	@Override
 	public LispStruct read(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {

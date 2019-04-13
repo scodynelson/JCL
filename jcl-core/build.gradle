@@ -14,9 +14,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
-	compile("org.springframework:spring-context")
 	compile("org.springframework:spring-core")
-	compile("org.springframework:spring-beans")
 
 	testCompile("junit:junit")
 	testCompile("org.hamcrest:hamcrest-core")

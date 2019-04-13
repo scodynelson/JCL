@@ -3,9 +3,7 @@ package jcl.reader;
 import jcl.lang.BooleanStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import org.springframework.stereotype.Component;
 
-@Component
 public class InternalRead {
 
 	private final Reader reader;

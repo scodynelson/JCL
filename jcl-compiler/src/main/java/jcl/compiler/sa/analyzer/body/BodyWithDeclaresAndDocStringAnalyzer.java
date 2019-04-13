@@ -8,12 +8,10 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
 
-@Component
 public class BodyWithDeclaresAndDocStringAnalyzer {
 
-	public BodyProcessingResult analyze(final List<LispStruct> input) {
+	public static BodyProcessingResult analyze(final List<LispStruct> input) {
 
 		final List<LispStruct> declares = new ArrayList<>();
 		StringStruct docString = null;
@@ -71,7 +69,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 		return new BodyProcessingResult(declares, docString, bodyForms);
 	}
 
-	private boolean isDeclaration(final LispStruct next) {
+	private static boolean isDeclaration(final LispStruct next) {
 		return (next instanceof ListStruct) && ((ListStruct) next).car().eq(SpecialOperatorStructImpl.DECLARE);
 	}
 }

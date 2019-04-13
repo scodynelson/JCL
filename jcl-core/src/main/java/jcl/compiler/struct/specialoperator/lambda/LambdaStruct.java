@@ -33,7 +33,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.springframework.stereotype.Component;
 
 /**
  * Class to generate {@link LambdaStruct} object dynamically by creating a new Java class with the name of the {@link
@@ -231,7 +230,6 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
 	 * {@link JavaClassBuilder#classWriter}</li>
-	 * <li>Generating the code for the {@link Component} annotation</li>
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
 	 * <li>Generating the code for the {@link Closure} argument constructor</li>

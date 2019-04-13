@@ -12,12 +12,10 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.statics.CompilerVariables;
-import org.springframework.stereotype.Component;
 
-@Component
 public class InternalMacroExpand {
 
-	public MacroExpandResult macroExpand(final LispStruct element, final Environment environment) {
+	public static MacroExpandResult macroExpand(final LispStruct element, final Environment environment) {
 		LispStruct tempElement = element;
 
 		boolean wasExpanded = false;
@@ -33,7 +31,7 @@ public class InternalMacroExpand {
 		}
 	}
 
-	public MacroExpandResult macroExpand1(final LispStruct element, final Environment environment) {
+	public static MacroExpandResult macroExpand1(final LispStruct element, final Environment environment) {
 		if (element instanceof ListStruct) {
 			return macroExpand1((ListStruct) element, environment);
 		} else if (element instanceof SymbolStruct) {

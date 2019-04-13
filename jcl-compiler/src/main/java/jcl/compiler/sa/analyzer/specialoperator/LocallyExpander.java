@@ -31,9 +31,6 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	@Autowired
 	private DeclareExpander declareExpander;
 
-	@Autowired
-	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
-
 	@Override
 	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.LOCALLY;
@@ -49,7 +46,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 		final Environment locallyEnvironment = new Environment(environment);
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = declareExpander.expand(fullDeclaration, locallyEnvironment);

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 public final class DestructuringLambdaListParser {
 
 	@Autowired
-	private MacroLambdaListParser lambdaListParser;
+	private LambdaListParser lambdaListParser;
 
 	public DestructuringLambdaList parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                            final DeclareStruct declareElement) {

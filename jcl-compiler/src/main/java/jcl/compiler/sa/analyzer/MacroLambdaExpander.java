@@ -46,9 +46,6 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-	@Autowired
-	private DeclareExpander declareExpander;
-
 	@Override
 	public SymbolStruct getFunctionSymbol() {
 		return SpecialOperatorStructImpl.MACRO_LAMBDA;
@@ -87,7 +84,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroLambdaEnvironment);
+		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, macroLambdaEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()

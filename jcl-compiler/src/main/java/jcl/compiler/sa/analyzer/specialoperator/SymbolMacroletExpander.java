@@ -29,11 +29,9 @@ import org.springframework.stereotype.Component;
 public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacroletStruct> {
 
 	private final FormAnalyzer formAnalyzer;
-	private final DeclareExpander declareExpander;
 
-	public SymbolMacroletExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander) {
+	public SymbolMacroletExpander(final FormAnalyzer formAnalyzer) {
 		this.formAnalyzer = formAnalyzer;
-		this.declareExpander = declareExpander;
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = declareExpander.expand(fullDeclaration, symbolMacroletEnvironment);
+		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, symbolMacroletEnvironment);
 		validateDeclares(declare);
 
 		final List<SymbolMacroletStruct.SymbolMacroletVar> symbolMacroletVars

@@ -20,10 +20,13 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
 
-@Component
-public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
+public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
+
+	public static final DeclareExpander INSTANCE = new DeclareExpander();
+
+	private DeclareExpander() {
+	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

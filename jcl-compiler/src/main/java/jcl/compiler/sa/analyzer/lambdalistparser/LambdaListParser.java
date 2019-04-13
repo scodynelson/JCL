@@ -31,19 +31,19 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.type.TType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public abstract class LambdaListParser {
+@Component
+public class LambdaListParser {
 
-	private final DestructuringLambdaListParser destructuringLambdaListParser;
-	private final FormAnalyzer formAnalyzer;
+	@Autowired
+	private DestructuringLambdaListParser destructuringLambdaListParser;
 
-	protected LambdaListParser(final DestructuringLambdaListParser destructuringLambdaListParser,
-	                           final FormAnalyzer formAnalyzer) {
-		this.destructuringLambdaListParser = destructuringLambdaListParser;
-		this.formAnalyzer = formAnalyzer;
-	}
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
-	protected WholeParseResult parseWholeBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	public WholeParseResult parseWholeBinding(final Environment environment, final Iterator<LispStruct> iterator,
 	                                             final DeclareStruct declareElement) {
 
 		final LispStruct currentElement = iterator.next();
@@ -68,7 +68,7 @@ public abstract class LambdaListParser {
 		return new WholeParseResult(wholeBinding);
 	}
 
-	protected EnvironmentParseResult parseEnvironmentBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	public EnvironmentParseResult parseEnvironmentBinding(final Environment environment, final Iterator<LispStruct> iterator,
 	                                                         final boolean isAfterRequired) {
 
 		LispStruct currentElement = iterator.next();
@@ -91,7 +91,7 @@ public abstract class LambdaListParser {
 		return new EnvironmentParseResult(currentElement, environmentBinding);
 	}
 
-	protected RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<LispStruct> iterator,
+	public RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                                    final DeclareStruct declareElement, final boolean isDotted,
 	                                                    final boolean isDestructuringAllowed) {
 
@@ -145,7 +145,7 @@ public abstract class LambdaListParser {
 		return new RequiredParseResult(currentElement, requiredBindings);
 	}
 
-	protected OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<LispStruct> iterator,
+	public OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                                    final DeclareStruct declareElement, final boolean isDotted,
 	                                                    final boolean isDestructuringAllowed) {
 
@@ -330,7 +330,7 @@ public abstract class LambdaListParser {
 		return new OptionalParseResult(currentElement, optionalBindings);
 	}
 
-	protected RestParseResult parseRestBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	public RestParseResult parseRestBinding(final Environment environment, final Iterator<LispStruct> iterator,
 	                                           final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		if (!iterator.hasNext()) {
@@ -381,7 +381,7 @@ public abstract class LambdaListParser {
 		return new RestParseResult(currentElement, restBinding);
 	}
 
-	protected RestParseResult parseDottedRestBinding(final Environment environment, final LispStruct dottedRest,
+	public RestParseResult parseDottedRestBinding(final Environment environment, final LispStruct dottedRest,
 	                                                 final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		final SymbolStruct currentParam;
@@ -419,7 +419,7 @@ public abstract class LambdaListParser {
 		return new RestParseResult(dottedRest, restBinding);
 	}
 
-	protected BodyParseResult parseBodyBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	public BodyParseResult parseBodyBinding(final Environment environment, final Iterator<LispStruct> iterator,
 	                                           final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		if (!iterator.hasNext()) {
@@ -470,7 +470,7 @@ public abstract class LambdaListParser {
 		return new BodyParseResult(currentElement, bodyBinding);
 	}
 
-	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<LispStruct> iterator,
+	public KeyParseResult parseKeyBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                          final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		final List<KeyParameter> keyBindings = new ArrayList<>();
@@ -672,7 +672,7 @@ public abstract class LambdaListParser {
 		return new KeyParseResult(currentElement, keyBindings);
 	}
 
-	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<LispStruct> iterator,
+	public AuxParseResult parseAuxBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                          final DeclareStruct declareElement, final boolean isDestructuringAllowed) {
 
 		final List<AuxParameter> auxBindings = new ArrayList<>();
@@ -780,7 +780,7 @@ public abstract class LambdaListParser {
 		return new AuxParseResult(currentElement, auxBindings);
 	}
 
-	protected static boolean isLambdaListKeyword(final LispStruct lispStruct) {
+	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
 		return lispStruct.eq(CompilerConstants.AUX)
 				|| lispStruct.eq(CompilerConstants.ALLOW_OTHER_KEYS)
 				|| lispStruct.eq(CompilerConstants.KEY)

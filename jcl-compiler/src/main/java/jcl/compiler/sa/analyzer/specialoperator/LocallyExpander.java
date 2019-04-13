@@ -25,11 +25,9 @@ import org.springframework.stereotype.Component;
 public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 	private final FormAnalyzer formAnalyzer;
-	private final DeclareExpander declareExpander;
 
-	public LocallyExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander) {
+	public LocallyExpander(final FormAnalyzer formAnalyzer) {
 		this.formAnalyzer = formAnalyzer;
-		this.declareExpander = declareExpander;
 	}
 
 	@Override
@@ -50,7 +48,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = declareExpander.expand(fullDeclaration, locallyEnvironment);
+		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, locallyEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.stream()

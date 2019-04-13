@@ -18,7 +18,6 @@ import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -28,11 +27,12 @@ import jcl.lang.statics.CompilerConstants;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MacroLambdaListParser extends LambdaListParser {
+public final class MacroLambdaListParser {
 
-	public MacroLambdaListParser(final DestructuringLambdaListParser destructuringLambdaListParser,
-	                             final FormAnalyzer formAnalyzer) {
-		super(destructuringLambdaListParser, formAnalyzer);
+	private final LambdaListParser lambdaListParser;
+
+	public MacroLambdaListParser(final LambdaListParser lambdaListParser) {
+		this.lambdaListParser = lambdaListParser;
 	}
 
 	public MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
@@ -64,7 +64,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= parseWholeBinding(environment, iterator, declareElement);
+					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -72,7 +72,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		EnvironmentParameter environmentBinding = null;
 		if (CompilerConstants.ENVIRONMENT.eq(currentElement)) {
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, false);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, false);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
@@ -80,7 +80,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, declareElement, false, true);
+					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -92,7 +92,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -101,7 +101,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, declareElement, false, true);
+					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -113,7 +113,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -122,7 +122,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		RestParameter restBinding = null;
 		if (CompilerConstants.REST.eq(currentElement)) {
 			final RestParseResult restParseResult
-					= parseRestBinding(environment, iterator, declareElement, true);
+					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -135,7 +135,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final BodyParseResult bodyParseResult
-					= parseBodyBinding(environment, iterator, declareElement, true);
+					= lambdaListParser.parseBodyBinding(environment, iterator, declareElement, true);
 
 			bodyBinding = bodyParseResult.getBodyBinding();
 			currentElement = bodyParseResult.getCurrentElement();
@@ -147,7 +147,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -158,7 +158,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
-					= parseKeyBindings(environment, iterator, declareElement, true);
+					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
@@ -184,7 +184,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -193,7 +193,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
-					= parseAuxBindings(environment, iterator, declareElement, true);
+					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
 
 			auxBindings = auxParseResult.getAuxBindings();
 			currentElement = auxParseResult.getCurrentElement();
@@ -205,7 +205,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
@@ -237,7 +237,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= parseWholeBinding(environment, iterator, declareElement);
+					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -245,7 +245,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		EnvironmentParameter environmentBinding = null;
 		if (CompilerConstants.ENVIRONMENT.eq(currentElement)) {
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, false);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, false);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
@@ -253,7 +253,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, declareElement, true, true);
+					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -265,7 +265,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -274,7 +274,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, declareElement, true, true);
+					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -286,14 +286,14 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, true);
+					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
 		}
 
 		final RestParseResult restParseResult
-				= parseDottedRestBinding(environment, currentElement, declareElement, true);
+				= lambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
 		final RestParameter restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {

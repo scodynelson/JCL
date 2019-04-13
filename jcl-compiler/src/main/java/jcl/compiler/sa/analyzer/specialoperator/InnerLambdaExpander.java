@@ -39,14 +39,12 @@ import org.apache.commons.lang3.ObjectUtils;
 public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private final FormAnalyzer formAnalyzer;
-	private final DeclareExpander declareExpander;
 	protected final FunctionExpander functionExpander;
 	private final String expanderName;
 
-	protected InnerLambdaExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
-	                              final FunctionExpander functionExpander, final String expanderName) {
+	protected InnerLambdaExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander,
+	                              final String expanderName) {
 		this.formAnalyzer = formAnalyzer;
-		this.declareExpander = declareExpander;
 		this.functionExpander = functionExpander;
 		this.expanderName = expanderName;
 	}
@@ -77,7 +75,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = declareExpander.expand(fullDeclaration, innerLambdaEnvironment);
+		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, innerLambdaEnvironment);
 
 		return buildInnerLambda(innerLambdas, innerLambdaEnvironment, bodyProcessingResult, declare, functionNameStack, functionNames);
 	}

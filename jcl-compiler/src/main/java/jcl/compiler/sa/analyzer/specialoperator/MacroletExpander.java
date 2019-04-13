@@ -39,13 +39,10 @@ import org.springframework.stereotype.Component;
 public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private final FormAnalyzer formAnalyzer;
-	private final DeclareExpander declareExpander;
 	private final FunctionExpander functionExpander;
 
-	public MacroletExpander(final FormAnalyzer formAnalyzer, final DeclareExpander declareExpander,
-	                        final FunctionExpander functionExpander) {
+	public MacroletExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander) {
 		this.formAnalyzer = formAnalyzer;
-		this.declareExpander = declareExpander;
 		this.functionExpander = functionExpander;
 	}
 
@@ -80,7 +77,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
+		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, macroletEnvironment);
 
 		try {
 			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.

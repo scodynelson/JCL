@@ -6,19 +6,18 @@ package jcl.functions.reader;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import lombok.experimental.UtilityClass;
 
 /**
  * Reader Macro Function for handling the reading unicode character.
  */
+@UtilityClass
 final class UnicodeCharacterReaderMacroFunction {
 
 	/**
 	 * The Unicode radix value used to parse unicode characters into proper character code points.
 	 */
 	private static final int UNICODE_RADIX = 16;
-
-	private UnicodeCharacterReaderMacroFunction() {
-	}
 
 	/**
 	 * Reads in and returns the properly read in Unicode character token. A {@link ReaderErrorException} is thrown if
@@ -41,7 +40,8 @@ final class UnicodeCharacterReaderMacroFunction {
 			}
 			return unicodeCodePoint;
 		} catch (final NumberFormatException nfe) {
-			throw new ReaderErrorException('"' + unicodeCharacterString + "\" does not represent a hexadecimal integer.", nfe);
+			final String message = '"' + unicodeCharacterString + "\" does not represent a hexadecimal integer.";
+			throw new ReaderErrorException(message, nfe);
 		}
 	}
 }

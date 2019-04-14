@@ -19,6 +19,8 @@ dependencies {
 	compile(project(":jcl-functions"))
 
 	compile("org.apache.commons:commons-lang3")
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
 	compile("org.springframework.boot:spring-boot")
 	compile("org.springframework.boot:spring-boot-autoconfigure")

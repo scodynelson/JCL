@@ -9,22 +9,16 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.RationalStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.Range;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#r' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The valid range of radix values.
@@ -32,14 +26,8 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	@SuppressWarnings("MagicNumber")
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
-	/**
-	 * {@link Autowired} {@link RationalReaderMacroFunction} used for reading {@link RationalStruct}s.
-	 */
-	private final RationalReaderMacroFunction rationalReaderMacroFunction;
-
-	public SharpRReaderMacroFunction(final RationalReaderMacroFunction rationalReaderMacroFunction) {
+	public SharpRReaderMacroFunction() {
 		super("SHARP-R");
-		this.rationalReaderMacroFunction = rationalReaderMacroFunction;
 	}
 
 	@Override
@@ -51,7 +39,8 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_R) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_R);
 
 		if (!numberArgument.isPresent()) {
@@ -63,6 +52,6 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		}
 
-		return rationalReaderMacroFunction.readRational(inputStreamStruct, radix);
+		return RationalReaderMacroFunction.readRational(inputStreamStruct, radix);
 	}
 }

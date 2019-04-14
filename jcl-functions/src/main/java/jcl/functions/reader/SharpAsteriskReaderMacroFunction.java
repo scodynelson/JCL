@@ -15,15 +15,11 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#*' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpAsteriskReaderMacroFunction() {
 		super("SHARP-ASTERISK");
@@ -36,10 +32,12 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.ASTERISK;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken
+				= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
@@ -85,7 +83,8 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final int numberOfTokens = tokenString.length();
 		final int numberArgumentIntValue = numberArgument.intValueExact();
 		if (numberOfTokens > numberArgumentIntValue) {
-			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numberArgument + '*' + tokenString);
+			final String message = "Bit vector is longer than specified length: #" + numberArgument + '*' + tokenString;
+			throw new ReaderErrorException(message);
 		}
 
 		Character lastToken = null;

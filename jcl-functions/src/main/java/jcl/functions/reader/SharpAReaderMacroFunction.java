@@ -21,21 +21,14 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#a' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	public SharpAReaderMacroFunction(final Reader reader) {
+	public SharpAReaderMacroFunction() {
 		super("SHARP-A");
-		this.reader = reader;
 	}
 
 	@Override
@@ -47,10 +40,11 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_A) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_A);
 
-		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
@@ -62,7 +56,8 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		if (BigInteger.ZERO.compareTo(numberArgumentValue) < 0) {
 			if (!(token instanceof SequenceStruct)) {
-				throw new ReaderErrorException("The form following a #" + numberArgumentValue + "A reader macro should have been a sequence, but it was: " + token);
+				final String message = "The form following a #" + numberArgumentValue + "A reader macro should have been a sequence, but it was: " + token;
+				throw new ReaderErrorException(message);
 			}
 
 			final SequenceStruct contents = (SequenceStruct) token;
@@ -103,7 +98,8 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			if (sequence instanceof SequenceStruct) {
 				sequenceToken = (SequenceStruct) sequence;
 			} else {
-				throw new ReaderErrorException("#" + dimensions + "A axis " + axis + " is not a sequence: " + sequence);
+				final String message = "#" + dimensions + "A axis " + axis + " is not a sequence: " + sequence;
+				throw new ReaderErrorException(message);
 			}
 
 			final List<LispStruct> tokensAsJavaList = sequenceToken.stream().collect(Collectors.toList());
@@ -117,7 +113,8 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 				} else if (zeroAxis == null) {
 					sequence = tokensAsJavaList.get(0);
 				} else {
-					throw new ReaderErrorException("#" + dimensions + "A axis " + zeroAxis + " is empty, but axis " + axis + " is non-empty.");
+					final String message = "#" + dimensions + "A axis " + zeroAxis + " is empty, but axis " + axis + " is non-empty.";
+					throw new ReaderErrorException(message);
 				}
 			}
 		}

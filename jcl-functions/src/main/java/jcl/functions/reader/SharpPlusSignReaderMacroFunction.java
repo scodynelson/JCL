@@ -11,26 +11,14 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#+' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * {@link Autowired} {@link FeaturesReaderMacroFunction} used for reading features and either reading or
-	 * suppressing the following {@link LispStruct}s based on whether or not the feature is present.
-	 */
-	private final FeaturesReaderMacroFunction featuresReaderMacroFunction;
-
-	public SharpPlusSignReaderMacroFunction(final FeaturesReaderMacroFunction featuresReaderMacroFunction) {
+	public SharpPlusSignReaderMacroFunction() {
 		super("SHARP-PLUS-SIGN");
-		this.featuresReaderMacroFunction = featuresReaderMacroFunction;
 	}
 
 	@Override
@@ -40,10 +28,11 @@ public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.PLUS_SIGN;
 
-		featuresReaderMacroFunction.readFeatures(inputStreamStruct, false);
+		FeaturesReaderMacroFunction.readFeatures(inputStreamStruct, false);
 		return null;
 	}
 }

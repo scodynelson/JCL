@@ -15,21 +15,14 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#.' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	public SharpFullStopReaderMacroFunction(final Reader reader) {
+	public SharpFullStopReaderMacroFunction() {
 		super("SHARP-FULL-STOP");
-		this.reader = reader;
 	}
 
 	@Override
@@ -39,10 +32,11 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.FULL_STOP;
 
-		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}

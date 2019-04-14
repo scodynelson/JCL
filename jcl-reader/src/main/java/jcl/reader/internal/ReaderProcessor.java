@@ -23,6 +23,7 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,13 +49,8 @@ import lombok.extern.slf4j.Slf4j;
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
 @Slf4j
-class ReaderProcessor {
-
-	/**
-	 * Private constructor.
-	 */
-	private ReaderProcessor() {
-	}
+@UtilityClass
+public class ReaderProcessor {
 
 	/**
 	 * Step 1 of the Reader Algorithm.
@@ -64,11 +60,11 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
-	static LispStruct read(final TokenBuilder tokenBuilder) {
+	public static LispStruct read(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -120,7 +116,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -155,7 +151,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -184,7 +180,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -230,7 +226,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -262,7 +258,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -281,7 +277,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -342,7 +338,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -429,7 +425,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -495,7 +491,7 @@ class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the token
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -570,7 +566,8 @@ class ReaderProcessor {
 	 *
 	 * @return the proper code point value based from the provided {@code codePoint}
 	 */
-	static int getProperCaseForCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
+	static int getProperCaseForCodePoint(final int codePoint, final AttributeType attributeType,
+	                                     final ReadtableCase readtableCase) {
 
 		final int properCaseCodePoint;
 		if (Character.isBmpCodePoint(codePoint)) {
@@ -605,7 +602,8 @@ class ReaderProcessor {
 	 * @return if the provided list of {@link TokenAttribute}s contains at least one token with an {@link AttributeType}
 	 * equal to the provided {@code attributeType} value.
 	 */
-	static boolean hasAnyAttributeWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static boolean hasAnyAttributeWithAttributeType(final List<TokenAttribute> tokenAttributes,
+	                                                final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .map(TokenAttribute::getAttributeType)
 		                      .anyMatch(currentAttributeType -> currentAttributeType == attributeType);
@@ -623,7 +621,8 @@ class ReaderProcessor {
 	 * @return if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType} equal to
 	 * the provided {@code attributeType} value.
 	 */
-	static boolean hasNoAttributesWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static boolean hasNoAttributesWithAttributeType(final List<TokenAttribute> tokenAttributes,
+	                                                final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .map(TokenAttribute::getAttributeType)
 		                      .noneMatch(currentAttributeType -> currentAttributeType == attributeType);
@@ -644,7 +643,8 @@ class ReaderProcessor {
 	 * attributeType} value in the provided list of {@link TokenAttribute}s or null if no such token code point can be
 	 * found
 	 */
-	static Integer getTokenCodePointByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static Integer getTokenCodePointByAttribute(final List<TokenAttribute> tokenAttributes,
+	                                            final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .filter(currentTokenAttribute -> currentTokenAttribute.getAttributeType() == attributeType)
 		                      .map(TokenAttribute::getCodePoint)

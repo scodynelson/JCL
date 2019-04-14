@@ -1,6 +1,6 @@
 package jcl.system.repl;
 
-import jcl.functions.EvalFunction;
+import jcl.compiler.function.InternalEval;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -15,27 +15,13 @@ import jcl.lang.statics.StreamVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.printer.Printer;
 import jcl.reader.InternalRead;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.stereotype.Component;
 
-@Component
+@Slf4j
 public class ReadEvalPrint {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReadEvalPrint.class);
-
-	@Autowired
-	private InternalRead internalRead;
-
-	@Autowired
-	private EvalFunction evalFunction;
-
-	@Autowired
-	private Printer printer;
-
-	public void funcall(final ApplicationArguments args) {
+	public static void funcall(final ApplicationArguments args) {
 		try {
 			REPLVariables.DASH.setValue(NILStruct.INSTANCE);
 
@@ -59,16 +45,16 @@ public class ReadEvalPrint {
 					// PROMPT --------------
 					final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 					final String currentPackageName = currentPackage.getName();
-					LOGGER.info("{}: {}> ", currentPackageName, counter++);
+					log.info("{}: {}> ", currentPackageName, counter++);
 
 					// READ --------------
-					final LispStruct whatRead = internalRead.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
+					final LispStruct whatRead = InternalRead.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
 					REPLVariables.DASH.setValue(whatRead);
 
 					// EVAL --------------
-					final LispStruct value = evalFunction.apply(whatRead);
+					final LispStruct value = InternalEval.eval(whatRead);
 
 					// bind '**' and '***' to their appropriate values
 					REPLVariables.STAR_STAR_STAR.setValue(REPLVariables.STAR_STAR.getValue());
@@ -95,16 +81,16 @@ public class ReadEvalPrint {
 					REPLVariables.PLUS.setValue(REPLVariables.DASH.getValue());
 
 					if (value == null) {
-						LOGGER.warn("Setting * to NIL since it had no value.");
+						log.warn("Setting * to NIL since it had no value.");
 						REPLVariables.STAR.setValue(NILStruct.INSTANCE);
 					}
 
 					// PRINT -------------
 					if (value == null) {
-						LOGGER.info("; -- No Value --");
+						log.info("; -- No Value --");
 					} else {
-						final String printedValue = printer.print(value);
-						LOGGER.info(printedValue);
+						final String printedValue = Printer.print(value);
+						log.info(printedValue);
 					}
 				} catch (final ReaderErrorException ex) {
 
@@ -115,15 +101,15 @@ public class ReadEvalPrint {
 						readChar = readResult.getResult();
 					} while ((readChar != null) && (readChar != -1) && (readChar != 10));
 
-					LOGGER.warn("; WARNING: Reader Exception condition during Read -> ", ex);
+					log.warn("; WARNING: Reader Exception condition during Read -> ", ex);
 				} catch (final ConditionException ex) {
-					LOGGER.warn("; WARNING: Condition Exception condition during Read -> ", ex);
+					log.warn("; WARNING: Condition Exception condition during Read -> ", ex);
 				} catch (final RuntimeException ex) {
-					LOGGER.error("; WARNING: Runtime Exception condition -> ", ex);
+					log.error("; WARNING: Runtime Exception condition -> ", ex);
 				} catch (final StackOverflowError err) {
-					LOGGER.error("; Stack Overflow Error, restarting REP function.", err);
+					log.error("; Stack Overflow Error, restarting REP function.", err);
 				} catch (final VerifyError err) {
-					LOGGER.error("; ERROR: loading class, {}", err.getMessage(), err);
+					log.error("; ERROR: loading class, {}", err.getMessage(), err);
 				} finally {
 //					REPLVariables.DASH.unbindDynamicValue();
 				}

@@ -21,25 +21,14 @@ import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#(...)' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	/**
-	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
-	 */
-	private final ListReaderMacroFunction listReaderMacroFunction;
-
-	public SharpLeftParenthesisReaderMacroFunction(final ListReaderMacroFunction listReaderMacroFunction) {
+	public SharpLeftParenthesisReaderMacroFunction() {
 		super("SHARP-LEFT-PARENTHESIS");
-		this.listReaderMacroFunction = listReaderMacroFunction;
 	}
 
 	@Override
@@ -49,10 +38,11 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
-		final ListStruct listToken = listReaderMacroFunction.readList(inputStreamStruct);
+		final ListStruct listToken = ListReaderMacroFunction.readList(inputStreamStruct);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;

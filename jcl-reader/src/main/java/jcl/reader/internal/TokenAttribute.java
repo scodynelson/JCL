@@ -6,10 +6,14 @@ package jcl.reader.internal;
 
 import jcl.lang.readtable.AttributeType;
 import jcl.reader.Reader;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Used to store a character token and its {@link AttributeType} value as a {@link Reader} process executes.
  */
+@Getter
+@AllArgsConstructor
 class TokenAttribute {
 
 	/**
@@ -21,35 +25,4 @@ class TokenAttribute {
 	 * The {@link AttributeType} of the {@link #codePoint}.
 	 */
 	private final AttributeType attributeType;
-
-	/**
-	 * Package private constructor.
-	 *
-	 * @param codePoint
-	 * 		the character token code point
-	 * @param attributeType
-	 * 		the {@link AttributeType} of the character token
-	 */
-	TokenAttribute(final int codePoint, final AttributeType attributeType) {
-		this.codePoint = codePoint;
-		this.attributeType = attributeType;
-	}
-
-	/**
-	 * Getter for {@link #codePoint} property.
-	 *
-	 * @return {@link #codePoint} property
-	 */
-	int getCodePoint() {
-		return codePoint;
-	}
-
-	/**
-	 * Getter for {@link #attributeType} property.
-	 *
-	 * @return {@link #attributeType} property
-	 */
-	AttributeType getAttributeType() {
-		return attributeType;
-	}
 }

@@ -17,6 +17,7 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
+import lombok.experimental.UtilityClass;
 
 /**
  * Step 10.2 of the Reader Algorithm.
@@ -49,20 +50,15 @@ import jcl.lang.statics.PackageVariables;
  * return the EndState.
  * </p>
  */
+@UtilityClass
 final class SymbolTokenAccumulatedReaderState {
 
 	/**
-	 * Private constructor.
-	 */
-	private SymbolTokenAccumulatedReaderState() {
-	}
-
-	/**
 	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's {@link
-	 * TokenBuilder#tokenAttributes}.
+	 * TokenBuilder#getTokenAttributes()}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link SymbolStruct}
+	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link SymbolStruct}
 	 *
 	 * @return the built {@link SymbolStruct} value
 	 */
@@ -71,7 +67,9 @@ final class SymbolTokenAccumulatedReaderState {
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoPackageMarkers = ReaderProcessor.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.PACKAGEMARKER);
+		final boolean hasNoPackageMarkers = ReaderProcessor.hasNoAttributesWithAttributeType(
+				tokenAttributes, AttributeType.PACKAGEMARKER
+		);
 		if (hasNoPackageMarkers) {
 			final String symbolName = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 
@@ -148,7 +146,8 @@ final class SymbolTokenAccumulatedReaderState {
 
 				final SymbolStruct externalSymbol = symbolPackageExternalSymbols.get(symbolName);
 				if (externalSymbol == null) {
-					throw new ReaderErrorException("No external symbol named \"" + symbolName + "\" in package " + packageName);
+					final String message = "No external symbol named \"" + symbolName + "\" in package " + packageName;
+					throw new ReaderErrorException(message);
 				}
 				return externalSymbol;
 			} else {

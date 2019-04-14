@@ -13,17 +13,13 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the illegal '#??" Lisp reader macros.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	protected SharpIllegalReaderMacroFunction() {
+	public SharpIllegalReaderMacroFunction() {
 		super("SHARP-ILLEGAL");
 	}
 
@@ -43,7 +39,8 @@ public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

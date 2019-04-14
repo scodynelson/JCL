@@ -16,19 +16,14 @@ import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the ''' Lisp reader macro.
  */
-@Component
-public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	public ApostropheReaderMacroFunction(final Reader reader) {
+	public ApostropheReaderMacroFunction() {
 		super("APOSTROPHE");
-		this.reader = reader;
 	}
 
 	@Override
@@ -38,10 +33,11 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.APOSTROPHE;
 
-		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}

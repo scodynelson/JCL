@@ -32,7 +32,6 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -41,9 +40,6 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "LOAD";
 	private static final String FILESPEC_ARGUMENT = "FILESPEC";
-
-	@Autowired
-	private InternalRead internalRead;
 
 	public LoadFunction() {
 		super("Loads the file named by filespec into the Lisp environment.",
@@ -150,7 +146,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 		LispStruct form;
 		do {
-			form = internalRead.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+			form = InternalRead.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 			if (form == null) {
 				continue;
 			}

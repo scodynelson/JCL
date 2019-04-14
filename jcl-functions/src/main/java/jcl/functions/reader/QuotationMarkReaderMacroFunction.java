@@ -14,13 +14,11 @@ import jcl.lang.StringStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '"..."' Lisp reader macro.
  */
-@Component
-public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public QuotationMarkReaderMacroFunction() {
 		super("QUOTATION-MARK");
@@ -33,7 +31,8 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -70,7 +69,8 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} used to build the final token
 	 */
-	private static void handleEscapedCharacter(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
+	private static void handleEscapedCharacter(final InputStreamStruct inputStreamStruct,
+	                                           final StringBuilder stringBuilder) {
 		int codePoint = CodePointConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF

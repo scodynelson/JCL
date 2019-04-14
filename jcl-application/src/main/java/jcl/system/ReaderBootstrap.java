@@ -19,5 +19,7 @@ public final class ReaderBootstrap implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		ReaderVariables.READTABLE.getVariableValue()
 		                         .makeDispatchMacroCharacter(readDispatchCharacterFunction, CodePointConstants.NUMBER_SIGN, false);
+
+		BootstrapReaderMacroFunctions.bootstrap();
 	}
 }

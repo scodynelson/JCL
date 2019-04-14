@@ -14,20 +14,14 @@ import jcl.lang.RationalStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
 /**
  * Reader Macro Function for handling the reading of {@link RationalStruct}s, following proper radix rules for a
  * provided radix value.
  */
-@Component
+@UtilityClass
 final class RationalReaderMacroFunction {
-
-	private final Reader reader;
-
-	RationalReaderMacroFunction(final Reader reader) {
-		this.reader = reader;
-	}
 
 	/**
 	 * Read in and returns a properly parsed {@link RationalStruct}, handling proper radix rules for reader number base
@@ -40,7 +34,7 @@ final class RationalReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	LispStruct readRational(final InputStreamStruct inputStreamStruct, final BigInteger radix) {
+	static LispStruct readRational(final InputStreamStruct inputStreamStruct, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;
@@ -52,7 +46,7 @@ final class RationalReaderMacroFunction {
 		ReaderVariables.READ_BASE.setValue(IntegerStruct.toLispInteger(radix));
 
 		// read rational
-		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 
 		// reset the read-base
 		ReaderVariables.READ_BASE.setValue(previousReadBase);

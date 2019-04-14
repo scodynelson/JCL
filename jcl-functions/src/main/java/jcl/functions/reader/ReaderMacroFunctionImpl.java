@@ -48,7 +48,8 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 	 *
 	 * @return the parsed {@link LispStruct} token
 	 */
-	protected abstract LispStruct readMacro(InputStreamStruct inputStreamStruct, int codePoint, Optional<BigInteger> numberArgument);
+	protected abstract LispStruct readMacro(InputStreamStruct inputStreamStruct, int codePoint,
+	                                        Optional<BigInteger> numberArgument);
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {

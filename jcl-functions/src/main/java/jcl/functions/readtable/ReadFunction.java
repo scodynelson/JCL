@@ -15,7 +15,6 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
 import jcl.reader.InternalRead;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,9 +25,6 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 	private static final String EOF_ERROR_ARGUMENT = "EOF-ERROR";
 	private static final String EOF_VALUE_ARGUMENT = "EOF-VALUE";
 	private static final String RECURSIVE_P_ARGUMENT = "RECURSIVE-P";
-
-	@Autowired
-	private InternalRead internalRead;
 
 	public ReadFunction() {
 		super("Parses the printed representation of an object from input-stream and builds such an object.",
@@ -60,6 +56,6 @@ public final class ReadFunction extends CommonLispBuiltInFunctionStructBase {
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		return internalRead.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
+		return InternalRead.read(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 }

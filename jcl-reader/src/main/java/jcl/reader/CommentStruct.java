@@ -5,35 +5,20 @@
 package jcl.reader;
 
 import jcl.lang.LispStruct;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * The object representation of a Lisp 'comment' type.
  */
+@Getter
+@AllArgsConstructor
 public class CommentStruct implements LispStruct {
 
 	/**
 	 * The read in comment string.
 	 */
 	private final String commentString;
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param commentString
-	 * 		the {@link String} comment value
-	 */
-	public CommentStruct(final String commentString) {
-		this.commentString = commentString;
-	}
-
-	/**
-	 * Getter for character {@link #commentString} property.
-	 *
-	 * @return character {@link #commentString} property
-	 */
-	public String getCommentString() {
-		return commentString;
-	}
 
 	@Override
 	public String toString() {

@@ -1,6 +1,9 @@
 package jcl.reader;
 
-public class ReaderContextHolder {
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public final class ReaderContextHolder {
 
 	private static final ThreadLocal<ReaderContext> contextHolder = new ThreadLocal<>();
 

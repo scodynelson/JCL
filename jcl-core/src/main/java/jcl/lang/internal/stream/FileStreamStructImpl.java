@@ -23,18 +23,13 @@ import jcl.lang.stream.ReadPeekResult;
 import jcl.type.FileStreamType;
 import jcl.type.LispType;
 import jcl.type.SignedByteType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The {@link FileStreamStructImpl} is the object representation of a Lisp 'file-stream' type.
  */
+@Slf4j
 public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl implements FileStreamStruct {
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStructImpl.class);
 
 	/**
 	 * The {@link Path} of the file that the {@link #randomAccessFile} interacts with.
@@ -126,8 +121,8 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 		try {
 			return randomAccessFile.readUnsignedByte();
 		} catch (final EOFException eofe) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (log.isTraceEnabled()) {
+				log.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
 			}
 			return -1;
 		} catch (final IOException ioe) {
@@ -150,8 +145,8 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 		try {
 			return randomAccessFile.readByte();
 		} catch (final EOFException eofe) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (log.isTraceEnabled()) {
+				log.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
 			}
 			return -1;
 		} catch (final IOException ioe) {
@@ -192,8 +187,8 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 			randomAccessFile.seek(randomAccessFile.getFilePointer() - 1);
 			return nextChar;
 		} catch (final EOFException eofe) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (log.isTraceEnabled()) {
+				log.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
 			}
 			return -1;
 		} catch (final IOException ioe) {
@@ -220,8 +215,8 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 			}
 			return nextChar;
 		} catch (final EOFException eofe) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (log.isTraceEnabled()) {
+				log.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
 			}
 			return -1;
 		} catch (final IOException ioe) {
@@ -251,8 +246,8 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 			}
 			return nextChar;
 		} catch (final EOFException eofe) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (log.isTraceEnabled()) {
+				log.trace(StreamUtils.END_OF_FILE_REACHED, eofe);
 			}
 			return -1;
 		} catch (final IOException ioe) {

@@ -22,22 +22,16 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 /**
  * Reader Macro Function for handling the reading of *features* in the system, handling whether or not those specific
  * features should be hidden or not (aka. the token is read in but ignored).
  */
 @Slf4j
-@Component
+@UtilityClass
 final class FeaturesReaderMacroFunction {
-
-	private final Reader reader;
-
-	FeaturesReaderMacroFunction(final Reader reader) {
-		this.reader = reader;
-	}
 
 	/**
 	 * Reads in the next set of *features*, following the {@code shouldHideFeatures} property to properly suppress the
@@ -48,7 +42,7 @@ final class FeaturesReaderMacroFunction {
 	 * @param shouldHideFeatures
 	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
 	 */
-	void readFeatures(final InputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
+	static void readFeatures(final InputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
 
 		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
@@ -56,13 +50,13 @@ final class FeaturesReaderMacroFunction {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+			final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(token);
 			if (isFeature && shouldHideFeatures) {
 				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
-				reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+				Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
 			if (log.isDebugEnabled()) {
@@ -82,7 +76,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link LispStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isFeature(final LispStruct token) {
+	private static boolean isFeature(final LispStruct token) {
 		if (token instanceof ListStruct) {
 			return isListFeature((ListStruct) token);
 		} else {
@@ -99,7 +93,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link ListStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isListFeature(final ListStruct listToken) {
+	private static boolean isListFeature(final ListStruct listToken) {
 		return (listToken instanceof ConsStruct) && isConsFeature((ConsStruct) listToken);
 	}
 
@@ -111,7 +105,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isConsFeature(final ConsStruct consToken) {
+	private static boolean isConsFeature(final ConsStruct consToken) {
 		final Iterator<LispStruct> iterator = consToken.iterator();
 		final LispStruct first = iterator.next();
 
@@ -140,7 +134,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if all of the elements are features; false otherwise
 	 */
-	private boolean isAndConsFeature(final Iterator<LispStruct> iterator) {
+	private static boolean isAndConsFeature(final Iterator<LispStruct> iterator) {
 
 		boolean isFeature = true;
 		while (iterator.hasNext()) {
@@ -158,7 +152,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if any of the elements are features; false otherwise
 	 */
-	private boolean isOrConsFeature(final Iterator<LispStruct> iterator) {
+	private static boolean isOrConsFeature(final Iterator<LispStruct> iterator) {
 
 		boolean isFeature = false;
 		while (iterator.hasNext()) {

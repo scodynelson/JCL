@@ -19,8 +19,7 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.StreamVariables;
 import jcl.system.repl.ReadEvalPrint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -28,19 +27,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+@Slf4j
 @SpringBootApplication(scanBasePackages = "jcl")
 public class JCL implements ApplicationRunner {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(JCL.class);
 
 	@Autowired
 	private ConfigurableApplicationContext context;
 
 	@Autowired
 	private CompileFileFunction compileFileFunction;
-
-	@Autowired
-	private ReadEvalPrint readEvalPrint;
 
 	@Autowired
 	private LoadFunction loadFunction;
@@ -55,7 +50,7 @@ public class JCL implements ApplicationRunner {
 		BootstrapFunctions.bootstrap();
 		BootstrapExpanders.bootstrap();
 
-		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
+		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(log)) {
 			final JavaStreamStruct characterStream = JavaStreamStruct.toJavaStream(System.in, loggerOutputStream);
 
 			// TODO: Constructing stream directly from Impl
@@ -104,7 +99,7 @@ public class JCL implements ApplicationRunner {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
 			loadLispFiles();
-			readEvalPrint.funcall(args);
+			ReadEvalPrint.funcall(args);
 		}
 	}
 

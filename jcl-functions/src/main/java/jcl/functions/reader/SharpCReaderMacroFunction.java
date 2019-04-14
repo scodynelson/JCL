@@ -19,21 +19,14 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#c' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	public SharpCReaderMacroFunction(final Reader reader) {
+	public SharpCReaderMacroFunction() {
 		super("SHARP-C");
-		this.reader = reader;
 	}
 
 	@Override
@@ -45,10 +38,11 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_C) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_C);
 
-		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}

@@ -11,11 +11,16 @@ import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * Used to build {@link LispStruct} tokens as a {@link Reader} process executes.
  */
-class TokenBuilder {
+@Getter
+@RequiredArgsConstructor
+public class TokenBuilder {
 
 	/**
 	 * The {@link InputStreamStruct} to use when building lisp tokens.
@@ -35,73 +40,18 @@ class TokenBuilder {
 	/**
 	 * The current list of {@link TokenAttribute}s accumulated through the read operation.
 	 */
-	private final LinkedList<TokenAttribute> tokenAttributes;
+	private final LinkedList<TokenAttribute> tokenAttributes = new LinkedList<>();
 
 	/**
 	 * The previously read result. This value is null if no tokens have been read.
 	 */
+	@Setter
 	private ReadPeekResult previousReadResult;
 
 	/**
 	 * Notes whether the token was multi-escaped.
 	 */
 	private boolean isMultiEscapedToken;
-
-	/**
-	 * Package private constructor.
-	 *
-	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to read tokens from
-	 * @param eofErrorP
-	 * 		whether or not to throw an error when an End-Of-File is reached
-	 * @param eofValue
-	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
-	 */
-	TokenBuilder(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final LispStruct eofValue) {
-		this.inputStreamStruct = inputStreamStruct;
-		this.eofErrorP = eofErrorP;
-		this.eofValue = eofValue;
-		tokenAttributes = new LinkedList<>();
-
-		previousReadResult = null;
-		isMultiEscapedToken = false;
-	}
-
-	/**
-	 * Getter for {@link #inputStreamStruct} property.
-	 *
-	 * @return {@link #inputStreamStruct} property
-	 */
-	InputStreamStruct getInputStreamStruct() {
-		return inputStreamStruct;
-	}
-
-	/**
-	 * Getter for {@link #eofErrorP} property.
-	 *
-	 * @return {@link #eofErrorP} property
-	 */
-	boolean isEofErrorP() {
-		return eofErrorP;
-	}
-
-	/**
-	 * Getter for {@link #eofValue} property.
-	 *
-	 * @return {@link #eofValue} property
-	 */
-	LispStruct getEofValue() {
-		return eofValue;
-	}
-
-	/**
-	 * Getter for {@link #tokenAttributes} property.
-	 *
-	 * @return {@link #tokenAttributes} property
-	 */
-	LinkedList<TokenAttribute> getTokenAttributes() {
-		return tokenAttributes;
-	}
 
 	/**
 	 * Creates a new {@link TokenAttribute} with the provided {@code token} and {@link AttributeType} and adds it to
@@ -115,34 +65,6 @@ class TokenBuilder {
 	void addToTokenAttributes(final int token, final AttributeType attributeType) {
 		final TokenAttribute tokenAttribute = new TokenAttribute(token, attributeType);
 		tokenAttributes.add(tokenAttribute);
-	}
-
-	/**
-	 * Getter for {@link #previousReadResult} property.
-	 *
-	 * @return {@link #previousReadResult} property
-	 */
-	ReadPeekResult getPreviousReadResult() {
-		return previousReadResult;
-	}
-
-	/**
-	 * Setter for the {@link #previousReadResult} property.
-	 *
-	 * @param previousReadResult
-	 * 		the new value of the {@link #previousReadResult} property
-	 */
-	void setPreviousReadResult(final ReadPeekResult previousReadResult) {
-		this.previousReadResult = previousReadResult;
-	}
-
-	/**
-	 * Getter for {@link #isMultiEscapedToken} property.
-	 *
-	 * @return {@link #isMultiEscapedToken} property
-	 */
-	boolean isMultiEscapedToken() {
-		return isMultiEscapedToken;
 	}
 
 	/**

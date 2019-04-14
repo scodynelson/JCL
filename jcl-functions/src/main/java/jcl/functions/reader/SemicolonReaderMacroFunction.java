@@ -13,13 +13,11 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the ';' Lisp reader macro.
  */
-@Component
-public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SemicolonReaderMacroFunction() {
 		super("SEMICOLON");
@@ -32,7 +30,8 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.SEMICOLON;
 
 		final StringBuilder stringBuilder = new StringBuilder();

@@ -14,15 +14,11 @@ import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#u' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpUReaderMacroFunction() {
 		super("SHARP-U");
@@ -37,7 +33,8 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_U) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {

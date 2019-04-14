@@ -23,28 +23,14 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#s' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	/**
-	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
-	 */
-	private final ListReaderMacroFunction listReaderMacroFunction;
-
-	public SharpSReaderMacroFunction(final Reader reader, final ListReaderMacroFunction listReaderMacroFunction) {
+	public SharpSReaderMacroFunction() {
 		super("SHARP-S");
-		this.reader = reader;
-		this.listReaderMacroFunction = listReaderMacroFunction;
 	}
 
 	@Override
@@ -56,11 +42,12 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_S) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
-			reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+			Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			return NILStruct.INSTANCE;
 		}
 
@@ -70,7 +57,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Non-list following #S");
 		}
 
-		final ListStruct listToken = listReaderMacroFunction.readList(inputStreamStruct);
+		final ListStruct listToken = ListReaderMacroFunction.readList(inputStreamStruct);
 		if (listToken == null) {
 			throw new ReaderErrorException("Non-list following #S");
 		}
@@ -88,7 +75,8 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SymbolStruct structureSymbol = (SymbolStruct) structureType;
 		final StructureClassStruct structureClass = structureSymbol.getStructureClass();
 		if (structureClass == null) {
-			throw new ReaderErrorException(structureType + " is not a defined structure type for symbol: " + structureSymbol);
+			final String message = structureType + " is not a defined structure type for symbol: " + structureSymbol;
+			throw new ReaderErrorException(message);
 		}
 
 		final SymbolStruct defaultConstructorSymbol = structureClass.getDefaultConstructorSymbol();

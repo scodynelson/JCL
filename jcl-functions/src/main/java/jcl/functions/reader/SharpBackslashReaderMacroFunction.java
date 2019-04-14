@@ -17,15 +17,11 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#\' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpBackslashReaderMacroFunction() {
 		super("SHARP-BACKSLASH");
@@ -38,10 +34,12 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.BACKSLASH;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken
+				= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, true);
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {

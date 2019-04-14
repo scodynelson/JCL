@@ -14,6 +14,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jcl-application_main" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="module" module-name="jcl-functions_main" />
     <orderEntry type="module" module-name="jcl-compiler_main" />
     <orderEntry type="module" module-name="jcl-reader_main" />

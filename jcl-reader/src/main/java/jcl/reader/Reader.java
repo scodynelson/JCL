@@ -4,44 +4,58 @@
 
 package jcl.reader;
 
+import java.math.BigInteger;
+import java.util.Map;
+
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.stream.ReadPeekResult;
+import jcl.reader.internal.ReaderProcessor;
+import jcl.reader.internal.TokenBuilder;
+import lombok.experimental.UtilityClass;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
-public interface Reader {
+@UtilityClass
+public final class Reader {
 
-	/**
-	 * Reads the next {@link LispStruct} from the {@link InputStreamStruct}.
-	 *
-	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to read tokens from
-	 * @param eofErrorP
-	 * 		whether or not to throw an error when an End-Of-File is reached
-	 * @param eofValue
-	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
-	 * @param recursiveP
-	 * 		whether or not to recursively read tokens
-	 *
-	 * @return the next {@link LispStruct} from the {@link InputStreamStruct}
-	 */
-	LispStruct read(InputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	public static LispStruct read(final InputStreamStruct inputStreamStruct,
+	                              final boolean eofErrorP,
+	                              final LispStruct eofValue,
+	                              final boolean recursiveP) {
+		final LispStruct token = readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 
-	/**
-	 * Reads the next {@link LispStruct} from the {@link InputStreamStruct}, making sure to preserve any whitespace
-	 * characters after the {@link LispStruct} token is read.
-	 *
-	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to read tokens from
-	 * @param eofErrorP
-	 * 		whether or not to throw an error when an End-Of-File is reached
-	 * @param eofValue
-	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
-	 * @param recursiveP
-	 * 		whether or not to recursively read tokens
-	 *
-	 * @return the next {@link LispStruct} from the {@link InputStreamStruct}
-	 */
-	LispStruct readPreservingWhitespace(InputStreamStruct inputStreamStruct, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+		final ReadPeekResult possibleWhitespace = inputStreamStruct.readChar(false, eofValue, false);
+		final Integer codePoint = possibleWhitespace.getResult();
+		if (!possibleWhitespace.isEof() && (!Character.isWhitespace(codePoint) || recursiveP)) {
+			inputStreamStruct.unreadChar(codePoint);
+		}
+
+		return token;
+	}
+
+	public static LispStruct readPreservingWhitespace(final InputStreamStruct inputStreamStruct,
+	                                                  final boolean eofErrorP,
+	                                                  final LispStruct eofValue,
+	                                                  final boolean recursiveP) {
+		if (recursiveP) {
+			final TokenBuilder tokenBuilder = new TokenBuilder(inputStreamStruct, eofErrorP, eofValue);
+			return ReaderProcessor.read(tokenBuilder);
+		}
+
+		final ReaderContext context = ReaderContextHolder.getContext();
+		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = context.getSharpEqualFinalTable();
+		final Map<BigInteger, SymbolStruct> tempSharpEqualTempTable = context.getSharpEqualTempTable();
+		final Map<SymbolStruct, LispStruct> tempSharpEqualReplTable = context.getSharpEqualReplTable();
+
+		try {
+			context.clearSharpEqualTables();
+
+			return readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, true);
+		} finally {
+			context.restoreSharpEqualTables(tempSharpEqualFinalTable, tempSharpEqualTempTable, tempSharpEqualReplTable);
+		}
+	}
 }

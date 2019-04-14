@@ -14,15 +14,11 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#:' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpColonReaderMacroFunction() {
 		super("SHARP-COLON");
@@ -35,10 +31,12 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.COLON;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken
+				= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {

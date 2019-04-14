@@ -11,15 +11,14 @@ import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
+import lombok.experimental.UtilityClass;
 
 /**
  * Reader Macro Function for handling the reading of extended characters, handling proper character casing and
  * escaping.
  */
+@UtilityClass
 final class ExtendedTokenReaderMacroFunction {
-
-	private ExtendedTokenReaderMacroFunction() {
-	}
 
 	/**
 	 * Reads in and returns an extended token character containing the token, whether or not the token has escape
@@ -95,7 +94,8 @@ final class ExtendedTokenReaderMacroFunction {
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} to append the next token character(s)
 	 */
-	private static void readMultipleEscape(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
+	private static void readMultipleEscape(final InputStreamStruct inputStreamStruct,
+	                                       final StringBuilder stringBuilder) {
 
 		ReadPeekResult tempReadResult = inputStreamStruct.readChar(true, null, false);
 		int tempCodePoint = tempReadResult.getResult();
@@ -136,8 +136,11 @@ final class ExtendedTokenReaderMacroFunction {
 	 *
 	 * @return the resulting {@link ReadPeekResult} of the read operation performed by the {@link InputStreamStruct}
 	 */
-	private static ReadPeekResult readToken(final InputStreamStruct inputStreamStruct, final boolean eofErrorP, final boolean recursiveP,
-	                                        final StringBuilder stringBuilder, final boolean isEscaped) {
+	private static ReadPeekResult readToken(final InputStreamStruct inputStreamStruct,
+	                                        final boolean eofErrorP,
+	                                        final boolean recursiveP,
+	                                        final StringBuilder stringBuilder,
+	                                        final boolean isEscaped) {
 		final ReadPeekResult readResult = inputStreamStruct.readChar(eofErrorP, NILStruct.INSTANCE, recursiveP);
 		appendToken(readResult, stringBuilder, isEscaped);
 		return readResult;
@@ -154,7 +157,9 @@ final class ExtendedTokenReaderMacroFunction {
 	 * @param isEscaped
 	 * 		whether or not to attempt to modify the case of the read token
 	 */
-	private static void appendToken(final ReadPeekResult readResult, final StringBuilder stringBuilder, final boolean isEscaped) {
+	private static void appendToken(final ReadPeekResult readResult,
+	                                final StringBuilder stringBuilder,
+	                                final boolean isEscaped) {
 		if (!readResult.isEof()) {
 			int codePoint = readResult.getResult();
 			if (!isEscaped) {
@@ -226,7 +231,9 @@ final class ExtendedTokenReaderMacroFunction {
 				properCaseCodePoint = Character.toLowerCase(codePoint);
 				break;
 			case INVERT:
-				properCaseCodePoint = Character.isUpperCase(codePoint) ? Character.toLowerCase(codePoint) : Character.toUpperCase(codePoint);
+				properCaseCodePoint = Character.isUpperCase(codePoint)
+				                      ? Character.toLowerCase(codePoint)
+				                      : Character.toUpperCase(codePoint);
 				break;
 			case PRESERVE:
 				properCaseCodePoint = codePoint;
@@ -266,7 +273,8 @@ final class ExtendedTokenReaderMacroFunction {
 		 * @param hasPackageDelimiter
 		 * 		whether or not the token contains a package delimiter
 		 */
-		private ReadExtendedToken(final String tokenString, final boolean hasEscapes, final boolean hasPackageDelimiter) {
+		private ReadExtendedToken(final String tokenString, final boolean hasEscapes,
+		                          final boolean hasPackageDelimiter) {
 			this.tokenString = tokenString;
 			this.hasEscapes = hasEscapes;
 			this.hasPackageDelimiter = hasPackageDelimiter;

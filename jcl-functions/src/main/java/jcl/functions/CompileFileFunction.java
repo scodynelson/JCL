@@ -44,29 +44,24 @@ import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "COMPILE-FILE";
 	private static final String INPUT_FILE_ARGUMENT = "INPUT-FILE";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CompileFileFunction.class);
-
 	private static final Pattern VALID_FILE_CLASS_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
-
-	@Autowired
-	private InternalRead internalRead;
 
 	@Autowired
 	private CompileFilePathnameFunction compileFilePathnameFunction;
@@ -127,11 +122,11 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 		final Instant startTime = Instant.now();
 		if (verbose) {
 			final String javaVersion = SystemUtils.JAVA_VERSION;
-			LOGGER.info("; Java Compiler Version {}", javaVersion);
+			log.info("; Java Compiler Version {}", javaVersion);
 
 			final LocalDateTime now = LocalDateTime.now();
-			LOGGER.info("; Compiling '{}' on {}", inputFileNamestring, now);
-			LOGGER.info("");
+			log.info("; Compiling '{}' on {}", inputFileNamestring, now);
+			log.info("");
 		}
 
 		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
@@ -157,14 +152,14 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 			LispStruct form;
 			do {
-				form = internalRead.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+				form = InternalRead.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 
 				if (form instanceof ListStruct) {
 					forms.add(form);
 				} else if (form != null) {
 					final Long currentFilePosition = inputFileStream.filePosition(null);
 					// TODO: can we rework this to tell what line we're on???
-					LOGGER.info("; Deleted a non-list form '{}' found at position {}.", form, currentFilePosition);
+					log.info("; Deleted a non-list form '{}' found at position {}.", form, currentFilePosition);
 					form = NILStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;
@@ -173,7 +168,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 			if (print && compiledWithWarnings.toJavaPBoolean()) {
 				// If we printed warnings, make sure to print a newline afterwards.
-				LOGGER.info("");
+				log.info("");
 			}
 
 			final String inputFileName = inputFilePath.getFileName().toString();
@@ -192,21 +187,21 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 		} catch (final IOException e) {
 			compiledSuccessfully = false;
 
-			LOGGER.error("Error in COMPILE-FILE for file: '{}'", inputFilePath, e);
+			log.error("Error in COMPILE-FILE for file: '{}'", inputFilePath, e);
 
 			return ValuesStruct.valueOf(NILStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
 		} finally {
 			if (compiledSuccessfully && verbose) {
-				LOGGER.info("\n; '{}' written", outputFilePath);
+				log.info("\n; '{}' written", outputFilePath);
 
 				final LocalDateTime now = LocalDateTime.now();
-				LOGGER.info("; Compilation finished in {}.", now);
+				log.info("; Compilation finished in {}.", now);
 			} else if (verbose) {
 				final Instant endTime = Instant.now();
 				final Duration duration = Duration.between(startTime, endTime);
-				LOGGER.info("; Compilation aborted after {}.", duration);
+				log.info("; Compilation aborted after {}.", duration);
 			}
-			LOGGER.info("");
+			log.info("");
 
 			CompilerVariables.COMPILE_FILE_TRUENAME.setValue(previousCompileFileTruename);
 			CompilerVariables.COMPILE_FILE_PATHNAME.setValue(previousCompileFilePathname);
@@ -251,7 +246,7 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 
 				if (print) {
 					final String fileName = javaClassBuilder.getFileName();
-					LOGGER.info("; Compiled '{}'", fileName);
+					log.info("; Compiled '{}'", fileName);
 				}
 
 				final String className = javaClassBuilder.getClassName();

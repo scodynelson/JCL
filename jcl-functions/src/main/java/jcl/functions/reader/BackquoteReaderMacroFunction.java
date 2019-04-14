@@ -23,13 +23,11 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '`' Lisp reader macro.
  */
-@Component
-public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private static final SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 	private static final SymbolStruct CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
@@ -44,11 +42,8 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public static final SymbolStruct BQ_DOT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",.").getSymbol();
 	public static final SymbolStruct BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
-	private final Reader reader;
-
-	public BackquoteReaderMacroFunction(final Reader reader) {
+	public BackquoteReaderMacroFunction() {
 		super("BACKQUOTE");
-		this.reader = reader;
 	}
 
 	@Override
@@ -58,13 +53,14 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
 		final ReaderContext context = ReaderContextHolder.getContext();
 		context.incrementBackquoteLevel();
 		try {
-			final LispStruct code = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+			final LispStruct code = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
 			final SymbolStruct flag = backquoteReturn.getFlag();
@@ -205,7 +201,9 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		return new BackquoteReturn(TStruct.INSTANCE, code);
 	}
 
-	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing,
+	                                          final SymbolStruct cdrBqtifyFlag,
+	                                          final LispStruct cdrBqtifyThing) {
 		if (NILStruct.INSTANCE.eq(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = ListStruct.toLispList(carBqtifyThing);
@@ -227,7 +225,9 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 	}
 
-	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing,
+	                                           final SymbolStruct cdrBqtifyFlag,
+	                                           final LispStruct cdrBqtifyThing) {
 		if (NILStruct.INSTANCE.eq(cdrBqtifyFlag)) {
 			if (expandableBackqExpressionP(carBqtifyThing)) {
 				final ListStruct bqReturnThing = ListStruct.toLispList(carBqtifyThing);
@@ -306,9 +306,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (o instanceof ConsStruct) {
 			final ConsStruct consStruct = (ConsStruct) o;
 			final LispStruct flag = consStruct.car();
-			if (BQ_AT_FLAG.eq(flag) || BQ_DOT_FLAG.eq(flag)) {
-				return true;
-			}
+			return BQ_AT_FLAG.eq(flag) || BQ_DOT_FLAG.eq(flag);
 		}
 		return false;
 	}

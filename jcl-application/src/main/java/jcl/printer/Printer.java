@@ -5,9 +5,12 @@
 package jcl.printer;
 
 import jcl.lang.LispStruct;
+import lombok.experimental.UtilityClass;
 
-@FunctionalInterface
-public interface Printer {
+@UtilityClass
+public final class Printer {
 
-	String print(LispStruct object);
+	public String print(final LispStruct object) {
+		return object.toString();
+	}
 }

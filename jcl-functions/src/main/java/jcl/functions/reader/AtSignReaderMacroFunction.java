@@ -15,13 +15,11 @@ import jcl.lang.java.JavaObjectStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '@...' Lisp reader macro.
  */
-@Component
-public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public AtSignReaderMacroFunction() {
 		super("AT-SIGN");
@@ -34,7 +32,8 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.AT_SIGN;
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
@@ -44,7 +43,8 @@ public class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final String tokenString;
 		try {
-			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken
+					= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			tokenString = extendedToken.getTokenString();
 		} finally {
 			readtable.setReadtableCase(previousCase);

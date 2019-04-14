@@ -14,13 +14,11 @@ import jcl.lang.java.JavaNameStruct;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '$...' Lisp reader macro.
  */
-@Component
-public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public DollarSignReaderMacroFunction() {
 		super("DOLLAR-SIGN");
@@ -33,7 +31,8 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.DOLLAR_SIGN;
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
@@ -43,7 +42,8 @@ public class DollarSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final String tokenString;
 		try {
-			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
+			final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken
+					= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			tokenString = extendedToken.getTokenString();
 		} finally {
 			readtable.setReadtableCase(previousCase);

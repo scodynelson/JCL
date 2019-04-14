@@ -18,19 +18,14 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the ',' Lisp reader macro.
  */
-@Component
-public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	public CommaReaderMacroFunction(final Reader reader) {
+	public CommaReaderMacroFunction() {
 		super("COMMA");
-		this.reader = reader;
 	}
 
 	@Override
@@ -40,7 +35,8 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
 		final ReaderContext context = ReaderContextHolder.getContext();
@@ -61,14 +57,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final ConsStruct commaCons;
 
 			if (nextCodePoint == CodePointConstants.AT_SIGN) {
-				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+				final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_AT_FLAG, token);
 			} else if (nextCodePoint == CodePointConstants.FULL_STOP) {
-				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+				final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_DOT_FLAG, token);
 			} else {
 				inputStreamStruct.unreadChar(nextCodePoint);
-				final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+				final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
 			}
 			return commaCons;

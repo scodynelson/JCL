@@ -16,17 +16,13 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '##' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	protected SharpSharpReaderMacroFunction() {
+	public SharpSharpReaderMacroFunction() {
 		super("SHARP-SHARP");
 	}
 
@@ -37,7 +33,8 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {

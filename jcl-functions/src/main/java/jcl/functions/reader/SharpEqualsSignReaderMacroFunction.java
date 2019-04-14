@@ -22,21 +22,14 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * Implements the '#=' Lisp reader macro.
  */
-@Component
-@DependsOn("readerBootstrap")
-public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl {
+public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
-	private final Reader reader;
-
-	public SharpEqualsSignReaderMacroFunction(final Reader reader) {
+	public SharpEqualsSignReaderMacroFunction() {
 		super("SHARP-EQUALS");
-		this.reader = reader;
 	}
 
 	@Override
@@ -46,7 +39,8 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
+	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
@@ -71,7 +65,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		final SymbolStruct labelTag = SymbolStruct.toLispSymbol(labelTagName);
 		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
-		final LispStruct token = reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 
 		final Map<SymbolStruct, LispStruct> sharpEqualReplTable = context.getSharpEqualReplTable();
 		sharpEqualReplTable.put(labelTag, token);
@@ -103,7 +97,8 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding {@link
 	 * LispStruct} tokens
 	 */
-	private static LispStruct replaceTagsWithTokens(final LispStruct token, final Map<SymbolStruct, LispStruct> sharpEqualReplTable,
+	private static LispStruct replaceTagsWithTokens(final LispStruct token,
+	                                                final Map<SymbolStruct, LispStruct> sharpEqualReplTable,
 	                                                final Set<LispStruct> sharpEqualCircleSet) {
 
 		if (token instanceof SymbolStruct) {

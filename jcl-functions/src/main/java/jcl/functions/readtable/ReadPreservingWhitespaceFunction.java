@@ -15,7 +15,6 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
 import jcl.reader.InternalRead;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,9 +25,6 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 	private static final String EOF_ERROR_ARGUMENT = "EOF-ERROR";
 	private static final String EOF_VALUE_ARGUMENT = "EOF-VALUE";
 	private static final String RECURSIVE_P_ARGUMENT = "RECURSIVE-P";
-
-	@Autowired
-	private InternalRead internalRead;
 
 	public ReadPreservingWhitespaceFunction() {
 		super("Parses the printed representation of an object from input-stream and builds such an object preserving any whitespace character that delimits the printed representation of the object.",
@@ -60,6 +56,6 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 		final LispStruct eofValue = arguments.getOptionalArgument(EOF_VALUE_ARGUMENT);
 		final BooleanStruct recursiveP = arguments.getOptionalArgument(RECURSIVE_P_ARGUMENT, BooleanStruct.class);
 
-		return internalRead.readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
+		return InternalRead.readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 	}
 }

@@ -8,7 +8,6 @@ import java.util.List;
 
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.util.ClassUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ReverseListIterator;
 
@@ -167,8 +166,11 @@ public interface ListStruct extends SequenceStruct {
 
 		final List<ListStruct> lists = new ArrayList<>();
 		reverseListIterator.forEachRemaining(argument -> {
-			final ListStruct list = ClassUtils.convert(argument, ListStruct.class);
-			lists.add(list);
+			if (argument instanceof ListStruct) {
+				lists.add((ListStruct) argument);
+			} else {
+				throw new TypeErrorException("Cannot convert value '" + argument + "' to type 'LIST'");
+			}
 		});
 		return append(lists, object);
 	}
@@ -239,8 +241,11 @@ public interface ListStruct extends SequenceStruct {
 
 		final List<ListStruct> lists = new ArrayList<>();
 		reverseListIterator.forEachRemaining(argument -> {
-			final ListStruct list = ClassUtils.convert(argument, ListStruct.class);
-			lists.add(list);
+			if (argument instanceof ListStruct) {
+				lists.add((ListStruct) argument);
+			} else {
+				throw new TypeErrorException("Cannot convert value '" + argument + "' to type 'LIST'");
+			}
 		});
 		return nConc(lists, object);
 	}

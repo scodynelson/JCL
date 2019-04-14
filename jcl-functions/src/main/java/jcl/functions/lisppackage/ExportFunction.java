@@ -17,7 +17,6 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.PackageVariables;
-import jcl.util.ClassUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,7 +51,11 @@ public final class ExportFunction extends CommonLispBuiltInFunctionStructBase {
 			final ListStruct symbols = (ListStruct) lispStruct;
 			final List<SymbolStruct> realSymbols = new ArrayList<>();
 			for (final LispStruct theSymbol : symbols) {
-				realSymbols.add(ClassUtils.convert(theSymbol, SymbolStruct.class));
+				if (theSymbol instanceof SymbolStruct) {
+					realSymbols.add((SymbolStruct) theSymbol);
+				} else {
+					throw new TypeErrorException("Cannot convert value '" + theSymbol + "' to type 'SYMBOL'");
+				}
 			}
 			realSymbolArray = realSymbols.toArray(new SymbolStruct[realSymbols.size()]);
 		} else if (lispStruct instanceof SymbolStruct) {

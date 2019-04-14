@@ -7,7 +7,7 @@ import java.util.Map;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
-import jcl.util.ClassUtils;
+import jcl.lang.condition.exception.TypeErrorException;
 
 import static java.util.stream.Collectors.toList;
 
@@ -34,7 +34,7 @@ public final class Arguments {
 
 	public <T extends LispStruct> T getRequiredArgument(final String parameterName, final Class<T> clazz) {
 		final LispStruct parameterValue = getRequiredParameters().get(parameterName);
-		return ClassUtils.convert(parameterValue, clazz);
+		return convert(parameterValue, clazz);
 	}
 
 	Map<String, LispStruct> getOptionalParameters() {
@@ -57,7 +57,7 @@ public final class Arguments {
 
 	public <T extends LispStruct> T getOptionalArgument(final String parameterName, final Class<T> clazz) {
 		final LispStruct parameterValue = getOptionalParameters().get(parameterName);
-		return ClassUtils.convert(parameterValue, clazz);
+		return convert(parameterValue, clazz);
 	}
 
 	List<LispStruct> getRestParameter() {
@@ -73,7 +73,7 @@ public final class Arguments {
 
 	public <T extends LispStruct> List<T> getRestArgument(final Class<T> clazz) {
 		return getRestParameter().stream()
-		                         .map(parameterValue -> ClassUtils.convert(parameterValue, clazz))
+		                         .map(parameterValue -> convert(parameterValue, clazz))
 		                         .collect(toList());
 	}
 
@@ -97,6 +97,14 @@ public final class Arguments {
 
 	public <T extends LispStruct> T getKeyArgument(final KeywordStruct keyword, final Class<T> clazz) {
 		final LispStruct parameterValue = getKeyParameters().get(keyword);
-		return ClassUtils.convert(parameterValue, clazz);
+		return convert(parameterValue, clazz);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T convert(final Object value, final Class<T> type) {
+		if ((value != null) && type.isAssignableFrom(value.getClass())) {
+			return (T) value;
+		}
+		throw new TypeErrorException("Cannot convert value '" + value + "' to type '" + type.getSimpleName() + '\'');
 	}
 }

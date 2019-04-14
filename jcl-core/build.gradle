@@ -4,7 +4,6 @@ dependencies {
 	compile("com.ibm.icu:icu4j")
 	compile("commons-io:commons-io")
 	compile("com.google.guava:guava")
-//	compile("io.javaslang:javaslang")
 	compile("org.ow2.asm:asm")
 	compile("org.apache.commons:commons-lang3")
 	compile("org.apache.commons:commons-text")
@@ -14,9 +13,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
-	compile("org.springframework:spring-core")
 
 	testCompile("junit:junit")
 	testCompile("org.hamcrest:hamcrest-core")
-//	testCompile("org.spockframework:spock-core")
 }

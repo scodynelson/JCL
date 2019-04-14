@@ -12,16 +12,13 @@ import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class IfExpander extends MacroFunctionExpander<IfStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class IfExpander extends MacroFunctionExpander<IfStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public IfExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final IfExpander INSTANCE = new IfExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -51,13 +48,13 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 			throw new ProgramErrorException("IF: Incorrect number of arguments: 4. Expected between 2 and 3 arguments.");
 		}
 
-		final LispStruct testFormAnalyzed = formAnalyzer.analyze(testForm, environment);
-		final LispStruct thenFormAnalyzed = formAnalyzer.analyze(thenForm, environment);
+		final LispStruct testFormAnalyzed = FormAnalyzer.analyze(testForm, environment);
+		final LispStruct thenFormAnalyzed = FormAnalyzer.analyze(thenForm, environment);
 		final LispStruct elseFormAnalyzed;
 		if (elseForm == null) {
 			elseFormAnalyzed = NILStruct.INSTANCE;
 		} else {
-			elseFormAnalyzed = formAnalyzer.analyze(elseForm, environment);
+			elseFormAnalyzed = FormAnalyzer.analyze(elseForm, environment);
 		}
 		return new IfStruct(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);
 	}

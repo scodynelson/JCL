@@ -36,16 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 
 @Slf4j
-public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStruct> {
+abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-	protected final FunctionExpander functionExpander;
 	private final String expanderName;
 
-	protected InnerLambdaExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander,
-	                              final String expanderName) {
-		this.formAnalyzer = formAnalyzer;
-		this.functionExpander = functionExpander;
+	protected InnerLambdaExpander(final String expanderName) {
 		this.expanderName = expanderName;
 	}
 
@@ -116,7 +111,7 @@ public abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLam
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, innerLambdaEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, innerLambdaEnvironment))
 				           .collect(Collectors.toList());
 
 		return new InnerLambdaStruct(vars, new PrognStruct(analyzedBodyForms), innerLambdaEnvironment);

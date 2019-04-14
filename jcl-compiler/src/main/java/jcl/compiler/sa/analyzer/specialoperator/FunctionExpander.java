@@ -18,18 +18,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStruct> {
 
-	private final LambdaExpander lambdaExpander;
-	private final MacroLambdaExpander macroLambdaExpander;
-
-	public FunctionExpander(final LambdaExpander lambdaExpander, final MacroLambdaExpander macroLambdaExpander) {
-		this.lambdaExpander = lambdaExpander;
-		this.macroLambdaExpander = macroLambdaExpander;
-	}
+	public static final FunctionExpander INSTANCE = new FunctionExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -64,10 +59,10 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 		final LispStruct functionListFirst = functionList.car();
 
 		if (SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
-			final LambdaStruct analyzedLambda = lambdaExpander.expand(functionList, environment);
+			final LambdaStruct analyzedLambda = LambdaExpander.INSTANCE.expand(functionList, environment);
 			return new LambdaCompilerFunctionStruct(analyzedLambda);
 		} else if(!SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
-			final MacroLambdaStruct analyzedMacroLambda = macroLambdaExpander.expand(functionList, environment);
+			final MacroLambdaStruct analyzedMacroLambda = MacroLambdaExpander.INSTANCE.expand(functionList, environment);
 			return new MacroLambdaCompilerFunctionStruct(analyzedMacroLambda);
 		} else {
 			throw new ProgramErrorException("FUNCTION: First element of list argument must be the symbol 'LAMBDA'. Got: " + functionListFirst);

@@ -45,9 +45,6 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 	@Autowired
 	private InternalRead internalRead;
 
-	@Autowired
-	private InternalEval internalEval;
-
 	public LoadFunction() {
 		super("Loads the file named by filespec into the Lisp environment.",
 		      FUNCTION_NAME,
@@ -62,7 +59,6 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-
 
 		final LispStruct filespec = arguments.getRequiredArgument(FILESPEC_ARGUMENT);
 		final boolean verbose;
@@ -159,7 +155,7 @@ public final class LoadFunction extends CommonLispBuiltInFunctionStructBase {
 				continue;
 			}
 
-			final LispStruct evaluatedForm = internalEval.eval(form);
+			final LispStruct evaluatedForm = InternalEval.eval(form);
 			if (print) {
 				log.info("; {}", evaluatedForm);
 			}

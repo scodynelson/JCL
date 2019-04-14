@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.sa.Analyzer;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -27,20 +26,12 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.java.JavaNameStruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
-public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
+@UtilityClass
+public final class ConsAnalyzer {
 
-	@Autowired
-	private FormAnalyzer formAnalyzer;
-
-	@Autowired
-	private LambdaExpander lambdaExpander;
-
-	@Override
-	public LispStruct analyze(final ConsStruct input, final Environment environment) {
+	public static LispStruct analyze(final ConsStruct input, final Environment environment) {
 		final LispStruct first = input.car();
 
 		if (NILStruct.INSTANCE.eq(first)) {
@@ -56,7 +47,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 		}
 	}
 
-	private SymbolFunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
+	private static SymbolFunctionCallStruct analyzeSymbolFunctionCall(final ListStruct input, final Environment environment) {
 		final Iterator<LispStruct> iterator = input.iterator();
 
 		final SymbolStruct functionSymbol = (SymbolStruct) iterator.next();
@@ -79,7 +70,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 
 		final List<LispStruct> functionArguments = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			functionArguments.add(analyzedElement);
 		});
 
@@ -88,7 +79,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 		return new SymbolFunctionCallStruct(symbolCompilerFunction, functionArguments, false);
 	}
 
-	private JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {
+	private static JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {
 		final Iterator<LispStruct> iterator = input.iterator();
 
 		final JavaNameStruct methodName = (JavaNameStruct) iterator.next();
@@ -97,17 +88,17 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 			throw new ProgramErrorException("CONS ANALYZER: Incorrect number of arguments to Java method call: 0. Expected at least 1 argument.");
 		}
 		final LispStruct second = iterator.next();
-		final LispStruct javaObject = formAnalyzer.analyze(second, environment);
+		final LispStruct javaObject = FormAnalyzer.analyze(second, environment);
 
 		final List<LispStruct> methodArguments = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			methodArguments.add(analyzedElement);
 		});
 		return new JavaMethodCallStruct(methodName, javaObject, methodArguments);
 	}
 
-	private LambdaFunctionCallStruct analyzeLambdaFunctionCall(final ListStruct input, final Environment environment) {
+	private static LambdaFunctionCallStruct analyzeLambdaFunctionCall(final ListStruct input, final Environment environment) {
 		// ex ((lambda (x) (+ x 1)) 3)
 
 		final Iterator<LispStruct> iterator = input.iterator();
@@ -119,11 +110,11 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 			throw new ProgramErrorException("CONS ANALYZER: First element of a lambda list must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 
-		final LambdaStruct lambdaAnalyzed = lambdaExpander.expand(functionList, environment);
+		final LambdaStruct lambdaAnalyzed = LambdaExpander.INSTANCE.expand(functionList, environment);
 
 		final List<LispStruct> functionArguments = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			functionArguments.add(analyzedElement);
 		});
 

@@ -12,18 +12,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-	private final InternalEval internalEval;
-
-	public LoadTimeValueExpander(final FormAnalyzer formAnalyzer, final InternalEval internalEval) {
-		this.formAnalyzer = formAnalyzer;
-		this.internalEval = internalEval;
-	}
+	public static final LoadTimeValueExpander INSTANCE = new LoadTimeValueExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -53,7 +48,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LispStruct> {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + readOnlyP);
 		}
 
-		final LispStruct analyzedLoadTimeValueForm = formAnalyzer.analyze(loadTimeValueForm, Environment.NULL);
-		return internalEval.eval(analyzedLoadTimeValueForm, Environment.NULL);
+		final LispStruct analyzedLoadTimeValueForm = FormAnalyzer.analyze(loadTimeValueForm, Environment.NULL);
+		return InternalEval.eval(analyzedLoadTimeValueForm, Environment.NULL);
 	}
 }

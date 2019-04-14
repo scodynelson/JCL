@@ -14,7 +14,6 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaObjectStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,9 +22,6 @@ public final class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 	private static final String FUNCTION_NAME = "JINVOKE";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";
 	private static final String JAVA_OBJECT_ARGUMENT = "JAVA-OBJECT";
-
-	@Autowired
-	private InternalEval internalEval;
 
 	public JInvoke() {
 		super("Invokes an instance method for the provided JavaMethod and JavaObject.",
@@ -55,7 +51,7 @@ public final class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 			methodArgs[i] = unwrapJavaObject(currentArg);
 		}
 
-		return internalEval.jInvoke(javaMethod, javaObject, methodArgs);
+		return InternalEval.jInvoke(javaMethod, javaObject, methodArgs);
 	}
 
 	private static Object unwrapJavaObject(final Object javaObject) {

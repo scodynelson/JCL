@@ -37,7 +37,6 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 */
 	private final ListReaderMacroFunction listReaderMacroFunction;
 
-	@Autowired
 	public SharpLeftParenthesisReaderMacroFunction(final ListReaderMacroFunction listReaderMacroFunction) {
 		super("SHARP-LEFT-PARENTHESIS");
 		this.listReaderMacroFunction = listReaderMacroFunction;

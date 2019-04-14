@@ -12,16 +12,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class TheExpander extends MacroFunctionExpander<TheStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TheExpander extends MacroFunctionExpander<TheStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public TheExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final TheExpander INSTANCE = new TheExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -51,7 +48,7 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 			throw new ProgramErrorException("THE: Incorrect number of arguments: 3. Expected 2 arguments.");
 		}
 
-		final LispStruct theFormAnalyzed = formAnalyzer.analyze(theForm, environment);
+		final LispStruct theFormAnalyzed = FormAnalyzer.analyze(theForm, environment);
 		return new TheStruct(null, theFormAnalyzed);
 	}
 }

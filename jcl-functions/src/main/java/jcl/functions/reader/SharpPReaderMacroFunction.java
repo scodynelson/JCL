@@ -17,7 +17,6 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,6 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private final Reader reader;
 
-	@Autowired
 	public SharpPReaderMacroFunction(final Reader reader) {
 		super("SHARP-P");
 		this.reader = reader;

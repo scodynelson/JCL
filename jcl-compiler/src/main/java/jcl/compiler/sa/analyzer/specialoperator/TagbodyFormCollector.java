@@ -28,14 +28,11 @@ import jcl.lang.SymbolStruct;
 
 final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> {
 
-	private final FormAnalyzer formAnalyzer;
-
 	private final Environment environment;
 
 	private GoStruct<?> currentTag;
 
-	TagbodyFormCollector(final FormAnalyzer formAnalyzer, final Environment environment) {
-		this.formAnalyzer = formAnalyzer;
+	TagbodyFormCollector(final Environment environment) {
 		this.environment = environment;
 		currentTag = null;
 	}
@@ -63,7 +60,7 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	}
 
 	private void handleOtherwise(final Map<GoStruct<?>, PrognStruct> tagToFormsMap, final LispStruct lispStruct) {
-		final LispStruct analyzedForm = formAnalyzer.analyze(lispStruct, environment);
+		final LispStruct analyzedForm = FormAnalyzer.analyze(lispStruct, environment);
 		tagToFormsMap.get(currentTag).getForms().add(analyzedForm);
 	}
 

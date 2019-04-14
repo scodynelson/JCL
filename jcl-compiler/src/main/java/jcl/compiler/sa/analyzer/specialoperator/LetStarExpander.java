@@ -10,13 +10,13 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
 
-@Component
-public class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetStarVar> {
+public final class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetStarVar> {
 
-	public LetStarExpander(final FormAnalyzer formAnalyzer) {
-		super(formAnalyzer, "LET*");
+	public static final LetStarExpander INSTANCE = new LetStarExpander();
+
+	private LetStarExpander() {
+		super("LET*");
 	}
 
 	@Override
@@ -40,6 +40,6 @@ public class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetSt
 	@Override
 	protected LispStruct getListParameterInitForm(final LispStruct parameterValue, final Environment environment) {
 		// Evaluate in the 'current' environment.
-		return formAnalyzer.analyze(parameterValue, environment);
+		return FormAnalyzer.analyze(parameterValue, environment);
 	}
 }

@@ -23,16 +23,13 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.type.TType;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacroletStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacroletStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public SymbolMacroletExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final SymbolMacroletExpander INSTANCE = new SymbolMacroletExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -73,7 +70,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, symbolMacroletEnvironment))
 				           .collect(Collectors.toList());
 
 		return new SymbolMacroletStruct(symbolMacroletVars, new PrognStruct(analyzedBodyForms), symbolMacroletEnvironment);
@@ -124,7 +121,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
-		final LispStruct expansion = formAnalyzer.analyze(parameterValue, parentEnvironment);
+		final LispStruct expansion = FormAnalyzer.analyze(parameterValue, parentEnvironment);
 
 		final SymbolMacroBinding binding = new SymbolMacroBinding(var, TType.INSTANCE, expansion);
 		symbolMacroletEnvironment.addSymbolMacroBinding(binding);

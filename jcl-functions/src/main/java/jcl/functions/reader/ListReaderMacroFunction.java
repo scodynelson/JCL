@@ -16,7 +16,6 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +28,6 @@ final class ListReaderMacroFunction {
 
 	private final Reader reader;
 
-	@Autowired
 	ListReaderMacroFunction(final Reader reader) {
 		this.reader = reader;
 	}

@@ -15,18 +15,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleValueCallStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MultipleValueCallExpander extends MacroFunctionExpander<MultipleValueCallStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-	private final FunctionExpander functionExpander;
-
-	public MultipleValueCallExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander) {
-		this.formAnalyzer = formAnalyzer;
-		this.functionExpander = functionExpander;
-	}
+	public static final MultipleValueCallExpander INSTANCE = new MultipleValueCallExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -42,7 +37,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Incorrect number of arguments: 0. Expected at least 1 argument.");
 		}
 		final LispStruct first = iterator.next();
-		final LispStruct functionForm = formAnalyzer.analyze(first, environment);
+		final LispStruct functionForm = FormAnalyzer.analyze(first, environment);
 
 		final CompilerFunctionStruct functionFormAsCompilerFunction;
 		if (functionForm instanceof CompilerFunctionStruct) {
@@ -50,14 +45,14 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 		} else if (functionForm instanceof QuoteStruct) {
 			final QuoteStruct quotedFunction = (QuoteStruct) functionForm;
 			final ListStruct functionListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, quotedFunction.getObject());
-			functionFormAsCompilerFunction = functionExpander.expand(functionListStruct, environment);
+			functionFormAsCompilerFunction = FunctionExpander.INSTANCE.expand(functionListStruct, environment);
 		} else {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid argument for function argument: " + functionForm);
 		}
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			forms.add(analyzedElement);
 		});
 		return new MultipleValueCallStruct(functionFormAsCompilerFunction, forms);

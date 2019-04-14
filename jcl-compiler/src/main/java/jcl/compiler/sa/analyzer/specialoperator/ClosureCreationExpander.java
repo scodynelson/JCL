@@ -30,11 +30,9 @@ import jcl.lang.condition.exception.TypeErrorException;
 
 abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {
 
-	protected final FormAnalyzer formAnalyzer;
 	private final String expanderName;
 
-	protected ClosureCreationExpander(final FormAnalyzer formAnalyzer, final String expanderName) {
-		this.formAnalyzer = formAnalyzer;
+	protected ClosureCreationExpander(final String expanderName) {
 		this.expanderName = expanderName;
 	}
 
@@ -77,7 +75,7 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, closureEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, closureEnvironment))
 				           .collect(Collectors.toList());
 
 		return getClosureCreationStruct(vars, new PrognStruct(analyzedBodyForms), closureEnvironment);

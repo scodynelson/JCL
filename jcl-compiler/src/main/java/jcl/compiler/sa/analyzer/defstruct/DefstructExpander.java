@@ -15,10 +15,13 @@ import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class DefstructExpander extends MacroFunctionExpander<LispStruct> {
+
+	public static final DefstructExpander INSTANCE = new DefstructExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

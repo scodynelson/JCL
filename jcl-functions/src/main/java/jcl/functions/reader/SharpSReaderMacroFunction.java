@@ -41,7 +41,6 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private final ListReaderMacroFunction listReaderMacroFunction;
 
-	@Autowired
 	public SharpSReaderMacroFunction(final Reader reader, final ListReaderMacroFunction listReaderMacroFunction) {
 		super("SHARP-S");
 		this.reader = reader;

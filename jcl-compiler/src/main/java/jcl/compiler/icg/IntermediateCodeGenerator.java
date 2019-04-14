@@ -8,10 +8,18 @@ import java.util.Deque;
 
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
+import lombok.experimental.UtilityClass;
 
-public interface IntermediateCodeGenerator {
+@UtilityClass
+public final class IntermediateCodeGenerator {
 
-	Deque<JavaClassBuilder> generate(LambdaStruct lambdaStruct);
+	public static Deque<JavaClassBuilder> generate(final LambdaStruct lambdaStruct) {
+		final GeneratorState classBuilder = new GeneratorState();
+		generate(lambdaStruct, classBuilder);
+		return classBuilder.getFinalClassBuilderDeque();
+	}
 
-	void generate(LispStruct input, GeneratorState generatorState);
+	public static void generate(final LispStruct input, final GeneratorState generatorState) {
+		input.generate(generatorState);
+	}
 }

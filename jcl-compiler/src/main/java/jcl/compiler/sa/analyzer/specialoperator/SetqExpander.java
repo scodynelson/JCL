@@ -14,16 +14,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public SetqExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final SetqExpander INSTANCE = new SetqExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -54,7 +51,7 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 			final SymbolStruct setqVarSymbol = (SymbolStruct) setqVar;
 
 			final LispStruct setqForm = forms.get(index + 1);
-			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, environment);
+			final LispStruct setqFormAnalyzed = FormAnalyzer.analyze(setqForm, environment);
 
 			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(setqVarSymbol, setqFormAnalyzed);
 			setqPairs.add(setqPair);

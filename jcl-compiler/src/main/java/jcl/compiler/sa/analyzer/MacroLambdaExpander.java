@@ -32,19 +32,15 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct> {
+
+	public static final MacroLambdaExpander INSTANCE = new MacroLambdaExpander();
 
 	private static final Pattern CLASS_SEPARATOR_PATTERN = Pattern.compile(".");
-
-	@Autowired
-	private MacroLambdaListParser macroLambdaListParser;
-
-	@Autowired
-	private FormAnalyzer formAnalyzer;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -130,12 +126,12 @@ public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct
 			className = javaClassName.replace('.', '/') + '_' + System.nanoTime();
 		}
 
-		final MacroLambdaList parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);
+		final MacroLambdaList parsedLambdaList = MacroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, macroLambdaEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, macroLambdaEnvironment))
 				           .collect(Collectors.toList());
 		return new MacroLambdaStruct(className, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), macroLambdaEnvironment);
 	}

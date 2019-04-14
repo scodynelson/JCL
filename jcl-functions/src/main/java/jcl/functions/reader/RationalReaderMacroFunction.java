@@ -14,7 +14,6 @@ import jcl.lang.RationalStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,6 @@ final class RationalReaderMacroFunction {
 
 	private final Reader reader;
 
-	@Autowired
 	RationalReaderMacroFunction(final Reader reader) {
 		this.reader = reader;
 	}

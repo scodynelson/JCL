@@ -13,16 +13,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public UnwindProtectExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final UnwindProtectExpander INSTANCE = new UnwindProtectExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -38,11 +35,11 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: 0. Expected at least 1 argument.");
 		}
 		final LispStruct first = iterator.next();
-		final LispStruct protectedForm = formAnalyzer.analyze(first, environment);
+		final LispStruct protectedForm = FormAnalyzer.analyze(first, environment);
 
 		final List<LispStruct> cleanupForms = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			cleanupForms.add(analyzedElement);
 		});
 		return new UnwindProtectStruct(protectedForm, cleanupForms);

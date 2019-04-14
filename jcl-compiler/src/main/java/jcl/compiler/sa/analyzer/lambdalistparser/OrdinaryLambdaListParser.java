@@ -20,18 +20,12 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CompilerConstants;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
+@UtilityClass
 public final class OrdinaryLambdaListParser {
 
-	private final LambdaListParser lambdaListParser;
-
-	public OrdinaryLambdaListParser(final LambdaListParser lambdaListParser) {
-		this.lambdaListParser = lambdaListParser;
-	}
-
-	public OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
+	public static OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                  final DeclareStruct declareElement) {
 
 		final Iterator<LispStruct> iterator = lambdaList.iterator();
@@ -41,7 +35,7 @@ public final class OrdinaryLambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, false);
+					= LambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, false);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -50,7 +44,7 @@ public final class OrdinaryLambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, false);
+					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, false);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -59,7 +53,7 @@ public final class OrdinaryLambdaListParser {
 		RestParameter restBinding = null;
 		if (CompilerConstants.REST.eq(currentElement)) {
 			final RestParseResult restParseResult
-					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, false);
+					= LambdaListParser.parseRestBinding(environment, iterator, declareElement, false);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -70,7 +64,7 @@ public final class OrdinaryLambdaListParser {
 		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
-					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, false);
+					= LambdaListParser.parseKeyBindings(environment, iterator, declareElement, false);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
@@ -93,7 +87,7 @@ public final class OrdinaryLambdaListParser {
 		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
-					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, false);
+					= LambdaListParser.parseAuxBindings(environment, iterator, declareElement, false);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}

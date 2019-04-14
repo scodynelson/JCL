@@ -19,16 +19,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public LocallyExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final LocallyExpander INSTANCE = new LocallyExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -60,7 +57,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, locallyEnvironment))
 				           .collect(Collectors.toList());
 
 		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);

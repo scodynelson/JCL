@@ -14,16 +14,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public BlockExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final BlockExpander INSTANCE = new BlockExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -49,7 +46,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 		try {
 			final List<LispStruct> forms = new ArrayList<>();
 			iterator.forEachRemaining(element -> {
-				final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+				final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 				forms.add(analyzedElement);
 			});
 			return new BlockStruct(name, forms);

@@ -20,13 +20,13 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 	public static final DeclareExpander INSTANCE = new DeclareExpander();
-
-	private DeclareExpander() {
-	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

@@ -10,10 +10,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
+
+	public static final QuoteExpander INSTANCE = new QuoteExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {

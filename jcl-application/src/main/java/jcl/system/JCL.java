@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import jcl.compiler.function.CompileForm;
+import jcl.compiler.sa.BootstrapExpanders;
 import jcl.functions.CompileFileFunction;
 import jcl.functions.FuncallFunction;
 import jcl.functions.LoadFunction;
@@ -52,6 +53,7 @@ public class JCL implements ApplicationRunner {
 	public JCL() throws Exception {
 		BootstrapSymbols.bootstrap();
 		BootstrapFunctions.bootstrap();
+		BootstrapExpanders.bootstrap();
 
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
 			final JavaStreamStruct characterStream = JavaStreamStruct.toJavaStream(System.in, loggerOutputStream);

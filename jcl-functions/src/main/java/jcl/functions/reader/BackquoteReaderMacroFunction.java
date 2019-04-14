@@ -23,7 +23,6 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,7 +46,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private final Reader reader;
 
-	@Autowired
 	public BackquoteReaderMacroFunction(final Reader reader) {
 		super("BACKQUOTE");
 		this.reader = reader;

@@ -21,32 +21,23 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class CompileForm {
+@UtilityClass
+public final class CompileForm {
 
 	public static boolean OUTPUT_FILE = true;
 
-	private final SemanticAnalyzer semanticAnalyzer;
-	private final IntermediateCodeGenerator intermediateCodeGenerator;
-
-	public CompileForm(final SemanticAnalyzer semanticAnalyzer,
-	                   final IntermediateCodeGenerator intermediateCodeGenerator) {
-		this.semanticAnalyzer = semanticAnalyzer;
-		this.intermediateCodeGenerator = intermediateCodeGenerator;
-	}
-
-	public CompileResult compile(final LispStruct form) {
+	public static CompileResult compile(final LispStruct form) {
 
 		final ListStruct lambdaForm = wrapFormInLambda(form);
-		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(lambdaForm);
-		final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedObj);
+		final LambdaStruct analyzedObj = SemanticAnalyzer.analyze(lambdaForm);
+		final Deque<JavaClassBuilder> javaClassBuilderDeque = IntermediateCodeGenerator.generate(analyzedObj);
 
 		boolean compiledWithWarnings = false;
 		boolean failedToCompile = false;

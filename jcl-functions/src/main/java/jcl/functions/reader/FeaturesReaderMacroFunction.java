@@ -23,7 +23,6 @@ import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,7 +35,6 @@ final class FeaturesReaderMacroFunction {
 
 	private final Reader reader;
 
-	@Autowired
 	FeaturesReaderMacroFunction(final Reader reader) {
 		this.reader = reader;
 	}

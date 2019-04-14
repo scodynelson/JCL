@@ -8,12 +8,16 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
     <output url="file://$MODULE_DIR$/../../../jcl-reader/out/production/classes" />
     <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../jcl-reader/build/generated/sources/annotationProcessor/java/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../jcl-reader/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
+    </content>
     <content url="file://$MODULE_DIR$/../../../jcl-reader/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../jcl-reader/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jcl-core_main" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: com.ibm.icu:icu4j:64.1" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
@@ -31,7 +35,6 @@
     <orderEntry type="library" name="Gradle: org.checkerframework:checker-qual:2.5.2" level="project" />
     <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.6" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.mojo:animal-sniffer-annotations:1.17" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.1.5.RELEASE" level="project" />
   </component>

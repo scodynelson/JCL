@@ -16,7 +16,6 @@ import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,6 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 	private final Reader reader;
 
-	@Autowired
 	public SharpApostropheReaderMacroFunction(final Reader reader) {
 		super("SHARP-APOSTROPHE");
 		this.reader = reader;

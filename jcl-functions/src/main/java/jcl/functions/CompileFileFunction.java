@@ -69,12 +69,6 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 	private InternalRead internalRead;
 
 	@Autowired
-	private SemanticAnalyzer semanticAnalyzer;
-
-	@Autowired
-	private IntermediateCodeGenerator intermediateCodeGenerator;
-
-	@Autowired
 	private CompileFilePathnameFunction compileFilePathnameFunction;
 
 	public CompileFileFunction() {
@@ -188,8 +182,8 @@ public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBa
 			inputClassName = VALID_FILE_CLASS_NAME_PATTERN.matcher(inputClassName).replaceAll("_");
 			final ListStruct fileLambda = buildFileLambda(forms, inputClassName);
 
-			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambda);
-			final Deque<JavaClassBuilder> javaClassBuilderDeque = intermediateCodeGenerator.generate(analyzedFileLambda);
+			final LambdaStruct analyzedFileLambda = SemanticAnalyzer.analyze(fileLambda);
+			final Deque<JavaClassBuilder> javaClassBuilderDeque = IntermediateCodeGenerator.generate(analyzedFileLambda);
 
 			writeToJar(javaClassBuilderDeque, outputFilePath, inputFileName, inputClassName, print);
 			compiledSuccessfully = true;

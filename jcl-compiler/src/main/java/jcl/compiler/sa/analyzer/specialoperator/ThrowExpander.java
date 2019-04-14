@@ -11,16 +11,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public ThrowExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final ThrowExpander INSTANCE = new ThrowExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -46,8 +43,8 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 			throw new ProgramErrorException("THROW: Incorrect number of arguments: 3. Expected 2 arguments.");
 		}
 
-		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
-		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, environment);
+		final LispStruct catchTagAnalyzed = FormAnalyzer.analyze(catchTag, environment);
+		final LispStruct resultFormAnalyzed = FormAnalyzer.analyze(resultForm, environment);
 		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);
 	}
 }

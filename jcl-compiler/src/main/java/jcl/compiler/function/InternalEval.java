@@ -28,36 +28,28 @@ import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
 import jcl.lang.statics.CompilerVariables;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class InternalEval {
+@UtilityClass
+public final class InternalEval {
 
-	private final CompileForm compileForm;
-	private final FormAnalyzer formAnalyzer;
-
-	public InternalEval(final CompileForm compileForm, final FormAnalyzer formAnalyzer) {
-		this.compileForm = compileForm;
-		this.formAnalyzer = formAnalyzer;
-	}
-
-	public LispStruct eval(final LispStruct originalExp) {
+	public static LispStruct eval(final LispStruct originalExp) {
 
 		final Environment nullEnvironment = Environment.NULL;
 		return eval(originalExp, nullEnvironment);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public LispStruct eval(final LispStruct originalExp, final Environment environment) {
+	public static LispStruct eval(final LispStruct originalExp, final Environment environment) {
 
 		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		LispStruct exp;
 		try {
-			exp = formAnalyzer.analyze(originalExp, environment);
+			exp = FormAnalyzer.analyze(originalExp, environment);
 		} finally {
 			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 		}
@@ -205,8 +197,8 @@ public class InternalEval {
 		return exp;
 	}
 
-	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel,
-	                                             final CompilerSpecialOperatorStruct exp) {
+	private static FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel,
+	                                                    final CompilerSpecialOperatorStruct exp) {
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
@@ -214,7 +206,7 @@ public class InternalEval {
 
 		final FunctionStruct function;
 		try {
-			final CompileResult compileResult = compileForm.compile(exp);
+			final CompileResult compileResult = CompileForm.compile(exp);
 			function = compileResult.getFunction();
 		} finally {
 			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
@@ -223,7 +215,7 @@ public class InternalEval {
 		return function;
 	}
 
-	public LispStruct jInvoke(final Method javaMethod, final Object javaObject, final Object... methodArgs) {
+	public static LispStruct jInvoke(final Method javaMethod, final Object javaObject, final Object... methodArgs) {
 
 		final String javaMethodName = javaMethod.getName();
 

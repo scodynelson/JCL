@@ -15,16 +15,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public ProgvExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final ProgvExpander INSTANCE = new ProgvExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -48,18 +45,18 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		final ListStruct quotedVars = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, first);
 		final ListStruct evalVars = ListStruct.toLispList(CommonLispSymbols.EVAL, quotedVars);
-		final LispStruct analyzedEvalVars = formAnalyzer.analyze(evalVars, environment);
+		final LispStruct analyzedEvalVars = FormAnalyzer.analyze(evalVars, environment);
 
 		final ListStruct quotedVals = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, second);
 		final ListStruct evalVals = ListStruct.toLispList(CommonLispSymbols.EVAL, quotedVals);
-		final LispStruct analyzedEvalVals = formAnalyzer.analyze(evalVals, environment);
+		final LispStruct analyzedEvalVals = FormAnalyzer.analyze(evalVals, environment);
 
 		// Handle Progn Environment processing
 		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(environment);
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			forms.add(analyzedElement);
 		});
 		return new ProgvStruct(analyzedEvalVars, analyzedEvalVals, forms, progvEnvironment);

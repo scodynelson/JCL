@@ -13,16 +13,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public ReturnFromExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final ReturnFromExpander INSTANCE = new ReturnFromExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -60,7 +57,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 		if (third == null) {
 			result = NILStruct.INSTANCE;
 		} else {
-			result = formAnalyzer.analyze(third, environment);
+			result = FormAnalyzer.analyze(third, environment);
 		}
 		return new ReturnFromStruct(name, result);
 	}

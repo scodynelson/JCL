@@ -13,16 +13,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleValueProg1Struct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleValueProg1Struct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public MultipleValueProg1Expander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final MultipleValueProg1Expander INSTANCE = new MultipleValueProg1Expander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -38,11 +35,11 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 			throw new ProgramErrorException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: 0. Expected at least 1 argument.");
 		}
 		final LispStruct first = iterator.next();
-		final LispStruct firstForm = formAnalyzer.analyze(first, environment);
+		final LispStruct firstForm = FormAnalyzer.analyze(first, environment);
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			forms.add(analyzedElement);
 		});
 		return new MultipleValueProg1Struct(firstForm, forms);

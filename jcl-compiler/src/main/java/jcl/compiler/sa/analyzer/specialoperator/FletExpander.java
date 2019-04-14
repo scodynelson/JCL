@@ -6,7 +6,6 @@ import java.util.Stack;
 
 import jcl.compiler.StackUtils;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
@@ -17,13 +16,13 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import org.springframework.stereotype.Component;
 
-@Component
-public class FletExpander extends InnerLambdaExpander {
+public final class FletExpander extends InnerLambdaExpander {
 
-	public FletExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander) {
-		super(formAnalyzer, functionExpander, "FLET");
+	public static final FletExpander INSTANCE = new FletExpander();
+
+	private FletExpander() {
+		super("FLET");
 	}
 
 	@Override
@@ -87,6 +86,6 @@ public class FletExpander extends InnerLambdaExpander {
 	protected CompilerFunctionStruct expandBuiltInnerFunction(final ListStruct innerFunctionListStruct, final Environment environment) {
 		// Evaluate in the 'outer' environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = environment.getParent();
-		return functionExpander.expand(innerFunctionListStruct, parentEnvironment);
+		return FunctionExpander.INSTANCE.expand(innerFunctionListStruct, parentEnvironment);
 	}
 }

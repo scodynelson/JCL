@@ -23,16 +23,12 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CompilerConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
+@UtilityClass
 public final class DestructuringLambdaListParser {
 
-	@Autowired
-	private LambdaListParser lambdaListParser;
-
-	public DestructuringLambdaList parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
+	public static DestructuringLambdaList parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                            final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
@@ -42,8 +38,9 @@ public final class DestructuringLambdaListParser {
 		}
 	}
 
-	private DestructuringLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                      final DeclareStruct declareElement) {
+	private static DestructuringLambdaList getLambdaListBindings(final Environment environment,
+	                                                             final ListStruct lambdaList,
+	                                                             final DeclareStruct declareElement) {
 
 		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
@@ -61,7 +58,7 @@ public final class DestructuringLambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
+					= LambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -69,7 +66,7 @@ public final class DestructuringLambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
+					= LambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -78,7 +75,7 @@ public final class DestructuringLambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
+					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -87,7 +84,7 @@ public final class DestructuringLambdaListParser {
 		RestParameter restBinding = null;
 		if (CompilerConstants.REST.eq(currentElement)) {
 			final RestParseResult restParseResult
-					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
+					= LambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -100,7 +97,7 @@ public final class DestructuringLambdaListParser {
 			}
 
 			final BodyParseResult bodyParseResult
-					= lambdaListParser.parseBodyBinding(environment, iterator, declareElement, true);
+					= LambdaListParser.parseBodyBinding(environment, iterator, declareElement, true);
 
 			bodyBinding = bodyParseResult.getBodyBinding();
 			currentElement = bodyParseResult.getCurrentElement();
@@ -111,7 +108,7 @@ public final class DestructuringLambdaListParser {
 		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
-					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
+					= LambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
@@ -134,7 +131,7 @@ public final class DestructuringLambdaListParser {
 		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
-					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
+					= LambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}
@@ -147,8 +144,9 @@ public final class DestructuringLambdaListParser {
 		return new DestructuringLambdaList(wholeBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	private DestructuringLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                            final DeclareStruct declareElement) {
+	private static DestructuringLambdaList getDottedLambdaListBindings(final Environment environment,
+	                                                                   final ListStruct lambdaList,
+	                                                                   final DeclareStruct declareElement) {
 
 		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
@@ -166,7 +164,7 @@ public final class DestructuringLambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
+					= LambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -174,7 +172,7 @@ public final class DestructuringLambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
+					= LambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -183,14 +181,14 @@ public final class DestructuringLambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
+					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
 		}
 
 		final RestParseResult restParseResult
-				= lambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
+				= LambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
 		final RestParameter restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {

@@ -29,19 +29,15 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
+
+	public static final LambdaExpander INSTANCE = new LambdaExpander();
 
 	private static final Pattern CLASS_SEPARATOR_PATTERN = Pattern.compile(".");
-
-	@Autowired
-	private OrdinaryLambdaListParser ordinaryLambdaListParser;
-
-	@Autowired
-	private FormAnalyzer formAnalyzer;
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -123,12 +119,12 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
 		}
 
-		final OrdinaryLambdaList parsedLambdaList = ordinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
+		final OrdinaryLambdaList parsedLambdaList = OrdinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, lambdaEnvironment))
 				           .collect(Collectors.toList());
 		return new LambdaStruct(className, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}

@@ -26,7 +26,6 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 */
 	private final ListReaderMacroFunction listReaderMacroFunction;
 
-	@Autowired
 	public LeftParenthesisReaderMacroFunction(final ListReaderMacroFunction listReaderMacroFunction) {
 		super("LEFT-PARENTHESIS");
 		this.listReaderMacroFunction = listReaderMacroFunction;

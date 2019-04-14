@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
-import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
@@ -17,16 +16,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public TagbodyExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final TagbodyExpander INSTANCE = new TagbodyExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -57,7 +53,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		}
 
 		try {
-			final TagbodyFormCollector tagbodyFormCollector = new TagbodyFormCollector(formAnalyzer, environment);
+			final TagbodyFormCollector tagbodyFormCollector = new TagbodyFormCollector(environment);
 			final Map<GoStruct<?>, PrognStruct> analyzedTagbodyForms = forms.stream()
 			                                                                .collect(tagbodyFormCollector);
 			return new TagbodyStruct(analyzedTagbodyForms);

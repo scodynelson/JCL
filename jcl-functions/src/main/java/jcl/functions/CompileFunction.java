@@ -13,7 +13,6 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,9 +21,6 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 	private static final String FUNCTION_NAME = "COMPILE";
 	private static final String NAME_ARGUMENT = "NAME";
 	private static final String DEFINITION_ARGUMENT = "DEFINITION";
-
-	@Autowired
-	private CompileForm compileForm;
 
 	public CompileFunction() {
 		super("Produces a compiled function from definition.",
@@ -56,7 +52,7 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 			if (uncompiledDefinition instanceof FunctionStruct) {
 				function = (FunctionStruct) uncompiledDefinition;
 			} else {
-				compiledDefinition = compileForm.compile(uncompiledDefinition);
+				compiledDefinition = CompileForm.compile(uncompiledDefinition);
 				final FunctionStruct compiledDefinitionFunction = compiledDefinition.getFunction();
 				final LispStruct compiledDefinitionResult = compiledDefinitionFunction.apply();
 

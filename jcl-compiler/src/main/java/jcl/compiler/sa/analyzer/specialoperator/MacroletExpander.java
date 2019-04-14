@@ -30,21 +30,16 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.type.TType;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-	private final FunctionExpander functionExpander;
-
-	public MacroletExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander) {
-		this.formAnalyzer = formAnalyzer;
-		this.functionExpander = functionExpander;
-	}
+	public static final MacroletExpander INSTANCE = new MacroletExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -97,7 +92,7 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
 					= bodyForms.stream()
-					           .map(e -> formAnalyzer.analyze(e, macroletEnvironment))
+					           .map(e -> FormAnalyzer.analyze(e, macroletEnvironment))
 					           .collect(Collectors.toList());
 
 			return new InnerLambdaStruct(macroletVars, new PrognStruct(analyzedBodyForms), macroletEnvironment);
@@ -207,6 +202,6 @@ public class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 		final ListStruct innerFunctionListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment.
-		return functionExpander.expand(innerFunctionListStruct, macroletEnvironment);
+		return FunctionExpander.INSTANCE.expand(innerFunctionListStruct, macroletEnvironment);
 	}
 }

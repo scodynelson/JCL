@@ -13,16 +13,13 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public CatchExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final CatchExpander INSTANCE = new CatchExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -38,11 +35,11 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 			throw new ProgramErrorException("CATCH: Incorrect number of arguments: 0. Expected at least 1 argument.");
 		}
 		final LispStruct catchTag = iterator.next();
-		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
+		final LispStruct catchTagAnalyzed = FormAnalyzer.analyze(catchTag, environment);
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = formAnalyzer.analyze(element, environment);
+			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
 			forms.add(analyzedElement);
 		});
 		return new CatchStruct(catchTagAnalyzed, forms);

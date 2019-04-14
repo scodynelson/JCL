@@ -13,16 +13,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 
-	private final FormAnalyzer formAnalyzer;
-
-	public PrognExpander(final FormAnalyzer formAnalyzer) {
-		this.formAnalyzer = formAnalyzer;
-	}
+	public static final PrognExpander INSTANCE = new PrognExpander();
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -39,7 +36,7 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, environment))
+				     .map(e -> FormAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 		return new PrognStruct(analyzedForms);
 	}

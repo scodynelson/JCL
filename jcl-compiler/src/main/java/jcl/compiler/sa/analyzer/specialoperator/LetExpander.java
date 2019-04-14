@@ -10,13 +10,13 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
 
-@Component
-public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
+public final class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 
-	public LetExpander(final FormAnalyzer formAnalyzer) {
-		super(formAnalyzer, "LET");
+	public static final LetExpander INSTANCE = new LetExpander();
+
+	private LetExpander() {
+		super("LET");
 	}
 
 	@Override
@@ -41,6 +41,6 @@ public class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
 	protected LispStruct getListParameterInitForm(final LispStruct parameterValue, final Environment environment) {
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = environment.getParent();
-		return formAnalyzer.analyze(parameterValue, parentEnvironment);
+		return FormAnalyzer.analyze(parameterValue, parentEnvironment);
 	}
 }

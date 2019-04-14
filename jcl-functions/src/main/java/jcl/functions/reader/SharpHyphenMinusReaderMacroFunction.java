@@ -28,7 +28,6 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl
 	 */
 	private final FeaturesReaderMacroFunction featuresReaderMacroFunction;
 
-	@Autowired
 	public SharpHyphenMinusReaderMacroFunction(final FeaturesReaderMacroFunction featuresReaderMacroFunction) {
 		super("SHARP-HYPHEN-MINUS");
 		this.featuresReaderMacroFunction = featuresReaderMacroFunction;

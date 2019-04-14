@@ -22,7 +22,6 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,6 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 	private final Reader reader;
 
-	@Autowired
 	public SharpEqualsSignReaderMacroFunction(final Reader reader) {
 		super("SHARP-EQUALS");
 		this.reader = reader;

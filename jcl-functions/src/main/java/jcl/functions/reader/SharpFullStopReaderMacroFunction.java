@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.compiler.function.InternalEval;
-import jcl.functions.EvalFunction;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -16,7 +15,6 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -29,16 +27,9 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private final Reader reader;
 
-	/**
-	 * {@link EvalFunction} singleton used to evaluate the expression passed to '#.'.
-	 */
-	private final InternalEval internalEval;
-
-	@Autowired
-	public SharpFullStopReaderMacroFunction(final Reader reader, final InternalEval internalEval) {
+	public SharpFullStopReaderMacroFunction(final Reader reader) {
 		super("SHARP-FULL-STOP");
 		this.reader = reader;
-		this.internalEval = internalEval;
 	}
 
 	@Override
@@ -60,6 +51,6 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 
-		return internalEval.eval(token);
+		return InternalEval.eval(token);
 	}
 }

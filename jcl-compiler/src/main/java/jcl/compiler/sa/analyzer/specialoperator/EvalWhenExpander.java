@@ -19,10 +19,13 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
-import org.springframework.stereotype.Component;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Component
-public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
+
+	public static final EvalWhenExpander INSTANCE = new EvalWhenExpander();
 
 	private static final Set<SymbolStruct> SITUATION_KEYWORDS = new HashSet<>(6);
 
@@ -34,12 +37,6 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE);
 		SITUATION_KEYWORDS.add(CommonLispSymbols.LOAD);
 		SITUATION_KEYWORDS.add(CommonLispSymbols.EVAL);
-	}
-
-	private final InternalEval internalEval;
-
-	public EvalWhenExpander(final InternalEval internalEval) {
-		this.internalEval = internalEval;
 	}
 
 	@Override
@@ -77,20 +74,20 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			if (isCompileTopLevel(situationList)) {
 				final ListStruct formsList = ListStruct.toLispList(forms);
 				final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
-				return internalEval.eval(prognOperatorList);
+				return InternalEval.eval(prognOperatorList);
 			}
 
 			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
 				final ListStruct formsList = ListStruct.toLispList(forms);
 				final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
-				return internalEval.eval(prognOperatorList);
+				return InternalEval.eval(prognOperatorList);
 			}
 		}
 
 		if (isExecute(situationList)) {
 			final ListStruct formsList = ListStruct.toLispList(forms);
 			final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
-			return internalEval.eval(prognOperatorList);
+			return InternalEval.eval(prognOperatorList);
 		}
 
 		return NILStruct.INSTANCE;

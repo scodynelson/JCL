@@ -24,18 +24,12 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CompilerConstants;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
+@UtilityClass
 public final class MacroLambdaListParser {
 
-	private final LambdaListParser lambdaListParser;
-
-	public MacroLambdaListParser(final LambdaListParser lambdaListParser) {
-		this.lambdaListParser = lambdaListParser;
-	}
-
-	public MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
+	public static MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                            final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
@@ -45,8 +39,8 @@ public final class MacroLambdaListParser {
 		}
 	}
 
-	private MacroLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                              final DeclareStruct declareElement) {
+	private static MacroLambdaList getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	                                                     final DeclareStruct declareElement) {
 
 		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
@@ -64,7 +58,7 @@ public final class MacroLambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
+					= LambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -72,7 +66,7 @@ public final class MacroLambdaListParser {
 		EnvironmentParameter environmentBinding = null;
 		if (CompilerConstants.ENVIRONMENT.eq(currentElement)) {
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, false);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, false);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
@@ -80,7 +74,7 @@ public final class MacroLambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
+					= LambdaListParser.parseRequiredBindings(environment, iterator, declareElement, false, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -92,7 +86,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -101,7 +95,7 @@ public final class MacroLambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
+					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -113,7 +107,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -122,7 +116,7 @@ public final class MacroLambdaListParser {
 		RestParameter restBinding = null;
 		if (CompilerConstants.REST.eq(currentElement)) {
 			final RestParseResult restParseResult
-					= lambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
+					= LambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -135,7 +129,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final BodyParseResult bodyParseResult
-					= lambdaListParser.parseBodyBinding(environment, iterator, declareElement, true);
+					= LambdaListParser.parseBodyBinding(environment, iterator, declareElement, true);
 
 			bodyBinding = bodyParseResult.getBodyBinding();
 			currentElement = bodyParseResult.getCurrentElement();
@@ -147,7 +141,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -158,7 +152,7 @@ public final class MacroLambdaListParser {
 		List<KeyParameter> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
-					= lambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
+					= LambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
@@ -184,7 +178,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -193,7 +187,7 @@ public final class MacroLambdaListParser {
 		List<AuxParameter> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
-					= lambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
+					= LambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
 
 			auxBindings = auxParseResult.getAuxBindings();
 			currentElement = auxParseResult.getCurrentElement();
@@ -205,7 +199,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
@@ -218,8 +212,9 @@ public final class MacroLambdaListParser {
 		return new MacroLambdaList(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	private MacroLambdaList getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                    final DeclareStruct declareElement) {
+	private static MacroLambdaList getDottedLambdaListBindings(final Environment environment,
+	                                                           final ListStruct lambdaList,
+	                                                           final DeclareStruct declareElement) {
 
 		final Iterator<LispStruct> iterator = lambdaList.iterator();
 
@@ -237,7 +232,7 @@ public final class MacroLambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= lambdaListParser.parseWholeBinding(environment, iterator, declareElement);
+					= LambdaListParser.parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
 		}
@@ -245,7 +240,7 @@ public final class MacroLambdaListParser {
 		EnvironmentParameter environmentBinding = null;
 		if (CompilerConstants.ENVIRONMENT.eq(currentElement)) {
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, false);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, false);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
@@ -253,7 +248,7 @@ public final class MacroLambdaListParser {
 		List<RequiredParameter> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= lambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
+					= LambdaListParser.parseRequiredBindings(environment, iterator, declareElement, true, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -265,7 +260,7 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
@@ -274,7 +269,7 @@ public final class MacroLambdaListParser {
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= lambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
+					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -286,14 +281,14 @@ public final class MacroLambdaListParser {
 			}
 
 			final EnvironmentParseResult environmentParseResult
-					= lambdaListParser.parseEnvironmentBinding(environment, iterator, true);
+					= LambdaListParser.parseEnvironmentBinding(environment, iterator, true);
 
 			environmentBinding = environmentParseResult.getEnvironmentBinding();
 			currentElement = environmentParseResult.getCurrentElement();
 		}
 
 		final RestParseResult restParseResult
-				= lambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
+				= LambdaListParser.parseDottedRestBinding(environment, currentElement, declareElement, true);
 		final RestParameter restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {

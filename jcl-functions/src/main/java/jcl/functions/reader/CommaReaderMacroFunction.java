@@ -18,7 +18,6 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +28,6 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private final Reader reader;
 
-	@Autowired
 	public CommaReaderMacroFunction(final Reader reader) {
 		super("COMMA");
 		this.reader = reader;

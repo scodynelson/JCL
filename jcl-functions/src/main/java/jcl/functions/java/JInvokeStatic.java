@@ -14,7 +14,6 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaObjectStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,9 +21,6 @@ public final class JInvokeStatic extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JINVOKE-STATIC";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";
-
-	@Autowired
-	private InternalEval internalEval;
 
 	public JInvokeStatic() {
 		super("Invokes a static method for the provided JavaMethod",
@@ -49,7 +45,7 @@ public final class JInvokeStatic extends ExtensionsBuiltInFunctionStructBase {
 			methodArgs[i] = unwrapJavaObject(currentArg);
 		}
 
-		return internalEval.jInvoke(javaMethod, null, methodArgs);
+		return InternalEval.jInvoke(javaMethod, null, methodArgs);
 	}
 
 	private static Object unwrapJavaObject(final Object javaObject) {

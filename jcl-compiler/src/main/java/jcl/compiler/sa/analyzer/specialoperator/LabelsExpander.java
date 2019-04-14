@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import jcl.compiler.StackUtils;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
@@ -13,13 +12,13 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import org.springframework.stereotype.Component;
 
-@Component
-public class LabelsExpander extends InnerLambdaExpander {
+public final class LabelsExpander extends InnerLambdaExpander {
 
-	public LabelsExpander(final FormAnalyzer formAnalyzer, final FunctionExpander functionExpander) {
-		super(formAnalyzer, functionExpander, "LABELS");
+	public static final LabelsExpander INSTANCE = new LabelsExpander();
+
+	private LabelsExpander() {
+		super("LABELS");
 	}
 
 	@Override
@@ -56,6 +55,6 @@ public class LabelsExpander extends InnerLambdaExpander {
 	@Override
 	protected CompilerFunctionStruct expandBuiltInnerFunction(final ListStruct innerFunctionListStruct, final Environment environment) {
 		// Evaluate in the 'current' environment.
-		return functionExpander.expand(innerFunctionListStruct, environment);
+		return FunctionExpander.INSTANCE.expand(innerFunctionListStruct, environment);
 	}
 }

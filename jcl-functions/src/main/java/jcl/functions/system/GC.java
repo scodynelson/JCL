@@ -4,23 +4,28 @@
 
 package jcl.functions.system;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class GC extends ExtensionsBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "GC";
+public final class GC extends BuiltInFunctionStructImpl {
 
 	public GC() {
 		super("Manually invokes the Java runtime garbage collection.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.GC.getName(),
+		      Parameters.forFunction(CommonLispSymbols.GC.getName())
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.GC;
 	}
 
 	@SuppressWarnings("all")

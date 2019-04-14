@@ -9,21 +9,27 @@ import java.util.List;
 import jcl.compiler.function.InternalApply;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
+public final class FuncallFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "FUNCALL";
 	private static final String FN_ARGUMENT = "FN";
 
 	public FuncallFunction() {
 		super("Applies function to args.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.FUNCALL.getName(),
+		      Parameters.forFunction(CommonLispSymbols.FUNCALL.getName())
 		                .requiredParameter(FN_ARGUMENT)
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.FUNCALL;
 	}
 
 	@Override

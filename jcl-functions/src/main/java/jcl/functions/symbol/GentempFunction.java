@@ -4,17 +4,18 @@
 
 package jcl.functions.symbol;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PackageVariables;
 
-public final class GentempFunction extends CommonLispBuiltInFunctionStructBase {
+public final class GentempFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "GENTEMP";
 	private static final String PREFIX_ARGUMENT = "PREFIX";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";
 
@@ -22,11 +23,16 @@ public final class GentempFunction extends CommonLispBuiltInFunctionStructBase {
 
 	public GentempFunction() {
 		super("Creates and returns a fresh symbol, interned in the indicated package.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.GENTEMP.getName(),
+		      Parameters.forFunction(CommonLispSymbols.GENTEMP.getName())
 		                .optionalParameter(PREFIX_ARGUMENT).withInitialValue(StringStruct.toLispString("T"))
 		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(PackageVariables.PACKAGE.getVariableValue())
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.GENTEMP;
 	}
 
 	@Override

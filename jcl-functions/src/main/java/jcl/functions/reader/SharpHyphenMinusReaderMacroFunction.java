@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 
 /**
@@ -19,12 +18,6 @@ public final class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFuncti
 
 	public SharpHyphenMinusReaderMacroFunction() {
 		super("SHARP-HYPHEN-MINUS");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.HYPHEN_MINUS, this);
 	}
 
 	@Override

@@ -9,10 +9,7 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ReadtableStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
-import jcl.util.CodePointConstants;
 
 /**
  * Implements the illegal '#??" Lisp reader macros.
@@ -21,21 +18,6 @@ public final class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionIm
 
 	public SharpIllegalReaderMacroFunction() {
 		super("SHARP-ILLEGAL");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.RIGHT_PARENTHESIS, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LESS_THAN_SIGN, this);
-
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.TAB, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.NEWLINE, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LINE_FEED, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.SPACE, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.PAGE, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.RETURN, this);
 	}
 
 	@Override

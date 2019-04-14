@@ -4,25 +4,31 @@
 
 package jcl.printer.functions;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.printer.Printer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class PrintObjectFunction extends CommonLispBuiltInFunctionStructBase {
+public final class PrintObjectFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "PRINT-OBJECT";
 	private static final String OBJECT_ARGUMENT = "OBJECT";
 
 	public PrintObjectFunction() {
 		super("Prints the provided object.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.PRINT_OBJECT.getName(),
+		      Parameters.forFunction(CommonLispSymbols.PRINT_OBJECT.getName())
 		                .requiredParameter(OBJECT_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.PRINT_OBJECT;
 	}
 
 	@Override

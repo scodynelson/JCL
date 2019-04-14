@@ -28,6 +28,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.type.SimpleBitVectorType;
 import jcl.type.SimpleStringType;
 import jcl.type.SimpleVectorType;
@@ -36,20 +37,28 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class PredicateFunctions {
 
-	abstract static class AbstractPredicateFunction extends CommonLispBuiltInFunctionStructBase {
+	abstract static class AbstractPredicateFunction extends BuiltInFunctionStructImpl {
 
 		protected static final String OBJECT_ARGUMENT = "OBJECT";
 
 		protected final Class<? extends LispStruct> classType;
 
-		AbstractPredicateFunction(final String functionName, final String type,
-		                                 final Class<? extends LispStruct> classType) {
+		private final SymbolStruct functionSymbol;
+
+		AbstractPredicateFunction(final SymbolStruct functionSymbol, final String type,
+		                          final Class<? extends LispStruct> classType) {
 			super("Returns true if object is of type " + type + "; otherwise, returns false.",
-			      functionName,
-			      Parameters.forFunction(functionName)
+			      functionSymbol.getName(),
+			      Parameters.forFunction(functionSymbol.getName())
 			                .requiredParameter(OBJECT_ARGUMENT)
 			);
 			this.classType = classType;
+			this.functionSymbol = functionSymbol;
+		}
+
+		@Override
+		public SymbolStruct getFunctionSymbol() {
+			return functionSymbol;
 		}
 
 		@Override
@@ -61,21 +70,19 @@ public final class PredicateFunctions {
 
 	public static final class ArrayPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "ARRAYP";
 		private static final String TYPE = "ARRAY";
 
 		public ArrayPFunction() {
-			super(FUNCTION_NAME, TYPE, ArrayStruct.class);
+			super(CommonLispSymbols.ARRAYP, TYPE, ArrayStruct.class);
 		}
 	}
 
 	public static final class AtomFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "ATOM";
 		private static final String TYPE = "ATOM";
 
 		public AtomFunction() {
-			super(FUNCTION_NAME, TYPE, ArrayStruct.class);
+			super(CommonLispSymbols.ATOM, TYPE, ArrayStruct.class);
 		}
 
 		@Override
@@ -87,111 +94,109 @@ public final class PredicateFunctions {
 
 	public static final class BitVectorPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "BIT-VECTOR-P";
 		private static final String TYPE = "BIT-VECTOR";
 
 		public BitVectorPFunction() {
-			super(FUNCTION_NAME, TYPE, BitVectorStruct.class);
+			super(CommonLispSymbols.BIT_VECTOR_P, TYPE, BitVectorStruct.class);
 		}
 	}
 
 	public static final class CharacterPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "CHARACTERP";
 		private static final String TYPE = "CHARACTER";
 
 		public CharacterPFunction() {
-			super(FUNCTION_NAME, TYPE, CharacterStruct.class);
+			super(CommonLispSymbols.CHARACTERP, TYPE, CharacterStruct.class);
 		}
 	}
 
 	public static final class CompiledFunctionPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "COMPILE-FUNCTION-P";
 		private static final String TYPE = "COMPILE-FUNCTION";
 
 		public CompiledFunctionPFunction() {
-			super(FUNCTION_NAME, TYPE, CompiledFunctionStruct.class);
+			super(CommonLispSymbols.COMPILED_FUNCTION_P, TYPE, CompiledFunctionStruct.class);
 		}
 	}
 
 	public static final class ComplexPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "COMPLEXP";
 		private static final String TYPE = "COMPLEX";
 
 		public ComplexPFunction() {
-			super(FUNCTION_NAME, TYPE, ComplexStruct.class);
+			super(CommonLispSymbols.COMPLEXP, TYPE, ComplexStruct.class);
 		}
 	}
 
 	public static final class ConsPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "CONSP";
 		private static final String TYPE = "CONS";
 
 		public ConsPFunction() {
-			super(FUNCTION_NAME, TYPE, ConsStruct.class);
+			super(CommonLispSymbols.CONSP, TYPE, ConsStruct.class);
 		}
 	}
 
 	public static final class FloatPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "FLOATP";
 		private static final String TYPE = "FLOAT";
 
 		public FloatPFunction() {
-			super(FUNCTION_NAME, TYPE, FloatStruct.class);
+			super(CommonLispSymbols.FLOATP, TYPE, FloatStruct.class);
 		}
 	}
 
 	public static final class FunctionPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "FUNCTIONP";
 		private static final String TYPE = "FUNCTION";
 
 		public FunctionPFunction() {
-			super(FUNCTION_NAME, TYPE, FunctionStruct.class);
+			super(CommonLispSymbols.FUNCTIONP, TYPE, FunctionStruct.class);
 		}
 	}
 
 	public static final class HashTablePFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "HASH-TABLE-P";
 		private static final String TYPE = "HASH-TABLE";
 
 		public HashTablePFunction() {
-			super(FUNCTION_NAME, TYPE, HashTableStruct.class);
+			super(CommonLispSymbols.HASH_TABLE_P, TYPE, HashTableStruct.class);
 		}
 	}
 
 	public static final class IntegerPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "INTEGERP";
 		private static final String TYPE = "INTEGER";
 
 		public IntegerPFunction() {
-			super(FUNCTION_NAME, TYPE, IntegerStruct.class);
+			super(CommonLispSymbols.INTEGERP, TYPE, IntegerStruct.class);
+		}
+	}
+
+	public static final class KeywordPFunction extends AbstractPredicateFunction {
+
+		private static final String TYPE = "KEYWORD";
+
+		public KeywordPFunction() {
+			super(CommonLispSymbols.KEYWORDP, TYPE, KeywordStruct.class);
 		}
 	}
 
 	public static final class ListPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "LISTP";
 		private static final String TYPE = "LIST";
 
 		public ListPFunction() {
-			super(FUNCTION_NAME, TYPE, ListStruct.class);
+			super(CommonLispSymbols.LISTP, TYPE, ListStruct.class);
 		}
 	}
 
 	public static final class NullFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "NULL";
 		private static final String TYPE = "NIL";
 
 		public NullFunction() {
-			super(FUNCTION_NAME, TYPE, NILStruct.class);
+			super(CommonLispSymbols.NULL, TYPE, NILStruct.class);
 		}
 
 		@Override
@@ -203,81 +208,73 @@ public final class PredicateFunctions {
 
 	public static final class NumberPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "NUMBERP";
 		private static final String TYPE = "NUMBER";
 
 		public NumberPFunction() {
-			super(FUNCTION_NAME, TYPE, NumberStruct.class);
+			super(CommonLispSymbols.NUMBERP, TYPE, NumberStruct.class);
 		}
 	}
 
 	public static final class PackagePFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "PACKAGEP";
 		private static final String TYPE = "PACKAGE";
 
 		public PackagePFunction() {
-			super(FUNCTION_NAME, TYPE, PackageStruct.class);
+			super(CommonLispSymbols.PACKAGEP, TYPE, PackageStruct.class);
 		}
 	}
 
 	public static final class PathnamePFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "PATHNAMEP";
 		private static final String TYPE = "PATHNAME";
 
 		public PathnamePFunction() {
-			super(FUNCTION_NAME, TYPE, PathnameStruct.class);
-		}
-	}
-
-	public static final class RationalPFunction extends AbstractPredicateFunction {
-
-		private static final String FUNCTION_NAME = "RATIONALP";
-		private static final String TYPE = "RATIONAL";
-
-		public RationalPFunction() {
-			super(FUNCTION_NAME, TYPE, RationalStruct.class);
-		}
-	}
-
-	public static final class ReadtablePFunction extends AbstractPredicateFunction {
-
-		private static final String FUNCTION_NAME = "READTABLEP";
-		private static final String TYPE = "READTABLE";
-
-		public ReadtablePFunction() {
-			super(FUNCTION_NAME, TYPE, ReadtableStruct.class);
-		}
-	}
-
-	public static final class RealPFunction extends AbstractPredicateFunction {
-
-		private static final String FUNCTION_NAME = "REALP";
-		private static final String TYPE = "REAL";
-
-		public RealPFunction() {
-			super(FUNCTION_NAME, TYPE, RealStruct.class);
+			super(CommonLispSymbols.PATHNAMEP, TYPE, PathnameStruct.class);
 		}
 	}
 
 	public static final class RandomStatePFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "RANDOM-STATE-P";
 		private static final String TYPE = "RANDOM-STATE";
 
 		public RandomStatePFunction() {
-			super(FUNCTION_NAME, TYPE, RandomStateStruct.class);
+			super(CommonLispSymbols.RANDOM_STATE_P, TYPE, RandomStateStruct.class);
+		}
+	}
+
+	public static final class RationalPFunction extends AbstractPredicateFunction {
+
+		private static final String TYPE = "RATIONAL";
+
+		public RationalPFunction() {
+			super(CommonLispSymbols.RATIONALP, TYPE, RationalStruct.class);
+		}
+	}
+
+	public static final class ReadtablePFunction extends AbstractPredicateFunction {
+
+		private static final String TYPE = "READTABLE";
+
+		public ReadtablePFunction() {
+			super(CommonLispSymbols.READTABLEP, TYPE, ReadtableStruct.class);
+		}
+	}
+
+	public static final class RealPFunction extends AbstractPredicateFunction {
+
+		private static final String TYPE = "REAL";
+
+		public RealPFunction() {
+			super(CommonLispSymbols.REALP, TYPE, RealStruct.class);
 		}
 	}
 
 	public static final class SimpleBitVectorPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "SIMPLE-BIT-VECTOR-P";
 		private static final String TYPE = "SIMPLE-BIT-VECTOR";
 
 		public SimpleBitVectorPFunction() {
-			super(FUNCTION_NAME, TYPE, BitVectorStruct.class);
+			super(CommonLispSymbols.SIMPLE_BIT_VECTOR_P, TYPE, BitVectorStruct.class);
 		}
 
 		@Override
@@ -291,11 +288,10 @@ public final class PredicateFunctions {
 
 	public static final class SimpleStringPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "SIMPLE-STRING-P";
 		private static final String TYPE = "SIMPLE-STRING";
 
 		public SimpleStringPFunction() {
-			super(FUNCTION_NAME, TYPE, StringStruct.class);
+			super(CommonLispSymbols.SIMPLE_STRING_P, TYPE, StringStruct.class);
 		}
 
 		@Override
@@ -309,11 +305,10 @@ public final class PredicateFunctions {
 
 	public static final class SimpleVectorPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "SIMPLE-VECTOR-P";
 		private static final String TYPE = "SIMPLE-VECTOR";
 
 		public SimpleVectorPFunction() {
-			super(FUNCTION_NAME, TYPE, VectorStruct.class);
+			super(CommonLispSymbols.SIMPLE_VECTOR_P, TYPE, VectorStruct.class);
 		}
 
 		@Override
@@ -325,55 +320,39 @@ public final class PredicateFunctions {
 		}
 	}
 
-	public static final class StringPFunction extends AbstractPredicateFunction {
-
-		private static final String FUNCTION_NAME = "STRINGP";
-		private static final String TYPE = "STRING";
-
-		public StringPFunction() {
-			super(FUNCTION_NAME, TYPE, StringStruct.class);
-		}
-	}
-
 	public static final class StreamPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "STREAMP";
 		private static final String TYPE = "STREAM";
 
 		public StreamPFunction() {
-			super(FUNCTION_NAME, TYPE, StreamStruct.class);
+			super(CommonLispSymbols.STREAMP, TYPE, StreamStruct.class);
+		}
+	}
+
+	public static final class StringPFunction extends AbstractPredicateFunction {
+
+		private static final String TYPE = "STRING";
+
+		public StringPFunction() {
+			super(CommonLispSymbols.STRINGP, TYPE, StringStruct.class);
 		}
 	}
 
 	public static final class SymbolPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "SYMBOLP";
 		private static final String TYPE = "SYMBOL";
 
 		public SymbolPFunction() {
-			super(FUNCTION_NAME, TYPE, SymbolStruct.class);
+			super(CommonLispSymbols.SYMBOLP, TYPE, SymbolStruct.class);
 		}
 	}
 
 	public static final class VectorPFunction extends AbstractPredicateFunction {
 
-		private static final String FUNCTION_NAME = "VECTORP";
 		private static final String TYPE = "VECTOR";
 
 		public VectorPFunction() {
-			super(FUNCTION_NAME, TYPE, VectorStruct.class);
-		}
-	}
-
-	// Non-Standard
-
-	public static final class KeywordPFunction extends AbstractPredicateFunction {
-
-		private static final String FUNCTION_NAME = "KEYWORDP";
-		private static final String TYPE = "KEYWORD";
-
-		public KeywordPFunction() {
-			super(FUNCTION_NAME, TYPE, KeywordStruct.class);
+			super(CommonLispSymbols.VECTORP, TYPE, VectorStruct.class);
 		}
 	}
 }

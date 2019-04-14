@@ -26,7 +26,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @Slf4j
-@SpringBootApplication(scanBasePackages = "jcl")
+@SpringBootApplication
 public class JCL implements ApplicationRunner {
 
 	@Autowired

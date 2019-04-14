@@ -6,22 +6,27 @@ package jcl.functions.list;
 
 import java.util.List;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class NconcFunction extends CommonLispBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "NCONC";
+public final class NconcFunction extends BuiltInFunctionStructImpl {
 
 	public NconcFunction() {
 		super("Returns a list that is the concatenation of lists.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.NCONC.getName(),
+		      Parameters.forFunction(CommonLispSymbols.NCONC.getName())
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.NCONC;
 	}
 
 	@Override

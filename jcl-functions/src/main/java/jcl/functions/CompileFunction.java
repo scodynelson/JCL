@@ -3,22 +3,28 @@ package jcl.functions;
 import jcl.compiler.function.InternalCompile;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
+public final class CompileFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "COMPILE";
 	private static final String NAME_ARGUMENT = "NAME";
 	private static final String DEFINITION_ARGUMENT = "DEFINITION";
 
 	public CompileFunction() {
 		super("Produces a compiled function from definition.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.COMPILE.getName(),
+		      Parameters.forFunction(CommonLispSymbols.COMPILE.getName())
 		                .requiredParameter(NAME_ARGUMENT)
 		                .optionalParameter(DEFINITION_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.COMPILE;
 	}
 
 	@Override

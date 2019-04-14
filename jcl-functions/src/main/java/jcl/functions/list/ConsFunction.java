@@ -4,25 +4,31 @@
 
 package jcl.functions.list;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class ConsFunction extends CommonLispBuiltInFunctionStructBase {
+public final class ConsFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "CONS";
 	private static final String OBJECT_1_ARGUMENT = "OBJECT1";
 	private static final String OBJECT_2_ARGUMENT = "OBJECT2";
 
 	public ConsFunction() {
 		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.CONS.getName(),
+		      Parameters.forFunction(CommonLispSymbols.CONS.getName())
 		                .requiredParameter(OBJECT_1_ARGUMENT)
 		                .requiredParameter(OBJECT_2_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.CONS;
 	}
 
 	@Override

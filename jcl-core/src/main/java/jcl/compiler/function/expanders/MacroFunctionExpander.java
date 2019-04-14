@@ -35,12 +35,6 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		super(documentation);
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		final SymbolStruct functionSymbol = getFunctionSymbol();
-		functionSymbol.setMacroFunctionExpander(this);
-	}
-
 	protected List<RequiredParameter> getRequiredBindings() {
 		return Collections.emptyList();
 	}

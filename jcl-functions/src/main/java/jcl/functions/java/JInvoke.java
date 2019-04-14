@@ -8,27 +8,33 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import jcl.compiler.function.InternalEval;
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaObjectStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class JInvoke extends ExtensionsBuiltInFunctionStructBase {
+public final class JInvoke extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "JINVOKE";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";
 	private static final String JAVA_OBJECT_ARGUMENT = "JAVA-OBJECT";
 
 	public JInvoke() {
 		super("Invokes an instance method for the provided JavaMethod and JavaObject.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.JINVOKE.getName(),
+		      Parameters.forFunction(CommonLispSymbols.JINVOKE.getName())
 		                .requiredParameter(JAVA_METHOD_ARGUMENT)
 		                .requiredParameter(JAVA_OBJECT_ARGUMENT)
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.JINVOKE;
 	}
 
 	@Override

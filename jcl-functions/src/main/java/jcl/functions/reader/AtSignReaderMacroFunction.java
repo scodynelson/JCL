@@ -26,12 +26,6 @@ public final class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.AT_SIGN, this, false);
-	}
-
-	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.AT_SIGN;

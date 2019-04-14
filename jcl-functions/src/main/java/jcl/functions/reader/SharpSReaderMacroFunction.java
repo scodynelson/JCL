@@ -15,7 +15,6 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
@@ -31,14 +30,6 @@ public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpSReaderMacroFunction() {
 		super("SHARP-S");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_S, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_S, this);
 	}
 
 	@Override

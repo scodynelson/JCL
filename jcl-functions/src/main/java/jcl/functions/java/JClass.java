@@ -4,24 +4,30 @@
 
 package jcl.functions.java;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class JClass extends ExtensionsBuiltInFunctionStructBase {
+public final class JClass extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "JCLASS";
 	private static final String CLASS_NAME_ARGUMENT = "CLASS_NAME";
 
 	public JClass() {
 		super("Gets the Java class matching the provided class name string.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.JCLASS.getName(),
+		      Parameters.forFunction(CommonLispSymbols.JCLASS.getName())
 		                .requiredParameter(CLASS_NAME_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.JCLASS;
 	}
 
 	@Override

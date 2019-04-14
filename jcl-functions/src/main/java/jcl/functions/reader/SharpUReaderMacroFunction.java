@@ -11,7 +11,6 @@ import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.ReadtableStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 
@@ -22,14 +21,6 @@ public final class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpUReaderMacroFunction() {
 		super("SHARP-U");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_U, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_U, this);
 	}
 
 	@Override

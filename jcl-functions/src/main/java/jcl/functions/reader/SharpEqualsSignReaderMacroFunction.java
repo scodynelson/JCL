@@ -33,12 +33,6 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.EQUALS_SIGN, this);
-	}
-
-	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;

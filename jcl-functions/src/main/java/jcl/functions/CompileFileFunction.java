@@ -4,26 +4,31 @@ import jcl.compiler.function.InternalCompile;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 
-public final class CompileFileFunction extends CommonLispBuiltInFunctionStructBase {
+public final class CompileFileFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "COMPILE-FILE";
 	private static final String INPUT_FILE_ARGUMENT = "INPUT-FILE";
 
 	public CompileFileFunction() {
 		super("Compiles the provided input-file.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.COMPILE_FILE.getName(),
+		      Parameters.forFunction(CommonLispSymbols.COMPILE_FILE.getName())
 		                .requiredParameter(INPUT_FILE_ARGUMENT)
 		                .keyParameter(CommonLispSymbols.OUTPUT_FILE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		                .keyParameter(CommonLispSymbols.VERBOSE_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		                .keyParameter(CommonLispSymbols.PRINT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		                .keyParameter(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD).withInitialValue(NILStruct.INSTANCE)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.COMPILE_FILE;
 	}
 
 	@Override

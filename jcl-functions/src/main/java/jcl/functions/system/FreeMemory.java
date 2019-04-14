@@ -4,21 +4,26 @@
 
 package jcl.functions.system;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class FreeMemory extends ExtensionsBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "FREE-MEMORY";
+public final class FreeMemory extends BuiltInFunctionStructImpl {
 
 	public FreeMemory() {
 		super("Returns the current free runtime memory usage.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.FREE_MEMORY.getName(),
+		      Parameters.forFunction(CommonLispSymbols.FREE_MEMORY.getName())
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.FREE_MEMORY;
 	}
 
 	@Override

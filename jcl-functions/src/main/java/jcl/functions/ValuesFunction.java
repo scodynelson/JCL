@@ -7,20 +7,25 @@ package jcl.functions;
 import java.util.List;
 
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class ValuesFunction extends CommonLispBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "VALUES";
+public final class ValuesFunction extends BuiltInFunctionStructImpl {
 
 	public ValuesFunction() {
 		super("Returns the objects as multiple values.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.VALUES.getName(),
+		      Parameters.forFunction(CommonLispSymbols.VALUES.getName())
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.VALUES;
 	}
 
 	@Override

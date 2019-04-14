@@ -9,27 +9,33 @@ import javax.help.HelpBroker;
 import javax.help.HelpSet;
 
 import jcl.compiler.classloaders.CompilerClassLoader;
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class Help extends ExtensionsBuiltInFunctionStructBase {
+public final class Help extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "HELP";
 	private static final String SEARCH_TERM_ARGUMENT = "SEARCH-TERM";
 
 	public Help() {
 		super("Invokes Java Help.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.HELP.getName(),
+		      Parameters.forFunction(CommonLispSymbols.HELP.getName())
 		                .optionalParameter(SEARCH_TERM_ARGUMENT).withInitialValue(null)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.HELP;
 	}
 
 	@Override

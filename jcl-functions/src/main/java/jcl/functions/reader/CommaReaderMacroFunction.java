@@ -29,12 +29,6 @@ public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.COMMA, this, false);
-	}
-
-	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;

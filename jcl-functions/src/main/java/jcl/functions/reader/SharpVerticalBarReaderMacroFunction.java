@@ -10,7 +10,6 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
@@ -22,12 +21,6 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 
 	public SharpVerticalBarReaderMacroFunction() {
 		super("SHARP-VERTICAL-BAR");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.VERTICAL_LINE, this);
 	}
 
 	@Override

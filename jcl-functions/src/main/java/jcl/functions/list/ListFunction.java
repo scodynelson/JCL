@@ -6,22 +6,27 @@ package jcl.functions.list;
 
 import java.util.List;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class ListFunction extends CommonLispBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "LIST";
+public final class ListFunction extends BuiltInFunctionStructImpl {
 
 	public ListFunction() {
 		super("Returns a list containing the supplied objects.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.LIST.getName(),
+		      Parameters.forFunction(CommonLispSymbols.LIST.getName())
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.LIST;
 	}
 
 	@Override

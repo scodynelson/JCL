@@ -6,25 +6,30 @@ package jcl.functions.symbol;
 
 import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.compiler.function.expanders.SymbolMacroExpanderImpl;
-import jcl.functions.SystemBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class SetSymbolMacroFunction extends SystemBuiltInFunctionStructBase {
+public final class SetSymbolMacroFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "SET-SYMBOL-MACRO";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";
 	private static final String EXPANSION_ARGUMENT = "EXPANSION";
 
 	public SetSymbolMacroFunction() {
 		super("Creates a new symbol-macro with the provided expansion and sets the symbol-macro value of the provided symbol to it.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.SET_SYMBOL_MACRO.getName(),
+		      Parameters.forFunction(CommonLispSymbols.SET_SYMBOL_MACRO.getName())
 		                .requiredParameter(SYMBOL_ARGUMENT)
 		                .requiredParameter(EXPANSION_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.SET_SYMBOL_MACRO;
 	}
 
 	@Override

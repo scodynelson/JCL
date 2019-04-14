@@ -4,26 +4,31 @@
 
 package jcl.functions.symbol;
 
-import jcl.functions.SystemBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class SetSymbolFunctionFunction extends SystemBuiltInFunctionStructBase {
+public final class SetSymbolFunctionFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "SET-SYMBOL-FUNCTION";
 	private static final String SYMBOL_ARGUMENT = "SYMBOL";
 	private static final String FUNCTION_ARGUMENT = "FUNCTION";
 
 	public SetSymbolFunctionFunction() {
 		super("Sets the function value of the provided symbol to the provided function value.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.SET_SYMBOL_FUNCTION.getName(),
+		      Parameters.forFunction(CommonLispSymbols.SET_SYMBOL_FUNCTION.getName())
 		                .requiredParameter(SYMBOL_ARGUMENT)
 		                .requiredParameter(FUNCTION_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.SET_SYMBOL_FUNCTION;
 	}
 
 	@Override

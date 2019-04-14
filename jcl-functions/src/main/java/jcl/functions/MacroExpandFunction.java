@@ -10,24 +10,30 @@ import jcl.compiler.function.MacroExpandResult;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class MacroExpandFunction extends CommonLispBuiltInFunctionStructBase {
+public final class MacroExpandFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "MACROEXPAND";
 	private static final String FORM_ARGUMENT = "FORM";
 	private static final String ENVIRONMENT_ARGUMENT = "ENVIRONMENT";
 
 	public MacroExpandFunction() {
 		super("Repeatedly expands form until it is no longer a macro form.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.MACROEXPAND.getName(),
+		      Parameters.forFunction(CommonLispSymbols.MACROEXPAND.getName())
 		                .requiredParameter(FORM_ARGUMENT)
 		                .optionalParameter(ENVIRONMENT_ARGUMENT).withInitialValue(Environment.NULL)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.MACROEXPAND;
 	}
 
 	@Override

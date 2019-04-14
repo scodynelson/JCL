@@ -4,25 +4,30 @@
 
 package jcl.system.function;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-public final class QuitFunction extends ExtensionsBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "QUIT";
+public final class QuitFunction extends BuiltInFunctionStructImpl {
 
 	private final ApplicationContext context;
 
 	public QuitFunction(final ApplicationContext context) {
 		super("Quits the JCL Application.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.QUIT.getName(),
+		      Parameters.forFunction(CommonLispSymbols.QUIT.getName())
 		);
 		this.context = context;
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.QUIT;
 	}
 
 	@SuppressWarnings("all")

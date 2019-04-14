@@ -4,7 +4,6 @@ import java.util.List;
 
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.type.FunctionType;
 import jcl.type.LispType;
@@ -26,15 +25,4 @@ public abstract class FunctionStructImpl extends BuiltInClassStruct implements F
 	                             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(documentation, type, directSuperClasses, subClasses);
 	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		final SymbolStruct functionSymbol = getFunctionSymbol();
-		functionSymbol.setFunction(this);
-	}
-
-	public abstract SymbolStruct getFunctionSymbol();
-
-	@Override
-	public abstract LispStruct apply(LispStruct... lispStructs);
 }

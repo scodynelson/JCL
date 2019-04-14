@@ -28,12 +28,6 @@ public final class SharpBackslashReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.BACKSLASH, this);
-	}
-
-	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.BACKSLASH;

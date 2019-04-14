@@ -19,10 +19,6 @@ public abstract class SymbolMacroExpander extends MacroExpander<LispStruct, Symb
 		return null;
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-	}
-
 //	@Override
 //	public LispStruct apply(final LispStruct... lispStructs) {
 //		final SymbolStruct symbolStruct = (SymbolStruct) lispStructs[0];

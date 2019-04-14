@@ -4,21 +4,26 @@
 
 package jcl.functions.system;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class MaxMemory extends ExtensionsBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "MAX-MEMORY";
+public final class MaxMemory extends BuiltInFunctionStructImpl {
 
 	public MaxMemory() {
 		super("Returns the current max runtime memory usage.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.MAX_MEMORY.getName(),
+		      Parameters.forFunction(CommonLispSymbols.MAX_MEMORY.getName())
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.MAX_MEMORY;
 	}
 
 	@Override

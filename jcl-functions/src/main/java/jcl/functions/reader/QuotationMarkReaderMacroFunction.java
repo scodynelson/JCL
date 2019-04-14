@@ -25,12 +25,6 @@ public final class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionI
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.QUOTATION_MARK, this, false);
-	}
-
-	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final Optional<BigInteger> numberArgument) {
 		assert codePoint == CodePointConstants.QUOTATION_MARK;

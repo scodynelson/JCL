@@ -9,7 +9,7 @@ public interface FunctionStruct extends LispStruct {
 
 	LispStruct apply(LispStruct... lispStructs);
 
-	void afterPropertiesSet() throws Exception;
+	SymbolStruct getFunctionSymbol();
 
 	static FunctionStruct toLispFunction(final LispStruct functionDesignator) {
 		// TODO: probably a better way to do this without returning "null"

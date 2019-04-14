@@ -13,7 +13,6 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -24,12 +23,6 @@ public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunctio
 
 	public SharpApostropheReaderMacroFunction() {
 		super("SHARP-APOSTROPHE");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.APOSTROPHE, this);
 	}
 
 	@Override

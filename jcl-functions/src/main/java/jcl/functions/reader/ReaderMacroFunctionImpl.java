@@ -7,11 +7,12 @@ package jcl.functions.reader;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import jcl.functions.SystemBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
@@ -19,7 +20,7 @@ import jcl.lang.function.parameterdsl.Parameters;
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
-public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStructBase {
+public abstract class ReaderMacroFunctionImpl extends BuiltInFunctionStructImpl {
 
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";
 	private static final String MACRO_CHARACTER_ARGUMENT = "MACRO-CHARACTER";
@@ -50,6 +51,12 @@ public abstract class ReaderMacroFunctionImpl extends SystemBuiltInFunctionStruc
 	 */
 	protected abstract LispStruct readMacro(InputStreamStruct inputStreamStruct, int codePoint,
 	                                        Optional<BigInteger> numberArgument);
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		// TODO: change this???
+		return SymbolStruct.toLispSymbol(functionName);
+	}
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {

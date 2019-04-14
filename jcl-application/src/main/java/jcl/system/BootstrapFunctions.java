@@ -1,6 +1,7 @@
 package jcl.system;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import jcl.functions.ApplyFunction;
@@ -46,18 +47,21 @@ import jcl.functions.system.FreeMemory;
 import jcl.functions.system.GC;
 import jcl.functions.system.Help;
 import jcl.functions.system.MaxMemory;
-import jcl.system.function.QuitFunction;
 import jcl.functions.system.TotalMemory;
 import jcl.lang.FunctionStruct;
+import jcl.lang.PackageStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.statics.CompilerVariables;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.ReaderVariables;
 import jcl.printer.functions.PrintObjectFunction;
+import jcl.system.function.QuitFunction;
 import jcl.util.CodePointConstants;
 import org.springframework.context.ApplicationContext;
 
 class BootstrapFunctions {
 
-	static void bootstrap(final ApplicationContext context) throws Exception {
+	static void bootstrap(final ApplicationContext context) {
 		bootstrapSystemFunctions();
 
 		bootstrapPredicateFunctions();
@@ -72,7 +76,7 @@ class BootstrapFunctions {
 		bootstrapPrinterFunctions();
 	}
 
-	private static void bootstrapSystemFunctions() throws Exception {
+	private static void bootstrapSystemFunctions() {
 		final FuncallFunction funcallFunction = new FuncallFunction();
 
 		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);
@@ -93,13 +97,10 @@ class BootstrapFunctions {
 				new MacroExpandFunction(),
 				new ValuesFunction()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapCommonLispPackageFunctions(functions);
 	}
 
-	private static void bootstrapPredicateFunctions() throws Exception {
+	private static void bootstrapPredicateFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new PredicateFunctions.ArrayPFunction(),
 				new PredicateFunctions.AtomFunction(),
@@ -112,6 +113,7 @@ class BootstrapFunctions {
 				new PredicateFunctions.FunctionPFunction(),
 				new PredicateFunctions.HashTablePFunction(),
 				new PredicateFunctions.IntegerPFunction(),
+				new PredicateFunctions.KeywordPFunction(),
 				new PredicateFunctions.ListPFunction(),
 				new PredicateFunctions.NullFunction(),
 				new PredicateFunctions.NumberPFunction(),
@@ -127,35 +129,26 @@ class BootstrapFunctions {
 				new PredicateFunctions.StringPFunction(),
 				new PredicateFunctions.StreamPFunction(),
 				new PredicateFunctions.SymbolPFunction(),
-				new PredicateFunctions.VectorPFunction(),
-
-				new PredicateFunctions.KeywordPFunction()
-		);		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+				new PredicateFunctions.VectorPFunction()
+		);
+		bootstrapCommonLispPackageFunctions(functions);
 	}
 
-	private static void bootstrapArrayFunctions() throws Exception {
+	private static void bootstrapArrayFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new ListToVectorFunction()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapSystemPackageFunctions(functions);
 	}
 
-	private static void bootstrapConditionFunctions() throws Exception {
+	private static void bootstrapConditionFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new ErrorFunction()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapCommonLispPackageFunctions(functions);
 	}
 
-	private static void bootstrapJavaFunctions() throws Exception {
+	private static void bootstrapJavaFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new JClass(),
 				new JInvoke(),
@@ -163,24 +156,18 @@ class BootstrapFunctions {
 				new JMethod(),
 				new JNew()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapExtensionPackageFunctions(functions);
 	}
 
-	private static void bootstrapPackageFunctions() throws Exception {
+	private static void bootstrapPackageFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new ExportFunction(),
-				new InPackageFunction()
+				new InPackageFunction() // TODO: in-package is a Macro
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapCommonLispPackageFunctions(functions);
 	}
 
-	private static void bootstrapListFunctions() throws Exception {
+	private static void bootstrapListFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new AppendFunction(),
 				new CarFunction(),
@@ -190,46 +177,41 @@ class BootstrapFunctions {
 				new ListStarFunction(),
 				new NconcFunction()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapCommonLispPackageFunctions(functions);
 	}
 
-	private static void bootstrapReaderFunctions() throws Exception {
+	private static void bootstrapReaderFunctions() {
+		final List<FunctionStruct> functions = Arrays.asList(
+				new ReadFunction(),
+				new ReadPreservingWhitespaceFunction()
+		);
+		bootstrapCommonLispPackageFunctions(functions);
+
 		final ReadDispatchCharacterFunction readDispatchCharacterFunction = new ReadDispatchCharacterFunction();
+		bootstrapSystemPackageFunctions(Collections.singletonList(readDispatchCharacterFunction));
 
 		ReaderVariables.READTABLE.getVariableValue()
 		                         .makeDispatchMacroCharacter(readDispatchCharacterFunction, CodePointConstants.NUMBER_SIGN, false);
 
 		BootstrapReaderMacroFunctions.bootstrap();
-
-		final List<FunctionStruct> functions = Arrays.asList(
-				readDispatchCharacterFunction,
-				new ReadFunction(),
-				new ReadPreservingWhitespaceFunction()
-		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
 	}
 
-	private static void bootstrapSymbolFunctions() throws Exception {
-		final List<FunctionStruct> functions = Arrays.asList(
+	private static void bootstrapSymbolFunctions() {
+		List<FunctionStruct> functions = Arrays.asList(
 				new GensymFunction(),
-				new GentempFunction(),
+				new GentempFunction()
+		);
+		bootstrapCommonLispPackageFunctions(functions);
+
+		functions = Arrays.asList(
 				new SetSymbolFunctionFunction(),
 				new SetSymbolMacroFunction(),
 				new SetSymbolSetfFunctionFunction()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapSystemPackageFunctions(functions);
 	}
 
-	private static void bootstrapExtensionFunctions(final ApplicationContext context) throws Exception {
+	private static void bootstrapExtensionFunctions(final ApplicationContext context) {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new FreeMemory(),
 				new GC(),
@@ -238,19 +220,35 @@ class BootstrapFunctions {
 				new QuitFunction(context),
 				new TotalMemory()
 		);
-
-		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
-		}
+		bootstrapExtensionPackageFunctions(functions);
 	}
 
-	private static void bootstrapPrinterFunctions() throws Exception {
+	private static void bootstrapPrinterFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new PrintObjectFunction()
 		);
+		bootstrapCommonLispPackageFunctions(functions);
+	}
 
+	private static void bootstrapCommonLispPackageFunctions(final List<FunctionStruct> functions) {
+		bootstrapFunctions(functions, GlobalPackageStruct.COMMON_LISP);
+	}
+
+	private static void bootstrapExtensionPackageFunctions(final List<FunctionStruct> functions) {
+		bootstrapFunctions(functions, GlobalPackageStruct.EXTENSIONS);
+	}
+
+	private static void bootstrapSystemPackageFunctions(final List<FunctionStruct> functions) {
+		bootstrapFunctions(functions, GlobalPackageStruct.SYSTEM);
+	}
+
+	private static void bootstrapFunctions(final List<FunctionStruct> functions, final PackageStruct aPackage) {
 		for (final FunctionStruct function : functions) {
-			function.afterPropertiesSet();
+			final SymbolStruct functionSymbol = function.getFunctionSymbol();
+			functionSymbol.setFunction(function);
+
+			final SymbolStruct symbol = aPackage.intern(functionSymbol.getName()).getSymbol();
+			aPackage.export(symbol);
 		}
 	}
 }

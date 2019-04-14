@@ -6,28 +6,34 @@ package jcl.functions.java;
 
 import java.util.List;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaMethodStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class JMethod extends ExtensionsBuiltInFunctionStructBase {
+public final class JMethod extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "JMETHOD";
 	private static final String METHOD_NAME_ARGUMENT = "METHOD-NAME";
 	private static final String JAVA_CLASS_ARGUMENT = "JAVA-CLASS";
 
 	public JMethod() {
 		super("Gets the Java method matching the provided method name string for the provided Java Class object and the provided Java Class parameter object types.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.JMETHOD.getName(),
+		      Parameters.forFunction(CommonLispSymbols.JMETHOD.getName())
 		                .requiredParameter(METHOD_NAME_ARGUMENT)
 		                .requiredParameter(JAVA_CLASS_ARGUMENT)
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.JMETHOD;
 	}
 
 	@Override

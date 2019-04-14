@@ -8,25 +8,31 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import jcl.compiler.function.InternalEval;
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaObjectStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class JInvokeStatic extends ExtensionsBuiltInFunctionStructBase {
+public final class JInvokeStatic extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "JINVOKE-STATIC";
 	private static final String JAVA_METHOD_ARGUMENT = "JAVA-METHOD";
 
 	public JInvokeStatic() {
 		super("Invokes a static method for the provided JavaMethod",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.JINVOKE_STATIC.getName(),
+		      Parameters.forFunction(CommonLispSymbols.JINVOKE_STATIC.getName())
 		                .requiredParameter(JAVA_METHOD_ARGUMENT)
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.JINVOKE_STATIC;
 	}
 
 	@Override

@@ -4,21 +4,24 @@
 
 package jcl.functions.lisppackage;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PackageVariables;
 
 /**
  * Function implementation for {@code in-package}.
+ * <p>
+ * TODO: in-package is a Macro
  */
-public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase {
+public final class InPackageFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "IN-PACKAGE";
 	private static final String NAME_ARGUMENT = "NAME";
 
 	/**
@@ -26,10 +29,15 @@ public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase
 	 */
 	public InPackageFunction() {
 		super("Causes the the package named by name to become the current package.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.IN_PACKAGE.getName(),
+		      Parameters.forFunction(CommonLispSymbols.IN_PACKAGE.getName())
 		                .requiredParameter(NAME_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.IN_PACKAGE;
 	}
 
 	/**

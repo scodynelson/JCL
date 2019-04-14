@@ -7,23 +7,29 @@ package jcl.functions;
 import jcl.compiler.function.InternalApply;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class ApplyFunction extends CommonLispBuiltInFunctionStructBase {
+public final class ApplyFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "APPLY";
 	private static final String FN_ARGUMENT = "FN";
 	private static final String ARG_ARGUMENT = "ARG";
 
 	public ApplyFunction() {
 		super("Applies the function to the args.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.APPLY.getName(),
+		      Parameters.forFunction(CommonLispSymbols.APPLY.getName())
 		                .requiredParameter(FN_ARGUMENT)
 		                .requiredParameter(ARG_ARGUMENT)
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.APPLY;
 	}
 
 	@Override

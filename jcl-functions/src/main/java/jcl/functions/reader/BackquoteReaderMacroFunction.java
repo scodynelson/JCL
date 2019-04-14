@@ -18,7 +18,6 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
@@ -44,12 +43,6 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 	public BackquoteReaderMacroFunction() {
 		super("BACKQUOTE");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.GRAVE_ACCENT, this, false);
 	}
 
 	@Override

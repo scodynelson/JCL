@@ -4,21 +4,26 @@
 
 package jcl.functions.system;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class TotalMemory extends ExtensionsBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "TOTAL-MEMORY";
+public final class TotalMemory extends BuiltInFunctionStructImpl {
 
 	public TotalMemory() {
 		super("Returns the current total runtime memory usage.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.TOTAL_MEMORY.getName(),
+		      Parameters.forFunction(CommonLispSymbols.TOTAL_MEMORY.getName())
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.TOTAL_MEMORY;
 	}
 
 	@Override

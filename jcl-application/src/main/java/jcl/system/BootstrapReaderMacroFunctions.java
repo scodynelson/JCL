@@ -31,100 +31,121 @@ import jcl.functions.reader.SharpSharpReaderMacroFunction;
 import jcl.functions.reader.SharpUReaderMacroFunction;
 import jcl.functions.reader.SharpVerticalBarReaderMacroFunction;
 import jcl.functions.reader.SharpXReaderMacroFunction;
+import jcl.lang.ReadtableStruct;
+import jcl.lang.statics.ReaderVariables;
+import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class BootstrapReaderMacroFunctions {
 
-	public static void bootstrap() throws Exception {
+	public static void bootstrap() {
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+
 		ReaderMacroFunctionImpl readerMacroFunction = new ApostropheReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.APOSTROPHE, readerMacroFunction, false);
 
 		readerMacroFunction = new AtSignReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.AT_SIGN, readerMacroFunction, false);
 
 		readerMacroFunction = new BackquoteReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.GRAVE_ACCENT, readerMacroFunction, false);
 
 		readerMacroFunction = new CommaReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.COMMA, readerMacroFunction, false);
 
 		readerMacroFunction = new DollarSignReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.DOLLAR_SIGN, readerMacroFunction, false);
 
 		readerMacroFunction = new LeftParenthesisReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.LEFT_PARENTHESIS, readerMacroFunction, false);
 
 		readerMacroFunction = new QuotationMarkReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.QUOTATION_MARK, readerMacroFunction, false);
 
 		readerMacroFunction = new RightParenthesisReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.RIGHT_PARENTHESIS, readerMacroFunction, false);
 
 		readerMacroFunction = new SemicolonReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setMacroCharacter(CodePointConstants.SEMICOLON, readerMacroFunction, false);
 
 		readerMacroFunction = new SharpApostropheReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.APOSTROPHE, readerMacroFunction);
 
 		readerMacroFunction = new SharpAReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_A, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_A, readerMacroFunction);
 
 		readerMacroFunction = new SharpAsteriskReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.ASTERISK, readerMacroFunction);
 
 		readerMacroFunction = new SharpBackslashReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.BACKSLASH, readerMacroFunction);
 
 		readerMacroFunction = new SharpBReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_B, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_B, readerMacroFunction);
 
 		readerMacroFunction = new SharpColonReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.COLON, readerMacroFunction);
 
 		readerMacroFunction = new SharpCReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_C, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_C, readerMacroFunction);
 
 		readerMacroFunction = new SharpEqualsSignReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.EQUALS_SIGN, readerMacroFunction);
 
 		readerMacroFunction = new SharpFullStopReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.FULL_STOP, readerMacroFunction);
 
 		readerMacroFunction = new SharpHyphenMinusReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.HYPHEN_MINUS, readerMacroFunction);
 
 		readerMacroFunction = new SharpIllegalReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.RIGHT_PARENTHESIS, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LESS_THAN_SIGN, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.TAB, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.NEWLINE, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LINE_FEED, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.SPACE, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.PAGE, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.RETURN, readerMacroFunction);
 
 		readerMacroFunction = new SharpLeftParenthesisReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LEFT_PARENTHESIS, readerMacroFunction);
 
 		readerMacroFunction = new SharpOReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_O, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_O, readerMacroFunction);
 
 		readerMacroFunction = new SharpPlusSignReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.PLUS_SIGN, readerMacroFunction);
 
 		readerMacroFunction = new SharpPReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_P, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_P, readerMacroFunction);
 
 		readerMacroFunction = new SharpRReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_R, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_R, readerMacroFunction);
 
 		readerMacroFunction = new SharpSharpReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.NUMBER_SIGN, readerMacroFunction);
 
 		readerMacroFunction = new SharpSReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_S, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_S, readerMacroFunction);
 
 		readerMacroFunction = new SharpUReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_U, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_U, readerMacroFunction);
 
 		readerMacroFunction = new SharpVerticalBarReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.VERTICAL_LINE, readerMacroFunction);
 
 		readerMacroFunction = new SharpXReaderMacroFunction();
-		readerMacroFunction.afterPropertiesSet();
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_X, readerMacroFunction);
+		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_X, readerMacroFunction);
 	}
 }

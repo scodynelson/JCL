@@ -4,7 +4,7 @@
 
 package jcl.functions.symbol;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
@@ -12,19 +12,24 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.SymbolVariables;
 
-public final class GensymFunction extends CommonLispBuiltInFunctionStructBase {
+public final class GensymFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "GENSYM";
 	private static final String PREFIX_ARGUMENT = "PREFIX";
 
 	public GensymFunction() {
 		super("Creates and returns a fresh, uninterned symbol.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.GENSYM.getName(),
+		      Parameters.forFunction(CommonLispSymbols.GENSYM.getName())
 		                .optionalParameter(PREFIX_ARGUMENT).withInitialValue(null)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.GENSYM;
 	}
 
 	@Override

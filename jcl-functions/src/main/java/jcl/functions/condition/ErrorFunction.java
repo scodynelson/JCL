@@ -1,24 +1,30 @@
 package jcl.functions.condition;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class ErrorFunction extends CommonLispBuiltInFunctionStructBase {
+public final class ErrorFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "ERROR";
 	private static final String DATUM_ARGUMENT = "DATUM";
 
 	public ErrorFunction() {
 		super("Error effectively invokes signal on the denoted condition.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.ERROR.getName(),
+		      Parameters.forFunction(CommonLispSymbols.ERROR.getName())
 		                .requiredParameter(DATUM_ARGUMENT)
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.ERROR;
 	}
 
 	@Override

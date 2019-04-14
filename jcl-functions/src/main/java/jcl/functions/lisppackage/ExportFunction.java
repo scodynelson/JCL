@@ -7,7 +7,7 @@ package jcl.functions.lisppackage;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
@@ -16,14 +16,14 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PackageVariables;
 
 /**
  * Function implementation for {@code export}.
  */
-public final class ExportFunction extends CommonLispBuiltInFunctionStructBase {
+public final class ExportFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "EXPORT";
 	private static final String SYMBOLS_ARGUMENT = "SYMBOLS";
 	private static final String PACKAGE_ARGUMENT = "PACKAGE";
 
@@ -32,11 +32,16 @@ public final class ExportFunction extends CommonLispBuiltInFunctionStructBase {
 	 */
 	public ExportFunction() {
 		super("Makes one or more symbols that are accessible in package (whether directly or by inheritance) be external symbols of that package.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.EXPORT.getName(),
+		      Parameters.forFunction(CommonLispSymbols.EXPORT.getName())
 		                .requiredParameter(SYMBOLS_ARGUMENT)
 		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(PackageVariables.PACKAGE.getVariableValue())
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.EXPORT;
 	}
 
 	@Override

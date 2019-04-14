@@ -9,8 +9,6 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ReadtableStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 
 /**
@@ -25,14 +23,6 @@ public final class SharpXReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpXReaderMacroFunction() {
 		super("SHARP-X");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_X, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_X, this);
 	}
 
 	@Override

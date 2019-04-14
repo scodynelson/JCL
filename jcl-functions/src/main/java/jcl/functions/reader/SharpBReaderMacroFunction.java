@@ -9,8 +9,6 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ReadtableStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 
 /**
@@ -25,14 +23,6 @@ public final class SharpBReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	public SharpBReaderMacroFunction() {
 		super("SHARP-B");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_SMALL_LETTER_B, this);
-		readtable.setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.LATIN_CAPITAL_LETTER_B, this);
 	}
 
 	@Override

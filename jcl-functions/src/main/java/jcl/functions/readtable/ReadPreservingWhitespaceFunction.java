@@ -4,21 +4,22 @@
 
 package jcl.functions.readtable;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.BooleanStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.StreamVariables;
 import jcl.reader.InternalRead;
 
-public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFunctionStructBase {
+public final class ReadPreservingWhitespaceFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "READ-PRESERVING-WHITESPACE";
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";
 	private static final String EOF_ERROR_ARGUMENT = "EOF-ERROR";
 	private static final String EOF_VALUE_ARGUMENT = "EOF-VALUE";
@@ -26,13 +27,18 @@ public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFun
 
 	public ReadPreservingWhitespaceFunction() {
 		super("Parses the printed representation of an object from input-stream and builds such an object preserving any whitespace character that delimits the printed representation of the object.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.READ_PRESERVING_WHITESPACE.getName(),
+		      Parameters.forFunction(CommonLispSymbols.READ_PRESERVING_WHITESPACE.getName())
 		                .optionalParameter(INPUT_STREAM_ARGUMENT).withInitialValue(StreamVariables.STANDARD_INPUT)
 		                .optionalParameter(EOF_ERROR_ARGUMENT).withInitialValue(TStruct.INSTANCE)
 		                .optionalParameter(EOF_VALUE_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
 		                .optionalParameter(RECURSIVE_P_ARGUMENT).withInitialValue(TStruct.INSTANCE)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.READ_PRESERVING_WHITESPACE;
 	}
 
 	@Override

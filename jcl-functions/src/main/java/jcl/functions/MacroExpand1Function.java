@@ -10,24 +10,30 @@ import jcl.compiler.function.MacroExpandResult;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class MacroExpand1Function extends CommonLispBuiltInFunctionStructBase {
+public final class MacroExpand1Function extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "MACROEXPAND-1";
 	private static final String FORM_ARGUMENT = "FORM";
 	private static final String ENVIRONMENT_ARGUMENT = "ENVIRONMENT";
 
 	public MacroExpand1Function() {
 		super("Expands form once.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.MACROEXPAND_1.getName(),
+		      Parameters.forFunction(CommonLispSymbols.MACROEXPAND_1.getName())
 		                .requiredParameter(FORM_ARGUMENT)
 		                .optionalParameter(ENVIRONMENT_ARGUMENT).withInitialValue(Environment.NULL)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.MACROEXPAND_1;
 	}
 
 	@Override

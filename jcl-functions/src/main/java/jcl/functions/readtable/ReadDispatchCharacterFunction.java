@@ -2,7 +2,7 @@ package jcl.functions.readtable;
 
 import java.math.BigInteger;
 
-import jcl.functions.SystemBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.InputStreamStruct;
@@ -10,27 +10,33 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
 
-public final class ReadDispatchCharacterFunction extends SystemBuiltInFunctionStructBase {
+public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "READ-DISPATCH-CHARACTER";
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";
 	private static final String DISPATCH_CHAR_ARGUMENT = "DISPATCH-CHAR";
 	private static final String IGNORED_ARGUMENT = "IGNORED";
 
 	public ReadDispatchCharacterFunction() {
 		super("Reads the dispatch character and invokes the appropriate dispatching character function.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.READ_DISPATCH_CHARACTER.getName(),
+		      Parameters.forFunction(CommonLispSymbols.READ_DISPATCH_CHARACTER.getName())
 		                .requiredParameter(INPUT_STREAM_ARGUMENT)
 		                .requiredParameter(DISPATCH_CHAR_ARGUMENT)
 		                .optionalParameter(IGNORED_ARGUMENT).withInitialValue(NILStruct.INSTANCE)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.READ_DISPATCH_CHARACTER;
 	}
 
 	@Override

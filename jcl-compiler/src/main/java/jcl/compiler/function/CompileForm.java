@@ -20,6 +20,7 @@ import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +75,8 @@ public final class CompileForm {
 				final boolean isFunctionStruct = FunctionStruct.class.isAssignableFrom(classLoaded);
 				if (isFunctionStruct) {
 					function = (FunctionStruct) classLoaded.getDeclaredConstructor().newInstance();
-					function.afterPropertiesSet();
+					final SymbolStruct functionSymbol = function.getFunctionSymbol();
+					functionSymbol.setFunction(function);
 				}
 			} catch (final Exception ex) {
 				log.error("Error compiling definition.", ex);

@@ -6,22 +6,27 @@ package jcl.functions.list;
 
 import java.util.List;
 
-import jcl.functions.CommonLispBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class AppendFunction extends CommonLispBuiltInFunctionStructBase {
-
-	private static final String FUNCTION_NAME = "APPEND";
+public final class AppendFunction extends BuiltInFunctionStructImpl {
 
 	public AppendFunction() {
 		super("Returns a new list that is the concatenation of the copies.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.APPEND.getName(),
+		      Parameters.forFunction(CommonLispSymbols.APPEND.getName())
 		                .restParameter()
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.APPEND;
 	}
 
 	@Override

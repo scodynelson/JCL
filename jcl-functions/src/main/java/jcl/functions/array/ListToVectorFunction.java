@@ -7,24 +7,30 @@ package jcl.functions.array;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jcl.functions.SystemBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class ListToVectorFunction extends SystemBuiltInFunctionStructBase {
+public final class ListToVectorFunction extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "LIST-TO-VECTOR";
 	private static final String LIST_ARGUMENT = "LIST";
 
 	public ListToVectorFunction() {
 		super("Creates a fresh simple general vector from the provided list.",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.LIST_TO_VECTOR.getName(),
+		      Parameters.forFunction(CommonLispSymbols.LIST_TO_VECTOR.getName())
 		                .requiredParameter(LIST_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.LIST_TO_VECTOR;
 	}
 
 	@Override

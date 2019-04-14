@@ -4,24 +4,30 @@
 
 package jcl.functions.java;
 
-import jcl.functions.ExtensionsBuiltInFunctionStructBase;
+import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaObjectStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
-public final class JNew extends ExtensionsBuiltInFunctionStructBase {
+public final class JNew extends BuiltInFunctionStructImpl {
 
-	private static final String FUNCTION_NAME = "JNEW";
 	private static final String JAVA_CLASS_ARGUMENT = "JAVA-CLASS";
 
 	public JNew() {
 		super("Creates a new instance of the Java Class matching the provided string",
-		      FUNCTION_NAME,
-		      Parameters.forFunction(FUNCTION_NAME)
+		      CommonLispSymbols.JNEW.getName(),
+		      Parameters.forFunction(CommonLispSymbols.JNEW.getName())
 		                .requiredParameter(JAVA_CLASS_ARGUMENT)
 		);
+	}
+
+	@Override
+	public SymbolStruct getFunctionSymbol() {
+		return CommonLispSymbols.JNEW;
 	}
 
 	@Override

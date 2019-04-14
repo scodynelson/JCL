@@ -10,7 +10,6 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 
 /**
@@ -20,12 +19,6 @@ public final class RightParenthesisReaderMacroFunction extends ReaderMacroFuncti
 
 	public RightParenthesisReaderMacroFunction() {
 		super("RIGHT-PARENTHESIS");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setMacroCharacter(CodePointConstants.RIGHT_PARENTHESIS, this, false);
 	}
 
 	@Override

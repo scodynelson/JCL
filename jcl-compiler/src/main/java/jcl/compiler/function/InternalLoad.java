@@ -13,6 +13,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.pathname.PathnameVersion;
@@ -128,7 +129,8 @@ public final class InternalLoad {
 				return NILStruct.INSTANCE;
 			} else {
 				final FunctionStruct function = (FunctionStruct) classLoaded.getDeclaredConstructor().newInstance();
-				function.afterPropertiesSet();
+				final SymbolStruct functionSymbol = function.getFunctionSymbol();
+				functionSymbol.setFunction(function);
 				return function.apply();
 			}
 		} catch (final FileErrorException fee) {

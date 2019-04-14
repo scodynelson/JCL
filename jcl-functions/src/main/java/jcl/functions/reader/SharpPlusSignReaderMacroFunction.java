@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 
 /**
@@ -19,12 +18,6 @@ public final class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionI
 
 	public SharpPlusSignReaderMacroFunction() {
 		super("SHARP-PLUS-SIGN");
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		ReaderVariables.READTABLE.getVariableValue().setDispatchMacroCharacter(CodePointConstants.NUMBER_SIGN, CodePointConstants.PLUS_SIGN, this);
 	}
 
 	@Override

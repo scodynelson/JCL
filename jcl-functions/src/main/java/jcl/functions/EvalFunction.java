@@ -4,9 +4,7 @@ import jcl.compiler.function.InternalEval;
 import jcl.lang.LispStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class EvalFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "EVAL";

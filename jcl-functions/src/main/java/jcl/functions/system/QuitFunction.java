@@ -8,24 +8,21 @@ import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class QuitFunction extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "QUIT";
 
-	@Autowired
-	private ApplicationContext context;
+	private final ApplicationContext context;
 
-	public QuitFunction() {
+	public QuitFunction(final ApplicationContext context) {
 		super("Quits the JCL Application.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)
 		);
+		this.context = context;
 	}
 
 	@SuppressWarnings("all")

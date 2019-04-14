@@ -4,12 +4,9 @@
 
 package jcl.functions.system;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import javax.help.BadIDException;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
-import javax.help.HelpSetException;
 
 import jcl.compiler.classloaders.CompilerClassLoader;
 import jcl.functions.ExtensionsBuiltInFunctionStructBase;
@@ -19,9 +16,9 @@ import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Slf4j
 public final class Help extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "HELP";
@@ -40,19 +37,25 @@ public final class Help extends ExtensionsBuiltInFunctionStructBase {
 		final String searchString;
 		if (arguments.hasOptionalArgument(SEARCH_TERM_ARGUMENT)) {
 			final StringStruct searchTerm = arguments.getOptionalArgument(SEARCH_TERM_ARGUMENT, StringStruct.class);
-			searchString = searchTerm.toJavaString();
+			if (searchTerm == null) {
+				searchString = "index";
+			} else {
+				searchString = searchTerm.toJavaString();
+			}
 		} else {
 			searchString = "index";
 		}
 
 		try {
 			// TODO: Full path works. Relative does not. We might want to figure out a way to do this better anyways.
-			final HelpSet helpSet = new HelpSet(CompilerClassLoader.INSTANCE, new URL("jar:file:../../resources/HelpSystem.jar!/HelpSystemMain.hs"));
+			final URL jarUrl = new URL("jar:file:/Volumes/Dev/repo/JCL/jcl-application/src/main/resources/HelpSystem.jar!/HelpSystemMain.hs");
+			final HelpSet helpSet = new HelpSet(CompilerClassLoader.INSTANCE, jarUrl);
 			final HelpBroker helpBroker = helpSet.createHelpBroker();
 			helpBroker.setCurrentID(searchString);
 			helpBroker.setViewDisplayed(true);
 			helpBroker.setDisplayed(true);
-		} catch (BadIDException | javax.help.UnsupportedOperationException | HelpSetException | MalformedURLException e) {
+		} catch (final Exception e) {
+			log.error(e.getMessage(), e);
 			throw new ProgramErrorException("Error Loading Help System: " + e);
 		}
 

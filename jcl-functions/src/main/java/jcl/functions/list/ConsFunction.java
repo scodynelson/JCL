@@ -9,9 +9,7 @@ import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class ConsFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "CONS";

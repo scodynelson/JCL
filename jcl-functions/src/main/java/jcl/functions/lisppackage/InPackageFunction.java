@@ -12,12 +12,10 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.PackageVariables;
-import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code in-package}.
  */
-@Component
 public final class InPackageFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "IN-PACKAGE";

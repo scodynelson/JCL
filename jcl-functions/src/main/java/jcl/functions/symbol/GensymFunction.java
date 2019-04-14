@@ -13,9 +13,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.SymbolVariables;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class GensymFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GENSYM";

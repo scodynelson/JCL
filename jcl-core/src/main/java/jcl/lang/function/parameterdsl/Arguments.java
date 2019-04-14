@@ -102,7 +102,10 @@ public final class Arguments {
 
 	@SuppressWarnings("unchecked")
 	private static <T> T convert(final Object value, final Class<T> type) {
-		if ((value != null) && type.isAssignableFrom(value.getClass())) {
+		if (value == null) {
+			return null;
+		}
+		if (type.isAssignableFrom(value.getClass())) {
 			return (T) value;
 		}
 		throw new TypeErrorException("Cannot convert value '" + value + "' to type '" + type.getSimpleName() + '\'');

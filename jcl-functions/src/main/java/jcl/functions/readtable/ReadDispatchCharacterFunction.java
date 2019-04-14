@@ -15,10 +15,8 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.ReaderVariables;
 import jcl.lang.stream.ReadPeekResult;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ReadDispatchCharacterFunction extends SystemBuiltInFunctionStructBase {
+public final class ReadDispatchCharacterFunction extends SystemBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "READ-DISPATCH-CHARACTER";
 	private static final String INPUT_STREAM_ARGUMENT = "INPUT-STREAM";

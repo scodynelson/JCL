@@ -23,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @Slf4j
@@ -46,10 +46,6 @@ public class JCL implements ApplicationRunner {
 	private final List<String> lispFilesToLoad;
 
 	public JCL() throws Exception {
-		BootstrapSymbols.bootstrap();
-		BootstrapFunctions.bootstrap();
-		BootstrapExpanders.bootstrap();
-
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(log)) {
 			final JavaStreamStruct characterStream = JavaStreamStruct.toJavaStream(System.in, loggerOutputStream);
 
@@ -80,13 +76,20 @@ public class JCL implements ApplicationRunner {
 	}
 
 	public static void main(final String... args) {
-		try (final ConfigurableApplicationContext context = SpringApplication.run(JCL.class, args)) {
+		final SpringApplicationBuilder applicationBuilder = new SpringApplicationBuilder(JCL.class);
+		applicationBuilder.headless(false);
+
+		try (final ConfigurableApplicationContext context = applicationBuilder.run(args)) {
 			context.registerShutdownHook();
 		}
 	}
 
 	@Override
 	public void run(final ApplicationArguments args) throws Exception {
+		BootstrapSymbols.bootstrap();
+		BootstrapFunctions.bootstrap(context);
+		BootstrapExpanders.bootstrap();
+
 		initializeLispFunctions();
 
 		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);

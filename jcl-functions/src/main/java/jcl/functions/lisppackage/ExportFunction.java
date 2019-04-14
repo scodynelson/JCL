@@ -17,12 +17,10 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.PackageVariables;
-import org.springframework.stereotype.Component;
 
 /**
  * Function implementation for {@code export}.
  */
-@Component
 public final class ExportFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "EXPORT";

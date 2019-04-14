@@ -15,9 +15,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.StreamVariables;
 import jcl.reader.InternalRead;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class ReadPreservingWhitespaceFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "READ-PRESERVING-WHITESPACE";

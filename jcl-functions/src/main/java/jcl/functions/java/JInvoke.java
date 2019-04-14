@@ -14,9 +14,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaObjectStruct;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class JInvoke extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "JINVOKE";

@@ -22,7 +22,7 @@ public final class ApplyFunction extends CommonLispBuiltInFunctionStructBase {
 	private static final String FN_ARGUMENT = "FN";
 	private static final String ARG_ARGUMENT = "ARG";
 
-	private ApplyFunction() {
+	public ApplyFunction() {
 		super("Applies the function to the args.",
 		      FUNCTION_NAME,
 		      Parameters.forFunction(FUNCTION_NAME)

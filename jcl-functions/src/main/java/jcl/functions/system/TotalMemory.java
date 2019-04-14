@@ -9,9 +9,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class TotalMemory extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "TOTAL-MEMORY";

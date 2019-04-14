@@ -10,10 +10,8 @@ import jcl.lang.TStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 public final class GC extends ExtensionsBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "GC";

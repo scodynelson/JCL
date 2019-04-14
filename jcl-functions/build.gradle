@@ -5,16 +5,11 @@ dependencies {
 	compile(project(":jcl-compiler"))
 	compile(project(":jcl-reader"))
 
-	compile("commons-io:commons-io")
 	compile("javax.help:javahelp")
 	compile("org.apache.commons:commons-collections4")
 	compile("org.apache.commons:commons-lang3")
 	compile("org.benf:cfr")
-	compile("org.ow2.asm:asm")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	compile("org.slf4j:slf4j-api")
-	compile("org.springframework.boot:spring-boot")
-	compile("org.springframework:spring-context")
-	compile("org.springframework:spring-beans")
 }

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions.system;
+package jcl.system.function;
 
 import jcl.functions.ExtensionsBuiltInFunctionStructBase;
 import jcl.lang.LispStruct;

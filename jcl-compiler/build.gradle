@@ -2,6 +2,7 @@ description = "JCL Compiler"
 
 dependencies {
 	compile(project(":jcl-core"))
+	compile(project(":jcl-reader"))
 
 	compile("commons-io:commons-io")
 	compile("org.benf:cfr")

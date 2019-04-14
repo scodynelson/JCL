@@ -3,12 +3,17 @@ package jcl.system;
 import java.util.Arrays;
 import java.util.List;
 
+import jcl.functions.ApplyFunction;
+import jcl.functions.CompileFileFunction;
+import jcl.functions.CompileFilePathnameFunction;
 import jcl.functions.CompileFunction;
 import jcl.functions.EqFunction;
 import jcl.functions.EqlFunction;
 import jcl.functions.EqualFunction;
 import jcl.functions.EqualpFunction;
 import jcl.functions.EvalFunction;
+import jcl.functions.FuncallFunction;
+import jcl.functions.LoadFunction;
 import jcl.functions.MacroExpand1Function;
 import jcl.functions.MacroExpandFunction;
 import jcl.functions.PredicateFunctions;
@@ -41,10 +46,12 @@ import jcl.functions.system.FreeMemory;
 import jcl.functions.system.GC;
 import jcl.functions.system.Help;
 import jcl.functions.system.MaxMemory;
-import jcl.functions.system.QuitFunction;
+import jcl.system.function.QuitFunction;
 import jcl.functions.system.TotalMemory;
 import jcl.lang.FunctionStruct;
+import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.ReaderVariables;
+import jcl.printer.functions.PrintObjectFunction;
 import jcl.util.CodePointConstants;
 import org.springframework.context.ApplicationContext;
 
@@ -62,21 +69,26 @@ class BootstrapFunctions {
 		bootstrapReaderFunctions();
 		bootstrapSymbolFunctions();
 		bootstrapExtensionFunctions(context);
+		bootstrapPrinterFunctions();
 	}
 
 	private static void bootstrapSystemFunctions() throws Exception {
+		final FuncallFunction funcallFunction = new FuncallFunction();
+
+		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);
+
 		final List<FunctionStruct> functions = Arrays.asList(
-//				new ApplyFunction(),
-//				new CompileFileFunction(),
-//				new CompileFilePathnameFunction(),
+				new ApplyFunction(),
+				new CompileFileFunction(),
+				new CompileFilePathnameFunction(),
 				new CompileFunction(),
 				new EqFunction(),
 				new EqlFunction(),
 				new EqualFunction(),
 				new EqualpFunction(),
 				new EvalFunction(),
-//				new FuncallFunction(),
-//				new LoadFunction(),
+				funcallFunction,
+				new LoadFunction(),
 				new MacroExpand1Function(),
 				new MacroExpandFunction(),
 				new ValuesFunction()
@@ -225,6 +237,16 @@ class BootstrapFunctions {
 				new MaxMemory(),
 				new QuitFunction(context),
 				new TotalMemory()
+		);
+
+		for (final FunctionStruct function : functions) {
+			function.afterPropertiesSet();
+		}
+	}
+
+	private static void bootstrapPrinterFunctions() throws Exception {
+		final List<FunctionStruct> functions = Arrays.asList(
+				new PrintObjectFunction()
 		);
 
 		for (final FunctionStruct function : functions) {

@@ -6,24 +6,16 @@ package jcl.functions;
 
 import java.util.List;
 
-import jcl.lang.FunctionStruct;
+import jcl.compiler.function.InternalApply;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.SymbolStruct;
-import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 
 	private static final String FUNCTION_NAME = "FUNCALL";
 	private static final String FN_ARGUMENT = "FN";
-
-	@Autowired
-	private ApplyFunction applyFunction;
 
 	public FuncallFunction() {
 		super("Applies function to args.",
@@ -37,28 +29,8 @@ public final class FuncallFunction extends CommonLispBuiltInFunctionStructBase {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct functionDesignator = arguments.getRequiredArgument(FN_ARGUMENT);
-
-		FunctionStruct functionStruct = null;
-		if (functionDesignator instanceof SymbolStruct) {
-			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
-		} else if (functionDesignator instanceof FunctionStruct) {
-			functionStruct = (FunctionStruct) functionDesignator;
-		}
-
 		final List<LispStruct> functionArguments = arguments.getRestArgument();
 		final ListStruct argumentList = ListStruct.toLispList(functionArguments);
-
-		if (functionStruct == null) {
-			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + argumentList);
-		}
-
-		final LispStruct[] argumentsArrays = new LispStruct[2];
-		argumentsArrays[0] = functionDesignator;
-		argumentsArrays[1] = argumentList;
-
-		final Parameters parameters = applyFunction.getParameters();
-		final Arguments applyArguments = parameters.build(argumentsArrays);
-
-		return applyFunction.apply(applyArguments);
+		return InternalApply.funcall(functionDesignator, argumentList);
 	}
 }

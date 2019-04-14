@@ -1,16 +1,8 @@
 package jcl.functions;
 
-import jcl.compiler.function.CompileForm;
-import jcl.compiler.function.CompileResult;
-import jcl.lang.BooleanStruct;
-import jcl.lang.FunctionStruct;
+import jcl.compiler.function.InternalCompile;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.SymbolStruct;
-import jcl.lang.ValuesStruct;
-import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
@@ -38,62 +30,6 @@ public final class CompileFunction extends CommonLispBuiltInFunctionStructBase {
 			uncompiledDefinition = arguments.getOptionalArgument(DEFINITION_ARGUMENT);
 		}
 
-		return compile(name, uncompiledDefinition);
-	}
-
-	private LispStruct compile(final LispStruct name, final LispStruct uncompiledDefinition) {
-
-		if (uncompiledDefinition != null) {
-			CompileResult compiledDefinition = null;
-
-			final FunctionStruct function;
-			if (uncompiledDefinition instanceof FunctionStruct) {
-				function = (FunctionStruct) uncompiledDefinition;
-			} else {
-				compiledDefinition = CompileForm.compile(uncompiledDefinition);
-				final FunctionStruct compiledDefinitionFunction = compiledDefinition.getFunction();
-				final LispStruct compiledDefinitionResult = compiledDefinitionFunction.apply();
-
-				if (!(compiledDefinitionResult instanceof FunctionStruct)) {
-					throw new ProgramErrorException("Error compiling anonymous function : " + uncompiledDefinition + " is not a valid lambda expression.");
-				}
-				function = (FunctionStruct) compiledDefinitionResult;
-			}
-
-			if (name instanceof SymbolStruct) {
-				final SymbolStruct nameSymbol = (SymbolStruct) name;
-				nameSymbol.setFunction(function);
-			} else if (!NILStruct.INSTANCE.eq(name)) {
-				throw new ErrorException("The value " + name + " is not an acceptable function name.");
-			}
-
-			if (compiledDefinition == null) {
-				return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
-			} else {
-				return ValuesStruct.valueOf(
-						function,
-						BooleanStruct.toLispBoolean(compiledDefinition.isCompiledWithWarnings()),
-						BooleanStruct.toLispBoolean(compiledDefinition.isFailedToCompile())
-				);
-			}
-		}
-
-		if (!(name instanceof SymbolStruct)) {
-			throw new ErrorException("The value " + name + " is not an acceptable function name.");
-		}
-		final SymbolStruct nameSymbol = (SymbolStruct) name;
-
-		final MacroFunctionExpanderInter macroFunction = nameSymbol.getMacroFunctionExpander();
-		if (macroFunction != null) {
-			return ValuesStruct.valueOf(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
-		}
-
-		final boolean hasFunction = nameSymbol.hasFunction();
-		if (hasFunction) {
-			final FunctionStruct function = nameSymbol.getFunction();
-			return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
-		}
-
-		throw new ErrorException("No definition found for " + nameSymbol);
+		return InternalCompile.compile(name, uncompiledDefinition);
 	}
 }

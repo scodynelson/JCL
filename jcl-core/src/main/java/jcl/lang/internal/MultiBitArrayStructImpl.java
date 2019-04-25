@@ -12,24 +12,22 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.type.ArrayType;
-import jcl.type.BitType;
-import jcl.type.SimpleArrayType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link MultiBitArrayStructImpl} is the object representation of a Lisp 'bit-array' type.
  */
 public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements BitArrayStruct {
 
-	public MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	public MultiBitArrayStructImpl(final List<Integer> dimensions,
 	                               final List<LispStruct> contents, final boolean isAdjustable) {
-		super(arrayType, dimensions, BitType.INSTANCE, contents, isAdjustable);
+		super(dimensions, CommonLispSymbols.BIT, contents, isAdjustable);
 	}
 
-	public MultiBitArrayStructImpl(final ArrayType arrayType, final List<Integer> dimensions,
+	public MultiBitArrayStructImpl(final List<Integer> dimensions,
 	                               final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                               final boolean isAdjustable) {
-		super(arrayType, dimensions, BitType.INSTANCE, displacedTo, displacedIndexOffset, isAdjustable);
+		super(dimensions, CommonLispSymbols.BIT, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement,
@@ -44,8 +42,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                               .limit(totalSize)
 		                                               .collect(Collectors.toList());
 
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new MultiBitArrayStructImpl(arrayType, dimensionInts, initialContents, isAdjustable);
+		return new MultiBitArrayStructImpl(dimensionInts, initialContents, isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents,
@@ -55,8 +52,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new MultiBitArrayStructImpl(arrayType, dimensionInts, validContents, isAdjustable);
+		return new MultiBitArrayStructImpl(dimensionInts, validContents, isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final BitArrayStruct displacedTo,
@@ -67,9 +63,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 
 		// TODO: Total size of A be no smaller than the sum of the total size of B plus the offset 'n' supplied by the offset
 
-		return new MultiBitArrayStructImpl(ArrayType.INSTANCE, dimensionInts, displacedTo,
-		                                   displacedIndexOffset.toJavaInt(),
-		                                   isAdjustable);
+		return new MultiBitArrayStructImpl(dimensionInts, displacedTo, displacedIndexOffset.toJavaInt(), isAdjustable);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final IntegerStruct initialElement) {
@@ -83,7 +77,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                               .limit(totalSize)
 		                                               .collect(Collectors.toList());
 
-		return new MultiBitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, initialContents, false);
+		return new MultiBitArrayStructImpl(dimensionInts, initialContents, false);
 	}
 
 	public static BitArrayStruct valueOf(final List<IntegerStruct> dimensions, final SequenceStruct initialContents) {
@@ -92,7 +86,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 		                                              .collect(Collectors.toList());
 		final List<LispStruct> validContents = getValidContents(dimensionInts, initialContents);
 
-		return new MultiBitArrayStructImpl(SimpleArrayType.INSTANCE, dimensionInts, validContents, false);
+		return new MultiBitArrayStructImpl(dimensionInts, validContents, false);
 	}
 
 	/**
@@ -121,7 +115,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 				                      .collect(Collectors.toList());
 			} else {
 				throw new SimpleErrorException(
-						initialContents + " doesn't match array dimensions of #<" + BitType.INSTANCE + ' ' + dimension + ">.");
+						initialContents + " doesn't match array dimensions of #<" + CommonLispSymbols.BIT + ' ' + dimension + ">.");
 			}
 		}
 
@@ -134,7 +128,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 			for (final LispStruct contentToCheck : initialContents) {
 				if (!(contentToCheck instanceof SequenceStruct)) {
 					throw new SimpleErrorException(
-							initialContents + " doesn't match array dimensions of #<" + BitType.INSTANCE + ' ' + dimension + ">.");
+							initialContents + " doesn't match array dimensions of #<" + CommonLispSymbols.BIT + ' ' + dimension + ">.");
 				}
 
 				final SequenceStruct subContents = (SequenceStruct) contentToCheck;
@@ -143,7 +137,7 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 			}
 		} else {
 			throw new SimpleErrorException(
-					initialContents + " doesn't match array dimensions of #<" + BitType.INSTANCE + ' ' + dimension + ">.");
+					initialContents + " doesn't match array dimensions of #<" + CommonLispSymbols.BIT + ' ' + dimension + ">.");
 		}
 
 		return validContents;
@@ -152,10 +146,9 @@ public class MultiBitArrayStructImpl extends MultiArrayStructImpl implements Bit
 	@Override
 	public BitArrayStruct copyBitArray() {
 		if (displacedTo == null) {
-			return new MultiBitArrayStructImpl(getArrayType(isAdjustable), dimensions, contents, isAdjustable);
+			return new MultiBitArrayStructImpl(dimensions, contents, isAdjustable);
 		} else {
-			return new MultiBitArrayStructImpl(getArrayType(isAdjustable), dimensions, displacedTo,
-			                                   displacedIndexOffset, isAdjustable);
+			return new MultiBitArrayStructImpl(dimensions, displacedTo, displacedIndexOffset, isAdjustable);
 		}
 	}
 }

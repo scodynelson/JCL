@@ -29,7 +29,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -141,7 +141,7 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(Predicate.isEqual(functionName));
 
-		final Binding binding = new Binding(functionName, TType.INSTANCE);
+		final Binding binding = new Binding(functionName, CommonLispSymbols.T);
 		if (isSpecial) {
 			macroletEnvironment.addDynamicBinding(binding);
 		} else {

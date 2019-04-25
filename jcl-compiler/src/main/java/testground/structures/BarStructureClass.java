@@ -4,28 +4,28 @@
 
 package testground.structures;
 
-import java.util.List;
-
-import jcl.lang.LispStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.LispType;
 
 @SuppressWarnings("all")
 public class BarStructureClass extends FooStructureClass {
 
-	public static final BarStructureClass INSTANCE
-			= new BarStructureClass(SymbolStruct.toLispSymbol("MAKE-BAR"), null, null, null);
+	public static final BarStructureClass INSTANCE;
 
-	protected BarStructureClass(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(BarStructureType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
+	static {
+		final PackageStruct namePackage = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct nameSymbol = namePackage.findSymbol("BAR").getSymbol();
+
+		final PackageStruct constructorPackage = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct constructorSymbol = constructorPackage.findSymbol("MAKE-BAR").getSymbol();
+
+		INSTANCE = new BarStructureClass(nameSymbol, constructorSymbol, null);
+		nameSymbol.setStructureClass(INSTANCE);
 	}
 
-	protected BarStructureClass(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
-		SymbolStruct.toLispSymbol("BAR").setStructureClass(INSTANCE);
+	protected BarStructureClass(final SymbolStruct name, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol) {
+		super(name, defaultConstructorSymbol, printerSymbol);
 	}
 
 	@Override

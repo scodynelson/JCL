@@ -13,19 +13,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.KeywordStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.PackageErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.type.PackageType;
 
 /**
  * The {@link PackageStructImpl} is the object representation of a Lisp 'package' type.
  */
-public class PackageStructImpl extends BuiltInClassStruct implements PackageStruct {
+public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStruct.toLispKeyword("INTERNAL");
 	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStruct.toLispKeyword("EXTERNAL");
@@ -117,7 +121,6 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 	 * 		the packages this package will use/inherit from
 	 */
 	public PackageStructImpl(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
-		super(PackageType.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
 
@@ -504,6 +507,27 @@ public class PackageStructImpl extends BuiltInClassStruct implements PackageStru
 		}
 
 		return foundSymbol;
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.PACKAGE;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.PACKAGE;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.PACKAGE) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.PACKAGE) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	@Override

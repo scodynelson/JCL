@@ -9,7 +9,7 @@ import java.util.List;
 
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class RequiredParameter extends Parameter {
 
@@ -27,7 +27,7 @@ public class RequiredParameter extends Parameter {
 
 	public RequiredParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                         final boolean isSpecial) {
-		super(var, destructuringForm, TType.INSTANCE, null, isSpecial);
+		super(var, destructuringForm, CommonLispSymbols.T, null, isSpecial);
 	}
 
 	public static Builder builder(final PackageStruct aPackage, final String symbolName) {

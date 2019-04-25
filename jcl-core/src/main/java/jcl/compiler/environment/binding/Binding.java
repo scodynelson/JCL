@@ -4,21 +4,21 @@
 
 package jcl.compiler.environment.binding;
 
+import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.LispType;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class Binding {
 
 	private final SymbolStruct var;
 
-	private final LispType type;
+	private final LispStruct type;
 
 	public Binding(final SymbolStruct var) {
-		this(var, TType.INSTANCE);
+		this(var, CommonLispSymbols.T);
 	}
 
-	public Binding(final SymbolStruct var, final LispType type) {
+	public Binding(final SymbolStruct var, final LispStruct type) {
 		this.var = var;
 		this.type = type;
 	}
@@ -27,7 +27,7 @@ public class Binding {
 		return var;
 	}
 
-	public LispType getType() {
+	public LispStruct getType() {
 		return type;
 	}
 

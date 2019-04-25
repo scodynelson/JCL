@@ -18,10 +18,9 @@ import java.util.List;
 import jcl.lang.JavaStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.CharacterType;
-import jcl.type.StreamType;
 
 /**
  * The {@link JavaStreamStructImpl} is the object representation of a character reading and writing system level Lisp
@@ -67,7 +66,7 @@ public final class JavaStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 * 		the {@link OutputStream} to create a CharacterStreamStruct from
 	 */
 	public JavaStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
+		super(interactive, CommonLispSymbols.CHARACTER);
 
 		final Charset defaultCharset = Charset.defaultCharset();
 		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);

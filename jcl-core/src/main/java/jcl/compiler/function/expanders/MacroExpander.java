@@ -11,6 +11,9 @@ import jcl.lang.function.expander.MacroExpanderInter;
 
 public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStructImpl implements MacroExpanderInter {
 
+	protected MacroExpander() {
+	}
+
 	protected MacroExpander(final String documentation) {
 		super(documentation);
 	}

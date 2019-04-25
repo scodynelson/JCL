@@ -13,16 +13,20 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.internal.BignumStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.ExternalFormat;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.FileStreamType;
-import jcl.type.LispType;
-import jcl.type.SignedByteType;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -60,7 +64,7 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 * 		the {@link Path} to create a FileStreamStruct from
 	 */
 	public FileStreamStructImpl(final boolean interactive, final Path path) {
-		super(FileStreamType.INSTANCE, interactive, getElementType2(path));
+		super(interactive, getElementType2(path));
 
 		this.path = path;
 		try {
@@ -78,11 +82,11 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType2(final Path path) {
+	private static LispStruct getElementType2(final Path path) {
 		try (FileChannel fileChannel = FileChannel.open(path, StandardOpenOption.READ)) {
 			final long bufferSize = fileChannel.size();
 			final BigInteger bits = BigInteger.valueOf(bufferSize);
-			return SignedByteType.Factory.getInstance(bits);
+			return ListStruct.toLispList(CommonLispSymbols.SIGNED_BYTE, new BignumStructImpl(bits));
 		} catch (final IOException ioe) {
 			throw new ErrorException("Failed to open provided file.", ioe);
 		}
@@ -348,5 +352,26 @@ public final class FileStreamStructImpl extends AbstractNativeStreamStructImpl i
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not retrieve file position.", ioe, this);
 		}
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.FILE_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.FILE_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.FILE_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.FILE_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

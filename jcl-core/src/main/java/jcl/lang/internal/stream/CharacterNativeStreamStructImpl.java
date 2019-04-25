@@ -18,10 +18,9 @@ import java.util.List;
 import jcl.lang.CharacterNativeStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.CharacterType;
-import jcl.type.StreamType;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
@@ -73,7 +72,7 @@ public final class CharacterNativeStreamStructImpl extends AbstractNativeStreamS
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterNativeStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
+		super(interactive, CommonLispSymbols.CHARACTER);
 
 		final Charset defaultCharset = Charset.defaultCharset();
 		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);

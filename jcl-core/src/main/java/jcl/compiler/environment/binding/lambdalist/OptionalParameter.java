@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class OptionalParameter extends Parameter {
 
@@ -33,7 +33,7 @@ public class OptionalParameter extends Parameter {
 
 	public OptionalParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                         final LispStruct initForm, final boolean isSpecial, final SuppliedPParameter suppliedPBinding) {
-		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
+		super(var, destructuringForm, CommonLispSymbols.T, initForm, isSpecial);
 		this.suppliedPBinding = suppliedPBinding;
 	}
 

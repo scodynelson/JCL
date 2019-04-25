@@ -3,14 +3,12 @@ package jcl.lang;
 import java.util.Arrays;
 import java.util.List;
 
-import jcl.type.LispType;
-
 public class AdjustArrayContext {
 
 	public static class Builder {
 
 		private final IntegerStruct[] dimensions;
-		private LispType elementType;
+		private LispStruct elementType;
 		private LispStruct initialElement;
 		private SequenceStruct initialContents;
 		private boolean adjustable;
@@ -22,7 +20,7 @@ public class AdjustArrayContext {
 			this.dimensions = dimensions;
 		}
 
-		public Builder elementType(final LispType elementType) {
+		public Builder elementType(final LispStruct elementType) {
 			this.elementType = elementType;
 			return this;
 		}
@@ -70,7 +68,7 @@ public class AdjustArrayContext {
 	}
 
 	private final List<IntegerStruct> dimensions;
-	private final LispType elementType;
+	private final LispStruct elementType;
 	private final LispStruct initialElement;
 	private final SequenceStruct initialContents;
 	private final boolean adjustable;
@@ -79,7 +77,7 @@ public class AdjustArrayContext {
 	private final IntegerStruct displacedIndexOffset;
 
 	private AdjustArrayContext(final List<IntegerStruct> dimensions,
-	                           final LispType elementType,
+	                           final LispStruct elementType,
 	                           final LispStruct initialElement,
 	                           final SequenceStruct initialContents,
 	                           final boolean adjustable,
@@ -100,7 +98,7 @@ public class AdjustArrayContext {
 		return dimensions;
 	}
 
-	public LispType getElementType() {
+	public LispStruct getElementType() {
 		return elementType;
 	}
 

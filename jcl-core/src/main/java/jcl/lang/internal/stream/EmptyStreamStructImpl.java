@@ -7,10 +7,9 @@ package jcl.lang.internal.stream;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.CharacterType;
-import jcl.type.StreamType;
 
 /**
  * The {@link EmptyStreamStructImpl} is the object representation of an empty reading and writing system level Lisp stream.
@@ -26,7 +25,7 @@ public final class EmptyStreamStructImpl extends AbstractNativeStreamStructImpl 
 	 * Private constructor.
 	 */
 	private EmptyStreamStructImpl() {
-		super(StreamType.INSTANCE, false, CharacterType.INSTANCE);
+		super(false, CommonLispSymbols.CHARACTER);
 	}
 
 	@Override

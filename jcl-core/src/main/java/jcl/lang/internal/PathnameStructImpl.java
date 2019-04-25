@@ -21,9 +21,12 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.pathname.PathnameComponentType;
@@ -38,6 +41,7 @@ import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +52,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link PathnameStructImpl} is the object representation of a Lisp 'pathname' type.
  */
-public class PathnameStructImpl extends BuiltInClassStruct implements PathnameStruct {
+public class PathnameStructImpl extends LispStructImpl implements PathnameStruct {
 
 	private static final String CURRENT_DIR_STRING = ".";
 
@@ -180,7 +184,7 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
 	public PathnameStructImpl(final URI uri) {
-		this(jcl.type.PathnameType.INSTANCE, getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
+		this(getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
 	}
 
 	/**
@@ -201,14 +205,12 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 */
 	public PathnameStructImpl(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                           final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		this(jcl.type.PathnameType.INSTANCE, host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
+		this(host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
 	}
 
 	/**
 	 * Protected constructor.
 	 *
-	 * @param pathnameType
-	 * 		the pathname structure type
 	 * @param host
 	 * 		the pathname host
 	 * @param device
@@ -224,11 +226,9 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 	 * @param uri
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
-	public PathnameStructImpl(final jcl.type.PathnameType pathnameType,
-	                             final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	public PathnameStructImpl(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                             final PathnameName name, final PathnameType type, final PathnameVersion version,
 	                             final URI uri) {
-		super(pathnameType, null, null);
 		this.host = host;
 		this.device = device;
 		this.directory = directory;
@@ -992,6 +992,27 @@ public class PathnameStructImpl extends BuiltInClassStruct implements PathnameSt
 		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME,
 		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.PATHNAME;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.PATHNAME;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.PATHNAME) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.PATHNAME) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	/*

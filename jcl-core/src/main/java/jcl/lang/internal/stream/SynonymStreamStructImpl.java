@@ -4,18 +4,21 @@
 
 package jcl.lang.internal.stream;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.internal.VariableStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.LispType;
-import jcl.type.SynonymStreamType;
 
 /**
  * The {@link SynonymStreamStructImpl} is the object representation of a Lisp 'synonym-stream' type.
@@ -56,7 +59,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
 	public SynonymStreamStructImpl(final boolean interactive, final SymbolStruct symbol) {
-		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
+		super(interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
 
@@ -68,7 +71,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final SymbolStruct symbol) {
+	private static LispStruct getElementType(final SymbolStruct symbol) {
 		if (symbol == null) {
 			throw new ErrorException("Provided Symbol must not be null.");
 		}
@@ -224,9 +227,30 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	}
 
 	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.SYNONYM_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.SYNONYM_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.SYNONYM_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SYNONYM_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
+
+	@Override
 	public String toString() {
-		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+		final String type = typeOf().toString();
 		final String printedSymbol = symbol.toString();
-		return "#<" + typeClassName + " to " + printedSymbol + '>';
+		return "#<" + type + " to " + printedSymbol + '>';
 	}
 }

@@ -8,21 +8,20 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
-import jcl.type.typespecifier.TypeSpecifier;
 
 public class TheStruct extends CompilerSpecialOperatorStruct {
 
-	private final TypeSpecifier valueType;
+	private final LispStruct valueType;
 
 	private final LispStruct form;
 
-	public TheStruct(final TypeSpecifier valueType, final LispStruct form) {
+	public TheStruct(final LispStruct valueType, final LispStruct form) {
 		super("the");
 		this.valueType = valueType;
 		this.form = form;
 	}
 
-	public TypeSpecifier getValueType() {
+	public LispStruct getValueType() {
 		return valueType;
 	}
 

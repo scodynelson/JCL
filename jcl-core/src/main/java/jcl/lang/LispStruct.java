@@ -6,22 +6,14 @@ package jcl.lang;
 
 import jcl.compiler.GenerationUnsupportedException;
 import jcl.compiler.icg.GeneratorState;
-import jcl.type.LispType;
-import jcl.type.TType;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link LispStruct} is the representation for all Lisp types.
  */
 public interface LispStruct {
-
-	/**
-	 * This method returns the type of the struct.
-	 *
-	 * @return the type of the struct
-	 */
-	default LispType getType() {
-		return TType.INSTANCE;
-	}
 
 	default boolean eq(final LispStruct object) {
 		return this == object;
@@ -41,5 +33,26 @@ public interface LispStruct {
 
 	default void generate(final GeneratorState generatorState) {
 		throw new GenerationUnsupportedException();
+	}
+
+	default LispStruct typeOf() {
+		return CommonLispSymbols.T;
+	}
+
+	default ClassStruct classOf() {
+		return BuiltInClassStruct.CLASS_T;
+	}
+
+	default BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.T) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.CLASS_T) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.ATOM) {
+			return TStruct.INSTANCE;
+		}
+		return NILStruct.INSTANCE;
 	}
 }

@@ -10,10 +10,7 @@ import java.util.stream.Stream;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.BitVectorStructImpl;
-import jcl.type.BitType;
-import jcl.type.BitVectorType;
-import jcl.type.LispType;
-import jcl.type.SimpleBitVectorType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
@@ -84,50 +81,34 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
 		                                                  .limit(size)
 		                                                  .collect(Collectors.toList());
-		final BitVectorType bitVectorType = getBitVectorType(isAdjustable, fillPointer);
-		return new BitVectorStructImpl(bitVectorType, size, initialContents, isAdjustable, fillPointer);
+		return new BitVectorStructImpl(size, initialContents, isAdjustable, fillPointer);
 	}
 
 	static BitVectorStruct toLispBitVector(final Integer size, final List<IntegerStruct> initialContents,
 	                                       final boolean isAdjustable, final Integer fillPointer) {
-		final BitVectorType bitVectorType = getBitVectorType(isAdjustable, fillPointer);
-		return new BitVectorStructImpl(bitVectorType, size, initialContents, isAdjustable, fillPointer);
+		return new BitVectorStructImpl(size, initialContents, isAdjustable, fillPointer);
 	}
 
 	static BitVectorStruct toLispBitVector(final Integer size, final IntegerStruct initialElement) {
 		final List<IntegerStruct> initialContents = Stream.generate(() -> initialElement)
 		                                                  .limit(size)
 		                                                  .collect(Collectors.toList());
-		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, size, initialContents, false, null);
+		return new BitVectorStructImpl(size, initialContents, false, null);
 	}
 
 	static BitVectorStruct toLispBitVector(final Integer size, final List<IntegerStruct> initialContents) {
-		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, size, initialContents, false, null);
+		return new BitVectorStructImpl(size, initialContents, false, null);
 	}
 
 	static BitVectorStruct toLispBitVector(final String bitString) {
-		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, bitString.length(), getBitList(bitString), false, null);
+		return new BitVectorStructImpl(bitString.length(), getBitList(bitString), false, null);
 	}
 
 	static BitVectorStruct toLispBitVector(final List<IntegerStruct> contents) {
-		return new BitVectorStructImpl(SimpleBitVectorType.INSTANCE, contents.size(), contents, false, null);
+		return new BitVectorStructImpl(contents.size(), contents, false, null);
 	}
 
 	Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
-
-	/**
-	 * Gets the bit-vector type from the provided isAdjustable and fillPointer values.
-	 *
-	 * @param isAdjustable
-	 * 		whether or not the bit-vector is adjustable
-	 * @param fillPointer
-	 * 		the bit-vector fillPointer
-	 *
-	 * @return the matching bit-vector type for the provided isAdjustable and fillPointer values
-	 */
-	static BitVectorType getBitVectorType(final boolean isAdjustable, final Integer fillPointer) {
-		return (isAdjustable || (fillPointer != null)) ? BitVectorType.INSTANCE : SimpleBitVectorType.INSTANCE;
-	}
 
 	/**
 	 * Gets a list of {@link IntegerStruct}s from the provided {@link String} value.
@@ -140,7 +121,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!bitString.isEmpty() && !BIT_PATTERN.matcher(bitString).matches()) {
 			throw new TypeErrorException(
-					"Input contains characters not of type " + BitType.INSTANCE + ": " + bitString + '.');
+					"Input contains characters not of type " + CommonLispSymbols.BIT + ": " + bitString + '.');
 		}
 
 		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());
@@ -154,18 +135,18 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		return bitList;
 	}
 
-	final class Builder extends ArrayStruct.AbstractBuilder<BitVectorStruct, BitType, IntegerStruct> {
+	final class Builder extends ArrayStruct.AbstractBuilder<BitVectorStruct, LispStruct, IntegerStruct> {
 
 		private final IntegerStruct size;
 		private IntegerStruct fillPointer;
 
 		private Builder(final IntegerStruct size) {
-			super(BitType.INSTANCE, IntegerStruct.ZERO);
+			super(CommonLispSymbols.BIT, IntegerStruct.ZERO);
 			this.size = size;
 		}
 
 		@Override
-		public BitVectorStruct.Builder elementType(final BitType elementType) {
+		public BitVectorStruct.Builder elementType(final LispStruct elementType) {
 			this.elementType = elementType;
 			return this;
 		}
@@ -209,13 +190,12 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		@Override
 		public BitVectorStruct build() {
 			final int sizeInt = size.toJavaInt();
-			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+			final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable;
 			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {
-				final LispType displacedToType = displacedTo.getType();
-				if (!upgradedET.typeEquals(displacedToType)) {
+				if (!displacedTo.typep(upgradedET).toJavaPBoolean()) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -237,14 +217,9 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 				return null;
 			}
 
-			final BitVectorType vectorType = (adjustableBoolean || (fillPointerInt != null))
-			                                 ? BitVectorType.INSTANCE
-			                                 : SimpleBitVectorType.INSTANCE;
-
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
-					final LispType initialElementType = element.getType();
-					if (!upgradedET.typeEquals(initialElementType)) {
+					if (!element.typep(upgradedET).toJavaPBoolean()) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -254,14 +229,12 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 						= ArrayStruct.getValidContents(Collections.singletonList(sizeInt),
 						                               upgradedET,
 						                               initialContents);
-				return new BitVectorStructImpl(vectorType,
-				                               sizeInt,
+				return new BitVectorStructImpl(sizeInt,
 				                               validContents,
 				                               adjustableBoolean,
 				                               fillPointerInt);
 			} else {
-				final LispType initialElementType = initialElement.getType();
-				if (!upgradedET.typeEquals(initialElementType)) {
+				if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -269,8 +242,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 				final List<IntegerStruct> contents = Stream.generate(() -> initialElement)
 				                                           .limit(sizeInt)
 				                                           .collect(Collectors.toList());
-				return new BitVectorStructImpl(vectorType,
-				                               sizeInt,
+				return new BitVectorStructImpl(sizeInt,
 				                               contents,
 				                               adjustableBoolean,
 				                               fillPointerInt);

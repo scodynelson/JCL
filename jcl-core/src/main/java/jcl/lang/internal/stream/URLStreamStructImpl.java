@@ -14,10 +14,9 @@ import jcl.lang.LispStruct;
 import jcl.lang.URLStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.CharacterType;
-import jcl.type.FileStreamType;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -61,7 +60,7 @@ public final class URLStreamStructImpl extends AbstractNativeStreamStructImpl im
 	 */
 	public URLStreamStructImpl(final boolean interactive, final URL url) {
 		// TODO: Character Type Stream???
-		super(FileStreamType.INSTANCE, interactive, CharacterType.INSTANCE);
+		super(interactive, CommonLispSymbols.CHARACTER);
 
 		this.url = url;
 		try {

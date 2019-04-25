@@ -12,14 +12,17 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RatioStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.number.QuotientRemainder;
-import jcl.type.RatioType;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;
@@ -35,8 +38,8 @@ import org.objectweb.asm.Type;
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
  */
-@EqualsAndHashCode(callSuper = false)
-public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
+@EqualsAndHashCode
+public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 
 	/**
 	 * The numerator of the ratio.
@@ -62,7 +65,6 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 	 * 		the {@link IntegerStruct} value of the denominator of the resulting RationalStruct
 	 */
 	public RatioStructImpl(final IntegerStruct numerator, final IntegerStruct denominator) {
-		super(RatioType.INSTANCE, null, null);
 		this.numerator = numerator;
 		this.denominator = denominator;
 		value = new BigFraction(numerator.toJavaBigInteger(), denominator.toJavaBigInteger());
@@ -75,7 +77,6 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 	 * 		the {@link BigFraction} value representing data for the resulting RationalStruct
 	 */
 	public RatioStructImpl(final BigFraction value) {
-		super(RatioType.INSTANCE, null, null);
 		numerator = IntegerStruct.toLispInteger(value.getNumerator());
 		denominator = IntegerStruct.toLispInteger(value.getDenominator());
 		this.value = value;
@@ -771,6 +772,36 @@ public class RatioStructImpl extends BuiltInClassStruct implements RatioStruct {
 		                   RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
 		                   RATIONAL_TO_LISP_RATIONAL_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.RATIO;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.RATIO;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.RATIO) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.RATIONAL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.REAL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.NUMBER) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.RATIO) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	/*

@@ -6,7 +6,6 @@ package jcl.lang;
 
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.type.LispType;
 
 /**
  * The {@link StreamStruct} is the representation for all Lisp 'stream' types.
@@ -34,7 +33,7 @@ public interface StreamStruct extends LispStruct {
 	 *
 	 * @return the element type of the stream
 	 */
-	LispType getElementType();
+	LispStruct getElementType();
 
 	default LispStruct streamElementType() {
 		return getElementType();

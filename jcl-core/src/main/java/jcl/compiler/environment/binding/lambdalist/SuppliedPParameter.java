@@ -6,7 +6,7 @@ package jcl.compiler.environment.binding.lambdalist;
 
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class SuppliedPParameter extends Parameter {
 
@@ -15,7 +15,7 @@ public class SuppliedPParameter extends Parameter {
 	}
 
 	public SuppliedPParameter(final SymbolStruct var, final boolean isSpecial) {
-		super(var, null, TType.INSTANCE, null, isSpecial);
+		super(var, null, CommonLispSymbols.T, null, isSpecial);
 	}
 
 	public static Builder builder(final PackageStruct aPackage, final String symbolName) {

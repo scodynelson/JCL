@@ -13,8 +13,6 @@ import jcl.lang.StringStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.PrinterVariables;
-import jcl.type.ArrayType;
-import jcl.type.LispType;
 
 /**
  * The implementation of a zero-ranked {@link ArrayStruct}.
@@ -29,8 +27,6 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	/**
 	 * Constructor for building the zero-ranked array structure.
 	 *
-	 * @param arrayType
-	 * 		the {@link LispStruct} type of the array
 	 * @param elementType
 	 * 		the upgraded-array-element-type type of the content value
 	 * @param content
@@ -38,17 +34,14 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @param isAdjustable
 	 * 		whether or not the structure is mutable
 	 */
-	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final LispStruct content,
-	                          final boolean isAdjustable) {
-		super(arrayType, elementType, isAdjustable);
+	public NILArrayStructImpl(final LispStruct elementType, final LispStruct content, final boolean isAdjustable) {
+		super(elementType, isAdjustable);
 		this.content = content;
 	}
 
 	/**
 	 * Constructor for building the zero-ranked array structure.
 	 *
-	 * @param arrayType
-	 * 		the {@link LispStruct} type of the array
 	 * @param elementType
 	 * 		the upgraded-array-element-type type of the content value
 	 * @param displacedTo
@@ -58,9 +51,9 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 * @param isAdjustable
 	 * 		whether or not the structure is mutable
 	 */
-	public NILArrayStructImpl(final ArrayType arrayType, final LispType elementType, final ArrayStruct displacedTo,
+	public NILArrayStructImpl(final LispStruct elementType, final ArrayStruct displacedTo,
 	                          final Integer displacedIndexOffset, final boolean isAdjustable) {
-		super(arrayType, elementType, displacedTo, displacedIndexOffset, isAdjustable);
+		super(elementType, displacedTo, displacedIndexOffset, isAdjustable);
 	}
 
 	/**
@@ -75,18 +68,16 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static ArrayStruct valueOf(final LispType elementType, final LispStruct initialElement,
+	public static ArrayStruct valueOf(final LispStruct elementType, final LispStruct initialElement,
 	                                  final boolean isAdjustable) {
 
-		final LispType initialElementType = initialElement.getType();
-		if (!elementType.typeEquals(initialElementType)) {
+		if (!initialElement.typep(elementType).toJavaPBoolean()) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + elementType + '.');
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new NILArrayStructImpl(arrayType, upgradedET, initialElement, isAdjustable);
+		return new NILArrayStructImpl(upgradedET, initialElement, isAdjustable);
 	}
 
 	/**
@@ -101,20 +92,18 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static ArrayStruct valueOf(final LispType elementType, final SequenceStruct initialContents,
+	public static ArrayStruct valueOf(final LispStruct elementType, final SequenceStruct initialContents,
 	                                  final boolean isAdjustable) {
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
 		for (final LispStruct initialElement : initialContents) {
-			final LispType initialElementType = initialElement.getType();
-			if (!upgradedET.typeEquals(initialElementType)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
 		}
 
-		final ArrayType arrayType = getArrayType(isAdjustable);
-		return new NILArrayStructImpl(arrayType, upgradedET, initialContents, isAdjustable);
+		return new NILArrayStructImpl(upgradedET, initialContents, isAdjustable);
 	}
 
 	/**
@@ -131,12 +120,11 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static ArrayStruct valueOf(final LispType elementType, final ArrayStruct displacedTo,
+	public static ArrayStruct valueOf(final LispStruct elementType, final ArrayStruct displacedTo,
 	                                  final IntegerStruct displacedIndexOffset, final boolean isAdjustable) {
 
-		final LispType displacedToType = displacedTo.getType();
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-		if (!upgradedET.typeEquals(displacedToType)) {
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		if (!displacedTo.typep(upgradedET).toJavaPBoolean()) {
 			throw new TypeErrorException(
 					"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -147,8 +135,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
 		}
 
-		return new NILArrayStructImpl(ArrayType.INSTANCE,
-		                              upgradedET,
+		return new NILArrayStructImpl(upgradedET,
 		                              displacedTo,
 		                              displacedIndexOffset.toJavaInt(),
 		                              isAdjustable);
@@ -164,7 +151,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static ArrayStruct valueOf(final LispType elementType, final LispStruct initialElement) {
+	public static ArrayStruct valueOf(final LispStruct elementType, final LispStruct initialElement) {
 		return valueOf(elementType, initialElement, false);
 	}
 
@@ -178,12 +165,12 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	 *
 	 * @return a newly created zero-ranked array structure.
 	 */
-	public static ArrayStruct valueOf(final LispType elementType, final SequenceStruct initialContents) {
+	public static ArrayStruct valueOf(final LispStruct elementType, final SequenceStruct initialContents) {
 		return valueOf(elementType, initialContents, false);
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
@@ -193,14 +180,13 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 
-		if (!this.elementType.typeEquals(elementType)) {
+		if (!this.elementType.eq(elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + elementType + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		final LispType initialElementType = initialElement.getType();
-		if (!upgradedET.typeEquals(initialElementType)) {
+		if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -217,7 +203,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
@@ -227,15 +213,14 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 
-		if (!this.elementType.typeEquals(elementType)) {
+		if (!this.elementType.eq(elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + elementType + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
 		for (final LispStruct initialElement : initialContents) {
-			final LispType initialElementType = initialElement.getType();
-			if (!upgradedET.typeEquals(initialElementType)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -253,7 +238,7 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
 	                               final IntegerStruct displacedIndexOffset) {
 
@@ -264,14 +249,14 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
 		}
 
-		if (!this.elementType.typeEquals(elementType)) {
+		if (!this.elementType.eq(elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + elementType + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		final LispType initialElementType = displacedTo.arrayElementType();
-		if (!upgradedET.typeEquals(initialElementType)) {
+		final LispStruct initialElementType = displacedTo.arrayElementType();
+		if (!upgradedET.eq(initialElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + displacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -436,10 +421,8 @@ public class NILArrayStructImpl extends ArrayStructImpl {
 			stringBuilder.append(content);
 
 		} else {
-			final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
-
 			stringBuilder.append("#<");
-			stringBuilder.append(typeClassName);
+			stringBuilder.append(typeOf());
 			stringBuilder.append(" NIL type ");
 
 			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();

@@ -1,8 +1,8 @@
 package jcl.lang.condition;
 
-import jcl.type.LispType;
+import jcl.lang.LispStruct;
 
-public enum ConditionType implements LispType {
+public enum ConditionType implements LispStruct {
 
 	TYPE_ERROR,
 	SIMPLE_TYPE_ERROR,
@@ -42,9 +42,4 @@ public enum ConditionType implements LispType {
 	PRINT_NOT_READABLE,
 
 	READER_ERROR;
-
-	@Override
-	public boolean typeEquals(final Object obj) {
-		return true;
-	}
 }

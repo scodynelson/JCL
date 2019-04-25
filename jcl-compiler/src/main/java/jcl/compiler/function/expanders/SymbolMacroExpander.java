@@ -10,6 +10,9 @@ import jcl.lang.function.expander.SymbolMacroExpanderInter;
 
 public abstract class SymbolMacroExpander extends MacroExpander<LispStruct, SymbolStruct> implements SymbolMacroExpanderInter {
 
+	protected SymbolMacroExpander() {
+	}
+
 	protected SymbolMacroExpander(final String documentation) {
 		super(documentation);
 	}

@@ -8,19 +8,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.internal.LispStructImpl;
 import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
-import jcl.type.ReadtableType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link ReadtableStructImpl} is the object representation of a Lisp 'readtable' type.
  */
-public final class ReadtableStructImpl extends BuiltInClassStruct implements ReadtableStruct {
+public final class ReadtableStructImpl extends LispStructImpl implements ReadtableStruct {
 
 	/**
 	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link FunctionStruct}s.
@@ -62,7 +67,6 @@ public final class ReadtableStructImpl extends BuiltInClassStruct implements Rea
 	 * 		the readtable case
 	 */
 	public ReadtableStructImpl(final ReadtableCase readtableCase) {
-		super(ReadtableType.INSTANCE, null, null);
 		this.readtableCase = readtableCase;
 	}
 
@@ -114,5 +118,26 @@ public final class ReadtableStructImpl extends BuiltInClassStruct implements Rea
 	@Override
 	public SyntaxType getSyntaxType(final int codePoint) {
 		return syntaxTable.getSyntaxType(codePoint);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.READTABLE;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.READTABLE;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.READTABLE) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.READTABLE) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

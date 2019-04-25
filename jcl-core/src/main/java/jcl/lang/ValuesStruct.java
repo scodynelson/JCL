@@ -8,8 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import jcl.compiler.icg.GeneratorState;
+import jcl.lang.internal.LispStructImpl;
 
-public class ValuesStruct implements LispStruct {
+public class ValuesStruct extends LispStructImpl {
 
 	private final List<LispStruct> valuesList;
 

@@ -7,14 +7,18 @@ package jcl.lang.internal.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.EchoStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.EndOfFileException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.EchoStreamType;
 
 /**
  * The {@link EchoStreamStructImpl} is the object representation of a Lisp 'echo-stream' type.
@@ -49,7 +53,7 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
 	 */
 	public EchoStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		super(EchoStreamType.INSTANCE, interactive, inputStreamStruct, outputStreamStruct);
+		super(interactive, inputStreamStruct, outputStreamStruct);
 	}
 
 	@Override
@@ -126,10 +130,31 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	}
 
 	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.ECHO_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.ECHO_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.ECHO_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.ECHO_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
+
+	@Override
 	public String toString() {
-		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
+		final String type = typeOf().toString();
 		final String printedInputStream = inputStreamStruct.toString();
 		final String printedOutputStream = outputStreamStruct.toString();
-		return "#<" + typeClassName + " input " + printedInputStream + ", output " + printedOutputStream + '>';
+		return "#<" + type + " input " + printedInputStream + ", output " + printedOutputStream + '>';
 	}
 }

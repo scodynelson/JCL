@@ -22,13 +22,10 @@ import jcl.lang.NumberStruct;
 import jcl.lang.RatioStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.SingleFloatStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.readtable.AttributeType;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
-import jcl.type.DoubleFloatType;
-import jcl.type.FloatType;
-import jcl.type.LongFloatType;
-import jcl.type.ShortFloatType;
-import jcl.type.SingleFloatType;
 import jcl.util.CodePointConstants;
 import jcl.util.NumberUtils;
 import lombok.experimental.UtilityClass;
@@ -279,7 +276,7 @@ final class NumberTokenAccumulatedReaderState {
 		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
 		// TODO: FloatType???
-		final FloatType floatType = getFloatType(exponentTokenCodePoint);
+		final SymbolStruct floatType = getFloatType(exponentTokenCodePoint);
 		// TODO: Float parsing
 		return SingleFloatStruct.toLispFloat(Float.parseFloat(tokenString));
 
@@ -328,19 +325,19 @@ final class NumberTokenAccumulatedReaderState {
 	 *
 	 * @return the proper float type
 	 */
-	private static FloatType getFloatType(final Integer exponentTokenCodePoint) {
-		FloatType floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+	private static SymbolStruct getFloatType(final Integer exponentTokenCodePoint) {
+		SymbolStruct floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
 		if (exponentTokenCodePoint != null) {
 			final int exponentTokenInt = exponentTokenCodePoint;
 			if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_S)) {
-				floatType = ShortFloatType.INSTANCE;
+				floatType = CommonLispSymbols.SHORT_FLOAT;
 			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_F)) {
-				floatType = SingleFloatType.INSTANCE;
+				floatType = CommonLispSymbols.SINGLE_FLOAT;
 			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_D)) {
-				floatType = DoubleFloatType.INSTANCE;
+				floatType = CommonLispSymbols.DOUBLE_FLOAT;
 			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_L)) {
-				floatType = LongFloatType.INSTANCE;
+				floatType = CommonLispSymbols.LONG_FLOAT;
 			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_E)) {
 				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 			}
@@ -452,7 +449,7 @@ final class NumberTokenAccumulatedReaderState {
 
 		// TODO: Not sure this is the best way to handle rational floats for the read algorithm. Might be a better way.
 		// TODO: FloatType???
-		final FloatType floatType = getFloatType(exponentTokenCodePoint);
+		final SymbolStruct floatType = getFloatType(exponentTokenCodePoint);
 		// TODO: Float parsing
 		return SingleFloatStruct.toLispFloat(Float.parseFloat(tokenString));
 

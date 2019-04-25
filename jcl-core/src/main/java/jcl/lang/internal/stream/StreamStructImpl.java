@@ -4,18 +4,19 @@
 
 package jcl.lang.internal.stream;
 
-import java.util.List;
-
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StreamStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.type.LispType;
-import jcl.type.StreamType;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.internal.LispStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link StreamStructImpl} is the object representation of a Lisp 'stream' type.
  */
-public abstract class StreamStructImpl extends BuiltInClassStruct implements StreamStruct {
+public abstract class StreamStructImpl extends LispStructImpl implements StreamStruct {
 
 	/**
 	 * Whether or not the StreamStruct is interactive.
@@ -23,9 +24,9 @@ public abstract class StreamStructImpl extends BuiltInClassStruct implements Str
 	private boolean interactive;
 
 	/**
-	 * The {@link LispType} of the elements in the StreamStruct.
+	 * The {@link LispStruct} of the elements in the StreamStruct.
 	 */
-	private final LispType elementType;
+	private final LispStruct elementType;
 
 	/**
 	 * Whether or not the StreamStruct is closed.
@@ -37,40 +38,12 @@ public abstract class StreamStructImpl extends BuiltInClassStruct implements Str
 	/**
 	 * Protected constructor.
 	 *
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	protected StreamStructImpl(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
-	                           final boolean interactive, final LispType elementType) {
-		super(StreamType.INSTANCE, directSuperClasses, subClasses);
-		this.interactive = interactive;
-		this.elementType = elementType;
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param type
-	 * 		the type of the stream object
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param elementType
-	 * 		the stream elementType
-	 */
-	StreamStructImpl(final StreamType type,
-	                 final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
-	                 final boolean interactive, final LispType elementType) {
-		super(type, directSuperClasses, subClasses);
+	StreamStructImpl(final boolean interactive, final LispStruct elementType) {
 		this.interactive = interactive;
 		this.elementType = elementType;
 	}
@@ -83,7 +56,7 @@ public abstract class StreamStructImpl extends BuiltInClassStruct implements Str
 	}
 
 	@Override
-	public LispType getElementType() {
+	public LispStruct getElementType() {
 		return elementType;
 	}
 
@@ -113,5 +86,26 @@ public abstract class StreamStructImpl extends BuiltInClassStruct implements Str
 	@Override
 	public Long lineNumber() {
 		return lineNumber;
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.STREAM) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.STREAM) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

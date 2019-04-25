@@ -8,10 +8,9 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.internal.VariableStructImpl;
-import jcl.type.FloatType;
-import jcl.type.SingleFloatType;
 
 /**
  * Interface for defining global reader variables for the JCL system.
@@ -26,7 +25,7 @@ public interface ReaderVariables {
 	/**
 	 * Determine the format in which to read float numeric values.
 	 */
-	VariableStructImpl<FloatType> READ_DEFAULT_FLOAT_FORMAT = VariableStructImpl.valueOf("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP, SingleFloatType.INSTANCE);
+	VariableStructImpl<SymbolStruct> READ_DEFAULT_FLOAT_FORMAT = VariableStructImpl.valueOf("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP, CommonLispSymbols.SINGLE_FLOAT);
 
 	/**
 	 * Determines whether or not the read operation should be evaluated where *read-eval* is used.

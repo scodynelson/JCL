@@ -7,16 +7,14 @@ package jcl.lang.java;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.internal.LispStructImpl;
 
-public class JavaMethodStruct extends BuiltInClassStruct {
+public class JavaMethodStruct extends LispStructImpl {
 
 	private final Method javaMethod;
 
 	private JavaMethodStruct(final Method javaMethod) {
-		super(null, null);
-
 		this.javaMethod = javaMethod;
 	}
 

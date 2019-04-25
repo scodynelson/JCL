@@ -5,7 +5,7 @@
 package jcl.compiler.environment.binding.lambdalist;
 
 import jcl.lang.SymbolStruct;
-import jcl.type.ListType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class WholeParameter extends Parameter {
 
@@ -14,6 +14,6 @@ public class WholeParameter extends Parameter {
 	}
 
 	public WholeParameter(final SymbolStruct var, final boolean isSpecial) {
-		super(var, null, ListType.INSTANCE, null, isSpecial);
+		super(var, null, CommonLispSymbols.T, null, isSpecial);
 	}
 }

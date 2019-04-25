@@ -50,10 +50,6 @@ import jcl.lang.internal.StructureObjectStructImpl;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.type.LispType;
-import jcl.type.TypeBaseClass;
-import jcl.type.TypeFactory;
-import jcl.type.typespecifier.AtomicTypeSpecifier;
 import org.objectweb.asm.Type;
 
 public interface GenerationConstants {
@@ -459,16 +455,4 @@ public interface GenerationConstants {
 	String LIST_STRUCT_STREAM_METHOD_DESC = CodeGenerators.getMethodDescription(ListStruct.class, LIST_STRUCT_STREAM_METHOD_NAME);
 
 	String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStructImpl.class);
-
-	String TYPE_BASE_CLASS_NAME = Type.getInternalName(TypeBaseClass.class);
-
-	String TYPE_BASE_CLASS_INIT_STRING_DESC = CodeGenerators.getConstructorDescription(TypeBaseClass.class, String.class);
-
-	String ATOMIC_TYPE_SPECIFIER_NAME = Type.getInternalName(AtomicTypeSpecifier.class);
-
-	String TYPE_FACTORY_NAME = Type.getInternalName(TypeFactory.class);
-
-	String LISP_TYPE_TYPE_EQUALS_METHOD_NAME = "typeEquals";
-
-	String LISP_TYPE_TYPE_EQUALS_METHOD_DESC = CodeGenerators.getMethodDescription(LispType.class, LISP_TYPE_TYPE_EQUALS_METHOD_NAME, Object.class);
 }

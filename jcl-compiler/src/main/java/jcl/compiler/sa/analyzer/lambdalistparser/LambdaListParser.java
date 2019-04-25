@@ -28,9 +28,9 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.type.TType;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -51,7 +51,7 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(Predicate.isEqual(currentParam));
 
-		final Binding binding = new Binding(currentParam, TType.INSTANCE);
+		final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -79,7 +79,7 @@ public final class LambdaListParser {
 			}
 		}
 
-		final Binding binding = new Binding(currentParam, TType.INSTANCE);
+		final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 		environment.addDynamicBinding(binding);
 
 		final EnvironmentParameter environmentBinding = new EnvironmentParameter(currentParam);
@@ -128,7 +128,7 @@ public final class LambdaListParser {
 			                                        .map(SpecialDeclarationStruct::getVar)
 			                                        .anyMatch(Predicate.isEqual(currentParam));
 
-			final Binding binding = new Binding(currentParam, TType.INSTANCE);
+			final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 			if (isSpecial) {
 				environment.addDynamicBinding(binding);
 			} else {
@@ -172,7 +172,7 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(Predicate.isEqual(currentParam));
 
-				Binding binding = new Binding(currentParam, TType.INSTANCE);
+				Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -190,7 +190,7 @@ public final class LambdaListParser {
 				                                                 .map(SpecialDeclarationStruct::getVar)
 				                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
-				binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
+				binding = new Binding(customSuppliedPCurrent, CommonLispSymbols.T);
 				if (isSuppliedPSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -268,7 +268,7 @@ public final class LambdaListParser {
 					                                        .map(SpecialDeclarationStruct::getVar)
 					                                        .anyMatch(Predicate.isEqual(varNameCurrent));
 
-					Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
+					Binding binding = new Binding(varNameCurrent, CommonLispSymbols.T);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -288,7 +288,7 @@ public final class LambdaListParser {
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
-						binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
+						binding = new Binding(customSuppliedPCurrent, CommonLispSymbols.T);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -308,7 +308,7 @@ public final class LambdaListParser {
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(Predicate.isEqual(suppliedPCurrent));
 
-						binding = new Binding(suppliedPCurrent, TType.INSTANCE);
+						binding = new Binding(suppliedPCurrent, CommonLispSymbols.T);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -371,7 +371,7 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(Predicate.isEqual(currentParam));
 
-		final Binding binding = new Binding(currentParam, TType.INSTANCE);
+		final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -411,7 +411,7 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(Predicate.isEqual(currentParam));
 
-		final Binding binding = new Binding(currentParam, TType.INSTANCE);
+		final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -464,7 +464,7 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(Predicate.isEqual(currentParam));
 
-		final Binding binding = new Binding(currentParam, TType.INSTANCE);
+		final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -502,7 +502,7 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(Predicate.isEqual(currentParam));
 
-				Binding binding = new Binding(currentParam, TType.INSTANCE);
+				Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -520,7 +520,7 @@ public final class LambdaListParser {
 				                                                 .map(SpecialDeclarationStruct::getVar)
 				                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
-				binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
+				binding = new Binding(customSuppliedPCurrent, CommonLispSymbols.T);
 				if (isSuppliedPSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -617,7 +617,7 @@ public final class LambdaListParser {
 					                                        .map(SpecialDeclarationStruct::getVar)
 					                                        .anyMatch(Predicate.isEqual(varNameCurrent));
 
-					Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
+					Binding binding = new Binding(varNameCurrent, CommonLispSymbols.T);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -637,7 +637,7 @@ public final class LambdaListParser {
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(Predicate.isEqual(customSuppliedPCurrent));
 
-						binding = new Binding(customSuppliedPCurrent, TType.INSTANCE);
+						binding = new Binding(customSuppliedPCurrent, CommonLispSymbols.T);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -657,7 +657,7 @@ public final class LambdaListParser {
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(Predicate.isEqual(suppliedPCurrent));
 
-						binding = new Binding(suppliedPCurrent, TType.INSTANCE);
+						binding = new Binding(suppliedPCurrent, CommonLispSymbols.T);
 						if (isSuppliedPSpecial) {
 							environment.addDynamicBinding(binding);
 						} else {
@@ -705,7 +705,7 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(Predicate.isEqual(currentParam));
 
-				final Binding binding = new Binding(currentParam, TType.INSTANCE);
+				final Binding binding = new Binding(currentParam, CommonLispSymbols.T);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -771,7 +771,7 @@ public final class LambdaListParser {
 					                                        .map(SpecialDeclarationStruct::getVar)
 					                                        .anyMatch(Predicate.isEqual(varNameCurrent));
 
-					final Binding binding = new Binding(varNameCurrent, TType.INSTANCE);
+					final Binding binding = new Binding(varNameCurrent, CommonLispSymbols.T);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {

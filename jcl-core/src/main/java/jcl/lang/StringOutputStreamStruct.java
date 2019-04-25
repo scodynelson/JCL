@@ -1,7 +1,6 @@
 package jcl.lang;
 
 import jcl.lang.internal.stream.StringOutputStreamStructImpl;
-import jcl.type.LispType;
 
 /**
  * The {@link StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
@@ -22,7 +21,7 @@ public interface StringOutputStreamStruct extends OutputStreamStruct {
 		return new StringOutputStreamStructImpl();
 	}
 
-	static StringOutputStreamStruct toStringOutputStream(final LispType elementType) {
+	static StringOutputStreamStruct toStringOutputStream(final LispStruct elementType) {
 		return new StringOutputStreamStructImpl(elementType);
 	}
 }

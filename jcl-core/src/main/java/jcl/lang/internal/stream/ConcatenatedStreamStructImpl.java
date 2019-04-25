@@ -7,16 +7,18 @@ package jcl.lang.internal.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.ConcatenatedStreamType;
-import jcl.type.LispType;
-import jcl.type.TType;
 
 /**
  * The {@link ConcatenatedStreamStructImpl} is the object representation of a Lisp 'concatenated-stream' type.
@@ -47,7 +49,7 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
 	 */
 	public ConcatenatedStreamStructImpl(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
-		super(ConcatenatedStreamType.INSTANCE, null, null, interactive, getElementType2(inputStreamStructs));
+		super(interactive, getElementType2(inputStreamStructs));
 		this.inputStreamStructs = new ArrayDeque<>(inputStreamStructs);
 	}
 
@@ -59,7 +61,7 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType2(final Deque<InputStreamStruct> inputStreamStructs) {
+	private static LispStruct getElementType2(final Deque<InputStreamStruct> inputStreamStructs) {
 		if (inputStreamStructs == null) {
 			throw new ErrorException("Provided Input Stream List must not be null.");
 		}
@@ -74,9 +76,9 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType3(final Deque<InputStreamStruct> inputStreamStructs) {
+	private static LispStruct getElementType3(final Deque<InputStreamStruct> inputStreamStructs) {
 		if (inputStreamStructs.isEmpty()) {
-			return TType.INSTANCE;
+			return CommonLispSymbols.T;
 		}
 
 		final InputStreamStruct last = inputStreamStructs.getLast();
@@ -185,7 +187,7 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	}
 
 	@Override
-	public LispType getElementType() {
+	public LispStruct getElementType() {
 		return getElementType3(inputStreamStructs);
 	}
 
@@ -207,5 +209,26 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 
 		final InputStreamStruct last = inputStreamStructs.getLast();
 		return last.filePosition(filePosition);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.CONCATENATED_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.CONCATENATED_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.CONCATENATED_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.CONCATENATED_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

@@ -22,7 +22,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -123,7 +123,7 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
 		final LispStruct expansion = FormAnalyzer.analyze(parameterValue, parentEnvironment);
 
-		final SymbolMacroBinding binding = new SymbolMacroBinding(var, TType.INSTANCE, expansion);
+		final SymbolMacroBinding binding = new SymbolMacroBinding(var, CommonLispSymbols.T, expansion);
 		symbolMacroletEnvironment.addSymbolMacroBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);

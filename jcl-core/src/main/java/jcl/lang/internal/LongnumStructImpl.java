@@ -19,7 +19,6 @@ import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.number.QuotientRemainder;
-import jcl.type.BignumType;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
@@ -52,7 +51,6 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	 * 		the integer value
 	 */
 	public LongnumStructImpl(final long value) {
-		super(BignumType.INSTANCE);
 		this.value = value;
 	}
 

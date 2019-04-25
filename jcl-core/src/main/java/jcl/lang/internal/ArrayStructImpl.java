@@ -7,13 +7,16 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
-import jcl.type.ArrayType;
-import jcl.type.LispType;
-import jcl.type.SimpleArrayType;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -28,33 +31,21 @@ public abstract class ArrayStructImpl extends AbstractArrayStructImpl {
 
 	protected Integer displacedIndexOffset;
 
-	protected ArrayStructImpl(final ArrayType arrayType, final LispType elementType, final boolean isAdjustable) {
-		super(arrayType, elementType);
+	protected ArrayStructImpl(final LispStruct elementType, final boolean isAdjustable) {
+		super(elementType);
 
 		this.isAdjustable = isAdjustable;
 		displacedTo = null;
 		displacedIndexOffset = 0;
 	}
 
-	protected ArrayStructImpl(final ArrayType arrayType, final LispType elementType, final ArrayStruct displacedTo,
+	protected ArrayStructImpl(final LispStruct elementType, final ArrayStruct displacedTo,
 	                          final Integer displacedIndexOffset, final boolean isAdjustable) {
-		super(arrayType, elementType);
+		super(elementType);
 
 		this.isAdjustable = isAdjustable;
 		this.displacedTo = displacedTo;
 		this.displacedIndexOffset = displacedIndexOffset;
-	}
-
-	/**
-	 * Gets the array type from the provided {@link #isAdjustable} value.
-	 *
-	 * @param isAdjustable
-	 * 		whether or not the array is adjustable
-	 *
-	 * @return the matching array type for the provided {@link #isAdjustable} value
-	 */
-	protected static ArrayType getArrayType(final boolean isAdjustable) {
-		return isAdjustable ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 	}
 
 	@Override
@@ -153,5 +144,29 @@ public abstract class ArrayStructImpl extends AbstractArrayStructImpl {
 		                   GenerationConstants.ARRAY_STRUCT_TO_ARRAY_METHOD_NAME,
 		                   GenerationConstants.ARRAY_STRUCT_TO_ARRAY_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		// TODO: Simple vs Not???
+		return ListStruct.toLispList(CommonLispSymbols.ARRAY, elementType, arrayDimensions());
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		// TODO: Simple vs Not???
+		return BuiltInClassStruct.ARRAY;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		// TODO: Simple vs Not???
+		if (typeSpecifier == CommonLispSymbols.ARRAY) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.ARRAY) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

@@ -4,7 +4,6 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.internal.BooleanStructImpl;
-import jcl.type.TType;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -20,7 +19,7 @@ public final class TStruct extends BooleanStructImpl {
 	 * Private constructor.
 	 */
 	private TStruct() {
-		super(TType.INSTANCE, "T", true);
+		super("T", true);
 	}
 
 	/*

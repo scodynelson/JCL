@@ -7,12 +7,15 @@ package jcl.lang.internal.stream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.OutputStreamStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.type.BroadcastStreamType;
-import jcl.type.LispType;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link BroadcastStreamStructImpl} is the object representation of a Lisp 'broadcast-stream' type.
@@ -43,7 +46,7 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
 	 */
 	public BroadcastStreamStructImpl(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
-		super(BroadcastStreamType.INSTANCE, null, null, interactive, getElementType2(outputStreamStructs));
+		super(interactive, getElementType2(outputStreamStructs));
 		this.outputStreamStructs = new ArrayDeque<>(outputStreamStructs);
 	}
 
@@ -55,7 +58,7 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType2(final Deque<OutputStreamStruct> outputStreamStructs) {
+	private static LispStruct getElementType2(final Deque<OutputStreamStruct> outputStreamStructs) {
 		if (outputStreamStructs == null) {
 			throw new ErrorException("Provided Output Stream List must not be null.");
 		}
@@ -70,9 +73,9 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType3(final Deque<OutputStreamStruct> outputStreamStructs) {
+	private static LispStruct getElementType3(final Deque<OutputStreamStruct> outputStreamStructs) {
 		if (outputStreamStructs.isEmpty()) {
-			return TType.INSTANCE;
+			return CommonLispSymbols.T;
 		}
 
 		final OutputStreamStruct last = outputStreamStructs.getLast();
@@ -120,7 +123,7 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	}
 
 	@Override
-	public LispType getElementType() {
+	public LispStruct getElementType() {
 		return getElementType3(outputStreamStructs);
 	}
 
@@ -142,5 +145,26 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 
 		final OutputStreamStruct last = outputStreamStructs.getLast();
 		return last.filePosition(filePosition);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.BROADCAST_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.BROADCAST_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.BROADCAST_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.BROADCAST_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

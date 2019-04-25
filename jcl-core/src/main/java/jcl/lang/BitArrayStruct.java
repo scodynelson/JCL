@@ -10,10 +10,7 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.MultiBitArrayStructImpl;
 import jcl.lang.internal.NILBitArrayStructImpl;
-import jcl.type.ArrayType;
-import jcl.type.BitType;
-import jcl.type.LispType;
-import jcl.type.SimpleArrayType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link BitArrayStruct} is the object representation of a Lisp 'bit-array' type.
@@ -29,21 +26,19 @@ public interface BitArrayStruct extends ArrayStruct {
 	}
 
 	default IntegerStruct sbit(final IntegerStruct... subscripts) {
-		final LispType type = getType();
-		if (SimpleArrayType.INSTANCE.isOfType(type)) {
+		if (typeOf().eq(CommonLispSymbols.SIMPLE_ARRAY)) {
 			return (IntegerStruct) aref(subscripts); // TODO
 		}
 		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + SimpleArrayType.INSTANCE + '.');
+				"The value " + this + " is not of the expected type " + CommonLispSymbols.SIMPLE_ARRAY + '.');
 	}
 
 	default IntegerStruct setfSbit(final IntegerStruct newElement, final IntegerStruct... subscripts) {
-		final LispType type = getType();
-		if (SimpleArrayType.INSTANCE.isOfType(type)) {
+		if (typeOf().eq(CommonLispSymbols.SIMPLE_ARRAY)) {
 			return (IntegerStruct) setfAref(newElement, subscripts); // TODO
 		}
 		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + SimpleArrayType.INSTANCE + '.');
+				"The value " + this + " is not of the expected type " + CommonLispSymbols.SIMPLE_ARRAY + '.');
 	}
 
 	default BitArrayStruct bitAnd(final BitArrayStruct bitArray2, final LispStruct optArg) {
@@ -225,17 +220,17 @@ public interface BitArrayStruct extends ArrayStruct {
 		return new BitArrayStruct.Builder(dimensions);
 	}
 
-	final class Builder extends ArrayStruct.AbstractBuilder<BitArrayStruct, BitType, IntegerStruct> {
+	final class Builder extends ArrayStruct.AbstractBuilder<BitArrayStruct, LispStruct, IntegerStruct> {
 
 		private final IntegerStruct[] dimensions;
 
 		private Builder(final IntegerStruct... dimensions) {
-			super(BitType.INSTANCE, IntegerStruct.ZERO);
+			super(CommonLispSymbols.BIT, IntegerStruct.ZERO);
 			this.dimensions = dimensions;
 		}
 
 		@Override
-		public BitArrayStruct.Builder elementType(final BitType elementType) {
+		public BitArrayStruct.Builder elementType(final LispStruct elementType) {
 			this.elementType = elementType;
 			return this;
 		}
@@ -277,12 +272,11 @@ public interface BitArrayStruct extends ArrayStruct {
 
 		@Override
 		public BitArrayStruct build() {
-			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+			final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable;
 
 			if (displacedTo != null) {
-				final LispType displacedToType = displacedTo.getType();
-				if (!upgradedET.typeEquals(displacedToType)) {
+				if (!displacedTo.typep(upgradedET).toJavaPBoolean()) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -294,7 +288,7 @@ public interface BitArrayStruct extends ArrayStruct {
 				}
 
 				if (dimensions.length == 0) {
-					return new NILBitArrayStructImpl(ArrayType.INSTANCE,
+					return new NILBitArrayStructImpl(
 //					                                 upgradedET,
                                                      displacedTo,
                                                      displacedIndexOffset.toJavaInt(),
@@ -304,29 +298,23 @@ public interface BitArrayStruct extends ArrayStruct {
 				final List<Integer> dimensionInts = Arrays.stream(dimensions)
 				                                          .map(IntegerStruct::toJavaInt)
 				                                          .collect(Collectors.toList());
-				return new MultiBitArrayStructImpl(ArrayType.INSTANCE,
-				                                   dimensionInts,
+				return new MultiBitArrayStructImpl(dimensionInts,
 //				                                   upgradedET,
                                                    displacedTo,
                                                    displacedIndexOffset.toJavaInt(),
                                                    adjustableBoolean);
 			}
 
-			final ArrayType arrayType = adjustableBoolean
-			                            ? ArrayType.INSTANCE
-			                            : SimpleArrayType.INSTANCE;
-
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
-					final LispType initialElementType = element.getType();
-					if (!upgradedET.typeEquals(initialElementType)) {
+					if (!element.typep(upgradedET).toJavaPBoolean()) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
 				}
 
 				if (dimensions.length == 0) {
-					return new NILBitArrayStructImpl(arrayType,
+					return new NILBitArrayStructImpl(
 //					                                upgradedET,
                                                      initialContents,
                                                      adjustableBoolean);
@@ -338,20 +326,18 @@ public interface BitArrayStruct extends ArrayStruct {
 				final List<LispStruct> validContents = ArrayStruct.getValidContents(dimensionInts,
 				                                                                    upgradedET,
 				                                                                    initialContents);
-				return new MultiBitArrayStructImpl(arrayType,
-				                                   dimensionInts,
+				return new MultiBitArrayStructImpl(dimensionInts,
 //				                                  upgradedET,
                                                    validContents,
                                                    adjustableBoolean);
 			} else {
-				final LispType initialElementType = initialElement.getType();
-				if (!upgradedET.typeEquals(initialElementType)) {
+				if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 					throw new TypeErrorException(
 							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
 
 				if (dimensions.length == 0) {
-					return new NILBitArrayStructImpl(arrayType,
+					return new NILBitArrayStructImpl(
 //					                                upgradedET,
                                                      initialElement,
                                                      adjustableBoolean);
@@ -366,8 +352,7 @@ public interface BitArrayStruct extends ArrayStruct {
 				final List<LispStruct> contents = Stream.generate(() -> initialElement)
 				                                        .limit(totalSize)
 				                                        .collect(Collectors.toList());
-				return new MultiBitArrayStructImpl(arrayType,
-				                                   dimensionInts,
+				return new MultiBitArrayStructImpl(dimensionInts,
 //				                                  upgradedET,
                                                    contents,
                                                    adjustableBoolean);

@@ -8,10 +8,13 @@ import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.BooleanStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.FloatStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RealStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.type.ComplexType;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
@@ -23,8 +26,8 @@ import org.objectweb.asm.Type;
 /**
  * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
  */
-@EqualsAndHashCode(callSuper = false)
-public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStruct {
+@EqualsAndHashCode
+public class ComplexStructImpl extends LispStructImpl implements ComplexStruct {
 
 	/**
 	 * The real part of the complex number.
@@ -48,7 +51,6 @@ public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStru
 	 * 		the {@link Apcomplex} representation of the complex number
 	 */
 	public ComplexStructImpl(final Apcomplex apcomplex) {
-		super(ComplexType.INSTANCE, null, null);
 		real = ApfloatUtils.toRealStruct(apcomplex.real());
 		imaginary = ApfloatUtils.toRealStruct(apcomplex.imag());
 		this.apcomplex = apcomplex;
@@ -63,7 +65,6 @@ public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStru
 	 * 		the imaginary part of the complex number
 	 */
 	public ComplexStructImpl(final RealStruct real, final RealStruct imaginary) {
-		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 		apcomplex = new Apcomplex(real.ap(), imaginary.ap());
@@ -334,5 +335,32 @@ public class ComplexStructImpl extends BuiltInClassStruct implements ComplexStru
 		                   COMPLEX_TO_LISP_COMPLEX_METHOD_NAME,
 		                   COMPLEX_TO_LISP_COMPLEX_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.COMPLEX;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.COMPLEX;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.COMPLEX) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.NUMBER) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.COMPLEX) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.NUMBER) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

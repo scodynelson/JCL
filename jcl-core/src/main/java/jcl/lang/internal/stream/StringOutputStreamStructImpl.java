@@ -4,11 +4,14 @@
 
 package jcl.lang.internal.stream;
 
+import jcl.lang.BooleanStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.StringOutputStreamStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.StreamErrorException;
-import jcl.type.BaseCharType;
-import jcl.type.LispType;
-import jcl.type.StringStreamType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link StringOutputStreamStructImpl} is the object representation of a Lisp 'string-stream' output type.
@@ -34,7 +37,7 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	 * 		whether or not the struct created is 'interactive'
 	 */
 	public StringOutputStreamStructImpl(final boolean interactive) {
-		this(interactive, BaseCharType.INSTANCE);
+		this(interactive, CommonLispSymbols.BASE_CHAR);
 	}
 
 	/**
@@ -43,7 +46,7 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	public StringOutputStreamStructImpl(final LispType elementType) {
+	public StringOutputStreamStructImpl(final LispStruct elementType) {
 		this(false, elementType);
 	}
 
@@ -55,8 +58,8 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 	 * @param elementType
 	 * 		the type of character elements in the stream
 	 */
-	public StringOutputStreamStructImpl(final boolean interactive, final LispType elementType) {
-		super(StringStreamType.INSTANCE, null, null, interactive, elementType);
+	public StringOutputStreamStructImpl(final boolean interactive, final LispStruct elementType) {
+		super(interactive, elementType);
 	}
 
 	@Override
@@ -116,5 +119,39 @@ public final class StringOutputStreamStructImpl extends StreamStructImpl impleme
 			return (long) stringBuffer.length();
 		}
 		return null;
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		// TODO
+//		return CommonLispSymbols.STRING_OUTPUT_STREAM;
+		return CommonLispSymbols.STRING_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		// TODO
+//		return BuiltInClassStruct.STRING_OUTPUT_STREAM;
+		return BuiltInClassStruct.STRING_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		// TODO
+//		if (typeSpecifier == CommonLispSymbols.STRING_OUTPUT_STREAM) {
+//			return TStruct.INSTANCE;
+//		}
+		if (typeSpecifier == CommonLispSymbols.STRING_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		// TODO
+//		if (typeSpecifier == BuiltInClassStruct.STRING_OUTPUT_STREAM) {
+//			return TStruct.INSTANCE;
+//		}
+		if (typeSpecifier == BuiltInClassStruct.STRING_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		// TODO
+		return super.typep(typeSpecifier);
 	}
 }

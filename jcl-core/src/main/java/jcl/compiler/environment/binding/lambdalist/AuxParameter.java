@@ -7,7 +7,7 @@ package jcl.compiler.environment.binding.lambdalist;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.TType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class AuxParameter extends Parameter {
 
@@ -26,7 +26,7 @@ public class AuxParameter extends Parameter {
 
 	public AuxParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                    final LispStruct initForm, final boolean isSpecial) {
-		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
+		super(var, destructuringForm, CommonLispSymbols.T, initForm, isSpecial);
 	}
 
 	@Override

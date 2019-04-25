@@ -4,14 +4,17 @@
 
 package jcl.lang.internal.stream;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringInputStreamStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.BaseCharType;
-import jcl.type.StringStreamType;
 
 /**
  * The {@link StringInputStreamStructImpl} is the object representation of a Lisp 'string-stream' input type.
@@ -82,7 +85,7 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	 * 		the ending position to read up to in the string
 	 */
 	public StringInputStreamStructImpl(final boolean interactive, final String inputString, final int current, final int end) {
-		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
+		super(interactive, CommonLispSymbols.BASE_CHAR);
 
 		if (inputString == null) {
 			throw new ErrorException("Provided Input String must not be null.");
@@ -223,5 +226,39 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 			current = filePosition.intValue();
 		}
 		return (long) current;
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		// TODO
+//		return CommonLispSymbols.STRING_INPUT_STREAM;
+		return CommonLispSymbols.STRING_STREAM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		// TODO
+//		return BuiltInClassStruct.STRING_INPUT_STREAM;
+		return BuiltInClassStruct.STRING_STREAM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		// TODO
+//		if (typeSpecifier == CommonLispSymbols.STRING_INPUT_STREAM) {
+//			return TStruct.INSTANCE;
+//		}
+		if (typeSpecifier == CommonLispSymbols.STRING_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		// TODO
+//		if (typeSpecifier == BuiltInClassStruct.STRING_INPUT_STREAM) {
+//			return TStruct.INSTANCE;
+//		}
+		if (typeSpecifier == BuiltInClassStruct.STRING_STREAM) {
+			return TStruct.INSTANCE;
+		}
+		// TODO
+		return super.typep(typeSpecifier);
 	}
 }

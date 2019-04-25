@@ -12,27 +12,27 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
-import jcl.type.BaseCharType;
-import jcl.type.CharacterType;
-import jcl.type.LispType;
-import jcl.type.SimpleBaseStringType;
-import jcl.type.SimpleStringType;
-import jcl.type.StringType;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -53,7 +53,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	 * 		the Java {@link String} to wrap
 	 */
 	public SimpleStringStructImpl(final String str) {
-		super(SimpleStringType.INSTANCE, CharacterType.INSTANCE, str.length());
+		super(CommonLispSymbols.CHARACTER, str.length());
 		contents = new StringBuilder(str);
 	}
 
@@ -63,25 +63,13 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	 * @param size
 	 * 		the size of the structure
 	 * @param elementType
-	 * 		the {@link CharacterType} type of the elements
+	 * 		the {@link LispStruct} type of the elements
 	 * @param contents
 	 * 		the {@link StringBuilder} contents
 	 */
-	public SimpleStringStructImpl(final Integer size, final CharacterType elementType, final StringBuilder contents) {
-		super(getStringType(elementType), elementType, size);
+	public SimpleStringStructImpl(final Integer size, final LispStruct elementType, final StringBuilder contents) {
+		super(elementType, size);
 		this.contents = contents;
-	}
-
-	/**
-	 * Gets the string type from the provided content element-type.
-	 *
-	 * @param elementType
-	 * 		the string content element-type
-	 *
-	 * @return the matching string type for the provided content element-type
-	 */
-	private static StringType getStringType(final CharacterType elementType) {
-		return (elementType instanceof BaseCharType) ? SimpleBaseStringType.INSTANCE : SimpleStringType.INSTANCE;
 	}
 
 	/*
@@ -178,7 +166,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	 */
 
 	@Override
-	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
+	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispStruct upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final boolean newAdjustable = context.getAdjustable();
@@ -186,8 +174,8 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
 
-		final LispType displacedElementType = newDisplacedTo.arrayElementType();
-		if (!upgradedET.typeEquals(displacedElementType)) {
+		final LispStruct displacedElementType = newDisplacedTo.arrayElementType();
+		if (!upgradedET.eq(displacedElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -199,7 +187,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		}
 
 		return StringStruct.builder(newTotalSize)
-		                   .elementType((CharacterType) upgradedET)
+		                   .elementType(upgradedET)
 		                   .adjustable(newAdjustable)
 		                   .fillPointer(newFillPointer)
 		                   .displacedTo(newDisplacedTo)
@@ -208,7 +196,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	protected StringStruct adjustInitialContents(final AdjustArrayContext context, final LispType upgradedET) {
+	protected StringStruct adjustInitialContents(final AdjustArrayContext context, final LispStruct upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final SequenceStruct newInitialContents = context.getInitialContents();
@@ -216,15 +204,14 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		final IntegerStruct newFillPointer = context.getFillPointer();
 
 		for (final LispStruct initialElement : newInitialContents) {
-			final LispType currentElementType = initialElement.getType();
-			if (!upgradedET.typeEquals(currentElementType)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
 		}
 
 		return StringStruct.builder(newTotalSize)
-		                   .elementType((CharacterType) upgradedET)
+		                   .elementType(upgradedET)
 		                   .adjustable(newAdjustable)
 		                   .fillPointer(newFillPointer)
 		                   .initialContents(newInitialContents)
@@ -232,7 +219,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	protected StringStruct adjustInitialElement(final AdjustArrayContext context, final LispType upgradedET) {
+	protected StringStruct adjustInitialElement(final AdjustArrayContext context, final LispStruct upgradedET) {
 		final LispStruct newInitialElement = context.getInitialElement();
 		validateNewInitialElement(newInitialElement, upgradedET);
 
@@ -250,11 +237,11 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 		if ((newFillPointerInt == null) && !newAdjustableBoolean) {
 			return new SimpleStringStructImpl(newTotalSizeInt,
-			                                  (CharacterType) upgradedET,
+			                                  upgradedET,
 			                                  newContents);
 		}
 		return new ComplexStringStructImpl(newTotalSizeInt,
-		                                   (CharacterType) upgradedET,
+		                                   upgradedET,
 		                                   newContents,
 		                                   newAdjustableBoolean,
 		                                   newFillPointerInt);
@@ -283,7 +270,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	public StringStruct reverse() {
 		final String contentsToReverse = contents.toString();
 		final StringBuilder reversedContents = new StringBuilder(contentsToReverse).reverse();
-		return new SimpleStringStructImpl(totalSize, (CharacterType) elementType, reversedContents);
+		return new SimpleStringStructImpl(totalSize, elementType, reversedContents);
 	}
 
 	@Override
@@ -388,6 +375,39 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_NAME,
 		                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return ListStruct.toLispList(CommonLispSymbols.SIMPLE_BASE_STRING, new FixnumStructImpl(totalSize));
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.SIMPLE_BASE_STRING;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_STRING) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_ARRAY) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_BASE_STRING) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_STRING) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_ARRAY) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_BASE_STRING) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	/*

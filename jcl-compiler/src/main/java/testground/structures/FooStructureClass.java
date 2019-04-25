@@ -4,29 +4,29 @@
 
 package testground.structures;
 
-import java.util.List;
-
-import jcl.lang.LispStruct;
+import jcl.lang.PackageStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
-import jcl.type.LispType;
 
 @SuppressWarnings("all")
 public class FooStructureClass extends StructureClassStruct {
 
-	public static final FooStructureClass INSTANCE
-			= new FooStructureClass(SymbolStruct.toLispSymbol("MAKE-FOO"), null, null, null);
+	public static final FooStructureClass INSTANCE;
 
-	protected FooStructureClass(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(FooStructureType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
+	static {
+		final PackageStruct namePackage = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct nameSymbol = namePackage.findSymbol("FOO").getSymbol();
+
+		final PackageStruct constructorPackage = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct constructorSymbol = constructorPackage.findSymbol("MAKE-FOO").getSymbol();
+
+		INSTANCE = new FooStructureClass(nameSymbol, constructorSymbol, null);
+		nameSymbol.setStructureClass(INSTANCE);
 	}
 
-	protected FooStructureClass(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
-		SymbolStruct.toLispSymbol("FOO").setStructureClass(INSTANCE);
+	protected FooStructureClass(final SymbolStruct name, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol) {
+		super(name, defaultConstructorSymbol, printerSymbol);
 	}
 
 	@Override

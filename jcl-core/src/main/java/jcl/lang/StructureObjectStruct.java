@@ -6,7 +6,6 @@ import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.type.LispType;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -46,10 +45,10 @@ public interface StructureObjectStruct extends LispStruct {
 		}
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
-		final LispType instanceStructureType = instanceStructureClass.getType();
+		final LispStruct instanceStructureType = instanceStructureClass.typeOf();
 
-		final LispType symbolStructureType = symbolStructureClass.getType();
-		if (symbolStructureType.isNotOfType(instanceStructureType)) {
+		final LispStruct symbolStructureType = symbolStructureClass.typeOf();
+		if (!symbolStructureType.eq(instanceStructureType)) {
 			throw new TypeErrorException(
 					"Error: The value " + structureInstance + " is not of the expected type " + symbolStructureType + '.');
 		}
@@ -86,10 +85,10 @@ public interface StructureObjectStruct extends LispStruct {
 		}
 
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
-		final LispType instanceStructureType = instanceStructureClass.getType();
+		final LispStruct instanceStructureType = instanceStructureClass.typeOf();
 
-		final LispType symbolStructureType = symbolStructureClass.getType();
-		if (symbolStructureType.isNotOfType(instanceStructureType)) {
+		final LispStruct symbolStructureType = symbolStructureClass.typeOf();
+		if (!symbolStructureType.eq(instanceStructureType)) {
 			throw new TypeErrorException(
 					"Error: The value " + structureInstance + " is not of the expected type " + symbolStructureType + '.');
 		}

@@ -3,19 +3,24 @@ package jcl.lang.internal;
 import java.util.Collections;
 import java.util.List;
 
+import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.SequenceStruct;
+import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.type.LispType;
-import jcl.type.VectorType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl implements VectorStruct {
 
 	protected Integer totalSize;
 
-	protected AbstractVectorStructImpl(final VectorType type, final LispType elementType, final Integer totalSize) {
-		super(type, elementType);
+	protected AbstractVectorStructImpl(final LispStruct elementType, final Integer totalSize) {
+		super(elementType);
 		this.totalSize = totalSize;
 	}
 
@@ -91,4 +96,29 @@ public abstract class AbstractVectorStructImpl extends AbstractArrayStructImpl i
 	}
 
 // =================
+
+	/*
+	LISP-STRUCT
+	 */
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.VECTOR) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.VECTOR) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SEQUENCE) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SEQUENCE) {
+			return TStruct.INSTANCE;
+		}
+		// TODO: check this
+		return BooleanStruct.toLispBoolean(
+				((ArrayStruct) this).typep(typeSpecifier).toJavaPBoolean()
+						|| ((SequenceStruct) this).typep(typeSpecifier).toJavaPBoolean()
+		);
+	}
 }

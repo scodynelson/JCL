@@ -13,12 +13,11 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
-import jcl.type.BaseCharType;
-import jcl.type.CharacterType;
-import jcl.type.ExtendedCharType;
-import jcl.type.StandardCharType;
 import jcl.util.CodePointConstants;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.CharUtils;
@@ -28,8 +27,8 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link CharacterStructImpl} is the object representation of a Lisp 'character' type.
  */
-@EqualsAndHashCode(callSuper = false)
-public final class CharacterStructImpl extends BuiltInClassStruct implements CharacterStruct {
+@EqualsAndHashCode
+public final class CharacterStructImpl extends LispStructImpl implements CharacterStruct {
 
 	/**
 	 * The code point of the character.
@@ -43,32 +42,7 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 	 * 		the character {@link #codePoint} value
 	 */
 	public CharacterStructImpl(final int codePoint) {
-		super(getCharacterType(codePoint), null, null);
 		this.codePoint = codePoint;
-	}
-
-	/**
-	 * This method gets the character type from the provide {@code codePoint}.
-	 *
-	 * @param codePoint
-	 * 		the character value
-	 *
-	 * @return the matching character type for the provided {@code codePoint}
-	 */
-	private static CharacterType getCharacterType(final int codePoint) {
-		final CharacterType characterType;
-
-		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
-			characterType = BaseCharType.INSTANCE;
-		} else if (CharUtils.isAscii((char) codePoint)) {
-			characterType = StandardCharType.INSTANCE;
-		} else if (Character.isDefined(codePoint)) {
-			characterType = ExtendedCharType.INSTANCE;
-		} else {
-			characterType = CharacterType.INSTANCE;
-		}
-
-		return characterType;
 	}
 
 	@Override
@@ -254,6 +228,36 @@ public final class CharacterStructImpl extends BuiltInClassStruct implements Cha
 		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME,
 		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		if (isStandardChar().toJavaPBoolean()) {
+			return CommonLispSymbols.STANDARD_CHAR;
+		}
+		return CommonLispSymbols.CHARACTER;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.CHARACTER;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.CHARACTER) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.CHARACTER) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.BASE_CHAR) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.STANDARD_CHAR) {
+			return isStandardChar().toJavaPBoolean() ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	/*

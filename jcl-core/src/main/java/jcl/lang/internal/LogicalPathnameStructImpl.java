@@ -9,8 +9,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import jcl.lang.BooleanStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.PathnameStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.pathname.PathnameComponentType;
 import jcl.lang.pathname.PathnameDirectory;
@@ -23,7 +28,7 @@ import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
-import jcl.type.LogicalPathnameType;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -103,7 +108,7 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 	 */
 	public LogicalPathnameStructImpl(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                                  final PathnameType type, final PathnameVersion version) {
-		super(LogicalPathnameType.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
+		super(host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
 	}
 
 	/**
@@ -367,5 +372,26 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 		 */
 		// TODO: do this!!!
 		return null;
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.LOGICAL_PATHNAME;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.LOGICAL_PATHNAME;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.LOGICAL_PATHNAME) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.LOGICAL_PATHNAME) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

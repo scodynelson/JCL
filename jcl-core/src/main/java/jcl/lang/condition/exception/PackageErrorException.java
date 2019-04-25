@@ -1,8 +1,6 @@
 package jcl.lang.condition.exception;
 
 import jcl.lang.PackageStruct;
-import jcl.lang.condition.ConditionType;
-import jcl.type.LispType;
 
 public class PackageErrorException extends ErrorException {
 
@@ -22,10 +20,5 @@ public class PackageErrorException extends ErrorException {
 
 	public PackageStruct getPackageWithError() {
 		return packageWithError;
-	}
-
-	@Override
-	public LispType getType() {
-		return ConditionType.PACKAGE_ERROR;
 	}
 }

@@ -6,12 +6,12 @@ package jcl.lang.internal.stream;
 
 import jcl.lang.DualStreamStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.StreamErrorException;
-import jcl.type.LispType;
-import jcl.type.StreamType;
-import jcl.type.typespecifier.AndTypeSpecifier;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link AbstractDualStreamStructImpl} is an abstraction for dual stream types.
@@ -31,8 +31,6 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	/**
 	 * Protected constructor.
 	 *
-	 * @param type
-	 * 		the type of the stream object
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStreamStruct
@@ -40,9 +38,8 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	 * @param outputStreamStruct
 	 * 		the {@link OutputStreamStruct} to create an AbstractDualStreamStruct from
 	 */
-	protected AbstractDualStreamStructImpl(final StreamType type,
-	                                       final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		super(type, null, null, interactive, getElementType(inputStreamStruct, outputStreamStruct));
+	protected AbstractDualStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+		super(interactive, getElementType(inputStreamStruct, outputStreamStruct));
 		this.inputStreamStruct = inputStreamStruct;
 		this.outputStreamStruct = outputStreamStruct;
 	}
@@ -57,7 +54,7 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
+	private static LispStruct getElementType(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
 		if (inputStreamStruct == null) {
 			throw new ErrorException("Provided Input Stream must not be null.");
 		}
@@ -65,10 +62,10 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 			throw new ErrorException("Provided Output Stream must not be null.");
 		}
 
-		final LispType inType = inputStreamStruct.getElementType();
-		final LispType outType = outputStreamStruct.getElementType();
+		final LispStruct inType = inputStreamStruct.getElementType();
+		final LispStruct outType = outputStreamStruct.getElementType();
 
-		return inType.isOfType(outType) ? inType : new AndTypeSpecifier(inType, outType);
+		return inType.typep(outType).toJavaPBoolean() ? inType : ListStruct.toLispList(CommonLispSymbols.AND, inType, outType);
 	}
 
 	/**

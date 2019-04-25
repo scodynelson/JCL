@@ -5,7 +5,7 @@
 package jcl.compiler.environment.binding.lambdalist;
 
 import jcl.lang.SymbolStruct;
-import jcl.type.ListType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public class BodyParameter extends Parameter {
 
@@ -23,6 +23,6 @@ public class BodyParameter extends Parameter {
 
 	public BodyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                     final boolean isSpecial) {
-		super(var, destructuringForm, ListType.INSTANCE, null, isSpecial);
+		super(var, destructuringForm, CommonLispSymbols.T, null, isSpecial);
 	}
 }

@@ -7,18 +7,16 @@ package jcl.lang.java;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.internal.LispStructImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class JavaObjectStruct extends BuiltInClassStruct {
+public class JavaObjectStruct extends LispStructImpl {
 
 	private final Object javaObject;
 
 	private JavaObjectStruct(final Object javaObject) {
-		super(null, null);
-
 		this.javaObject = javaObject;
 	}
 

@@ -1,12 +1,11 @@
 package jcl.lang.classes;
 
-import java.util.List;
-
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
-import jcl.type.LispType;
-import jcl.type.StructureClassType;
+import jcl.lang.TStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
@@ -20,37 +19,16 @@ public abstract class StructureClassStruct extends ClassStruct {
 	/**
 	 * Protected constructor.
 	 *
+	 * @param name
+	 * 		the name of the structure class object
 	 * @param defaultConstructorSymbol
 	 * 		the default constructor function symbol for this structure class
 	 * @param printerSymbol
 	 * 		the printer function symbol for this structure class
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(StructureClassType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param type
-	 * 		the type of the structure class object
-	 * @param defaultConstructorSymbol
-	 * 		the default constructor function symbol for this structure class
-	 * @param printerSymbol
-	 * 		the printer function symbol for this structure class
-	 * @param directSuperClasses
-	 * 		the direct super classes
-	 * @param subClasses
-	 * 		the subclasses
-	 */
-	protected StructureClassStruct(final LispType type, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol,
-	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, directSuperClasses, subClasses);
+	protected StructureClassStruct(final SymbolStruct name, final SymbolStruct defaultConstructorSymbol,
+	                               final SymbolStruct printerSymbol) {
+		super(name);
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
 		this.printerSymbol = printerSymbol;
 	}
@@ -60,4 +38,25 @@ public abstract class StructureClassStruct extends ClassStruct {
 	}
 
 	public abstract StructureObjectStruct newInstance();
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.STRUCTURE_CLASS;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return ClassStruct.findClass(CommonLispSymbols.STRUCTURE_CLASS);
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.STRUCTURE_CLASS) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == ClassStruct.findClass(CommonLispSymbols.STRUCTURE_CLASS)) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
 }

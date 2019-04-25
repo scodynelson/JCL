@@ -29,9 +29,6 @@ import jcl.lang.VectorStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.type.SimpleBitVectorType;
-import jcl.type.SimpleStringType;
-import jcl.type.SimpleVectorType;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -281,7 +278,7 @@ public final class PredicateFunctions {
 		public LispStruct apply(final Arguments arguments) {
 			final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 			return BooleanStruct.toLispBoolean(
-					classType.isAssignableFrom(object.getClass()) && object.getType().eq(SimpleBitVectorType.INSTANCE)
+					classType.isAssignableFrom(object.getClass()) && typep(CommonLispSymbols.SIMPLE_BIT_VECTOR).toJavaPBoolean()
 			);
 		}
 	}
@@ -298,7 +295,7 @@ public final class PredicateFunctions {
 		public LispStruct apply(final Arguments arguments) {
 			final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 			return BooleanStruct.toLispBoolean(
-					classType.isAssignableFrom(object.getClass()) && object.getType().eq(SimpleStringType.INSTANCE)
+					classType.isAssignableFrom(object.getClass()) && typep(CommonLispSymbols.SIMPLE_STRING).toJavaPBoolean()
 			);
 		}
 	}
@@ -315,7 +312,7 @@ public final class PredicateFunctions {
 		public LispStruct apply(final Arguments arguments) {
 			final LispStruct object = arguments.getRequiredArgument(OBJECT_ARGUMENT);
 			return BooleanStruct.toLispBoolean(
-					classType.isAssignableFrom(object.getClass()) && object.getType().eq(SimpleVectorType.INSTANCE)
+					classType.isAssignableFrom(object.getClass()) && typep(CommonLispSymbols.SIMPLE_VECTOR).toJavaPBoolean()
 			);
 		}
 	}

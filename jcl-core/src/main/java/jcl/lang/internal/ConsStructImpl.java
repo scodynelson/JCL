@@ -12,18 +12,22 @@ import java.util.stream.StreamSupport;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.type.ConsType;
+import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -31,7 +35,7 @@ import org.objectweb.asm.Opcodes;
  * The {@link ConsStructImpl} is the object representation of a Lisp 'cons' type.
  */
 //@EqualsAndHashCode(callSuper = false)
-public final class ConsStructImpl extends BuiltInClassStruct implements ConsStruct {
+public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 
 	/**
 	 * The 'car' (or head) of the cons linking structure.
@@ -52,7 +56,6 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 	 * 		the cdr of the binary cons structure
 	 */
 	public ConsStructImpl(final LispStruct car, final LispStruct cdr) {
-		super(ConsType.INSTANCE, null, null);
 		this.car = car;
 		this.cdr = cdr;
 	}
@@ -634,6 +637,48 @@ public final class ConsStructImpl extends BuiltInClassStruct implements ConsStru
 		                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
 		                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.CONS;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.CONS;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier instanceof SymbolStruct) {
+			if (typeSpecifier == CommonLispSymbols.LIST) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.CONS) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.SEQUENCE) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.T) {
+				return TStruct.INSTANCE;
+			}
+		} else if (typeSpecifier instanceof ClassStruct) {
+			if (typeSpecifier == BuiltInClassStruct.LIST) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.CONS) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.SEQUENCE) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.CLASS_T) {
+				return TStruct.INSTANCE;
+			}
+		}
+		return NILStruct.INSTANCE;
 	}
 
 	/*

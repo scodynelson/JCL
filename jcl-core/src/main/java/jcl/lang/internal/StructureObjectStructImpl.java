@@ -5,19 +5,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.type.LispType;
+import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * The {@link StructureObjectStructImpl} is the object representation of a Lisp 'structure-object' type.
  */
-public class StructureObjectStructImpl implements StructureObjectStruct {
+public class StructureObjectStructImpl extends LispStructImpl implements StructureObjectStruct {
 
 	protected final StructureClassStruct structureClass;
 
@@ -105,9 +110,48 @@ public class StructureObjectStructImpl implements StructureObjectStruct {
 		return false;
 	}
 
+//	@Override
+//	public LispStruct typeOf() {
+//		return structureClass.typeOf();
+//	}
+
 	@Override
-	public LispType getType() {
-		return structureClass.getType();
+	public LispStruct typeOf() {
+		return structureClass.getClassName();
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return structureClass;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier instanceof StructureClassStruct) {
+			final boolean isClassPresent = structureClass.getClassPrecedenceList()
+			                                             .stream()
+			                                             .anyMatch(classStruct -> classStruct.eq(typeSpecifier));
+			return isClassPresent ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		}
+		if (typeSpecifier == structureClass.getClassName()) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.STRUCTURE_OBJECT) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.STRUCTURE_OBJECT) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier instanceof SymbolStruct) {
+			final ClassStruct classStruct = ClassStruct.findClass((SymbolStruct) typeSpecifier);
+			if (classStruct != null) {
+				final boolean isClassPresent = structureClass.getClassPrecedenceList()
+				                                             .stream()
+				                                             .anyMatch(classStruct::eq);
+				return isClassPresent ? TStruct.INSTANCE : NILStruct.INSTANCE;
+			}
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	@Override

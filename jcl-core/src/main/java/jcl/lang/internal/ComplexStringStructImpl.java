@@ -24,14 +24,9 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
-import jcl.type.BaseCharType;
-import jcl.type.BaseStringType;
-import jcl.type.CharacterType;
-import jcl.type.LispType;
-import jcl.type.SimpleStringType;
-import jcl.type.StringType;
 
 /**
  * The {@link ComplexStringStructImpl} is the object representation of a Lisp 'string' type.
@@ -72,7 +67,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @param size
 	 * 		the size of the structure
 	 * @param elementType
-	 * 		the {@link CharacterType} type of the elements
+	 * 		the {@link LispStruct} type of the elements
 	 * @param contents
 	 * 		the {@link StringBuilder} contents
 	 * @param adjustable
@@ -80,9 +75,9 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @param fillPointer
 	 * 		the fill-pointer value of the structure
 	 */
-	public ComplexStringStructImpl(final Integer size, final CharacterType elementType, final StringBuilder contents,
+	public ComplexStringStructImpl(final Integer size, final LispStruct elementType, final StringBuilder contents,
 	                               final boolean adjustable, final Integer fillPointer) {
-		super(getStringType(elementType), elementType, size);
+		super(elementType, size);
 		this.contents = contents;
 		this.fillPointer = fillPointer;
 		this.adjustable = adjustable;
@@ -94,7 +89,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @param size
 	 * 		the size of the structure
 	 * @param elementType
-	 * 		the {@link CharacterType} type of the elements
+	 * 		the {@link LispStruct} type of the elements
 	 * @param displacedTo
 	 * 		the {@link ArrayStruct} structure this instance will be displaced to
 	 * @param displacedIndexOffset
@@ -104,26 +99,14 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @param fillPointer
 	 * 		the fill-pointer value of the structure
 	 */
-	public ComplexStringStructImpl(final Integer size, final CharacterType elementType,
+	public ComplexStringStructImpl(final Integer size, final LispStruct elementType,
 	                               final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                               final boolean adjustable, final Integer fillPointer) {
-		super(getStringType(elementType), elementType, size);
+		super(elementType, size);
 		this.displacedTo = displacedTo;
 		this.displacedIndexOffset = displacedIndexOffset;
 		this.fillPointer = fillPointer;
 		this.adjustable = adjustable;
-	}
-
-	/**
-	 * Gets the string type from the provided content element-type.
-	 *
-	 * @param elementType
-	 * 		the string content element-type
-	 *
-	 * @return the matching string type for the provided content element-type
-	 */
-	private static StringType getStringType(final CharacterType elementType) {
-		return (elementType instanceof BaseCharType) ? BaseStringType.INSTANCE : StringType.INSTANCE;
 	}
 
 	/*
@@ -162,13 +145,13 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	@Override
 	public CharacterStruct schar(final IntegerStruct index) {
 		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + SimpleStringType.INSTANCE + '.');
+				"The value " + this + " is not of the expected type " + CommonLispSymbols.SIMPLE_STRING + '.');
 	}
 
 	@Override
 	public CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index) {
 		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + SimpleStringType.INSTANCE + '.');
+				"The value " + this + " is not of the expected type " + CommonLispSymbols.SIMPLE_STRING + '.');
 	}
 
 	@Override
@@ -342,7 +325,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 */
 
 	@Override
-	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET) {
+	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispStruct upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final boolean newAdjustable = context.getAdjustable();
@@ -350,8 +333,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
 		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
 
-		final LispType displacedElementType = newDisplacedTo.arrayElementType();
-		if (!upgradedET.typeEquals(displacedElementType)) {
+		final LispStruct displacedElementType = newDisplacedTo.arrayElementType();
+		if (!upgradedET.eq(displacedElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -373,7 +356,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			return this;
 		} else {
 			return StringStruct.builder(newTotalSize)
-			                   .elementType((CharacterType) upgradedET)
+			                   .elementType(upgradedET)
 			                   .adjustable(newAdjustable)
 			                   .fillPointer(newFillPointer)
 			                   .displacedTo(newDisplacedTo)
@@ -383,7 +366,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	protected StringStruct adjustInitialContents(final AdjustArrayContext context, final LispType upgradedET) {
+	protected StringStruct adjustInitialContents(final AdjustArrayContext context, final LispStruct upgradedET) {
 
 		final IntegerStruct newTotalSize = context.getDimensions().get(0);
 		final SequenceStruct newInitialContents = context.getInitialContents();
@@ -391,8 +374,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		final IntegerStruct newFillPointer = context.getFillPointer();
 
 		for (final LispStruct initialElement : newInitialContents) {
-			final LispType currentElementType = initialElement.getType();
-			if (!upgradedET.typeEquals(currentElementType)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -422,7 +404,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			return this;
 		} else {
 			return StringStruct.builder(newTotalSize)
-			                   .elementType((CharacterType) upgradedET)
+			                   .elementType(upgradedET)
 			                   .adjustable(newAdjustable)
 			                   .fillPointer(newFillPointer)
 			                   .initialContents(newInitialContents)
@@ -431,7 +413,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	protected StringStruct adjustInitialElement(final AdjustArrayContext context, final LispType upgradedET) {
+	protected StringStruct adjustInitialElement(final AdjustArrayContext context, final LispStruct upgradedET) {
 		final LispStruct newInitialElement = context.getInitialElement();
 		validateNewInitialElement(newInitialElement, upgradedET);
 
@@ -471,7 +453,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			updateContentsWithElement(newContents, newInitialElement, totalSize, newTotalSizeInt);
 
 			return new ComplexStringStructImpl(newTotalSizeInt,
-			                                   (CharacterType) upgradedET,
+			                                   upgradedET,
 			                                   newContents,
 			                                   newAdjustableBoolean,
 			                                   newFillPointerInt);
@@ -532,7 +514,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			reversedContents = new StringBuilder(contentsToReverse).reverse();
 		}
 		return new ComplexStringStructImpl(totalSize,
-		                                   (CharacterType) elementType,
+		                                   elementType,
 		                                   reversedContents,
 		                                   adjustable,
 		                                   fillPointer);

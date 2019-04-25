@@ -34,22 +34,16 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.type.LispType;
 
 public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {
 
 	protected Closure closure;
 
 	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
-
-		@Override
-		public LispType getType() {
-			return null;
-		}
 	};
 
 	protected CompiledMacroFunctionExpander(final Closure closure) {
-		this("", closure);
+		this.closure = closure;
 	}
 
 	protected CompiledMacroFunctionExpander(final String documentation, final Closure closure) {

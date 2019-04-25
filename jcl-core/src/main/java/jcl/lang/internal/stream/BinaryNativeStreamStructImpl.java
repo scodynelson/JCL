@@ -13,10 +13,9 @@ import java.io.OutputStream;
 import jcl.lang.BinaryNativeStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.StreamErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.PeekType;
 import jcl.lang.stream.ReadPeekResult;
-import jcl.type.StreamType;
-import jcl.type.UnsignedByteType;
 
 /**
  * The {@link BinaryNativeStreamStructImpl} is the object representation of a binary reading and writing system level Lisp
@@ -57,7 +56,7 @@ public final class BinaryNativeStreamStructImpl extends AbstractNativeStreamStru
 	 * 		the {@link OutputStream} to create a BinaryStreamStruct from
 	 */
 	public BinaryNativeStreamStructImpl(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(StreamType.INSTANCE, interactive, UnsignedByteType.INSTANCE);
+		super(interactive, CommonLispSymbols.UNSIGNED_BYTE);
 
 		this.inputStream = new BufferedInputStream(inputStream);
 		this.outputStream = new BufferedOutputStream(outputStream);

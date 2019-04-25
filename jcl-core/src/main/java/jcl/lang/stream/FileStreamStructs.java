@@ -10,8 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.stream.FileStreamStructImpl;
-import jcl.type.CharacterType;
-import jcl.type.LispType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * Created by codynelson on 2/15/16.
@@ -21,7 +20,7 @@ public final class FileStreamStructs {
 	private FileStreamStructs() {
 	}
 
-	public static FileStreamStructImpl open(final PathnameStruct pathname, final DirectionType directionType, final LispType elementType,
+	public static FileStreamStructImpl open(final PathnameStruct pathname, final DirectionType directionType, final LispStruct elementType,
 	                                        final IfExistsType ifExistsType, final IfDoesNotExistType ifDoesNotExistType,
 	                                        final ExternalFormat externalFormat) {
 
@@ -42,7 +41,7 @@ public final class FileStreamStructs {
 		final IfExistsType ifExistsType = IfExistsType.fromValue(ifExistsSymbol);
 		final IfDoesNotExistType ifDoesNotExistType = IfDoesNotExistType.fromValue(ifDoesNotExistSymbol);
 
-		return open(pathname, directionType, CharacterType.INSTANCE, ifExistsType, ifDoesNotExistType, ExternalFormat.DEFAULT);
+		return open(pathname, directionType, CommonLispSymbols.CHARACTER, ifExistsType, ifDoesNotExistType, ExternalFormat.DEFAULT);
 	}
 }
 

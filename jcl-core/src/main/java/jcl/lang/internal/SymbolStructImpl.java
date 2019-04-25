@@ -15,16 +15,17 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
-import jcl.type.LispType;
-import jcl.type.SymbolType;
 import lombok.EqualsAndHashCode;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -33,7 +34,7 @@ import org.objectweb.asm.Opcodes;
  * The {@link SymbolStructImpl} is the object representation of a Lisp 'symbol' type.
  */
 @EqualsAndHashCode(of = {"name", "symbolPackage"}, callSuper = false)
-public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct {
+public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	protected final String name;
 
@@ -114,7 +115,7 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * 		the symbol value
 	 */
 	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value) {
-		this(SymbolType.INSTANCE, name, symbolPackage, value, null);
+		this(name, symbolPackage, value, null);
 	}
 
 	/**
@@ -130,26 +131,6 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 	 * 		the symbol function
 	 */
 	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
-		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param lispType
-	 * 		the type of the symbol object
-	 * @param name
-	 * 		the symbol name
-	 * @param symbolPackage
-	 * 		the symbol package
-	 * @param value
-	 * 		the symbol value
-	 * @param function
-	 * 		the symbol function
-	 */
-	protected SymbolStructImpl(final LispType lispType,
-	                           final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
-		super(lispType, null, null);
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
@@ -643,6 +624,39 @@ public class SymbolStructImpl extends BuiltInClassStruct implements SymbolStruct
 			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_DESC,
 			                   true);
 		}
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		if (symbolPackage == GlobalPackageStruct.KEYWORD) {
+			return CommonLispSymbols.KEYWORD;
+		}
+		if (this == TStruct.INSTANCE) {
+			return CommonLispSymbols.BOOLEAN;
+		}
+		return CommonLispSymbols.SYMBOL;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.SYMBOL;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.SYMBOL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SYMBOL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.KEYWORD) {
+			return (symbolPackage == GlobalPackageStruct.KEYWORD) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.BOOLEAN) {
+			return (this == TStruct.INSTANCE) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	/*

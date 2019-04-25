@@ -14,17 +14,21 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
-import jcl.type.BitVectorType;
-import jcl.type.LispType;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -43,10 +47,10 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 	protected Integer displacedIndexOffset;
 
-	public BitVectorStructImpl(final BitVectorType bitVectorType, final Integer size,
+	public BitVectorStructImpl(final Integer size,
 	                           final List<IntegerStruct> contents, final boolean isAdjustable,
 	                           final Integer fillPointer) {
-		super(bitVectorType, size);
+		super(size);
 		this.contents = contents;
 		this.isAdjustable = isAdjustable;
 		this.fillPointer = fillPointer;
@@ -127,21 +131,20 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 	 */
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (!upgradedET.typeEquals(this.elementType)) {
+		if (!upgradedET.eq(this.elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
-		final LispType initialElementType = initialElement.getType();
-		if (!upgradedET.typeEquals(initialElementType)) {
+		if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -164,22 +167,21 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (!upgradedET.typeEquals(this.elementType)) {
+		if (!upgradedET.eq(this.elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
 		for (final LispStruct initialElement : initialContents) {
-			final LispType initialElementType = initialElement.getType();
-			if (!upgradedET.typeEquals(initialElementType)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -202,22 +204,22 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
 	                               final IntegerStruct displacedIndexOffset) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (!upgradedET.typeEquals(this.elementType)) {
+		if (!upgradedET.eq(this.elementType)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
-		final LispType initialElementType = displacedTo.arrayElementType();
-		if (!upgradedET.typeEquals(initialElementType)) {
+		final LispStruct initialElementType = displacedTo.arrayElementType();
+		if (!upgradedET.eq(initialElementType)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + displacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -407,6 +409,36 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 		                   true);
 	}
 
+	@Override
+	public LispStruct typeOf() {
+		// TODO: Simple vs Not???
+		return ListStruct.toLispList(CommonLispSymbols.SIMPLE_BIT_VECTOR, new FixnumStructImpl(totalSize));
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		// TODO: Simple vs Not???
+		return BuiltInClassStruct.SIMPLE_BIT_VECTOR;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		// TODO: Simple vs Not???
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_BIT_VECTOR) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_ARRAY) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_BIT_VECTOR) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_ARRAY) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
+
 	/*
 	OBJECT
 	 */
@@ -429,10 +461,8 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 				stringBuilder.append(printedIntegerStruct);
 			}
 		} else {
-			final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
-
 			stringBuilder.append("#<");
-			stringBuilder.append(typeClassName);
+			stringBuilder.append(typeOf());
 			stringBuilder.append(' ');
 
 			stringBuilder.append(arrayTotalSize());
@@ -454,8 +484,7 @@ public final class BitVectorStructImpl extends AbstractBitVectorStructImpl {
 
 	@Override
 	public BitVectorStruct copyBitArray() {
-		return new BitVectorStructImpl(BitVectorStruct.getBitVectorType(isAdjustable, fillPointer), contents.size(), contents,
-		                               isAdjustable, fillPointer);
+		return new BitVectorStructImpl(contents.size(), contents, isAdjustable, fillPointer);
 	}
 
 	@Override

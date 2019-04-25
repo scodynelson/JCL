@@ -18,6 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -29,8 +30,7 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.function.parameterdsl.Parameters;
-import jcl.type.CompiledFunctionType;
-import jcl.type.LispType;
+import jcl.lang.statics.CommonLispSymbols;
 
 public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 
@@ -39,19 +39,14 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 	protected Closure closure;
 
 	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
-
-		@Override
-		public LispType getType() {
-			return null;
-		}
 	};
 
 	protected CompiledFunctionStruct(final Closure closure) {
-		this("", closure);
+		this.closure = closure;
 	}
 
 	protected CompiledFunctionStruct(final String documentation, final Closure closure) {
-		super(documentation, CompiledFunctionType.INSTANCE);
+		super(documentation);
 		this.closure = closure;
 	}
 
@@ -351,5 +346,18 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 
 	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
 		return NILStruct.INSTANCE;
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.COMPILED_FUNCTION;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.COMPILED_FUNCTION) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

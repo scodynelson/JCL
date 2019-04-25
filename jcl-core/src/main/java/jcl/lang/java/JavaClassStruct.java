@@ -4,16 +4,14 @@
 
 package jcl.lang.java;
 
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.internal.LispStructImpl;
 
-public class JavaClassStruct extends BuiltInClassStruct {
+public class JavaClassStruct extends LispStructImpl {
 
 	private final Class<?> javaClass;
 
 	private JavaClassStruct(final Class<?> javaClass) {
-		super(null, null);
-
 		this.javaClass = javaClass;
 	}
 

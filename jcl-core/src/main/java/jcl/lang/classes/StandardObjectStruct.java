@@ -1,13 +1,11 @@
 package jcl.lang.classes;
 
-import jcl.lang.LispStruct;
-import jcl.type.LispType;
-import jcl.type.StandardObjectType;
+import jcl.lang.internal.LispStructImpl;
 
 /**
  * The {@link StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
  */
-public abstract class StandardObjectStruct implements LispStruct {
+public abstract class StandardObjectStruct extends LispStructImpl {
 
 	protected String documentation;
 
@@ -45,11 +43,6 @@ public abstract class StandardObjectStruct implements LispStruct {
 	 */
 	public void setDocumentation(final String documentation) {
 		this.documentation = documentation;
-	}
-
-	@Override
-	public LispType getType() {
-		return StandardObjectType.INSTANCE;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.List;
 import jcl.lang.internal.BignumStructImpl;
 import jcl.lang.internal.FixnumStructImpl;
 import jcl.lang.internal.LongnumStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import org.apfloat.Apint;
 
 /**
@@ -509,4 +510,9 @@ public interface IntegerStruct extends RationalStruct {
 				((object instanceof IntegerStruct)
 						&& ((IntegerStruct) object).ap().equals(ap()));
 	}
+
+	LispStruct UNSIGNED_BYTE_8 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, new FixnumStructImpl(8));
+	LispStruct UNSIGNED_BYTE_16 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, new FixnumStructImpl(16));
+	LispStruct UNSIGNED_BYTE_32 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, new FixnumStructImpl(32));
+	LispStruct UNSIGNED_BYTE_32_MAX_VALUE = new BignumStructImpl(BigInteger.valueOf(4294967296L));
 }

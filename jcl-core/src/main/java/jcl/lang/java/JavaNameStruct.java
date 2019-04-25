@@ -7,17 +7,15 @@ package jcl.lang.java;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
-import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.internal.LispStructImpl;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class JavaNameStruct extends BuiltInClassStruct {
+public class JavaNameStruct extends LispStructImpl {
 
 	private final String javaName;
 
 	private JavaNameStruct(final String javaName) {
-		super(null, null);
-
 		this.javaName = javaName;
 	}
 

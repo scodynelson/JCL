@@ -13,8 +13,8 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.type.TType;
 
 public class KeyParameter extends Parameter {
 
@@ -40,7 +40,7 @@ public class KeyParameter extends Parameter {
 	public KeyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                    final LispStruct initForm, final boolean isSpecial, final SymbolStruct keyName,
 	                    final SuppliedPParameter suppliedPBinding) {
-		super(var, destructuringForm, TType.INSTANCE, initForm, isSpecial);
+		super(var, destructuringForm, CommonLispSymbols.T, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}

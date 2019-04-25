@@ -1,7 +1,6 @@
 package jcl.lang.condition;
 
 import jcl.lang.LispStruct;
-import jcl.type.LispType;
 
 public abstract class ConditionStruct implements LispStruct {
 
@@ -43,9 +42,4 @@ public abstract class ConditionStruct implements LispStruct {
   ;; after creation.
   (assigned-slots () :type list))
 	 */
-
-	@Override
-	public LispType getType() {
-		return null;
-	}
 }

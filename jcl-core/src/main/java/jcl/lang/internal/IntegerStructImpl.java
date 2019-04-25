@@ -3,15 +3,9 @@ package jcl.lang.internal;
 import java.math.BigInteger;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.statics.PrinterVariables;
-import jcl.type.IntegerType;
 
-abstract class IntegerStructImpl extends BuiltInClassStruct implements IntegerStruct {
-
-	protected IntegerStructImpl(final IntegerType type) {
-		super(type, null, null);
-	}
+abstract class IntegerStructImpl extends LispStructImpl implements IntegerStruct {
 
 	/*
 	Add Helpers

@@ -12,15 +12,23 @@ import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BignumStruct;
 import jcl.lang.BooleanStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.number.QuotientRemainder;
-import jcl.type.BignumType;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
@@ -52,7 +60,6 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	 * 		the integer value
 	 */
 	public BignumStructImpl(final BigInteger value) {
-		super(BignumType.INSTANCE);
 		this.value = value;
 	}
 
@@ -886,5 +893,75 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		                   INTEGER_TO_LISP_INTEGER_METHOD_NAME,
 		                   INTEGER_TO_LISP_INTEGER_METHOD_DESC,
 		                   true);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		if (signum().toJavaInt() > 0) {
+			return ListStruct.toLispList(
+					CommonLispSymbols.INTEGER,
+					new BignumStructImpl(BigInteger.valueOf((long) Integer.MAX_VALUE + 1))
+			);
+		}
+		return CommonLispSymbols.BIGNUM;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.BIGNUM;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier instanceof SymbolStruct) {
+			if (typeSpecifier == CommonLispSymbols.BIGNUM) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.INTEGER) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.RATIONAL) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.REAL) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.NUMBER) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.SIGNED_BYTE) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == CommonLispSymbols.UNSIGNED_BYTE) {
+				return (signum().toJavaInt() >= 0) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+			}
+		} else if (typeSpecifier instanceof ClassStruct) {
+			if (typeSpecifier == BuiltInClassStruct.BIGNUM) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.INTEGER) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.RATIONAL) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.REAL) {
+				return TStruct.INSTANCE;
+			}
+			if (typeSpecifier == BuiltInClassStruct.NUMBER) {
+				return TStruct.INSTANCE;
+			}
+		} else if (typeSpecifier instanceof ConsStruct) {
+			if (typeSpecifier.equal(UNSIGNED_BYTE_8)) {
+				return NILStruct.INSTANCE;
+			}
+			if (typeSpecifier.equal(UNSIGNED_BYTE_32)) {
+				if (minusp().toJavaPBoolean()) {
+					return NILStruct.INSTANCE;
+				}
+				return isLessThan((RealStruct) UNSIGNED_BYTE_32_MAX_VALUE) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+			}
+		}
+		return super.typep(typeSpecifier);
 	}
 }

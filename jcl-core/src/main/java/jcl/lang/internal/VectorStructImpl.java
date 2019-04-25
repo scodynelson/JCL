@@ -14,17 +14,21 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.specialoperator.QuoteStruct;
 import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
-import jcl.type.LispType;
-import jcl.type.VectorType;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -43,9 +47,9 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 
 	protected Integer displacedIndexOffset;
 
-	protected VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	protected VectorStructImpl(final Integer size, final LispStruct elementType,
 	                           final boolean isAdjustable, final Integer fillPointer) {
-		super(vectorType, elementType, size);
+		super(elementType, size);
 		this.fillPointer = fillPointer;
 		this.isAdjustable = isAdjustable;
 	}
@@ -53,8 +57,6 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param vectorType
-	 * 		the vector type
 	 * @param size
 	 * 		the vector size
 	 * @param contents
@@ -66,17 +68,15 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	public VectorStructImpl(final Integer size, final LispStruct elementType,
 	                        final List<LispStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
-		this(vectorType, size, elementType, isAdjustable, fillPointer);
+		this(size, elementType, isAdjustable, fillPointer);
 		this.contents = contents;
 	}
 
 	/**
 	 * Protected constructor.
 	 *
-	 * @param vectorType
-	 * 		the vector type
 	 * @param size
 	 * 		the vector size
 	 * @param displacedTo
@@ -90,10 +90,10 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	public VectorStructImpl(final VectorType vectorType, final Integer size, final LispType elementType,
+	public VectorStructImpl(final Integer size, final LispStruct elementType,
 	                        final ArrayStruct displacedTo, final Integer displacedIndexOffset,
 	                        final boolean isAdjustable, final Integer fillPointer) {
-		this(vectorType, size, elementType, isAdjustable, fillPointer);
+		this(size, elementType, isAdjustable, fillPointer);
 		this.displacedTo = displacedTo;
 		this.displacedIndexOffset = displacedIndexOffset;
 	}
@@ -173,21 +173,20 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	 */
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (this.elementType.isNotOfType(upgradedET)) {
+		if (!this.elementType.typep(upgradedET).toJavaPBoolean()) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
-		final LispType initialElementType = initialElement.getType();
-		if (initialElementType.isNotOfType(upgradedET)) {
+		if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 			throw new TypeErrorException(
 					"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -210,22 +209,21 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (this.elementType.isNotOfType(upgradedET)) {
+		if (this.elementType.eq(upgradedET)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
 		for (final LispStruct initialElement : initialContents) {
-			final LispType initialElementType = initialElement.getType();
-			if (initialElementType.isNotOfType(upgradedET)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -248,22 +246,22 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
 	                               final IntegerStruct displacedIndexOffset) {
 
 		if (!dimensions.isEmpty()) {
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
-		final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+		final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 
-		if (this.elementType.isNotOfType(upgradedET)) {
+		if (!this.elementType.eq(upgradedET)) {
 			throw new TypeErrorException(
 					"Provided upgraded-array-element-type " + upgradedET + " must be the same as initial upgraded-array-element-type " + this.elementType + '.');
 		}
 
-		final LispType initialElementType = displacedTo.arrayElementType();
-		if (initialElementType.isNotOfType(upgradedET)) {
+		final LispStruct initialElementType = displacedTo.arrayElementType();
+		if (initialElementType.eq(upgradedET)) {
 			throw new TypeErrorException(
 					"Provided array for displacement " + displacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 		}
@@ -499,6 +497,37 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 		                   true);
 	}
 
+	@Override
+	public LispStruct typeOf() {
+		return ListStruct.toLispList(CommonLispSymbols.SIMPLE_VECTOR, new FixnumStructImpl(totalSize));
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.SIMPLE_VECTOR;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		// TODO: Simple vs Not???
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_VECTOR) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SIMPLE_ARRAY) {
+			// TODO: Simple vs Not???
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_VECTOR) {
+			// TODO: Simple vs Not???
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SIMPLE_ARRAY) {
+			// TODO: Simple vs Not???
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
+
 	/*
 	OBJECT
 	 */
@@ -530,18 +559,15 @@ public class VectorStructImpl extends AbstractVectorStructImpl {
 
 			stringBuilder.append(')');
 		} else {
-			final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
-
 			stringBuilder.append("#<");
-			stringBuilder.append(typeClassName);
+			stringBuilder.append(typeOf());
 			stringBuilder.append(' ');
 
 			stringBuilder.append(arrayTotalSize());
 
 			stringBuilder.append(" type ");
 
-			final String elementTypeClassName = arrayElementType().getClass().getName().toUpperCase();
-			stringBuilder.append(elementTypeClassName);
+			stringBuilder.append(arrayElementType());
 
 			if (fillPointer != null) {
 				stringBuilder.append(" fill-pointer ");

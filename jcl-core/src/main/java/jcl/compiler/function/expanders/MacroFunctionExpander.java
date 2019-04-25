@@ -27,8 +27,6 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	protected MacroLambdaList macroLambdaListBindings;
 
 	protected MacroFunctionExpander() {
-		// TODO: Remove eventually
-		this("");
 	}
 
 	protected MacroFunctionExpander(final String documentation) {

@@ -10,9 +10,11 @@ import java.util.stream.Stream;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.internal.BooleanStructImpl;
-import jcl.type.NILType;
+import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.lang3.ArrayUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -28,7 +30,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	 * Private constructor.
 	 */
 	private NILStruct() {
-		super(NILType.INSTANCE, "NIL", false);
+		super("NIL", false);
 	}
 
 	/*
@@ -213,6 +215,48 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 		                  GenerationConstants.NIL_STRUCT_NAME,
 		                  GenerationConstants.SINGLETON_INSTANCE,
 		                  GenerationConstants.NIL_STRUCT_DESC);
+	}
+
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.NULL;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.NULL;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.NULL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.LIST) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SEQUENCE) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SYMBOL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.BOOLEAN) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.NULL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.LIST) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SEQUENCE) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SYMBOL) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 
 	/*

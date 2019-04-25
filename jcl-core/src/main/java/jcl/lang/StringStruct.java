@@ -8,8 +8,7 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.ComplexStringStructImpl;
 import jcl.lang.internal.SimpleStringStructImpl;
 import jcl.lang.statics.CharacterConstants;
-import jcl.type.CharacterType;
-import jcl.type.LispType;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
@@ -603,7 +602,7 @@ public interface StringStruct extends VectorStruct {
 		builder.initialElement(initialElement);
 
 		// TODO: elementType currently ignored!!
-		final CharacterType characterType = CharacterType.INSTANCE;
+		final LispStruct characterType = CommonLispSymbols.CHARACTER;
 		builder.elementType(characterType);
 
 		return builder.build();
@@ -697,7 +696,7 @@ public interface StringStruct extends VectorStruct {
 	/**
 	 * Builder factory for creating {@link StringStruct} objects.
 	 */
-	final class Builder extends ArrayStruct.AbstractBuilder<StringStruct, CharacterType, CharacterStruct> {
+	final class Builder extends ArrayStruct.AbstractBuilder<StringStruct, LispStruct, CharacterStruct> {
 
 		/**
 		 * The size of the resulting {@link StringStruct}.
@@ -716,12 +715,12 @@ public interface StringStruct extends VectorStruct {
 		 * 		the expected size of the resulting {@link StringStruct}
 		 */
 		private Builder(final IntegerStruct size) {
-			super(CharacterType.INSTANCE, CharacterConstants.NULL_CHAR);
+			super(CommonLispSymbols.CHARACTER, CharacterConstants.NULL_CHAR);
 			this.size = size;
 		}
 
 		@Override
-		public StringStruct.Builder elementType(final CharacterType elementType) {
+		public StringStruct.Builder elementType(final LispStruct elementType) {
 			this.elementType = elementType;
 			return this;
 		}
@@ -765,13 +764,13 @@ public interface StringStruct extends VectorStruct {
 		@Override
 		public StringStruct build() {
 			final int sizeInt = size.toJavaInt();
-			final LispType upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
+			final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
 			final boolean adjustableBoolean = adjustable;
 			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
 
 			if (displacedTo != null) {
-				final LispType displacedToType = displacedTo.arrayElementType();
-				if (!upgradedET.typeEquals(displacedToType)) {
+				final LispStruct displacedToType = displacedTo.arrayElementType();
+				if (!upgradedET.eq(displacedToType)) {
 					throw new TypeErrorException(
 							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
 				}
@@ -779,7 +778,7 @@ public interface StringStruct extends VectorStruct {
 				displacedTo.rowMajorAref(displacedIndexOffset);
 
 				return new ComplexStringStructImpl(sizeInt,
-				                                   (CharacterType) upgradedET,
+				                                   upgradedET,
 				                                   displacedTo,
 				                                   displacedIndexOffset.toJavaInt(),
 				                                   adjustableBoolean,
@@ -788,8 +787,7 @@ public interface StringStruct extends VectorStruct {
 
 			if (initialContents != null) {
 				for (final LispStruct element : initialContents) {
-					final LispType initialElementType = element.getType();
-					if (!upgradedET.typeEquals(initialElementType)) {
+					if (!element.typep(upgradedET).toJavaPBoolean()) {
 						throw new TypeErrorException(
 								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 					}
@@ -807,18 +805,17 @@ public interface StringStruct extends VectorStruct {
 				                                                     StringBuilder::append);
 				if ((fillPointerInt == null) && !adjustableBoolean) {
 					return new SimpleStringStructImpl(sizeInt,
-					                                  CharacterType.INSTANCE,
+					                                  CommonLispSymbols.CHARACTER,
 					                                  contents);
 				}
 				return new ComplexStringStructImpl(sizeInt,
-				                                   CharacterType.INSTANCE,
+				                                   CommonLispSymbols.CHARACTER,
 				                                   contents,
 				                                   adjustableBoolean,
 				                                   fillPointerInt);
 			}
 
-			final LispType initialElementType = initialElement.getType();
-			if (!upgradedET.typeEquals(initialElementType)) {
+			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
 				// NOTE: This should never get hit due to the implementation of array-upgraded-element-type
 				throw new TypeErrorException(
 						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
@@ -832,11 +829,11 @@ public interface StringStruct extends VectorStruct {
 			                                              StringBuilder::append);
 			if ((fillPointerInt == null) && !adjustableBoolean) {
 				return new SimpleStringStructImpl(sizeInt,
-				                                  CharacterType.INSTANCE,
+				                                  CommonLispSymbols.CHARACTER,
 				                                  contents);
 			}
 			return new ComplexStringStructImpl(sizeInt,
-			                                   CharacterType.INSTANCE,
+			                                   CommonLispSymbols.CHARACTER,
 			                                   contents,
 			                                   adjustableBoolean,
 			                                   fillPointerInt);

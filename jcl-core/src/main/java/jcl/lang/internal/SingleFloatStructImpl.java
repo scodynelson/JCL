@@ -20,15 +20,14 @@ import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.ShortFloatStruct;
 import jcl.lang.SingleFloatStruct;
+import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.number.QuotientRemainder;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
-import jcl.type.DoubleFloatType;
-import jcl.type.FloatType;
-import jcl.type.LongFloatType;
-import jcl.type.ShortFloatType;
-import jcl.type.SingleFloatType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +43,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-@EqualsAndHashCode(callSuper = false)
-public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleFloatStruct, ShortFloatStruct {
+@EqualsAndHashCode
+public class SingleFloatStructImpl extends LispStructImpl implements SingleFloatStruct, ShortFloatStruct {
 
 	/**
 	 * The floating-point precision of a FloatStruct object.
@@ -66,7 +65,6 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 	 * 		the float value
 	 */
 	public SingleFloatStructImpl(final float value) {
-		super(SingleFloatType.INSTANCE, null, null);
 		this.value = value;
 	}
 
@@ -869,6 +867,42 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 		                   true);
 	}
 
+	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.SINGLE_FLOAT;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.SINGLE_FLOAT;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.FLOAT) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.REAL) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.NUMBER) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SINGLE_FLOAT) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.SHORT_FLOAT) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.FLOAT) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.SINGLE_FLOAT) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
+
 	/*
 	OBJECT
 	 */
@@ -876,18 +910,18 @@ public class SingleFloatStructImpl extends BuiltInClassStruct implements SingleF
 	@Override
 	public String toString() {
 
-		final FloatType floatType = (FloatType) getType();
-		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+		final LispStruct floatType = typeOf();
+		final SymbolStruct defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
 
 		String floatString = String.valueOf(value);
-		if (floatType.isNotOfType(defaultFloatFormat)) {
-			if (floatType.isOfType(ShortFloatType.INSTANCE)) {
+		if (!floatType.eq(defaultFloatFormat)) {
+			if (floatType.eq(CommonLispSymbols.SHORT_FLOAT)) {
 				floatString = floatString.replace('E', 'S');
-			} else if (floatType.isOfType(SingleFloatType.INSTANCE)) {
+			} else if (floatType.eq(CommonLispSymbols.SINGLE_FLOAT)) {
 				floatString = floatString.replace('E', 'F');
-			} else if (floatType.isOfType(DoubleFloatType.INSTANCE)) {
+			} else if (floatType.eq(CommonLispSymbols.DOUBLE_FLOAT)) {
 				floatString = floatString.replace('E', 'D');
-			} else if (floatType.isOfType(LongFloatType.INSTANCE)) {
+			} else if (floatType.eq(CommonLispSymbols.LONG_FLOAT)) {
 				floatString = floatString.replace('E', 'L');
 			}
 		}

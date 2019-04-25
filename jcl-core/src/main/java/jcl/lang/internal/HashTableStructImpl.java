@@ -23,8 +23,8 @@ import jcl.lang.SingleFloatStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
-import jcl.type.HashTableType;
-import jcl.type.LispType;
+import jcl.lang.classes.ClassStruct;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link HashTableStructImpl} is the object representation of a Lisp 'hash-table' type.
@@ -32,7 +32,7 @@ import jcl.type.LispType;
  * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally
  * by Java.
  */
-public final class HashTableStructImpl extends BuiltInClassStruct implements HashTableStruct {
+public final class HashTableStructImpl extends LispStructImpl implements HashTableStruct {
 
 	/**
 	 * The test function for verifying equivalence of a key.
@@ -60,7 +60,6 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	 * 		the threshold amount when resizing the table
 	 */
 	public HashTableStructImpl(final FunctionStruct test, final FixnumStruct size, final FloatStruct rehashThreshold) {
-		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
 
@@ -179,6 +178,27 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	}
 
 	@Override
+	public LispStruct typeOf() {
+		return CommonLispSymbols.HASH_TABLE;
+	}
+
+	@Override
+	public ClassStruct classOf() {
+		return BuiltInClassStruct.HASH_TABLE;
+	}
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.HASH_TABLE) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.HASH_TABLE) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
+	}
+
+	@Override
 	public String toString() {
 		return "#<" + "HASH-TABLE" + " :TEST " + test + " :SIZE " + size() + '>';
 	}
@@ -186,7 +206,7 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
-	private static final class KeyWrapper implements LispStruct {
+	private static final class KeyWrapper extends LispStructImpl {
 
 		/**
 		 * The {@link LispStruct} key to wrap.
@@ -221,8 +241,8 @@ public final class HashTableStructImpl extends BuiltInClassStruct implements Has
 		}
 
 		@Override
-		public LispType getType() {
-			return key.getType();
+		public LispStruct typeOf() {
+			return key.typeOf();
 		}
 
 		@Override

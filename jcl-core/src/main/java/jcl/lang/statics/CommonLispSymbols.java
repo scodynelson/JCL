@@ -100,10 +100,10 @@ public interface CommonLispSymbols {
 	SymbolStruct COMPILE_FILE_TRUENAME_VAR = CompilerVariables.COMPILE_FILE_TRUENAME;
 	SymbolStruct COMPILE_PRINT_VAR = CompilerVariables.COMPILE_PRINT;
 	SymbolStruct COMPILE_VERBOSE_VAR = CompilerVariables.COMPILE_VERBOSE;
-	SymbolStruct DEBUG_IO_VAR = StreamVariables.DEBUG_IO;
+//	SymbolStruct DEBUG_IO_VAR = StreamVariables.DEBUG_IO;
 	SymbolStruct DEBUGGER_HOOK_VAR = CompilerVariables.DEBUGGER_HOOK;
 	SymbolStruct DEFAULT_PATHNAME_DEFAULTS_VAR = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS;
-	SymbolStruct ERROR_OUTPUT_VAR = StreamVariables.ERROR_OUTPUT;
+//	SymbolStruct ERROR_OUTPUT_VAR = StreamVariables.ERROR_OUTPUT;
 	SymbolStruct FEATURES_VAR = CompilerVariables.FEATURES;
 	SymbolStruct GENSYM_COUNTER_VAR = CompilerVariables.GENSYM_COUNTER;
 	SymbolStruct LOAD_PATHNAME_VAR = CompilerVariables.LOAD_PATHNAME;
@@ -128,17 +128,17 @@ public interface CommonLispSymbols {
 	SymbolStruct PRINT_RADIX_VAR = PrinterVariables.PRINT_RADIX;
 	SymbolStruct PRINT_READABLY_VAR = PrinterVariables.PRINT_READABLY;
 	SymbolStruct PRINT_RIGHT_MARGIN_VAR = PrinterVariables.PRINT_RIGHT_MARGIN;
-	SymbolStruct QUERY_IO_VAR = StreamVariables.QUERY_IO;
+//	SymbolStruct QUERY_IO_VAR = StreamVariables.QUERY_IO;
 	SymbolStruct RANDOM_STATE_VAR = NumberVariables.RANDOM_STATE;
 	SymbolStruct READ_BASE_VAR = ReaderVariables.READ_BASE;
 	SymbolStruct READ_DEFAULT_FLOAT_FORMAT_VAR = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT;
 	SymbolStruct READ_EVAL_VAR = ReaderVariables.READ_EVAL;
 	SymbolStruct READ_SUPPRESS_VAR = ReaderVariables.READ_SUPPRESS;
 	SymbolStruct READTABLE_VAR = ReaderVariables.READTABLE;
-	SymbolStruct STANDARD_INPUT_VAR = StreamVariables.STANDARD_INPUT;
-	SymbolStruct STANDARD_OUTPUT_VAR = StreamVariables.STANDARD_OUTPUT;
-	SymbolStruct TERMINAL_IO_VAR = StreamVariables.TERMINAL_IO;
-	SymbolStruct TRACE_OUTPUT_VAR = StreamVariables.TRACE_OUTPUT;
+//	SymbolStruct STANDARD_INPUT_VAR = StreamVariables.STANDARD_INPUT;
+//	SymbolStruct STANDARD_OUTPUT_VAR = StreamVariables.STANDARD_OUTPUT;
+//	SymbolStruct TERMINAL_IO_VAR = StreamVariables.TERMINAL_IO;
+//	SymbolStruct TRACE_OUTPUT_VAR = StreamVariables.TRACE_OUTPUT;
 
 	SymbolStruct STAR = REPLVariables.STAR;
 	SymbolStruct STAR_STAR = REPLVariables.STAR_STAR;
@@ -172,7 +172,7 @@ public interface CommonLispSymbols {
 	SymbolStruct ALLOCATE_INSTANCE = null;
 	SymbolStruct ALPHA_CHAR_P = null;
 	SymbolStruct ALPHANUMERICP = null;
-	SymbolStruct AND = null;
+	SymbolStruct AND = GlobalPackageStruct.COMMON_LISP.intern("AND").getSymbol();
 	SymbolStruct APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 	SymbolStruct APPLY = GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol();
 	SymbolStruct APROPOS = null;
@@ -181,7 +181,7 @@ public interface CommonLispSymbols {
 	SymbolStruct ARITHMETIC_ERROR = null;
 	SymbolStruct ARITHMETIC_ERROR_OPERANDS = null;
 	SymbolStruct ARITHMETIC_ERROR_OPERATION = null;
-	SymbolStruct ARRAY = null;
+	SymbolStruct ARRAY = GlobalPackageStruct.COMMON_LISP.intern("ARRAY").getSymbol();
 	SymbolStruct ARRAY_DIMENSION = null;
 	SymbolStruct ARRAY_DIMENSIONS = null;
 	SymbolStruct ARRAY_DISPLACEMENT = null;
@@ -202,10 +202,10 @@ public interface CommonLispSymbols {
 	SymbolStruct ATAN = null;
 	SymbolStruct ATANH = null;
 	SymbolStruct ATOM = GlobalPackageStruct.COMMON_LISP.intern("ATOM").getSymbol();
-	SymbolStruct BASE_CHAR = null;
-	SymbolStruct BASE_STRING = null;
-	SymbolStruct BIGNUM = null;
-	SymbolStruct BIT = null;
+	SymbolStruct BASE_CHAR = GlobalPackageStruct.COMMON_LISP.intern("BASE-CHAR").getSymbol();
+	SymbolStruct BASE_STRING = GlobalPackageStruct.COMMON_LISP.intern("BASE-STRING").getSymbol();
+	SymbolStruct BIGNUM = GlobalPackageStruct.COMMON_LISP.intern("BIGNUM").getSymbol();
+	SymbolStruct BIT = GlobalPackageStruct.COMMON_LISP.intern("BIT").getSymbol();
 	SymbolStruct BIT_AND = null;
 	SymbolStruct BIT_ANDC_1 = null;
 	SymbolStruct BIT_ANDC_2 = null;
@@ -221,13 +221,13 @@ public interface CommonLispSymbols {
 	SymbolStruct BIT_XOR = null;
 	SymbolStruct BLOCK = null;
 	SymbolStruct BOOLE = null;
-	SymbolStruct BOOLEAN = null;
+	SymbolStruct BOOLEAN = GlobalPackageStruct.COMMON_LISP.intern("BOOLEAN").getSymbol();
 	SymbolStruct BOTH_CASE_P = null;
 	SymbolStruct BOUNDP = null;
 	SymbolStruct BREAK = null;
 	SymbolStruct BROADCAST_STREAM = null;
 	SymbolStruct BROADCAST_STREAM_STREAMS = null;
-	SymbolStruct BUILT_IN_CLASS = null;
+	SymbolStruct BUILT_IN_CLASS = GlobalPackageStruct.COMMON_LISP.intern("BUILT-IN-CLASS").getSymbol();
 	SymbolStruct BUTLAST = null;
 	SymbolStruct BYTE = null;
 	SymbolStruct BYTE_POSITION = null;
@@ -290,7 +290,7 @@ public interface CommonLispSymbols {
 	SymbolStruct CHAR_EQUAL_CS = null;           // char=
 	SymbolStruct CHAR_GREATERP_CS = null;        // char>
 	SymbolStruct CHAR_NOT_LESSP_CS = null;       // char>=
-	SymbolStruct CHARACTER = null;
+	SymbolStruct CHARACTER = GlobalPackageStruct.COMMON_LISP.intern("CHARACTER").getSymbol();
 	SymbolStruct CHARACTERP = GlobalPackageStruct.COMMON_LISP.intern("CHARACTERP").getSymbol();
 	SymbolStruct CHECK_TYPE = null;
 	SymbolStruct CIS = null;
@@ -389,7 +389,7 @@ public interface CommonLispSymbols {
 	SymbolStruct DOCUMENTATION = null;
 	SymbolStruct DOLIST = null;
 	SymbolStruct DOTIMES = null;
-	SymbolStruct DOUBLE_FLOAT = null;
+	SymbolStruct DOUBLE_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("DOUBLE-FLOAT").getSymbol();
 	SymbolStruct DPB = null;
 	SymbolStruct DRIBBLE = null;
 	SymbolStruct ECASE = null;
@@ -418,7 +418,7 @@ public interface CommonLispSymbols {
 	SymbolStruct EXP = null;
 	SymbolStruct EXPORT = GlobalPackageStruct.COMMON_LISP.intern("EXPORT").getSymbol();
 	SymbolStruct EXPT = null;
-	SymbolStruct EXTENDED_CHAR = null;
+	SymbolStruct EXTENDED_CHAR = GlobalPackageStruct.COMMON_LISP.intern("EXTENDED-CHAR").getSymbol();
 	SymbolStruct FBOUNDP = null;
 	SymbolStruct FCEILING = null;
 	SymbolStruct FDEFINITION = null;
@@ -446,7 +446,7 @@ public interface CommonLispSymbols {
 	SymbolStruct FIND_SYMBOL = null;
 	SymbolStruct FINISH_OUTPUT = null;
 	SymbolStruct FIRST = null;
-	SymbolStruct FIXNUM = null;
+	SymbolStruct FIXNUM = GlobalPackageStruct.COMMON_LISP.intern("FIXNUM").getSymbol();
 	SymbolStruct FLET = null;
 	SymbolStruct FLOAT = null;
 	SymbolStruct FLOAT_DIGITS = null;
@@ -510,7 +510,7 @@ public interface CommonLispSymbols {
 	SymbolStruct INITIALIZE_INSTANCE = null;
 	SymbolStruct INPUT_STREAM_P = null;
 	SymbolStruct INSPECT = null;
-	SymbolStruct INTEGER = null;
+	SymbolStruct INTEGER = GlobalPackageStruct.COMMON_LISP.intern("INTEGER").getSymbol();
 	SymbolStruct INTEGER_DECODE_FLOAT = null;
 	SymbolStruct INTEGER_LENGTH = null;
 	SymbolStruct INTEGERP = GlobalPackageStruct.COMMON_LISP.intern("INTEGERP").getSymbol();
@@ -563,7 +563,7 @@ public interface CommonLispSymbols {
 	SymbolStruct LOGORC2 = null;
 	SymbolStruct LOGTEST = null;
 	SymbolStruct LOGXOR = null;
-	SymbolStruct LONG_FLOAT = null;
+	SymbolStruct LONG_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("LONG-FLOAT").getSymbol();
 	SymbolStruct LONG_SITE_NAME = null;
 	SymbolStruct LOOP = null;
 	SymbolStruct LOOP_FINISH = null;
@@ -659,7 +659,7 @@ public interface CommonLispSymbols {
 	SymbolStruct NTH_VALUE = null;
 	SymbolStruct NTHCDR = null;
 	SymbolStruct NULL = GlobalPackageStruct.COMMON_LISP.intern("NULL").getSymbol();
-	SymbolStruct NUMBER = null;
+	SymbolStruct NUMBER = GlobalPackageStruct.COMMON_LISP.intern("NUMBER").getSymbol();
 	SymbolStruct NUMBERP = GlobalPackageStruct.COMMON_LISP.intern("NUMBERP").getSymbol();
 	SymbolStruct NUMERATOR = null;
 	SymbolStruct NUNION = null;
@@ -740,7 +740,7 @@ public interface CommonLispSymbols {
 	SymbolStruct RASSOC_IF = null;
 	SymbolStruct RASSOC_IF_NOT = null;
 	SymbolStruct RATIO = null;
-	SymbolStruct RATIONAL = null;
+	SymbolStruct RATIONAL = GlobalPackageStruct.COMMON_LISP.intern("RATIONAL").getSymbol();
 	SymbolStruct RATIONALIZE = null;
 	SymbolStruct RATIONALP = GlobalPackageStruct.COMMON_LISP.intern("RATIONALP").getSymbol();
 	SymbolStruct READ = GlobalPackageStruct.COMMON_LISP.intern("READ").getSymbol();
@@ -756,7 +756,7 @@ public interface CommonLispSymbols {
 	SymbolStruct READTABLE = null;
 	SymbolStruct READTABLE_CASE = null;
 	SymbolStruct READTABLEP = GlobalPackageStruct.COMMON_LISP.intern("READTABLEP").getSymbol();
-	SymbolStruct REAL = null;
+	SymbolStruct REAL = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
 	SymbolStruct REALP = GlobalPackageStruct.COMMON_LISP.intern("REALP").getSymbol();
 	SymbolStruct REALPART = null;
 	SymbolStruct REDUCE = null;
@@ -795,7 +795,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SCHAR = null;
 	SymbolStruct SEARCH = null;
 	SymbolStruct SECOND = null;
-	SymbolStruct SEQUENCE = null;
+	SymbolStruct SEQUENCE = GlobalPackageStruct.COMMON_LISP.intern("SEQUENCE").getSymbol();
 	SymbolStruct SERIOUS_CONDITION = null;
 	SymbolStruct SET = null;
 	SymbolStruct SET_DIFFERENCE = null;
@@ -811,14 +811,14 @@ public interface CommonLispSymbols {
 	SymbolStruct SHADOWING_IMPORT = null;
 	SymbolStruct SHARED_INITIALIZE = null;
 	SymbolStruct SHIFTF = null;
-	SymbolStruct SHORT_FLOAT = null;
+	SymbolStruct SHORT_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("SHORT-FLOAT").getSymbol();
 	SymbolStruct SHORT_SITE_NAME = null;
 	SymbolStruct SIGNAL = null;
-	SymbolStruct SIGNED_BYTE = null;
+	SymbolStruct SIGNED_BYTE = GlobalPackageStruct.COMMON_LISP.intern("SIGNED-BYTE").getSymbol();
 	SymbolStruct SIGNUM = null;
-	SymbolStruct SIMPLE_ARRAY = null;
-	SymbolStruct SIMPLE_BASE_STRING = null;
-	SymbolStruct SIMPLE_BIT_VECTOR = null;
+	SymbolStruct SIMPLE_ARRAY = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-ARRAY").getSymbol();
+	SymbolStruct SIMPLE_BASE_STRING = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-BASE-STRING").getSymbol();
+	SymbolStruct SIMPLE_BIT_VECTOR = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-BIT-VECTOR").getSymbol();
 	SymbolStruct SIMPLE_BIT_VECTOR_P = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-BIT-VECTOR-P").getSymbol();
 	SymbolStruct SIMPLE_CONDITION = null;
 	SymbolStruct SIMPLE_CONDITION_FORMAT_ARGUMENTS = null;
@@ -831,7 +831,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SIMPLE_VECTOR_P = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-VECTOR-P").getSymbol();
 	SymbolStruct SIMPLE_WARNING = null;
 	SymbolStruct SIN = null;
-	SymbolStruct SINGLE_FLOAT = null;
+	SymbolStruct SINGLE_FLOAT = GlobalPackageStruct.COMMON_LISP.intern("SINGLE-FLOAT").getSymbol();
 	SymbolStruct SINH = null;
 	SymbolStruct SIXTH = null;
 	SymbolStruct SLEEP = null;
@@ -849,7 +849,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SQRT = null;
 	SymbolStruct STABLE_SORT = null;
 	SymbolStruct STANDARD = null;
-	SymbolStruct STANDARD_CHAR = null;
+	SymbolStruct STANDARD_CHAR = GlobalPackageStruct.COMMON_LISP.intern("STANDARD-CHAR").getSymbol();
 	SymbolStruct STANDARD_CHAR_P = null;
 	SymbolStruct STANDARD_CLASS = null;
 	SymbolStruct STANDARD_GENERIC_FUNCTION = null;
@@ -901,7 +901,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SUBTYPEP = null;
 	SymbolStruct SVREF = null;
 	SymbolStruct SXHASH = null;
-	SymbolStruct SYMBOL = null;
+	SymbolStruct SYMBOL = GlobalPackageStruct.COMMON_LISP.intern("SYMBOL").getSymbol();
 	SymbolStruct SYMBOL_FUNCTION = null;
 	SymbolStruct SYMBOL_MACROLET = null;
 	SymbolStruct SYMBOL_NAME = null;
@@ -945,7 +945,7 @@ public interface CommonLispSymbols {
 	SymbolStruct UNION = null;
 	SymbolStruct UNLESS = null;
 	SymbolStruct UNREAD_CHAR = null;
-	SymbolStruct UNSIGNED_BYTE = null;
+	SymbolStruct UNSIGNED_BYTE = GlobalPackageStruct.COMMON_LISP.intern("UNSIGNED-BYTE").getSymbol();
 	SymbolStruct UNTRACE = null;
 	SymbolStruct UNUSE_PACKAGE = null;
 	SymbolStruct UNWIND_PROTECT = null;

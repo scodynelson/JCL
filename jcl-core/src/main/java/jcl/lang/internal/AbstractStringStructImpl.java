@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import jcl.lang.AdjustArrayContext;
 import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -16,12 +17,12 @@ import jcl.lang.SequenceStruct;
 import jcl.lang.StringEqualityContext;
 import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
+import jcl.lang.TStruct;
+import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CharacterConstants;
-import jcl.type.CharacterType;
-import jcl.type.LispType;
-import jcl.type.StringType;
+import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
@@ -31,37 +32,34 @@ import org.apache.commons.text.WordUtils;
 public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl implements StringStruct {
 
 	/**
-	 * Protected constructor for initializing {@link #type}, {@link #elementType}, and {@link #totalSize} properties.
+	 * Protected constructor for initializing {@link #elementType}, and {@link #totalSize} properties.
 	 *
-	 * @param type
-	 * 		the value used to initialize {@link #type} property
 	 * @param elementType
 	 * 		the value used to initialize {@link #elementType} property
 	 * @param totalSize
 	 * 		the value used to initialize {@link #totalSize} property
 	 */
-	protected AbstractStringStructImpl(final StringType type, final CharacterType elementType,
-	                                   final Integer totalSize) {
-		super(type, elementType, totalSize);
+	protected AbstractStringStructImpl(final LispStruct elementType, final Integer totalSize) {
+		super(elementType, totalSize);
 	}
 
 	// =================
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
 		// TODO: Remove
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
 		// TODO: Remove
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispType elementType,
+	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
 	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
 	                               final IntegerStruct displacedIndexOffset) {
 		// TODO: Remove
@@ -168,7 +166,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		strToCasify = casifyOp.apply(strToCasify);
 		builder.replace(startInt, endInt, strToCasify);
 
-		return new SimpleStringStructImpl(builder.length(), (CharacterType) elementType, builder);
+		return new SimpleStringStructImpl(builder.length(), elementType, builder);
 	}
 
 	/**
@@ -233,7 +231,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		final String str = toJavaString(false);
 		final String trimmedString = trimOp.apply(str, stripChars);
 		return new SimpleStringStructImpl(trimmedString.length(),
-		                                  (CharacterType) elementType,
+		                                  elementType,
 		                                  new StringBuilder(trimmedString));
 	}
 
@@ -516,7 +514,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	public StringStruct adjustArray(final AdjustArrayContext context) {
 
 		final List<IntegerStruct> newDimensions = context.getDimensions();
-		final LispType newElementType = context.getElementType();
+		final LispStruct newElementType = context.getElementType();
 		final SequenceStruct newInitialContents = context.getInitialContents();
 		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
 
@@ -524,9 +522,9 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
 		}
 
-		LispType upgradedET = elementType;
+		LispStruct upgradedET = elementType;
 		if (newElementType != null) {
-			if (!elementType.typeEquals(newElementType)) {
+			if (!elementType.eq(newElementType)) {
 				throw new TypeErrorException(
 						"Provided element-type " + newElementType + " must be a subtype of the initial upgraded-array-element-type " + elementType + '.');
 			}
@@ -555,7 +553,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
 	 */
-	protected abstract StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispType upgradedET);
+	protected abstract StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispStruct upgradedET);
 
 	/**
 	 * Performs adjust-array functionality when attempting to adjust with a new sequence of contents. If the original
@@ -570,7 +568,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
 	 */
-	protected abstract StringStruct adjustInitialContents(final AdjustArrayContext context, final LispType upgradedET);
+	protected abstract StringStruct adjustInitialContents(final AdjustArrayContext context, final LispStruct upgradedET);
 
 	/**
 	 * Performs adjust-array functionality when attempting to adjust with a new provided element value. If the original
@@ -586,7 +584,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
 	 */
-	protected abstract StringStruct adjustInitialElement(final AdjustArrayContext context, final LispType upgradedET);
+	protected abstract StringStruct adjustInitialElement(final AdjustArrayContext context, final LispStruct upgradedET);
 
 	/**
 	 * Validates that the newly provided initial-element value for array adjustment is a subtype of the provided
@@ -597,7 +595,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 * @param upgradedET
 	 * 		the upgraded-array-element-type
 	 */
-	protected static void validateNewInitialElement(final LispStruct newInitialElement, final LispType upgradedET) {
+	protected static void validateNewInitialElement(final LispStruct newInitialElement, final LispStruct upgradedET) {
 		if (newInitialElement != null) {
 			if (!(newInitialElement instanceof CharacterStruct)) {
 				throw new TypeErrorException(
@@ -605,8 +603,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 			}
 
 			// NOTE: Should never hit this in reality, but keeping this check here.
-			final LispType initialElementType = newInitialElement.getType();
-			if (!upgradedET.typeEquals(initialElementType)) {
+			if (!newInitialElement.typep(upgradedET).toJavaPBoolean()) {
 				throw new TypeErrorException(
 						"Provided element " + newInitialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
 			}
@@ -713,5 +710,26 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 */
 	protected int validateIndex(final IntegerStruct index) {
 		return validateSubscript(index);
+	}
+
+	/*
+	LISP-STRUCT
+	 */
+
+	@Override
+	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if (typeSpecifier == CommonLispSymbols.STRING) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == CommonLispSymbols.BASE_STRING) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.STRING) {
+			return TStruct.INSTANCE;
+		}
+		if (typeSpecifier == BuiltInClassStruct.BASE_STRING) {
+			return TStruct.INSTANCE;
+		}
+		return super.typep(typeSpecifier);
 	}
 }

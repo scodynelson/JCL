@@ -8,7 +8,6 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.type.KeywordType;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -24,7 +23,7 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 	 * 		the symbol name
 	 */
 	public KeywordStructImpl(final String name) {
-		super(KeywordType.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
+		super(name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
 	}
 

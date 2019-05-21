@@ -32,7 +32,7 @@ import org.objectweb.asm.util.CheckClassAdapter;
 @UtilityClass
 public final class CompileForm {
 
-	public static boolean OUTPUT_FILE = true;
+	public static boolean OUTPUT_FILE;
 
 	public static CompileResult compile(final LispStruct form) {
 

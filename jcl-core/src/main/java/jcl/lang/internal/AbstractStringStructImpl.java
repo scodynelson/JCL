@@ -156,8 +156,8 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 */
 	private StringStruct casifyString(final StringIntervalOpContext context,
 	                                  final Function<String, String> casifyOp) {
-		final int startInt = getStringOpStart(context);
-		final int endInt = getStringOpEnd(context, startInt);
+		final int startInt = getStringOpStart(this, context);
+		final int endInt = getStringOpEnd(this, context, startInt);
 
 		final String str = toJavaString(false);
 		final StringBuilder builder = new StringBuilder(str);
@@ -398,18 +398,18 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 * @return an {@link EqualityStrings} object containing the two strings to compare for equality
 	 */
 	private EqualityStrings getEqualityStrings(final StringEqualityContext context) {
+		final StringStruct struct = context.getStruct();
 		final StringIntervalOpContext context1 = context.getContext1();
 		final StringIntervalOpContext context2 = context.getContext2();
 
-		final int start1 = getStringOpStart(context1);
-		final int end1 = getStringOpEnd(context1, start1);
+		final int start1 = getStringOpStart(this, context1);
+		final int end1 = getStringOpEnd(this, context1, start1);
 
-		final int start2 = getStringOpStart(context2);
-		final int end2 = getStringOpEnd(context2, start2);
+		final int start2 = getStringOpStart(struct, context2);
+		final int end2 = getStringOpEnd(struct, context2, start2);
 
 		final String str1 = toJavaString(false);
-		final String str2 = context.getStruct()
-		                           .toJavaString(false);
+		final String str2 = struct.toJavaString(false);
 
 		final String subStr1 = str1.substring(start1, end1);
 		final String subStr2 = str2.substring(start2, end2);
@@ -453,14 +453,15 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return the start value for the string operation
 	 */
-	protected int getStringOpStart(final StringIntervalOpContext context) {
+	protected static int getStringOpStart(final StringStruct struct, final StringIntervalOpContext context) {
 		final IntegerStruct start = context.getStart();
 		final int startInt;
 		if (start == null) {
 			startInt = 0;
 		} else {
 			startInt = start.toJavaInt();
-			final int observedLength = getObservedLength();
+			// TODO: Casting
+			final int observedLength = ((AbstractStringStructImpl) struct).getObservedLength();
 			if ((startInt < 0) || (startInt > observedLength)) {
 				throw new ErrorException(
 						"Bad start value " + start + " for string with size: " + observedLength);
@@ -479,14 +480,16 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return the end value for the string operation
 	 */
-	protected int getStringOpEnd(final StringIntervalOpContext context, final int startInt) {
+	protected static int getStringOpEnd(final StringStruct struct, final StringIntervalOpContext context, final int startInt) {
 		final IntegerStruct end = context.getEnd();
 		final int endInt;
 		if (end == null) {
-			endInt = getObservedLength();
+			// TODO: Casting
+			endInt = ((AbstractStringStructImpl) struct).getObservedLength();
 		} else {
 			endInt = end.toJavaInt();
-			final int observedLength = getObservedLength();
+			// TODO: Casting
+			final int observedLength = ((AbstractStringStructImpl) struct).getObservedLength();
 			if ((endInt < 0) || (endInt > observedLength) || (endInt < startInt)) {
 				throw new ErrorException(
 						"Bad end value " + end + " with start value " + startInt + " for string with size: " + observedLength);
@@ -496,8 +499,8 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	/**
-	 * Helper method for {@link #getStringOpStart(StringIntervalOpContext)} and {@link
-	 * #getStringOpEnd(StringIntervalOpContext, int)} methods for getting observed length values. This is used for
+	 * Helper method for {@link #getStringOpStart(StringStruct, StringIntervalOpContext)} and {@link
+	 * #getStringOpEnd(StringStruct, StringIntervalOpContext, int)} methods for getting observed length values. This is used for
 	 * dealing with things like fill-pointers in complex structures.
 	 *
 	 * @return the observed length value for interval operations

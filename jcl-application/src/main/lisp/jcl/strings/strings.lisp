@@ -1,10 +1,10 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-#|
-(eval-when (:load-toplevel :execute)
-(export '()
-        (find-package "COMMON-LISP"))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
+  (require "macros")
 ) ;eval-when
-|#
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -25,7 +25,7 @@
 
 (defun make-string (size &key (initial-element #\NULL) (element-type 'character))
   "Returns a simple string of length size whose elements have been initialized to initial-element."
-  (declare (system::%java-class-name "jcl.strings.functions.String"))
+  (declare (system::%java-class-name "jcl.strings.functions.MakeString"))
   (ext:jinvoke-static
     (ext:jmethod "makeString" (ext:jclass "jcl.lang.StringStruct")
                  (ext:jclass "jcl.lang.IntegerStruct")
@@ -240,3 +240,5 @@
           string= string/= string< string> string<= string>=
           string-equal string-not-equal string-lessp string-greaterp string-not-greaterp string-not-lessp)
         "COMMON-LISP")
+
+(provide "strings")

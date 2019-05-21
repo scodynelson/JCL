@@ -1,6 +1,8 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
 
-(in-package "COMMON-LISP")
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (system::%in-package "COMMON-LISP")
+) ;eval-when
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -69,10 +71,11 @@
          (body (car parsed-body))
          (decls (car (cdr parsed-body)))
          (doc (car (cdr (cdr parsed-body)))))
-    `(macro-lambda ,name ,lambda-list
-      ,@decls
-      ,doc
-      (block ,name ,@body))))
+    `(eval-when (:compile-toplevel :load-toplevel)
+       (macro-lambda ,name ,lambda-list
+         ,@decls
+         ,doc
+         (block ,name ,@body)))))
 
 (macro-lambda defun (name lambda-list &body doc-decls-body)
   (declare (system::%java-class-name "jcl.compiler.functions.Defun"))
@@ -95,7 +98,14 @@
           (block ,block-name ,@body)))
       (quote ,name))))
 
+(macro-lambda in-package (name)
+  (declare (system::%java-class-name "jcl.packages.functions.InPackage"))
+  `(eval-when (:compile-toplevel :load-toplevel :execute)
+     (system::%in-package ,name)))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(defmacro defun)
+(export '(defmacro defun in-package)
         "COMMON-LISP")
+
+(provide "base-macro-lambdas")

@@ -1,10 +1,10 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-#|
-(eval-when (:load-toplevel :execute)
-(export '()
-        (find-package "COMMON-LISP"))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
+  (require "macros")
 ) ;eval-when
-|#
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -381,3 +381,5 @@
           with-open-stream with-open-file
           with-input-from-string with-output-to-string)
         "COMMON-LISP")
+
+(provide "streams")

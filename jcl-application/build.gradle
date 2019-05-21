@@ -1,6 +1,6 @@
-//plugins {
-//	id 'org.springframework.boot' version '1.5.9.RELEASE'
-//}
+plugins {
+	id 'org.springframework.boot' version '2.1.3.RELEASE'
+}
 
 description = "JCL Application"
 
@@ -29,12 +29,14 @@ dependencies {
 
 	runtime("org.springframework.boot:spring-boot-starter-logging")
 
+	runtime fileTree(dir: 'compiled-lisp', include: ['*.jar'])
+
 	testCompile("junit:junit")
 }
 
-//bootJar {
-//	mainClass = "jcl.system.JCL"
-//}
+bootJar {
+	mainClassName = "jcl.system.JCL"
+}
 
 //jar {
 //	manifest {
@@ -60,7 +62,7 @@ dependencies {
 def lispCompiledTree = fileTree(dir: 'compiled-lisp', include: '**/*.jar')
 
 task cleanLispJars {
-	def compiledLispDirectory = "$projectDir/compiled-lisp"
+	String compiledLispDirectory = "$projectDir/compiled-lisp"
 	new File(compiledLispDirectory).mkdirs()
 
 	lispCompiledTree.each { file ->
@@ -72,16 +74,30 @@ task cleanLispJars {
 		}
 	}
 }
+clean.dependsOn(cleanLispJars)
 
 def lispSourceFiles = [
 		"jcl/compiler/base-macro-lambdas.lisp",
+		"jcl/sequences/sequences.lisp",
+		"jcl/lists/base-lists.lisp",
 		"jcl/compiler/macros.lisp",
 		"jcl/iterators/iterators.lisp",
-		"jcl/lists/lists.lisp"
+		"jcl/characters/characters.lisp",
+		"jcl/pathnames/pathnames.lisp",
+		"jcl/symbols/symbols.lisp",
+		"jcl/reader/reader.lisp",
+		"jcl/strings/strings.lisp",
+		"jcl/streams/streams.lisp",
+		"jcl/packages/packages.lisp",
+		"jcl/lists/lists.lisp",
+		"jcl/numbers/numbers.lisp",
+		"jcl/hashtables/hashtables.lisp",
+		"jcl/environment/environment.lisp",
+		"jcl/structures/structures.lisp"
 ]
 
-def createLispGenerationTask(def lispSourceFile, def lispSourceFileName) {
-	return tasks.create("generate-${lispSourceFileName}-Jar", JavaExec) {
+def createLispGenerationTask(def lispSourceFile, def taskName, def dependencies) {
+	return tasks.create(name: taskName, type: JavaExec, dependsOn: dependencies) {
 		main = "jcl.system.JCL"
 		classpath = sourceSets.main.runtimeClasspath
 		args += "--compileFileSrcDir=$projectDir/src/main/lisp/${lispSourceFile}"
@@ -90,23 +106,34 @@ def createLispGenerationTask(def lispSourceFile, def lispSourceFileName) {
 	}
 }
 
-def createJarUnpackingTask(def lispSourceFileName) {
-	return tasks.create(name: "unpack-${lispSourceFileName}-Jar",
-			type: Copy,
-			dependsOn: "generate-${lispSourceFileName}-Jar") {
-		from zipTree("$projectDir/compiled-lisp/${lispSourceFileName}.jar")
-		into compileJava.destinationDir
-	}
-}
+//def createJarUnpackingTask(def lispSourceFileName, def taskName, def dependencies) {
+//	return tasks.create(name: taskName, type: Copy, dependsOn: dependencies) {
+//		from zipTree("$projectDir/compiled-lisp/${lispSourceFileName}.jar")
+//		into compileJava.destinationDir
+//	}
+//}
 
 task generateLispSource(dependsOn: classes) {
+//	def generationLispSourceDependencies = []
+//	def unpackingLispSourceDependencies = []
+	def previousGenerationTask = []
+//	def previousUnpackingTask = []
+
 	lispSourceFiles.each { lispSourceFile ->
 		String lispSourceFileName = lispSourceFile.substring(
 				lispSourceFile.lastIndexOf("/") + 1,
 				lispSourceFile.lastIndexOf(".")
 		)
-		createLispGenerationTask(lispSourceFile, lispSourceFileName)
-		createJarUnpackingTask(lispSourceFileName)
+
+		String generationTaskName = "generate-${lispSourceFileName}-Jar"
+		createLispGenerationTask(lispSourceFile, generationTaskName, previousGenerationTask)
+		previousGenerationTask = generationTaskName
+//		generationLispSourceDependencies.add(generationTaskName)
+
+//		String unpackingTaskName = "unpack-${lispSourceFileName}-Jar"
+//		createJarUnpackingTask(lispSourceFileName, unpackingTaskName, generationLispSourceDependencies + unpackingLispSourceDependencies)
+//		unpackingLispSourceDependencies.add(unpackingTaskName)
 	}
+	assemble.dependsOn(previousGenerationTask)
 }
-//jar.dependsOn(generateLispSource)
+//assemble.dependsOn(generateLispSource)

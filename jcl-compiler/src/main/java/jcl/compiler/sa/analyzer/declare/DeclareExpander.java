@@ -116,10 +116,13 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 
 		final LispStruct lispName = declSpecBody.get(0);
 
+		SymbolStruct functionSymbolName = null;
+
 		final String name;
 		if (lispName instanceof SymbolStruct) {
 			final SymbolStruct lispNameSymbol = (SymbolStruct) lispName;
 			name = lispNameSymbol.getName().replace('-', '_');
+			functionSymbolName = lispNameSymbol;
 		} else if (lispName instanceof ConsStruct) {
 			final ConsStruct lispNameCons = (ConsStruct) lispName;
 
@@ -146,7 +149,7 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 		                            .collect(Collectors.joining());
 		final String lispNameClassName = realName + '_' + System.nanoTime();
 
-		return new LispNameDeclarationStruct(lispNameClassName);
+		return new LispNameDeclarationStruct(functionSymbolName, lispNameClassName);
 	}
 
 	private static List<SpecialDeclarationStruct> saSpecialDeclaration(final List<LispStruct> declSpecBody) {

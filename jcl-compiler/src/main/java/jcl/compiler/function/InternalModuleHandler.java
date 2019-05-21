@@ -1,0 +1,79 @@
+package jcl.compiler.function;
+
+import jcl.lang.BooleanStruct;
+import jcl.lang.ConsStruct;
+import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
+import jcl.lang.PathnameStruct;
+import jcl.lang.StringEqualityContext;
+import jcl.lang.StringStruct;
+import jcl.lang.TStruct;
+import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.CompilerVariables;
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public final class InternalModuleHandler {
+
+	public static BooleanStruct provide(final StringStruct moduleName) {
+		final ListStruct currentModulesList = CompilerVariables.MODULES.getVariableValue();
+
+		if (currentModulesList == NILStruct.INSTANCE) {
+			CompilerVariables.MODULES.setValue(ListStruct.toLispList(moduleName));
+		} else {
+			final boolean moduleAlreadyExists = moduleAlreadyExists(moduleName);
+			if (moduleAlreadyExists) {
+				return NILStruct.INSTANCE;
+			}
+
+			final ListStruct newModulesList = ConsStruct.toLispCons(moduleName, currentModulesList);
+			CompilerVariables.MODULES.setValue(newModulesList);
+		}
+		return TStruct.INSTANCE;
+	}
+
+	public static BooleanStruct require(final StringStruct moduleName, final ListStruct pathnameList) {
+		final boolean moduleAlreadyExists = moduleAlreadyExists(moduleName);
+		if (moduleAlreadyExists) {
+			return NILStruct.INSTANCE;
+		}
+
+		if (pathnameList == NILStruct.INSTANCE) {
+			InternalLoad.loadJavaModule(moduleName);
+		} else {
+			for (final LispStruct pathname : pathnameList) {
+				final PathnameStruct currentPathname = PathnameStruct.toPathname(pathname);
+				InternalLoad.load(
+						currentPathname,
+						NILStruct.INSTANCE, NILStruct.INSTANCE, TStruct.INSTANCE,
+						CommonLispSymbols.DEFAULT_KEYWORD
+				);
+			}
+		}
+
+		provide(moduleName);
+		return TStruct.INSTANCE;
+	}
+
+	private static boolean moduleAlreadyExists(final StringStruct moduleName) {
+		// TODO: Thread Safety issue here with global variable *modules*
+
+		final ListStruct currentModulesList = CompilerVariables.MODULES.getVariableValue();
+
+		for (final LispStruct module : currentModulesList) {
+			if (module instanceof StringStruct) {
+				final StringStruct currentModule = (StringStruct) module;
+
+				final StringEqualityContext equalityContext
+						= StringEqualityContext.builder(moduleName)
+						                       .build();
+				if (currentModule.stringEqual(equalityContext)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+}

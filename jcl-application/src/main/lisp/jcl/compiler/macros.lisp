@@ -1,5 +1,10 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
+  (require "base-lists")
+) ;eval-when
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -298,3 +303,5 @@
 (export '(psetq return when unless cond and or multiple-value-bind multiple-value-list multiple-value-setq nth-value
 		  prog prog* prog1 prog2)
         "COMMON-LISP")
+
+(provide "macros")

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -76,9 +77,18 @@ public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		                   .forEach(lambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
+		final LispNameDeclarationStruct lispNameDeclarationStruct = declare.getLispNameDeclarationStruct();
+
+		if (lispNameDeclarationStruct != null) {
+			final SymbolStruct functionSymbolName = lispNameDeclarationStruct.getFunctionSymbolName();
+			if (functionSymbolName != null) {
+				final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
+				functionNameStack.push(functionSymbolName);
+			}
+		}
+
 		final String className;
 		if (javaClassNameDeclaration == null) {
-			final LispNameDeclarationStruct lispNameDeclarationStruct = declare.getLispNameDeclarationStruct();
 			final String lambdaClassName;
 			if (lispNameDeclarationStruct == null) {
 				lambdaClassName = "Lambda" + '_' + System.nanoTime();
@@ -116,7 +126,8 @@ public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			}
 
 			// TODO: Remove System.nanoTime() from here, since this breaks JAR loading. But we need it for now.
-			className = javaClassNameDeclaration.getClassName().replace('.', '/') + '_' + System.nanoTime();
+//			className = javaClassName.replace('.', '/') + '_' + System.nanoTime();
+			className = javaClassName.replace('.', '/');
 		}
 
 		final OrdinaryLambdaList parsedLambdaList = OrdinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);

@@ -1,10 +1,10 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-#|
-(eval-when (:load-toplevel :execute)
-(export '()
-        (find-package "COMMON-LISP"))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
+  (require "macros")
 ) ;eval-when
-|#
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -214,7 +214,7 @@
 
 (defun - (number &rest numbers)
   "If only one number is supplied, the negation of that number is returned. If more than one argument is given, it subtracts all of the subtrahends from the minuend and returns the result."
-  (declare (system::%java-class-name "jcl.numbers.functions.Divide"))
+  (declare (system::%java-class-name "jcl.numbers.functions.Subtract"))
   (ext:jinvoke-static
     (ext:jmethod "subtract" (ext:jclass "jcl.lang.NumberStruct")
                  (ext:jclass "jcl.lang.NumberStruct")
@@ -828,3 +828,5 @@
           arithmetic-error-operands
           arithmetic-error-operation)
         "COMMON-LISP")
+
+(provide "numbers")

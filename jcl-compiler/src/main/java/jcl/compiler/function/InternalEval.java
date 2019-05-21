@@ -17,17 +17,14 @@ import jcl.compiler.struct.specialoperator.SetqStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.SymbolFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
-import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
-import jcl.lang.statics.CompilerVariables;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,15 +41,7 @@ public final class InternalEval {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static LispStruct eval(final LispStruct originalExp, final Environment environment) {
 
-		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue();
-		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
-
-		LispStruct exp;
-		try {
-			exp = FormAnalyzer.analyze(originalExp, environment);
-		} finally {
-			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
-		}
+		final LispStruct exp = FormAnalyzer.analyze(originalExp, environment);
 
 		if (exp instanceof SymbolStruct) {
 			final SymbolStruct symbol = (SymbolStruct) exp;
@@ -104,7 +93,7 @@ public final class InternalEval {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
+			final FunctionStruct function = getCompiledExpression(lambda);
 			return function.apply();
 		}
 
@@ -171,7 +160,7 @@ public final class InternalEval {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = lambdaFunctionCall.getLambdaCompilerFunction();
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
+			final FunctionStruct function = getCompiledExpression(lambda);
 
 			final List<LispStruct> arguments = lambdaFunctionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
@@ -189,30 +178,16 @@ public final class InternalEval {
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel,
-			                                                      (CompilerSpecialOperatorStruct) exp);
+			final FunctionStruct function = getCompiledExpression((CompilerSpecialOperatorStruct) exp);
 			return function.apply();
 		}
 
 		return exp;
 	}
 
-	private static FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel,
-	                                                    final CompilerSpecialOperatorStruct exp) {
-		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
-
-		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue();
-		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
-
-		final FunctionStruct function;
-		try {
-			final CompileResult compileResult = CompileForm.compile(exp);
-			function = compileResult.getFunction();
-		} finally {
-			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
-			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
-		}
-		return function;
+	private static FunctionStruct getCompiledExpression(final CompilerSpecialOperatorStruct exp) {
+		final CompileResult compileResult = CompileForm.compile(exp);
+		return compileResult.getFunction();
 	}
 
 	public static LispStruct jInvoke(final Method javaMethod, final Object javaObject, final Object... methodArgs) {

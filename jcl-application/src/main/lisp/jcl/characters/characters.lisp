@@ -1,10 +1,9 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-#|
-(eval-when (:load-toplevel :execute)
-(export '()
-        (find-package "COMMON-LISP"))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
 ) ;eval-when
-|#
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -201,3 +200,5 @@
           char= char/= char< char> char<= char>=
           char-equal char-not-equal char-lessp char-greaterp char-not-greaterp char-not-lessp)
         "COMMON-LISP")
+
+(provide "characters")

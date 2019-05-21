@@ -32,6 +32,7 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 	 */
 	private void init() {
 		dynamicValueStack.push(this);
+		symbolPackage = KeywordPackageStructImpl.INSTANCE;
 	}
 
 	/*

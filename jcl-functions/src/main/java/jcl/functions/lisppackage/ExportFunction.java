@@ -46,8 +46,8 @@ public final class ExportFunction extends BuiltInFunctionStructImpl {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		final LispStruct lispStruct = arguments.getRequiredArgument("SYMBOLS");
-		final PackageStruct aPackage = PackageStruct.toLispPackage(arguments.getOptionalArgument("PACKAGE"));
+		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOLS_ARGUMENT);
+		final PackageStruct aPackage = PackageStruct.toLispPackage(arguments.getOptionalArgument(PACKAGE_ARGUMENT));
 
 		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {

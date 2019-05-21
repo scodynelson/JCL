@@ -1,10 +1,9 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-#|
-(eval-when (:load-toplevel :execute)
-(export '()
-        (find-package "COMMON-LISP"))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
 ) ;eval-when
-|#
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -146,3 +145,5 @@
           translate-pathname
           merge-pathnames)
         "COMMON-LISP")
+
+(provide "pathnames")

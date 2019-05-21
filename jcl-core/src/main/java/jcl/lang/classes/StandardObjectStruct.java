@@ -48,6 +48,6 @@ public abstract class StandardObjectStruct extends LispStructImpl {
 	@Override
 	public String toString() {
 		final String typeClassName = getClass().getSimpleName();
-		return "#<" + typeClassName + '>';
+		return "#<" + typeClassName + '@' + hashCode() + '>';
 	}
 }

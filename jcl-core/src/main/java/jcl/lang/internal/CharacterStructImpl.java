@@ -219,11 +219,6 @@ public final class CharacterStructImpl extends LispStructImpl implements Charact
 
 		mv.visitLdcInsn(codePoint);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.JAVA_INTEGER_NAME,
-		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_NAME,
-		                   GenerationConstants.JAVA_INTEGER_VALUE_OF_METHOD_DESC,
-		                   false);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.CHARACTER_STRUCT_NAME,
 		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_NAME,
 		                   GenerationConstants.CHARACTER_STRUCT_TO_LISP_CHARACTER_METHOD_DESC,

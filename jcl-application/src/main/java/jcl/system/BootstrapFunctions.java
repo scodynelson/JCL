@@ -18,6 +18,8 @@ import jcl.functions.LoadFunction;
 import jcl.functions.MacroExpand1Function;
 import jcl.functions.MacroExpandFunction;
 import jcl.functions.PredicateFunctions;
+import jcl.functions.ProvideFunction;
+import jcl.functions.RequireFunction;
 import jcl.functions.ValuesFunction;
 import jcl.functions.array.ListToVectorFunction;
 import jcl.functions.condition.ErrorFunction;
@@ -95,6 +97,8 @@ class BootstrapFunctions {
 				new LoadFunction(),
 				new MacroExpand1Function(),
 				new MacroExpandFunction(),
+				new ProvideFunction(),
+				new RequireFunction(),
 				new ValuesFunction()
 		);
 		bootstrapCommonLispPackageFunctions(functions);

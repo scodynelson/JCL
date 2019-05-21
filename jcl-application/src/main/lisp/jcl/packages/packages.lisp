@@ -1,10 +1,11 @@
 ;;;; Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
-#|
-(eval-when (:load-toplevel :execute)
-(export '()
-        (find-package "COMMON-LISP"))
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require "base-macro-lambdas")
+  (require "macros")
+  (require "iterators")
 ) ;eval-when
-|#
+
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -302,3 +303,5 @@
           do-symbols do-external-symbols do-all-symbols
           with-package-iterator)
         "COMMON-LISP")
+
+(provide "packages")

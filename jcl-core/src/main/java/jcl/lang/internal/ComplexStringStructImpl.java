@@ -157,8 +157,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	@Override
 	protected StringStruct nCasifyString(final StringIntervalOpContext context,
 	                                     final Function<String, String> casifyOp) {
-		final int startInt = getStringOpStart(context);
-		final int endInt = getStringOpEnd(context, startInt);
+		final int startInt = getStringOpStart(this, context);
+		final int endInt = getStringOpEnd(this, context, startInt);
 
 		if (displacedTo == null) {
 			String str = contents.substring(startInt, endInt);

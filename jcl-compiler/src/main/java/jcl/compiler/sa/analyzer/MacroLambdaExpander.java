@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -89,6 +90,11 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 		                   .forEach(macroLambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
+
+		// TODO: should go on this stack? or have another stack for macros?
+		final Stack<SymbolStruct> functionNameStack = environment.getFunctionNameStack();
+		functionNameStack.push(macroName);
+
 		final String className;
 		if (javaClassNameDeclaration == null) {
 			final String name = macroName.getName().replace('-', '_');
@@ -123,7 +129,8 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 			}
 
 			// TODO: Remove System.nanoTime() from here, since this breaks JAR loading. But we need it for now.
-			className = javaClassName.replace('.', '/') + '_' + System.nanoTime();
+//			className = javaClassName.replace('.', '/') + '_' + System.nanoTime();
+			className = javaClassName.replace('.', '/');
 		}
 
 		final MacroLambdaList parsedLambdaList = MacroLambdaListParser.parseMacroLambdaList(macroLambdaEnvironment, parameters, declare);

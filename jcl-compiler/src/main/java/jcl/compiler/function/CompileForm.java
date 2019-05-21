@@ -74,7 +74,7 @@ public final class CompileForm {
 			try {
 				final boolean isFunctionStruct = FunctionStruct.class.isAssignableFrom(classLoaded);
 				if (isFunctionStruct) {
-					function = (FunctionStruct) classLoaded.getDeclaredConstructor().newInstance();
+					function = (FunctionStruct) classLoaded.getConstructor().newInstance();
 					final SymbolStruct functionSymbol = function.getFunctionSymbol();
 					functionSymbol.setFunction(function);
 				}

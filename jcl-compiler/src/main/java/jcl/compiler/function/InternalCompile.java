@@ -10,19 +10,22 @@ import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 
+import jcl.compiler.environment.Environment;
+import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
-import jcl.compiler.sa.SemanticAnalyzer;
-import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.CodeGenerators;
+import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.compiler.sa.FormAnalyzer;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.FunctionStruct;
@@ -33,7 +36,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -41,8 +43,6 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.internal.DeclarationStructImpl;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
@@ -56,13 +56,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.CheckClassAdapter;
 
 @Slf4j
 @UtilityClass
 public final class InternalCompile {
 
+	static final Attributes.Name LISP_MODULE_NAME = new Attributes.Name("Lisp-Module-Name");
+
 	private static final Pattern VALID_FILE_CLASS_NAME_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
+
+	private static final String MAIN_METHOD_NAME = "main";
+	private static final String MAIN_METHOD_DESC = "([Ljava/lang/String;)V";
+	private static final String INIT_METHOD_NAME = "init";
+	private static final String INIT_METHOD_DESC = "()V";
 
 	public static LispStruct compile(final LispStruct name, final LispStruct uncompiledDefinition) {
 
@@ -145,6 +154,7 @@ public final class InternalCompile {
 
 		final Instant startTime = Instant.now();
 		if (verbose) {
+			log.info("");
 			final String javaVersion = SystemUtils.JAVA_VERSION;
 			log.info("; Java Compiler Version {}", javaVersion);
 
@@ -153,7 +163,7 @@ public final class InternalCompile {
 			log.info("");
 		}
 
-		final PathnameStruct outputFilePathname = InternalCompile.compileFilePathname(inputFilePathname, outputFile);
+		final PathnameStruct outputFilePathname = compileFilePathname(inputFilePathname, outputFile);
 		final File outputFilePathnameFile = new File(outputFilePathname.getNamestring());
 		final Path outputFilePath = outputFilePathnameFile.toPath();
 
@@ -172,14 +182,123 @@ public final class InternalCompile {
 		boolean compiledSuccessfully = false;
 		try {
 			final FileStreamStruct inputFileStream = FileStreamStruct.toFileStream(inputFilePath);
-			final List<LispStruct> forms = new ArrayList<>();
+
+			final String inputFileLispName = inputFilePathname.getPathnameName().getName();
+
+			final String inputFileName = inputFilePath.getFileName().toString();
+			String inputClassName = FilenameUtils.getBaseName(inputFileName);
+			inputClassName = StringUtils.capitalize(inputClassName);
+			inputClassName = VALID_FILE_CLASS_NAME_PATTERN.matcher(inputClassName).replaceAll("_");
+			inputClassName = "jcl." + inputClassName;
+
+			//
+			// CODE GENERATION FIRST - START
+			//
+			final GeneratorState generatorState = new GeneratorState();
+
+			final String className = inputClassName.replace('.', '/');
+			final String fileName = CodeGenerators.getFileNameFromClassName(className);
+
+			final JavaClassBuilder currentClass = new JavaClassBuilder(className, fileName);
+			final Deque<JavaClassBuilder> classBuilderDeque = generatorState.getClassBuilderDeque();
+
+			classBuilderDeque.addFirst(currentClass);
+			generatorState.getFinalClassBuilderDeque().addFirst(currentClass);
+
+			final ClassWriter cw = currentClass.getClassWriter();
+
+			cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+			                  className,
+			                  null,
+			                  GenerationConstants.JAVA_OBJECT_NAME,
+			                  null);
+
+			cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
+
+			{
+				final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
+				                                        GenerationConstants.INIT_METHOD_NAME,
+				                                        GenerationConstants.INIT_METHOD_DESC,
+				                                        null,
+				                                        null);
+				mv.visitCode();
+				mv.visitVarInsn(Opcodes.ALOAD, 0);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				                   GenerationConstants.JAVA_OBJECT_NAME,
+				                   GenerationConstants.INIT_METHOD_NAME,
+				                   GenerationConstants.INIT_METHOD_DESC,
+				                   false);
+				mv.visitInsn(Opcodes.RETURN);
+				mv.visitMaxs(1, 1);
+				mv.visitEnd();
+			}
+			{
+				final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC,
+				                                        MAIN_METHOD_NAME,
+				                                        MAIN_METHOD_DESC,
+				                                        null,
+				                                        null);
+				mv.visitCode();
+				mv.visitTypeInsn(Opcodes.NEW, className);
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				                   className,
+				                   GenerationConstants.INIT_METHOD_NAME,
+				                   GenerationConstants.INIT_METHOD_DESC,
+						 false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				                   className,
+				                   INIT_METHOD_NAME,
+				                   INIT_METHOD_DESC,
+				                   false);
+				mv.visitInsn(Opcodes.RETURN);
+				mv.visitMaxs(-1, -1);
+				mv.visitEnd();
+			}
+
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE,
+			                                        INIT_METHOD_NAME,
+			                                        INIT_METHOD_DESC,
+			                                        null,
+			                                        null);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
+			methodBuilderDeque.addFirst(methodBuilder);
+
+			mv.visitCode();
+			@SuppressWarnings({"unused", "SuppressionAnnotation"})
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			@SuppressWarnings({"unused", "SuppressionAnnotation"})
+			final int closureArgStore = methodBuilder.getNextAvailableStore();
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitVarInsn(Opcodes.ASTORE, closureArgStore);
+
+			final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
+
+			final Environment globalEnvironment = new Environment(Environment.NULL);
+
+			environmentDeque.addFirst(globalEnvironment);
+			//
+			// CODE GENERATION FIRST - END
+			//
 
 			LispStruct form;
 			do {
 				form = InternalRead.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 
 				if (form instanceof ListStruct) {
-					forms.add(form);
+					final LispStruct analyzedForm = FormAnalyzer.analyze(form, globalEnvironment);
+					if (analyzedForm != NILStruct.INSTANCE) {
+						IntermediateCodeGenerator.generate(analyzedForm, generatorState);
+						mv.visitInsn(Opcodes.POP);
+
+						final Set<SymbolStruct> undefinedFunctions = globalEnvironment.getUndefinedFunctions();
+
+						if (!undefinedFunctions.isEmpty()) {
+							undefinedFunctions.clear();
+						}
+					}
 				} else if (form != null) {
 					final Long currentFilePosition = inputFileStream.filePosition(null);
 					// TODO: can we rework this to tell what line we're on???
@@ -190,21 +309,38 @@ public final class InternalCompile {
 				}
 			} while (form != null);
 
-			if (print && compiledWithWarnings.toJavaPBoolean()) {
+			//
+			// CODE GENERATION LAST - START
+			//
+			environmentDeque.removeFirst();
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+
+			methodBuilderDeque.removeFirst();
+
+			cw.visitEnd();
+
+			classBuilderDeque.removeFirst();
+			//
+			// CODE GENERATION LAST - END
+			//
+
+			if (compiledWithWarnings.toJavaPBoolean()) {
 				// If we printed warnings, make sure to print a newline afterwards.
 				log.info("");
 			}
 
-			final String inputFileName = inputFilePath.getFileName().toString();
-			String inputClassName = FilenameUtils.getBaseName(inputFileName);
-			inputClassName = StringUtils.capitalize(inputClassName);
-			inputClassName = VALID_FILE_CLASS_NAME_PATTERN.matcher(inputClassName).replaceAll("_");
-			final ListStruct fileLambda = buildFileLambda(forms, inputClassName);
+			if (print) {
+				// Print newline before each compiled class is printed
+				log.info("");
+			}
 
-			final LambdaStruct analyzedFileLambda = SemanticAnalyzer.analyze(fileLambda);
-			final Deque<JavaClassBuilder> javaClassBuilderDeque = IntermediateCodeGenerator.generate(analyzedFileLambda);
+			final Deque<JavaClassBuilder> javaClassBuilderDeque = generatorState.getFinalClassBuilderDeque();
 
-			writeToJar(javaClassBuilderDeque, outputFilePath, inputFileName, inputClassName, print);
+			writeToJar(javaClassBuilderDeque, outputFilePath, inputFileLispName, inputFileName, inputClassName, print);
 			compiledSuccessfully = true;
 
 			return ValuesStruct.valueOf(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
@@ -235,16 +371,8 @@ public final class InternalCompile {
 		}
 	}
 
-	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
-		final StringStruct newJavaClassName = StringStruct.toLispString("jcl." + inputClassName);
-		final ListStruct javaClassNameDeclaration = ListStruct.toLispList(DeclarationStructImpl.JAVA_CLASS_NAME, newJavaClassName);
-		final ListStruct declareBlock = ListStruct.toLispList(SpecialOperatorStructImpl.DECLARE, javaClassNameDeclaration);
-
-		final ListStruct formsToCompile = ListStruct.toLispList(forms);
-		return (ListStruct) ListStruct.toLispDottedList(SpecialOperatorStructImpl.LAMBDA, NILStruct.INSTANCE, declareBlock, formsToCompile);
-	}
-
-	private static void writeToJar(final Deque<JavaClassBuilder> javaClassBuilderDeque, final Path outputFilePath, final String inputFileName,
+	private static void writeToJar(final Deque<JavaClassBuilder> javaClassBuilderDeque, final Path outputFilePath,
+	                               final String inputFileLispName, final String inputFileName,
 	                               final String inputClassName, final boolean print)
 			throws IOException {
 
@@ -255,6 +383,7 @@ public final class InternalCompile {
 		final Attributes manifestMainAttributes = manifest.getMainAttributes();
 		manifestMainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
 		manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, inputClassName);
+		manifestMainAttributes.put(LISP_MODULE_NAME, inputFileLispName);
 
 		try (final OutputStream outputStream = Files.newOutputStream(tempOutputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		     final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {

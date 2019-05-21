@@ -36,7 +36,7 @@ public class JavaObjectStruct extends LispStructImpl {
 	public static JavaObjectStruct toJavaObject(final Class<?> javaClass) {
 		final String javaClassName = javaClass.getName();
 		try {
-			final Constructor<?> defaultConstructor = javaClass.getDeclaredConstructor();
+			final Constructor<?> defaultConstructor = javaClass.getConstructor();
 			final Object newInstance = defaultConstructor.newInstance();
 			return new JavaObjectStruct(newInstance);
 		} catch (final NoSuchMethodException ex) {

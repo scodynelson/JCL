@@ -16,9 +16,7 @@ import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PackageVariables;
 
 /**
- * Function implementation for {@code in-package}.
- * <p>
- * TODO: in-package is a Macro
+ * System function implementation for {@code %in-package}.
  */
 public final class InPackageFunction extends BuiltInFunctionStructImpl {
 
@@ -29,15 +27,15 @@ public final class InPackageFunction extends BuiltInFunctionStructImpl {
 	 */
 	public InPackageFunction() {
 		super("Causes the the package named by name to become the current package.",
-		      CommonLispSymbols.IN_PACKAGE.getName(),
-		      Parameters.forFunction(CommonLispSymbols.IN_PACKAGE.getName())
+		      CommonLispSymbols.SYSTEM_IN_PACKAGE.getName(),
+		      Parameters.forFunction(CommonLispSymbols.SYSTEM_IN_PACKAGE.getName())
 		                .requiredParameter(NAME_ARGUMENT)
 		);
 	}
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return CommonLispSymbols.IN_PACKAGE;
+		return CommonLispSymbols.SYSTEM_IN_PACKAGE;
 	}
 
 	/**

@@ -310,14 +310,14 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 		for (final SymbolStruct symbol : symbols) {
 			final String symbolName = symbol.getName();
 
+			if (externalSymbols.containsKey(symbolName)) {
+				continue; // go to next symbol. already external
+			}
+
 			final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
 			if (foundPackageSymbol == null) {
 				notFoundSymbolNames.add(symbolName);
 				continue;
-			}
-
-			if (externalSymbols.containsKey(symbolName)) {
-				continue; // go to next symbol. already external
 			}
 
 			importSymbols(symbol); // This will put the symbol in the "InternalSymbols" and possibly "ShadowingSymbols"
@@ -362,10 +362,8 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 		if (!notFoundSymbolNames.isEmpty()) {
 			final StringBuilder exceptionStringBuilder
 					= new StringBuilder("The following symbols are not accessible in package " + this + ": (");
-			for (final String notFoundSymbolName : notFoundSymbolNames) {
-				exceptionStringBuilder.append(notFoundSymbolName);
-				exceptionStringBuilder.append(' ');
-			}
+			final String notFoundNamesString = String.join(" ", notFoundSymbolNames);
+			exceptionStringBuilder.append(notFoundNamesString);
 			exceptionStringBuilder.append(')');
 			throw new PackageErrorException(exceptionStringBuilder.toString(), this);
 		}

@@ -9,6 +9,7 @@ import java.util.Set;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.InternalEval;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
+import jcl.compiler.sa.FormAnalyzer;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -18,7 +19,6 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +28,12 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	public static final EvalWhenExpander INSTANCE = new EvalWhenExpander();
 
 	private static final Set<SymbolStruct> SITUATION_KEYWORDS = new HashSet<>(6);
+
+	/*
+	TODO: Handle the "globalness" of the following
+	 */
+
+	private Mode mode = Mode.NOT_COMPILE_TIME;
 
 	static {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
@@ -67,30 +73,70 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
 
-		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getVariableValue().toJavaPBoolean();
-		final boolean convertingForCompiler = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getVariableValue().toJavaPBoolean();
+		final boolean compileTopLevel = isCompileTopLevel(situationList);
+		final boolean loadTopLevel = isLoadTopLevel(situationList);
+		final boolean execute = isExecute(situationList);
 
-		if (isTopLevel) {
-			if (isCompileTopLevel(situationList)) {
-				final ListStruct formsList = ListStruct.toLispList(forms);
-				final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
-				return InternalEval.eval(prognOperatorList);
+		final Mode previousMode = mode;
+		try {
+			Action action = Action.DISCARD;
+
+			if (compileTopLevel && loadTopLevel) {
+				action = Action.PROCESS;
+				mode = Mode.COMPILE_TIME_TOO;
+			}
+			if (!compileTopLevel && loadTopLevel && execute) {
+				if (mode == Mode.COMPILE_TIME_TOO) {
+					action = Action.PROCESS;
+					mode = Mode.COMPILE_TIME_TOO;
+				}
+			}
+			if (!compileTopLevel && loadTopLevel && execute) {
+				if (mode == Mode.NOT_COMPILE_TIME) {
+					action = Action.PROCESS;
+					mode = Mode.NOT_COMPILE_TIME;
+				}
+			}
+			if (!compileTopLevel && loadTopLevel && !execute) {
+				action = Action.PROCESS;
+				mode = Mode.NOT_COMPILE_TIME;
+			}
+			if (compileTopLevel && !loadTopLevel) {
+				action = Action.EVALUATE;
+			}
+			if (!compileTopLevel && !loadTopLevel && execute) {
+				if (mode == Mode.COMPILE_TIME_TOO) {
+					action = Action.EVALUATE;
+				}
+				if (mode == Mode.NOT_COMPILE_TIME) {
+					action = Action.DISCARD;
+				}
+			}
+			if (!compileTopLevel && !loadTopLevel && !execute) {
+				action = Action.DISCARD;
 			}
 
-			if (isLoadTopLevel(situationList) || (convertingForCompiler && isExecute(situationList))) {
-				final ListStruct formsList = ListStruct.toLispList(forms);
-				final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
-				return InternalEval.eval(prognOperatorList);
+			switch (action) {
+				case PROCESS:
+					final ListStruct formsList = ListStruct.toLispList(forms);
+					final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
+					if (mode == Mode.COMPILE_TIME_TOO) {
+						final ListStruct prognOperatorListCopy = prognOperatorList.copyTree();
+						InternalEval.eval(prognOperatorListCopy);
+					}
+					return FormAnalyzer.analyze(prognOperatorList, environment);
+				case EVALUATE:
+					final ListStruct formsList1 = ListStruct.toLispList(forms);
+					final ListStruct prognOperatorList1 = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList1);
+					return InternalEval.eval(prognOperatorList1);
+				case DISCARD:
+					return NILStruct.INSTANCE;
 			}
-		}
 
-		if (isExecute(situationList)) {
-			final ListStruct formsList = ListStruct.toLispList(forms);
-			final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
-			return InternalEval.eval(prognOperatorList);
+			return NILStruct.INSTANCE;
+		} finally {
+			mode = previousMode;
 		}
-
-		return NILStruct.INSTANCE;
 	}
 
 	private static boolean isCompileTopLevel(final ListStruct situationList) {
@@ -106,5 +152,16 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private static boolean isExecute(final ListStruct situationList) {
 		return situationList.stream()
 		                    .anyMatch(element -> CommonLispSymbols.EXECUTE.eq(element) || CommonLispSymbols.EVAL.eq(element));
+	}
+
+	private enum Mode {
+		COMPILE_TIME_TOO,
+		NOT_COMPILE_TIME
+	}
+
+	private enum Action {
+		PROCESS,
+		EVALUATE,
+		DISCARD
 	}
 }

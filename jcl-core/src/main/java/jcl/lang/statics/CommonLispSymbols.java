@@ -355,14 +355,14 @@ public interface CommonLispSymbols {
 	SymbolStruct DEFINE_MODIFY_MACRO = null;
 	SymbolStruct DEFINE_SETF_EXPANDER = null;
 	SymbolStruct DEFINE_SYMBOL_MACRO = null;
-	SymbolStruct DEFMACRO = null;
+	SymbolStruct DEFMACRO = GlobalPackageStruct.COMMON_LISP.intern("DEFMACRO").getSymbol();
 	SymbolStruct DEFMETHOD = null;
 	SymbolStruct DEFPACKAGE = null;
 	SymbolStruct DEFPARAMETER = null;
 	SymbolStruct DEFSETF = null;
 	SymbolStruct DEFSTRUCT = null;
 	SymbolStruct DEFTYPE = null;
-	SymbolStruct DEFUN = null;
+	SymbolStruct DEFUN = GlobalPackageStruct.COMMON_LISP.intern("DEFUN").getSymbol();
 	SymbolStruct DEFVAR = null;
 	SymbolStruct DELETE = null;
 	SymbolStruct DELETE_DUPLICATES = null;
@@ -727,7 +727,7 @@ public interface CommonLispSymbols {
 	SymbolStruct PROGN = null;
 	SymbolStruct PROGRAM_ERROR = null;
 	SymbolStruct PROGV = null;
-	SymbolStruct PROVIDE = null;
+	SymbolStruct PROVIDE = GlobalPackageStruct.COMMON_LISP.intern("PROVIDE").getSymbol();
 	SymbolStruct PSETF = null;
 	SymbolStruct PSETQ = null;
 	SymbolStruct PUSH = null;
@@ -773,7 +773,7 @@ public interface CommonLispSymbols {
 	SymbolStruct RENAME_FILE = null;
 	SymbolStruct RENAME_PACKAGE = null;
 	SymbolStruct REPLACE = null;
-	SymbolStruct REQUIRE = null;
+	SymbolStruct REQUIRE = GlobalPackageStruct.COMMON_LISP.intern("REQUIRE").getSymbol();
 	SymbolStruct REST = null;
 	SymbolStruct RESTART = null;
 	SymbolStruct RESTART_BIND = null;
@@ -993,6 +993,7 @@ public interface CommonLispSymbols {
 	SymbolStruct ZEROP = null;
 
 	// System
+	SymbolStruct SYSTEM_IN_PACKAGE = GlobalPackageStruct.SYSTEM.intern("%IN-PACKAGE").getSymbol();
 	SymbolStruct SET_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("SET-SYMBOL-FUNCTION").getSymbol();
 	SymbolStruct SET_SYMBOL_MACRO = GlobalPackageStruct.SYSTEM.intern("SET-SYMBOL-MACRO").getSymbol();
 	SymbolStruct SET_SYMBOL_SETF_FUNCTION = GlobalPackageStruct.SYSTEM.intern("SET-SYMBOL-SETF-FUNCTION").getSymbol();

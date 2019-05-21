@@ -20,6 +20,11 @@ public class CompilerClassLoader extends ClassLoader {
 	}
 
 	public synchronized Class<?> loadClass(final String name, final byte[] byteArray) {
+		final Class<?> loadedClass = findLoadedClass(name);
+		if (loadedClass != null) {
+			return loadedClass;
+		}
+
 		final Class<?> clazz = defineClass(name, byteArray, 0, byteArray.length);
 		resolveClass(clazz);
 		loadedClasses.put(name.replace('.', '/') + ".class", byteArray);

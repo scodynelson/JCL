@@ -30,8 +30,5 @@ public interface CompilerVariables {
 	VariableStructImpl<BooleanStruct> COMPILE_VERBOSE = VariableStructImpl.valueOf("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStructImpl<BooleanStruct> LOAD_PRINT = VariableStructImpl.valueOf("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStructImpl<BooleanStruct> LOAD_VERBOSE = VariableStructImpl.valueOf("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	VariableStructImpl<?> MODULES = VariableStructImpl.valueOf("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);
-
-	VariableStructImpl<BooleanStruct> COMPILE_TOP_LEVEL = VariableStructImpl.valueOf("*COMPILE-TOP-LEVEL*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
-	VariableStructImpl<BooleanStruct> CONVERTING_FOR_INTERPRETER = VariableStructImpl.valueOf("*CONVERTING-FOR-INTERPRETER*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
+	VariableStructImpl<ListStruct> MODULES = VariableStructImpl.valueOf("*MODULES*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 }

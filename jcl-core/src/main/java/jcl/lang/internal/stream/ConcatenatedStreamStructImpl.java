@@ -5,20 +5,22 @@
 package jcl.lang.internal.stream;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.ConcatenatedStreamStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.EndOfFileException;
-import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.PeekType;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 
 /**
  * The {@link ConcatenatedStreamStructImpl} is the object representation of a Lisp 'concatenated-stream' type.
@@ -26,84 +28,65 @@ import jcl.lang.stream.ReadPeekResult;
 public final class ConcatenatedStreamStructImpl extends StreamStructImpl implements ConcatenatedStreamStruct {
 
 	/**
-	 * This {@link InputStreamStruct}s in the ConcatenatedStreamStruct.
+	 * This {@link Deque} of {@link InputStreamStruct} objects where input is accepted from.
 	 */
 	private final Deque<InputStreamStruct> inputStreamStructs;
 
 	/**
-	 * Public constructor.
+	 * Public constructor, initializing the provided the {@link Deque} of {@link InputStreamStruct} objects.
 	 *
 	 * @param inputStreamStructs
-	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
+	 * 		the {@link Deque} of {@link InputStreamStruct} objects to initialize
 	 */
 	public ConcatenatedStreamStructImpl(final Deque<InputStreamStruct> inputStreamStructs) {
-		this(false, inputStreamStructs);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param inputStreamStructs
-	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
-	 */
-	public ConcatenatedStreamStructImpl(final boolean interactive, final Deque<InputStreamStruct> inputStreamStructs) {
-		super(interactive, getElementType2(inputStreamStructs));
+		super(getElementType(inputStreamStructs));
 		this.inputStreamStructs = new ArrayDeque<>(inputStreamStructs);
 	}
 
 	/**
-	 * Used to retrieve the element type for object construction.
+	 * Retrieves the current element type for the {@link Deque} of {@link InputStreamStruct} objects.
 	 *
 	 * @param inputStreamStructs
-	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
+	 * 		the {@link Deque} of {@link InputStreamStruct} objects to retrieve the element type from
 	 *
-	 * @return the element type for object construction
+	 * @return the current element type for the {@link Deque} of {@link InputStreamStruct} objects
 	 */
-	private static LispStruct getElementType2(final Deque<InputStreamStruct> inputStreamStructs) {
-		if (inputStreamStructs == null) {
-			throw new ErrorException("Provided Input Stream List must not be null.");
-		}
-		return getElementType3(inputStreamStructs);
-	}
-
-	/**
-	 * Used to retrieve the element type for object construction.
-	 *
-	 * @param inputStreamStructs
-	 * 		the {@link InputStreamStruct}s to create a ConcatenatedStreamStruct from
-	 *
-	 * @return the element type for object construction
-	 */
-	private static LispStruct getElementType3(final Deque<InputStreamStruct> inputStreamStructs) {
+	private static LispStruct getElementType(final Deque<InputStreamStruct> inputStreamStructs) {
 		if (inputStreamStructs.isEmpty()) {
 			return CommonLispSymbols.T;
 		}
 
 		final InputStreamStruct last = inputStreamStructs.getLast();
-		return last.getElementType();
+		return last.streamElementType();
 	}
 
-	@Override
-	public Deque<InputStreamStruct> getInputStreamStructs() {
-		return inputStreamStructs;
-	}
+	/*
+	CONCATENATED-STREAM-STRUCT
+	 */
 
 	@Override
-	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ListStruct concatenatedStreamStreams() {
+		return ListStruct.toLispList(new ArrayList<LispStruct>(inputStreamStructs));
+	}
+
+	/*
+	INPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public ReadCharResult readChar(final boolean eofErrorP, final LispStruct eofValue) {
 		while (true) {
 			if (inputStreamStructs.isEmpty()) {
 				if (eofErrorP) {
-					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
+					throw new EndOfFileException(this);
 				} else {
-					return new ReadPeekResult(eofValue);
+					return new ReadCharResult(eofValue);
 				}
 			}
 
 			final InputStreamStruct first = inputStreamStructs.getFirst();
 
-			final ReadPeekResult readResult = first.readChar(false, eofValue, false);
+			final ReadCharResult readResult = first.readChar(false, eofValue);
 			if (readResult.isEof()) {
 				inputStreamStructs.removeFirst();
 			} else {
@@ -113,19 +96,19 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	}
 
 	@Override
-	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadCharResult readCharNoHang(final boolean eofErrorP, final LispStruct eofValue) {
 		while (true) {
 			if (inputStreamStructs.isEmpty()) {
 				if (eofErrorP) {
-					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
+					throw new EndOfFileException(this);
 				} else {
-					return new ReadPeekResult(eofValue);
+					return new ReadCharResult(eofValue);
 				}
 			}
 
 			final InputStreamStruct first = inputStreamStructs.getFirst();
 
-			final ReadPeekResult readResult = first.readByte(false, eofValue);
+			final ReadCharResult readResult = first.readCharNoHang(false, eofValue);
 			if (readResult.isEof()) {
 				inputStreamStructs.removeFirst();
 			} else {
@@ -135,23 +118,31 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	}
 
 	@Override
-	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		if (inputStreamStructs.isEmpty()) {
-			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
+	public ReadCharResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+		while (true) {
+			if (inputStreamStructs.isEmpty()) {
+				if (eofErrorP) {
+					throw new EndOfFileException(this);
+				} else {
+					return new ReadCharResult(eofValue);
+				}
+			}
+
+			final InputStreamStruct first = inputStreamStructs.getFirst();
+
+			final ReadCharResult readResult = first.readByte(false, eofValue);
+			if (readResult.isEof()) {
+				inputStreamStructs.removeFirst();
 			} else {
-				return new ReadPeekResult(eofValue);
+				return readResult;
 			}
 		}
-
-		final InputStreamStruct first = inputStreamStructs.getFirst();
-		return first.peekChar(peekType, eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		if (inputStreamStructs.isEmpty()) {
-			return null;
+			throw new EndOfFileException(this);
 		}
 
 		final InputStreamStruct first = inputStreamStructs.getFirst();
@@ -159,42 +150,54 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	}
 
 	@Override
-	public void clearInput() {
+	public LispStruct clearInput() {
 		if (!inputStreamStructs.isEmpty()) {
 			final InputStreamStruct first = inputStreamStructs.getFirst();
 			first.clearInput();
 		}
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
-	public boolean listen() {
+	public BooleanStruct listen() {
 		if (inputStreamStructs.isEmpty()) {
-			return false;
+			return NILStruct.INSTANCE;
 		}
 
 		while (true) {
 			final InputStreamStruct first = inputStreamStructs.getFirst();
-			final boolean listen = first.listen();
-			if (listen) {
-				return true;
+			final BooleanStruct listen = first.listen();
+			if (listen.toJavaPBoolean()) {
+				return listen;
 			}
 
 			inputStreamStructs.removeFirst();
 			if (inputStreamStructs.isEmpty()) {
-				return false;
+				return NILStruct.INSTANCE;
 			}
 		}
 	}
 
+	/*
+	STREAM-STRUCT
+	 */
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * The element type can differ based on the state of the {@link #inputStreamStructs} {@link Deque}.
+	 *
+	 * @return the current stream-element-type
+	 */
 	@Override
-	public LispStruct getElementType() {
-		return getElementType3(inputStreamStructs);
+	public LispStruct streamElementType() {
+		return getElementType(inputStreamStructs);
 	}
 
 	@Override
-	public Long fileLength() {
+	public LispStruct fileLength() {
 		if (inputStreamStructs.isEmpty()) {
-			return 0L;
+			return IntegerStruct.ZERO;
 		}
 
 		final InputStreamStruct last = inputStreamStructs.getLast();
@@ -202,14 +205,18 @@ public final class ConcatenatedStreamStructImpl extends StreamStructImpl impleme
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) {
+	public LispStruct filePosition() {
 		if (inputStreamStructs.isEmpty()) {
-			return 0L;
+			return IntegerStruct.ZERO;
 		}
 
 		final InputStreamStruct last = inputStreamStructs.getLast();
-		return last.filePosition(filePosition);
+		return last.filePosition();
 	}
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {

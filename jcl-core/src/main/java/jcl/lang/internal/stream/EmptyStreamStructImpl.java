@@ -4,17 +4,21 @@
 
 package jcl.lang.internal.stream;
 
+import jcl.lang.BooleanStruct;
+import jcl.lang.CharacterStreamStruct;
 import jcl.lang.EmptyStreamStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.PeekType;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 
 /**
- * The {@link EmptyStreamStructImpl} is the object representation of an empty reading and writing system level Lisp stream.
+ * The {@link EmptyStreamStructImpl} is the object representation of an empty reading and writing Lisp stream.
  */
-public final class EmptyStreamStructImpl extends AbstractNativeStreamStructImpl implements EmptyStreamStruct {
+public final class EmptyStreamStructImpl extends StreamStructImpl implements EmptyStreamStruct {
+
+	private static final String OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM = "Operation not supported for EmptyStream.";
 
 	/**
 	 * Singleton instance of the {@link EmptyStreamStructImpl} Lisp stream.
@@ -25,76 +29,69 @@ public final class EmptyStreamStructImpl extends AbstractNativeStreamStructImpl 
 	 * Private constructor.
 	 */
 	private EmptyStreamStructImpl() {
-		super(false, CommonLispSymbols.CHARACTER);
+		super(CommonLispSymbols.CHARACTER);
+	}
+
+	/*
+	INPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public ReadCharResult readChar(final boolean eofErrorP, final LispStruct eofValue) {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
-	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
+	public ReadCharResult readCharNoHang(final boolean eofErrorP, final LispStruct eofValue) {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
-	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
-	}
-
-	@Override
-	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
+	public ReadCharResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
-	public void clearInput() {
-		// Do nothing.
+	public BooleanStruct listen() {
+		return NILStruct.INSTANCE;
 	}
 
+	/*
+	OUTPUT-STREAM-STRUCT
+	 */
+
 	@Override
-	public void writeChar(final int aChar) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
+	public void writeChar(final int codePoint) {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
+		throw new StreamErrorException(CharacterStreamStruct.OPERATION_UNSUPPORTED, this);
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
+	public void writeString(final String outputString) {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
-	public void clearOutput() {
-		// Do nothing.
+	public void writeLine(final String outputString) {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
-	public void finishOutput() {
-		// Do nothing.
+	public BooleanStruct freshLine() {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 
 	@Override
-	public void forceOutput() {
-		// Do nothing.
-	}
-
-	@Override
-	public boolean isStartOfLine() {
-		return false;
-	}
-
-	@Override
-	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
-	}
-
-	@Override
-	public Long filePosition(final Long filePosition) {
-		throw new StreamErrorException(StreamUtils.OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
+	public BooleanStruct terpri() {
+		throw new StreamErrorException(OPERATION_NOT_SUPPORTED_FOR_EMPTY_STREAM, this);
 	}
 }

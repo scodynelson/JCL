@@ -5,88 +5,114 @@
 package jcl.lang.internal.stream;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.StreamStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
+import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.internal.LispStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link StreamStructImpl} is the object representation of a Lisp 'stream' type.
  */
-public abstract class StreamStructImpl extends LispStructImpl implements StreamStruct {
+class StreamStructImpl extends LispStructImpl implements StreamStruct {
 
 	/**
-	 * Whether or not the StreamStruct is interactive.
+	 * Whether or not the stream is interactive.
 	 */
 	private boolean interactive;
 
 	/**
-	 * The {@link LispStruct} of the elements in the StreamStruct.
+	 * The type of elements in the stream.
 	 */
 	private final LispStruct elementType;
 
 	/**
-	 * Whether or not the StreamStruct is closed.
+	 * Whether or not the stream is closed.
 	 */
 	private boolean closed;
 
+	/**
+	 * The current line number (based on the number of newline characters read or written).
+	 */
 	protected long lineNumber;
 
 	/**
-	 * Protected constructor.
+	 * Protected constructor, initializing the {@link #elementType}.
 	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
 	 * @param elementType
-	 * 		the stream elementType
+	 * 		the stream element-type to initialize
 	 */
-	StreamStructImpl(final boolean interactive, final LispStruct elementType) {
-		this.interactive = interactive;
+	protected StreamStructImpl(final LispStruct elementType) {
 		this.elementType = elementType;
 	}
 
+	/*
+	STREAM-STRUCT
+	 */
+
 	@Override
-	public boolean close() {
+	public BooleanStruct close(final BooleanStruct abort) {
 		final boolean wasClosed = closed;
 		closed = true;
-		return wasClosed;
+		return BooleanStruct.toLispBoolean(wasClosed);
 	}
 
 	@Override
-	public LispStruct getElementType() {
+	public LispStruct streamElementType() {
 		return elementType;
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !closed && interactive;
+	public BooleanStruct interactiveStreamP() {
+		return BooleanStruct.toLispBoolean(!closed && interactive);
 	}
 
 	@Override
 	public void setInteractive(final boolean interactive) {
 		if (closed) {
-			throw new IllegalStateException("Cannot modify the state of a closed stream.");
+			throw new StreamErrorException("Cannot modify the state of a closed stream.", this);
 		}
 		this.interactive = interactive;
 	}
 
 	@Override
-	public boolean isOpen() {
-		return !closed;
+	public BooleanStruct openStreamP() {
+		return BooleanStruct.toLispBoolean(!closed);
 	}
 
 	@Override
-	public boolean isClosed() {
-		return closed;
+	public BooleanStruct closedStreamP() {
+		return BooleanStruct.toLispBoolean(closed);
 	}
 
 	@Override
-	public Long lineNumber() {
-		return lineNumber;
+	public LispStruct fileLength() {
+		throw new StreamErrorException("Operation only supported on a FileStream.", this);
 	}
+
+	@Override
+	public LispStruct filePosition() {
+		return NILStruct.INSTANCE;
+	}
+
+	@Override
+	public BooleanStruct filePosition(final IntegerStruct position) {
+		return NILStruct.INSTANCE;
+	}
+
+	@Override
+	public IntegerStruct lineNumber() {
+		return IntegerStruct.toLispInteger(lineNumber);
+	}
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {

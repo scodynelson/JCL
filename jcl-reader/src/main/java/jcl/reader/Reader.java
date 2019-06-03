@@ -10,7 +10,7 @@ import java.util.Map;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.internal.ReaderProcessor;
 import jcl.reader.internal.TokenBuilder;
 import lombok.experimental.UtilityClass;
@@ -27,7 +27,7 @@ public final class Reader {
 	                              final boolean recursiveP) {
 		final LispStruct token = readPreservingWhitespace(inputStreamStruct, eofErrorP, eofValue, recursiveP);
 
-		final ReadPeekResult possibleWhitespace = inputStreamStruct.readChar(false, eofValue, false);
+		final ReadCharResult possibleWhitespace = inputStreamStruct.readChar(false, eofValue);
 		final Integer codePoint = possibleWhitespace.getResult();
 		if (!possibleWhitespace.isEof() && (!Character.isWhitespace(codePoint) || recursiveP)) {
 			inputStreamStruct.unreadChar(codePoint);

@@ -29,6 +29,7 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
 import jcl.lang.FunctionStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.LogicalPathnameStruct;
@@ -44,6 +45,7 @@ import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.pathname.PathnameType;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.PathnameVariables;
@@ -181,7 +183,10 @@ public final class InternalCompile {
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
-			final FileStreamStruct inputFileStream = FileStreamStruct.toFileStream(inputFilePath);
+			final FileStreamStruct inputFileStream = FileStreamStruct.toFileStream(
+					inputFilePathname, CommonLispSymbols.INPUT_KEYWORD, CommonLispSymbols.CHARACTER,
+					CommonLispSymbols.NIL, CommonLispSymbols.NIL, CommonLispSymbols.DEFAULT_KEYWORD
+			);
 
 			final String inputFileLispName = inputFilePathname.getPathnameName().getName();
 
@@ -300,9 +305,9 @@ public final class InternalCompile {
 						}
 					}
 				} else if (form != null) {
-					final Long currentFilePosition = inputFileStream.filePosition(null);
-					// TODO: can we rework this to tell what line we're on???
-					log.info("; Deleted a non-list form '{}' found at position {}.", form, currentFilePosition);
+					final LispStruct filePosition = inputFileStream.filePosition();
+					final IntegerStruct lineNumber = inputFileStream.lineNumber();
+					log.info("; Deleted a non-list form '{}' found at position {} on line {}.", form, filePosition, lineNumber);
 					form = NILStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;

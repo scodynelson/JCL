@@ -19,7 +19,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -42,7 +42,7 @@ public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		final ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+		final ReadCharResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		final int nextCodePoint = readResult.getResult();
 		if (nextCodePoint != CodePointConstants.LEFT_PARENTHESIS) {
 			throw new ReaderErrorException("Non-list following #S");

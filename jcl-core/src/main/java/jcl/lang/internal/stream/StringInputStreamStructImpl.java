@@ -5,16 +5,17 @@
 package jcl.lang.internal.stream;
 
 import jcl.lang.BooleanStruct;
+import jcl.lang.CharacterStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.PeekType;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 
 /**
  * The {@link StringInputStreamStructImpl} is the object representation of a Lisp 'string-stream' input type.
@@ -27,82 +28,44 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	private final String inputString;
 
 	/**
-	 * The length of the {@link #inputString}.
+	 * The position to read up to from the {@link #inputString}.
 	 */
 	private final int end;
 
 	/**
-	 * The current location of reads on the {@link #inputString}.
+	 * The current location of reads from the {@link #inputString}.
 	 */
 	private int current;
 
 	/**
-	 * Public constructor.
+	 * Public constructor, initializing the {@link #inputString}, {@link #end}, and {@link #current}.
 	 *
 	 * @param inputString
-	 * 		the input to create a StringInputStreamStruct from
-	 */
-	public StringInputStreamStructImpl(final String inputString) {
-		this(false, inputString);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param inputString
-	 * 		the input to create a StringInputStreamStruct from
-	 */
-	public StringInputStreamStructImpl(final boolean interactive, final String inputString) {
-		this(interactive, inputString, 0, inputString.length());
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param inputString
-	 * 		the input to create a StringInputStreamStruct from
+	 * 		the input to initialize
 	 * @param current
 	 * 		the current position to read from in the string
 	 * @param end
 	 * 		the ending position to read up to in the string
 	 */
 	public StringInputStreamStructImpl(final String inputString, final int current, final int end) {
-		this(false, inputString, current, end);
-	}
+		super(CommonLispSymbols.CHARACTER);
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param inputString
-	 * 		the input to create a StringInputStreamStruct from
-	 * @param current
-	 * 		the current position to read from in the string
-	 * @param end
-	 * 		the ending position to read up to in the string
-	 */
-	public StringInputStreamStructImpl(final boolean interactive, final String inputString, final int current, final int end) {
-		super(interactive, CommonLispSymbols.BASE_CHAR);
-
-		if (inputString == null) {
-			throw new ErrorException("Provided Input String must not be null.");
-		}
 		this.inputString = inputString;
-
 		this.end = end;
 		this.current = current;
 	}
 
+	/*
+	INPUT-STREAM-STRUCT
+	 */
+
 	@Override
-	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadCharResult readChar(final boolean eofErrorP, final LispStruct eofValue) {
 		if (current == end) {
 			if (eofErrorP) {
-				return new ReadPeekResult(10);
+				throw new EndOfFileException(this);
 			} else {
-				return new ReadPeekResult(eofValue);
+				return new ReadCharResult(eofValue);
 			}
 		}
 
@@ -111,89 +74,17 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 			lineNumber++;
 		}
 		current++;
-		return new ReadPeekResult(readChar);
+		return new ReadCharResult(readChar);
 	}
 
 	@Override
-	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM, this);
+	public ReadCharResult readCharNoHang(final boolean eofErrorP, final LispStruct eofValue) {
+		return readChar(eofErrorP, eofValue);
 	}
 
 	@Override
-	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		if ((current + 1) == end) {
-			if (eofErrorP) {
-				return new ReadPeekResult(10);
-			} else {
-				return new ReadPeekResult(eofValue);
-			}
-		}
-
-		final int nextChar;
-		switch (peekType.getType()) {
-			case NIL:
-				nextChar = nilPeekCharSIS();
-				break;
-			case T:
-				nextChar = tPeekCharSIS();
-				break;
-			case CHARACTER:
-				nextChar = characterPeekCharSIS(peekType.getCodePoint());
-				break;
-			default:
-				nextChar = -1;
-				break;
-		}
-
-		return StreamUtils.getReadPeekResult(this, nextChar, eofErrorP, eofValue);
-	}
-
-	/**
-	 * Attempts to peek ahead to the next available character in the stream.
-	 *
-	 * @return the character peeked from the stream
-	 */
-	private int nilPeekCharSIS() {
-		return inputString.charAt(current + 1);
-	}
-
-	/**
-	 * Attempts to peek ahead to the next available non-whitespace character in the stream.
-	 *
-	 * @return the character peeked from the stream
-	 */
-	private int tPeekCharSIS() {
-		// Initialize to whitespace, since we are attempting to skip it anyways
-		int nextChar = ' ';
-
-		int indexToFind = current + 1;
-		while (Character.isWhitespace(nextChar) && (indexToFind < end)) {
-			nextChar = inputString.charAt(current + indexToFind);
-			indexToFind++;
-		}
-
-		return (indexToFind == end) ? nextChar : -1;
-	}
-
-	/**
-	 * Attempts to peek ahead to the provided {@code codePoint} in the stream.
-	 *
-	 * @param codePoint
-	 * 		the codePoint to peek up to in the stream
-	 *
-	 * @return the character peeked from the stream
-	 */
-	private int characterPeekCharSIS(final Integer codePoint) {
-		// Initialize to -1 value, since this is essentially EOF
-		int nextChar = -1;
-
-		int indexToFind = current + 1;
-		while ((nextChar != codePoint) && (indexToFind < end)) {
-			nextChar = inputString.charAt(current + indexToFind);
-			indexToFind++;
-		}
-
-		return (indexToFind == end) ? nextChar : -1;
+	public ReadCharResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+		throw new StreamErrorException(CharacterStreamStruct.OPERATION_UNSUPPORTED, this);
 	}
 
 	@Override
@@ -206,59 +97,53 @@ public final class StringInputStreamStructImpl extends StreamStructImpl implemen
 	}
 
 	@Override
-	public void clearInput() {
-		// Do nothing.
+	public BooleanStruct listen() {
+		return BooleanStruct.toLispBoolean(current < end);
+	}
+
+	/*
+	STREAM-STRUCT
+	 */
+
+	@Override
+	public LispStruct filePosition() {
+		return IntegerStruct.toLispInteger(current);
 	}
 
 	@Override
-	public boolean listen() {
-		return current < end;
+	public BooleanStruct filePosition(final IntegerStruct position) {
+		current = position.toJavaInt();
+		return TStruct.INSTANCE;
 	}
 
-	@Override
-	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
-	}
-
-	@Override
-	public Long filePosition(final Long filePosition) {
-		if (filePosition != null) {
-			current = filePosition.intValue();
-		}
-		return (long) current;
-	}
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {
-		// TODO
-//		return CommonLispSymbols.STRING_INPUT_STREAM;
-		return CommonLispSymbols.STRING_STREAM;
+		return CommonLispSymbols.STRING_INPUT_STREAM;
 	}
 
 	@Override
 	public ClassStruct classOf() {
-		// TODO
-//		return BuiltInClassStruct.STRING_INPUT_STREAM;
-		return BuiltInClassStruct.STRING_STREAM;
+		return BuiltInClassStruct.STRING_INPUT_STREAM;
 	}
 
 	@Override
 	public BooleanStruct typep(final LispStruct typeSpecifier) {
-		// TODO
-//		if (typeSpecifier == CommonLispSymbols.STRING_INPUT_STREAM) {
-//			return TStruct.INSTANCE;
-//		}
+		if (typeSpecifier == CommonLispSymbols.STRING_INPUT_STREAM) {
+			return TStruct.INSTANCE;
+		}
 		if (typeSpecifier == CommonLispSymbols.STRING_STREAM) {
 			return TStruct.INSTANCE;
 		}
-		// TODO
-//		if (typeSpecifier == BuiltInClassStruct.STRING_INPUT_STREAM) {
-//			return TStruct.INSTANCE;
-//		}
+		if (typeSpecifier == BuiltInClassStruct.STRING_INPUT_STREAM) {
+			return TStruct.INSTANCE;
+		}
 		if (typeSpecifier == BuiltInClassStruct.STRING_STREAM) {
 			return TStruct.INSTANCE;
 		}
-		// TODO
 		return super.typep(typeSpecifier);
 	}
 }

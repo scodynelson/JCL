@@ -13,7 +13,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
@@ -43,7 +43,7 @@ public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Comma not inside a backquote.");
 		}
 
-		final ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+		final ReadCharResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		final int nextCodePoint = readResult.getResult();
 
 		context.decrementBackquoteLevel();

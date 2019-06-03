@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.readtable.AttributeType;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.Reader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class TokenBuilder {
 	 * The previously read result. This value is null if no tokens have been read.
 	 */
 	@Setter
-	private ReadPeekResult previousReadResult;
+	private ReadCharResult previousReadResult;
 
 	/**
 	 * Notes whether the token was multi-escaped.

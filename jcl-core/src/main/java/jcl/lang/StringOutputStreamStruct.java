@@ -1,5 +1,7 @@
 package jcl.lang;
 
+import java.io.InputStream;
+
 import jcl.lang.internal.stream.StringOutputStreamStructImpl;
 
 /**
@@ -7,20 +9,22 @@ import jcl.lang.internal.stream.StringOutputStreamStructImpl;
  */
 public interface StringOutputStreamStruct extends OutputStreamStruct {
 
-	String getStreamString();
+	/**
+	 * Returns the output stream as a {@link StringStruct}. This operation also empties the underlying data that exists
+	 * in the stream.
+	 *
+	 * @return the output stream as a {@link StringStruct}
+	 */
+	StringStruct getOutputStreamString();
 
-	void clearStream();
-
-	default StringStruct getOutputStreamString() {
-		final String streamString = getStreamString();
-		clearStream();
-		return StringStruct.toLispString(streamString);
-	}
-
-	static StringOutputStreamStruct toStringOutputStream() {
-		return new StringOutputStreamStructImpl();
-	}
-
+	/**
+	 * Returns a new String-Output-Stream instance for writing characters to a string.
+	 *
+	 * @param elementType
+	 * 		the element type of the string data
+	 *
+	 * @return a new String-Output-Stream instance
+	 */
 	static StringOutputStreamStruct toStringOutputStream(final LispStruct elementType) {
 		return new StringOutputStreamStructImpl(elementType);
 	}

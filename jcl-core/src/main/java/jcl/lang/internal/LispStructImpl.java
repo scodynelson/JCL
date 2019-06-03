@@ -40,4 +40,9 @@ public abstract class LispStructImpl implements LispStruct {
 		}
 		return NILStruct.INSTANCE;
 	}
+
+	@Override
+	public String toString() {
+		return "#<" + typeOf() + '>';
+	}
 }

@@ -9,24 +9,26 @@ package jcl.lang;
  */
 public interface OutputStreamStruct extends StreamStruct {
 
-	@Override
-	default boolean close(final boolean abort) {
-		if (abort) {
-			clearOutput();
-		} else {
-			forceOutput();
-		}
-		return close();
-	}
+	/*
+	OUTPUT-STREAM-STRUCT
+	 */
 
 	/**
-	 * Writes the provided {@code aChar} out to the stream.
+	 * Writes the provided {@code codePoint} out to the stream.
 	 *
-	 * @param aChar
+	 * @param codePoint
 	 * 		the character to write out to the stream
 	 */
-	void writeChar(int aChar);
+	void writeChar(final int codePoint);
 
+	/**
+	 * Writes the provided {@code character} out to the stream.
+	 *
+	 * @param character
+	 * 		the character to write out to the stream
+	 *
+	 * @return the written character
+	 */
 	default CharacterStruct writeChar(final CharacterStruct character) {
 		writeChar(character.toUnicodeCodePoint());
 		return character;
@@ -38,26 +40,28 @@ public interface OutputStreamStruct extends StreamStruct {
 	 * @param aByte
 	 * 		the byte to write out to the stream
 	 */
-	void writeByte(int aByte);
+	void writeByte(final int aByte);
 
+	/**
+	 * Writes the provided {@code byteVal} out to the stream.
+	 *
+	 * @param byteVal
+	 * 		the byte to write out to the stream
+	 *
+	 * @return the written byte
+	 */
 	default IntegerStruct writeByte(final IntegerStruct byteVal) {
-		final int byteValue = byteVal.toJavaInt();
-		writeByte(byteValue);
+		writeByte(byteVal.toJavaInt());
 		return byteVal;
 	}
 
 	/**
-	 * Writes the provided {@code outputString} from the provided {@code start} index to the provided {@code end} index
-	 * to the stream.
+	 * Writes the provided {@code outputString} to the stream.
 	 *
 	 * @param outputString
 	 * 		the string to write out to the stream
-	 * @param start
-	 * 		the starting index
 	 */
-	default void writeString(final String outputString, final int start) {
-		writeString(outputString, start, outputString.length() - 1);
-	}
+	void writeString(final String outputString);
 
 	/**
 	 * Writes the provided {@code outputString} from the provided {@code start} index to the provided {@code end} index
@@ -69,99 +73,91 @@ public interface OutputStreamStruct extends StreamStruct {
 	 * 		the starting index
 	 * @param end
 	 * 		the ending index
+	 *
+	 * @return the written {@link StringStruct}
 	 */
-	default void writeString(final String outputString, final int start, final int end) {
-		final String subString = outputString.substring(start, end);
-		subString.chars().forEach(this::writeChar);
-	}
-
-	default StringStruct writeString(final StringStruct stringParam, final IntegerStruct startParam, final LispStruct endParam) {
-		final int start = startParam.toJavaInt();
-
-		final String javaString = stringParam.toJavaString();
-		if (endParam instanceof IntegerStruct) {
-			final int end = ((IntegerStruct) endParam).toJavaInt();
-			writeString(javaString, start, end);
-		} else {
-			writeString(javaString, start);
-		}
-		return stringParam;
-	}
-
-	default void writeLine(final String outputString, final int start) {
-		writeString(outputString, start);
-		writeChar('\n');
-	}
-
-	default void writeLine(final String outputString, final int start, final int end) {
-		writeString(outputString, start, end);
-		writeChar('\n');
-	}
-
-	default StringStruct writeLine(final StringStruct stringParam, final IntegerStruct startParam, final LispStruct endParam) {
-		final int start = startParam.toJavaInt();
-
-		final String javaString = stringParam.toJavaString();
-		if (endParam instanceof IntegerStruct) {
-			final int end = ((IntegerStruct) endParam).toJavaInt();
-			writeLine(javaString, start, end);
-		} else {
-			writeLine(javaString, start);
-		}
-		return stringParam;
+	default StringStruct writeString(final StringStruct outputString, final FixnumStruct start,
+	                                 final FixnumStruct end) {
+		final String javaString = outputString.toJavaString().substring(start.toJavaInt(), end.toJavaInt());
+		writeString(javaString);
+		return outputString;
 	}
 
 	/**
-	 * Clears the output from the stream.
+	 * Writes the provided {@code outputString} to the stream, followed by a newline character.
+	 *
+	 * @param outputString
+	 * 		the string to write out to the stream
 	 */
-	void clearOutput();
+	void writeLine(final String outputString);
 
-	default LispStruct clearOutput1() {
-		// TODO: Fix method name
-		clearOutput();
+	/**
+	 * Writes the provided {@code outputString} from the provided {@code start} index to the provided {@code end} index
+	 * to the stream, followed by a newline character.
+	 *
+	 * @param outputString
+	 * 		the string to write out to the stream
+	 * @param start
+	 * 		the starting index
+	 * @param end
+	 * 		the ending index
+	 *
+	 * @return the written {@link StringStruct}
+	 */
+	default StringStruct writeLine(final StringStruct outputString, final FixnumStruct start,
+	                               final FixnumStruct end) {
+		final String javaString = outputString.toJavaString().substring(start.toJavaInt(), end.toJavaInt());
+		writeLine(javaString);
+		return outputString;
+	}
+
+	/**
+	 * Outputs a newline character if the last character output to the stream is not a newline character.
+	 *
+	 * @return T if a newline character was written; NIL otherwise
+	 */
+	BooleanStruct freshLine();
+
+	/**
+	 * Outputs a newline character to the stream.
+	 *
+	 * @return NIL
+	 */
+	BooleanStruct terpri();
+
+	/**
+	 * Clears the output from the stream.
+	 *
+	 * @return NIL
+	 */
+	default LispStruct clearOutput() {
 		return NILStruct.INSTANCE;
 	}
 
 	/**
 	 * Finishes the output currently in the stream.
+	 *
+	 * @return NIL
 	 */
-	void finishOutput();
-
-	default LispStruct finishOutput1() {
-		// TODO: Fix method name
-		finishOutput();
+	default LispStruct finishOutput() {
 		return NILStruct.INSTANCE;
 	}
 
 	/**
 	 * Forces the output through the stream.
+	 *
+	 * @return NIL
 	 */
-	void forceOutput();
-
-	default LispStruct forceOutput1() {
-		// TODO: Fix method name
-		forceOutput();
+	default LispStruct forceOutput() {
 		return NILStruct.INSTANCE;
 	}
+
+	/*
+	STREAM-STRUCT
+	 */
 
 	@Override
-	default boolean isOutputStream() {
-		return true;
-	}
-
-	boolean isStartOfLine();
-
-	default BooleanStruct freshLine() {
-		final boolean shouldWriteNewline = !isStartOfLine();
-		if (shouldWriteNewline) {
-			writeChar('\n');
-		}
-
-		return BooleanStruct.toLispBoolean(shouldWriteNewline);
-	}
-
-	default BooleanStruct terpri() {
-		writeChar('\n');
-		return NILStruct.INSTANCE;
+	default BooleanStruct outputStreamP() {
+		return TStruct.INSTANCE;
 	}
 }

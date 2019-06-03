@@ -12,7 +12,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.util.CodePointConstants;
 
 /**
@@ -32,7 +32,7 @@ public final class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionI
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
+		ReadCharResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		int nextCodePoint = readResult.getResult();
 
 		while (nextCodePoint != CodePointConstants.QUOTATION_MARK) {
@@ -43,7 +43,7 @@ public final class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionI
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
-			readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
+			readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 			nextCodePoint = readResult.getResult();
 		}
 
@@ -68,12 +68,12 @@ public final class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionI
 		int codePoint = CodePointConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult tempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
+		final ReadCharResult tempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		final int tempCodePoint = tempReadResult.getResult();
 		if ((tempCodePoint == CodePointConstants.LATIN_SMALL_LETTER_U)
 				|| (tempCodePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadPeekResult nextTempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, true);
+			final ReadCharResult nextTempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 			final int nextTempCodePoint = nextTempReadResult.getResult();
 			if (nextTempCodePoint == CodePointConstants.PLUS_SIGN) {
 				codePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(inputStreamStruct);

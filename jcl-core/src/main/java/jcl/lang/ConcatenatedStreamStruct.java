@@ -1,8 +1,6 @@
 package jcl.lang;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import jcl.lang.internal.stream.ConcatenatedStreamStructImpl;
@@ -12,18 +10,23 @@ import jcl.lang.internal.stream.ConcatenatedStreamStructImpl;
  */
 public interface ConcatenatedStreamStruct extends InputStreamStruct {
 
-	Deque<InputStreamStruct> getInputStreamStructs();
+	/**
+	 * Returns the {@link ListStruct} of {@link InputStreamStruct} objects that input is accepted from for this stream.
+	 *
+	 * @return the {@link ListStruct} of {@link InputStreamStruct} objects that input is accepted from for this stream
+	 */
+	ListStruct concatenatedStreamStreams();
 
-	default ListStruct concatenatedStreamStreams() {
-		final Deque<InputStreamStruct> inputStreamStructs = getInputStreamStructs();
-		return ListStruct.toLispList(new ArrayList<LispStruct>(inputStreamStructs));
-	}
-
+	/**
+	 * Returns a new Concatenated-Stream instance that will accept input from each of the provided {@link List} of
+	 * {@link InputStreamStruct} objects in order.
+	 *
+	 * @param inputStreamStructs
+	 * 		the {@link List} of {@link InputStreamStruct} objects to accept input from
+	 *
+	 * @return a new Concatenated-Stream instance
+	 */
 	static ConcatenatedStreamStruct toConcatenatedStream(final List<InputStreamStruct> inputStreamStructs) {
 		return new ConcatenatedStreamStructImpl(new ArrayDeque<>(inputStreamStructs));
-	}
-
-	static ConcatenatedStreamStruct toConcatenatedStream(final Deque<InputStreamStruct> inputStreamStructs) {
-		return new ConcatenatedStreamStructImpl(inputStreamStructs);
 	}
 }

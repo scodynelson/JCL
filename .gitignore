@@ -9,6 +9,7 @@
 #*.iml
 #*.ipr
 #*.iws
+out/
 
 ### Java Class Files
 *.class
@@ -20,7 +21,7 @@
 
 ### Gradle
 .gradle/
-#build/
+build/
 
 ### Compiled Lisp
 compiled-lisp/

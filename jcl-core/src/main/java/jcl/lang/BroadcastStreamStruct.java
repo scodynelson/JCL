@@ -1,8 +1,6 @@
 package jcl.lang;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import jcl.lang.internal.stream.BroadcastStreamStructImpl;
@@ -12,18 +10,24 @@ import jcl.lang.internal.stream.BroadcastStreamStructImpl;
  */
 public interface BroadcastStreamStruct extends OutputStreamStruct {
 
-	Deque<OutputStreamStruct> getOutputStreamStructs();
+	/**
+	 * Returns the {@link ListStruct} of {@link OutputStreamStruct} objects that output will be broadcast to by this
+	 * stream.
+	 *
+	 * @return the {@link ListStruct} of {@link OutputStreamStruct} objects that output will be broadcast to by this stream
+	 */
+	ListStruct broadcastStreamStreams();
 
-	default ListStruct broadcastStreamStreams() {
-		final Deque<OutputStreamStruct> outputStreamStructs = getOutputStreamStructs();
-		return ListStruct.toLispList(new ArrayList<LispStruct>(outputStreamStructs));
-	}
-
+	/**
+	 * Returns a new Broadcast-Stream instance that will broadcast output to the provided {@link List} of {@link
+	 * OutputStreamStruct} objects.
+	 *
+	 * @param outputStreamStructs
+	 * 		the {@link List} of {@link OutputStreamStruct} objects to broadcast output to
+	 *
+	 * @return a new Broadcast-Stream instance
+	 */
 	static BroadcastStreamStruct toBroadcastStream(final List<OutputStreamStruct> outputStreamStructs) {
 		return new BroadcastStreamStructImpl(new ArrayDeque<>(outputStreamStructs));
-	}
-
-	static BroadcastStreamStruct toBroadcastStream(final Deque<OutputStreamStruct> outputStreamStructs) {
-		return new BroadcastStreamStructImpl(outputStreamStructs);
 	}
 }

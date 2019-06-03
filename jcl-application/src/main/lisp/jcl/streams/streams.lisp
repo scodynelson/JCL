@@ -3,6 +3,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (require "base-macro-lambdas")
   (require "macros")
+  (require "iterators")
 ) ;eval-when
 
 (in-package "COMMON-LISP")
@@ -59,8 +60,8 @@
     (ext:jinvoke-static
       (ext:jmethod "toStringInputStream" (ext:jclass "jcl.lang.StringInputStreamStruct")
                    (ext:jclass "jcl.lang.StringStruct")
-                   (ext:jclass "jcl.lang.IntegerStruct")
-                   (ext:jclass "jcl.lang.IntegerStruct"))
+                   (ext:jclass "jcl.lang.FixnumStruct")
+                   (ext:jclass "jcl.lang.FixnumStruct"))
       string start end)))
 
 (defun make-string-output-stream (&key (element-type 'character))
@@ -69,7 +70,7 @@
   (declare (system::%java-class-name "jcl.streams.functions.MakeStringOutputStream"))
   (ext:jinvoke-static
     (ext:jmethod "toStringOutputStream" (ext:jclass "jcl.lang.StringOutputStreamStruct")
-                 (ext:jclass "jcl.lang.LispType"))
+                 (ext:jclass "jcl.lang.LispStruct"))
     element-type))
 
 (defun make-synonym-stream (symbol)
@@ -131,13 +132,25 @@
   ($writeByte output-stream byte))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun peek-char (&optional (peek-type nil) (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Obtains the next character in input-stream without actually reading it."
   (declare (system::%java-class-name "jcl.streams.functions.PeekChar"))
   (let ((input-stream (streamify-designator input-stream)))
-    ($peekChar input-stream peek-type eof-error eof-value recursive-p)))
-
+    (cond ((eq peek-type nil)
+           (let ((c (read-char input-stream eof-error eof-value recursive-p)))
+             (unread-char c)
+             c))
+          ((eq peek-type t)
+           (do ((c (read-char input-stream eof-error eof-value recursive-p)))
+               ((not (ext::whitespacep c)) ;TODO: implement whitespacep; export whitespacep [ext:whitespacep]
+                (progn (unread-char c) c))))
+          ((characterp peek-type)
+           (do ((c (read-char input-stream eof-error eof-value recursive-p)))
+               ((eq peek-type c)
+                (progn (unread-char c) c))))
+          (t (error "Peek-type must be: nil, t, character.")))))
+|#
 (defun read-char (&optional (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Returns the next character from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ReadChar"))
@@ -146,10 +159,9 @@
 
 (defun read-char-no-hang (&optional (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Returns the next character from input-stream."
-  ;; TODO: Difference from read-char???
   (declare (system::%java-class-name "jcl.streams.functions.ReadCharNoHang"))
   (let ((input-stream (streamify-designator input-stream)))
-    ($readChar input-stream eof-error eof-value recursive-p)))
+    ($readCharNoHang input-stream eof-error eof-value recursive-p)))
 
 (defun unread-char (character &optional (input-stream *standard-input*))
   "Places character back onto the front of input-stream so that it will again be the next character in input-stream."
@@ -174,13 +186,15 @@
 (defun write-line (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream followed by a newline."
   (declare (system::%java-class-name "jcl.streams.functions.WriteLine"))
-  (let ((output-stream (streamify-designator output-stream)))
+  (let ((output-stream (streamify-designator output-stream))
+        (end (or end (length string))))
     ($writeLine output-stream string start end)))
 
 (defun write-string (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.WriteString"))
-  (let ((output-stream (streamify-designator output-stream)))
+  (let ((output-stream (streamify-designator output-stream))
+        (end (or end (length string))))
     ($writeString output-stream string start end)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -192,34 +206,46 @@
 (defun file-length (stream)
   "Returns the length of stream, or nil if the length cannot be determined."
   (declare (system::%java-class-name "jcl.streams.functions.FileLength"))
-  ($fileLength1 stream))
+  ($fileLength stream))
 
 (defun file-position (stream &optional position-spec)
   "Returns the length of stream, or nil if the length cannot be determined."
   (declare (system::%java-class-name "jcl.streams.functions.FilePosition"))
-  ($filePosition1 stream position-spec))
+  (cond ((integerp position-spec)
+         ($filePosition stream position-spec))
+        ((eq position-spec :start)
+         ($filePosition stream 0))
+        ((eq position-spec :end)
+         ($filePosition stream (file-length stream)))
+        ((null position-spec)
+         ($filePosition stream))
+        (t
+         (error "Invalid position-spec value. Must be: an integer, :start, :end, or nil."))))
 
 (defun file-string-length (stream object)
   "Returns the difference between what (file-position stream) would be after writing object and its current value,
-  or nil if this cannot be determined."
+   or nil if this cannot be determined."
   (declare (system::%java-class-name "jcl.streams.functions.FileStringLength"))
-  ($fileStringLength stream object))
+  (ext:jinvoke-static
+    (ext:jmethod "fileStringLength" (ext:jclass "jcl.lang.FileStreamStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    object))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: Clean up `open`??
+;; TODO: Expand `open` function to include all checks and full functionality
 
 (defun open (filespec &key (direction :input) element-type if-exists if-does-not-exist (external-format :default))
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.Open"))
   (ext:jinvoke-static
-    (ext:jmethod "open" (ext:jclass "jcl.lang.stream.FileStreamStructs")
+    (ext:jmethod "toFileStream" (ext:jclass "jcl.lang.FileStreamStruct")
                  (ext:jclass "jcl.lang.PathnameStruct")
                  (ext:jclass "jcl.lang.SymbolStruct")
                  (ext:jclass "jcl.lang.LispStruct")
                  (ext:jclass "jcl.lang.SymbolStruct")
                  (ext:jclass "jcl.lang.SymbolStruct")
-                 (ext:jclass "jcl.lang.SymbolStruct"))
+                 (ext:jclass "jcl.lang.LispStruct"))
     filespec direction element-type if-exists if-does-not-exist external-format))
 
 (defun close (stream &key (abort nil))
@@ -232,7 +258,7 @@
 (defun listen (&optional (input-stream *standard-input*))
   "Returns true if there is a character immediately available from input-stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.Listen"))
-  ($listen1 input-stream))
+  ($listen input-stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -258,23 +284,23 @@
 (defun clear-input (&optional (input-stream *standard-input*))
   "Clears any available input from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ClearInput"))
-  ($clearInput1 input-stream))
+  ($clearInput input-stream))
 
 (defun clear-output (&optional (output-stream *standard-output*))
   "Attempts to abort any outstanding output operation in progress in order to allow as little output as possible to
   continue to the destination."
   (declare (system::%java-class-name "jcl.streams.functions.ClearOutput"))
-  ($clearOutput1 output-stream))
+  ($clearOutput output-stream))
 
 (defun finish-output (&optional (output-stream *standard-output*))
   "Attempts to ensure that any buffered output sent to output-stream has reached its destination, and then returns."
   (declare (system::%java-class-name "jcl.streams.functions.FinishOutput"))
-  ($finishOutput1 output-stream))
+  ($finishOutput output-stream))
 
 (defun force-output (&optional (output-stream *standard-output*))
   "Initiates the emptying of any internal buffers but does not wait for completion or acknowledgment to return."
   (declare (system::%java-class-name "jcl.streams.functions.ForceOutput"))
-  ($forceOutput1 output-stream))
+  ($forceOutput output-stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

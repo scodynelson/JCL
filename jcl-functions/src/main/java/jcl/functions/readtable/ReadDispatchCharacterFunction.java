@@ -16,7 +16,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 
 public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructImpl {
 
@@ -45,15 +45,15 @@ public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructIm
 		final CharacterStruct character = arguments.getRequiredArgument(DISPATCH_CHAR_ARGUMENT, CharacterStruct.class);
 		final int dispatchCodePoint = character.toUnicodeCodePoint();
 
-		ReadPeekResult readResult = inputStream.readChar(false, null, false);
-		int codePoint = readResult.getResult();
+		ReadCharResult readResult = inputStream.readChar(false, null);
+		Integer codePoint = readResult.getResult();
 
 		final StringBuilder digitStringBuilder = new StringBuilder();
 
-		while (Character.isDigit(codePoint)) {
+		while (!readResult.isEof() && Character.isDigit(codePoint)) {
 			digitStringBuilder.appendCodePoint(codePoint);
 
-			readResult = inputStream.readChar(false, null, false);
+			readResult = inputStream.readChar(false, null);
 			codePoint = readResult.getResult();
 		}
 

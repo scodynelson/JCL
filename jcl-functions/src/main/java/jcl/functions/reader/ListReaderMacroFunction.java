@@ -13,7 +13,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
@@ -97,7 +97,7 @@ final class ListReaderMacroFunction {
 		boolean isDotted = false;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+		final ReadCharResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		final int nextCodePoint = readResult.getResult();
 
 		if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(nextCodePoint)) {
@@ -171,10 +171,10 @@ final class ListReaderMacroFunction {
 	private static int flushWhitespace(final InputStreamStruct inputStreamStruct) {
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+		ReadCharResult readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		int codePoint = readResult.getResult();
 		while (ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
-			readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+			readResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 			codePoint = readResult.getResult();
 		}
 		return codePoint;

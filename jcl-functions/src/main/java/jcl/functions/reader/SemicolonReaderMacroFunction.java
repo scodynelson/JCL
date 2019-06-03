@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 
@@ -29,12 +29,12 @@ public final class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		ReadPeekResult readResult = inputStreamStruct.readChar(false, null, false);
+		ReadCharResult readResult = inputStreamStruct.readChar(false, null);
 		Integer nextCodePoint = readResult.getResult();
 		while (!readResult.isEof() && (nextCodePoint.intValue() != CodePointConstants.NEWLINE)) {
 			stringBuilder.appendCodePoint(nextCodePoint);
 
-			readResult = inputStreamStruct.readChar(false, null, false);
+			readResult = inputStreamStruct.readChar(false, null);
 			nextCodePoint = readResult.getResult();
 		}
 

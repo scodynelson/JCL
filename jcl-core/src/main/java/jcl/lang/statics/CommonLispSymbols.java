@@ -100,10 +100,8 @@ public interface CommonLispSymbols {
 	SymbolStruct COMPILE_FILE_TRUENAME_VAR = CompilerVariables.COMPILE_FILE_TRUENAME;
 	SymbolStruct COMPILE_PRINT_VAR = CompilerVariables.COMPILE_PRINT;
 	SymbolStruct COMPILE_VERBOSE_VAR = CompilerVariables.COMPILE_VERBOSE;
-//	SymbolStruct DEBUG_IO_VAR = StreamVariables.DEBUG_IO;
 	SymbolStruct DEBUGGER_HOOK_VAR = CompilerVariables.DEBUGGER_HOOK;
 	SymbolStruct DEFAULT_PATHNAME_DEFAULTS_VAR = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS;
-//	SymbolStruct ERROR_OUTPUT_VAR = StreamVariables.ERROR_OUTPUT;
 	SymbolStruct FEATURES_VAR = CompilerVariables.FEATURES;
 	SymbolStruct GENSYM_COUNTER_VAR = CompilerVariables.GENSYM_COUNTER;
 	SymbolStruct LOAD_PATHNAME_VAR = CompilerVariables.LOAD_PATHNAME;
@@ -128,17 +126,20 @@ public interface CommonLispSymbols {
 	SymbolStruct PRINT_RADIX_VAR = PrinterVariables.PRINT_RADIX;
 	SymbolStruct PRINT_READABLY_VAR = PrinterVariables.PRINT_READABLY;
 	SymbolStruct PRINT_RIGHT_MARGIN_VAR = PrinterVariables.PRINT_RIGHT_MARGIN;
-//	SymbolStruct QUERY_IO_VAR = StreamVariables.QUERY_IO;
 	SymbolStruct RANDOM_STATE_VAR = NumberVariables.RANDOM_STATE;
 	SymbolStruct READ_BASE_VAR = ReaderVariables.READ_BASE;
 	SymbolStruct READ_DEFAULT_FLOAT_FORMAT_VAR = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT;
 	SymbolStruct READ_EVAL_VAR = ReaderVariables.READ_EVAL;
 	SymbolStruct READ_SUPPRESS_VAR = ReaderVariables.READ_SUPPRESS;
 	SymbolStruct READTABLE_VAR = ReaderVariables.READTABLE;
-//	SymbolStruct STANDARD_INPUT_VAR = StreamVariables.STANDARD_INPUT;
-//	SymbolStruct STANDARD_OUTPUT_VAR = StreamVariables.STANDARD_OUTPUT;
-//	SymbolStruct TERMINAL_IO_VAR = StreamVariables.TERMINAL_IO;
-//	SymbolStruct TRACE_OUTPUT_VAR = StreamVariables.TRACE_OUTPUT;
+
+	SymbolStruct TERMINAL_IO = GlobalPackageStruct.COMMON_LISP.intern("*TERMINAL-IO*").getSymbol();
+	SymbolStruct DEBUG_IO = GlobalPackageStruct.COMMON_LISP.intern("*DEBUG-IO*").getSymbol();
+	SymbolStruct ERROR_OUTPUT = GlobalPackageStruct.COMMON_LISP.intern("*ERROR-OUTPUT*").getSymbol();
+	SymbolStruct QUERY_IO = GlobalPackageStruct.COMMON_LISP.intern("*QUERY-OUTPUT*").getSymbol();
+	SymbolStruct STANDARD_INPUT = GlobalPackageStruct.COMMON_LISP.intern("*STANDARD-INPUT*").getSymbol();
+	SymbolStruct STANDARD_OUTPUT = GlobalPackageStruct.COMMON_LISP.intern("*STANDARD-OUTPUT*").getSymbol();
+	SymbolStruct TRACE_OUTPUT = GlobalPackageStruct.COMMON_LISP.intern("*TRACE-OUTPUT*").getSymbol();
 
 	SymbolStruct STAR = REPLVariables.STAR;
 	SymbolStruct STAR_STAR = REPLVariables.STAR_STAR;
@@ -1104,6 +1105,11 @@ public interface CommonLispSymbols {
 	SymbolStruct JINVOKE_STATIC = GlobalPackageStruct.EXTENSIONS.intern("JINVOKE-STATIC").getSymbol();
 	SymbolStruct JMETHOD = GlobalPackageStruct.EXTENSIONS.intern("JMETHOD").getSymbol();
 	SymbolStruct JNEW = GlobalPackageStruct.EXTENSIONS.intern("JNEW").getSymbol();
+
+	SymbolStruct WHITESPACEP = GlobalPackageStruct.EXTENSIONS.intern("WHITESPACEP").getSymbol();
+
+	SymbolStruct STRING_INPUT_STREAM = GlobalPackageStruct.EXTENSIONS.intern("STRING-INPUT-STREAM").getSymbol();
+	SymbolStruct STRING_OUTPUT_STREAM = GlobalPackageStruct.EXTENSIONS.intern("STRING-OUTPUT-STREAM").getSymbol();
 
 	SymbolStruct FREE_MEMORY = GlobalPackageStruct.EXTENSIONS.intern("FREE-MEMORY").getSymbol();
 	SymbolStruct GC = GlobalPackageStruct.EXTENSIONS.intern("GC").getSymbol();

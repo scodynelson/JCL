@@ -10,13 +10,17 @@ package jcl.lang;
  */
 public interface IOStreamStruct extends InputStreamStruct, OutputStreamStruct {
 
+	/*
+	STREAM-STRUCT
+	 */
+
 	@Override
-	default boolean isInputStream() {
-		return true;
+	default BooleanStruct inputStreamP() {
+		return TStruct.INSTANCE;
 	}
 
 	@Override
-	default boolean isOutputStream() {
-		return true;
+	default BooleanStruct outputStreamP() {
+		return TStruct.INSTANCE;
 	}
 }

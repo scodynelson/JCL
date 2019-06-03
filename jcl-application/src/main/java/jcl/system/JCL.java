@@ -5,15 +5,15 @@ import java.util.List;
 import jcl.compiler.function.InternalCompile;
 import jcl.compiler.function.InternalLoad;
 import jcl.compiler.sa.BootstrapExpanders;
-import jcl.lang.JavaStreamStruct;
+import jcl.lang.CharacterStreamStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.TStruct;
 import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.pathname.PathnameName;
 import jcl.lang.pathname.PathnameType;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
-import jcl.lang.statics.StreamVariables;
 import jcl.system.repl.ReadEvalPrint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +31,14 @@ public class JCL implements ApplicationRunner {
 	private ConfigurableApplicationContext context;
 
 	public JCL() throws Exception {
-		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(log)) {
-			final JavaStreamStruct characterStream = JavaStreamStruct.toJavaStream(System.in, loggerOutputStream);
+		BootstrapSymbols.bootstrapStreams();
 
-			// TODO: Constructing stream directly from Impl
-			final TwoWayStreamStruct terminalIoStream = TwoWayStreamStruct.toTwoWayStream(true, characterStream, characterStream);
-			StreamVariables.TERMINAL_IO.setValue(terminalIoStream);
+		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(log)) {
+			final CharacterStreamStruct characterStream = CharacterStreamStruct.toCharacterStream(System.in, loggerOutputStream);
+
+			final TwoWayStreamStruct terminalIoStream = TwoWayStreamStruct.toTwoWayStream(characterStream, characterStream);
+			terminalIoStream.setInteractive(true);
+			CommonLispSymbols.TERMINAL_IO.setValue(terminalIoStream);
 		}
 	}
 

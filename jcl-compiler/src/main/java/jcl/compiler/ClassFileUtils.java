@@ -9,12 +9,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import jcl.lang.CharacterStreamStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.internal.stream.JavaStreamStructImpl;
-import jcl.lang.statics.StreamVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.benf.cfr.reader.api.CfrDriver;
@@ -46,12 +47,11 @@ public final class ClassFileUtils {
 		final ClassFileSource source = new DisassembledClassFileSource(classBytes);
 
 		// TODO: Should be STANDARD_OUTPUT
-		final JavaStreamStructImpl standardOutput
-				= (JavaStreamStructImpl) StreamVariables.TERMINAL_IO.getVariableValue()
-				                                                    .getOutputStreamStruct();
+		final CharacterStreamStruct standardOutput
+				= (CharacterStreamStruct) ((TwoWayStreamStruct) CommonLispSymbols.TERMINAL_IO.getValue()).twoWayStreamOutputStream();
 
 		// NOTE: Don't close this writer, as it's the standard output.
-		final PrintWriter writer = standardOutput.getOutputStream();
+		final PrintWriter writer = standardOutput.getJavaWriter();
 
 		final OutputSinkFactory outputSink = new PrintWriterOutputSinkFactory(writer);
 

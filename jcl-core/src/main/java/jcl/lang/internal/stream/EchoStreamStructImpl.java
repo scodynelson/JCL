@@ -17,8 +17,7 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.PeekType;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 
 /**
  * The {@link EchoStreamStructImpl} is the object representation of a Lisp 'echo-stream' type.
@@ -31,43 +30,48 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	private final Deque<Integer> unreadTokens = new ArrayDeque<>();
 
 	/**
-	 * Public constructor.
+	 * Public constructor, initializing the provided {@link InputStreamStruct} and {@link OutputStreamStruct}.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to create a EchoStreamStruct from
+	 * 		the {@link InputStreamStruct} to initialize
 	 * @param outputStreamStruct
-	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
+	 * 		the {@link OutputStreamStruct} to initialize
 	 */
-	public EchoStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		this(false, inputStreamStruct, outputStreamStruct);
+	public EchoStreamStructImpl(final InputStreamStruct inputStreamStruct,
+	                            final OutputStreamStruct outputStreamStruct) {
+		super(inputStreamStruct, outputStreamStruct);
 	}
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to create a EchoStreamStruct from
-	 * @param outputStreamStruct
-	 * 		the {@link OutputStreamStruct} to create a EchoStreamStruct from
+	/*
+	ECHO-STREAM-STRUCT
 	 */
-	public EchoStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		super(interactive, inputStreamStruct, outputStreamStruct);
+
+	@Override
+	public InputStreamStruct echoStreamInputStream() {
+		return inputStreamStruct;
 	}
 
 	@Override
-	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public OutputStreamStruct echoStreamOutputStream() {
+		return outputStreamStruct;
+	}
+
+	/*
+	INPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public ReadCharResult readChar(final boolean eofErrorP, final LispStruct eofValue) {
 		if (!unreadTokens.isEmpty()) {
 			final Integer lastUnread = unreadTokens.getFirst();
-			return new ReadPeekResult(lastUnread);
+			return new ReadCharResult(lastUnread);
 		}
 
-		final ReadPeekResult readResult = inputStreamStruct.readChar(false, eofValue, false);
+		final ReadCharResult readResult = inputStreamStruct.readChar(false, eofValue);
 
 		if (readResult.isEof()) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
+				throw new EndOfFileException(this);
 			} else {
 				return readResult;
 			}
@@ -79,17 +83,43 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	}
 
 	@Override
-	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadCharResult readCharNoHang(final boolean eofErrorP, final LispStruct eofValue) {
 		if (!unreadTokens.isEmpty()) {
 			final Integer lastUnread = unreadTokens.getFirst();
-			return new ReadPeekResult(lastUnread);
+			return new ReadCharResult(lastUnread);
 		}
 
-		final ReadPeekResult readResult = inputStreamStruct.readByte(false, eofValue);
+		final ReadCharResult readResult = inputStreamStruct.readCharNoHang(false, eofValue);
 
 		if (readResult.isEof()) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED, this);
+				throw new EndOfFileException(this);
+			} else {
+				return readResult;
+			}
+		} else {
+			final int readChar = readResult.getResult();
+
+			// TODO: probably not the most efficient implementation
+			if (readChar != -5) {
+				outputStreamStruct.writeChar(readChar);
+			}
+			return readResult;
+		}
+	}
+
+	@Override
+	public ReadCharResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+		if (!unreadTokens.isEmpty()) {
+			final Integer lastUnread = unreadTokens.getFirst();
+			return new ReadCharResult(lastUnread);
+		}
+
+		final ReadCharResult readResult = inputStreamStruct.readByte(false, eofValue);
+
+		if (readResult.isEof()) {
+			if (eofErrorP) {
+				throw new EndOfFileException(this);
 			} else {
 				return readResult;
 			}
@@ -101,33 +131,14 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 	}
 
 	@Override
-	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		if (unreadTokens.isEmpty()) {
-			final ReadPeekResult readResult = inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
-
-			if (readResult.isEof()) {
-				return new ReadPeekResult(readResult.getEofValue());
-			} else {
-				final int peekedChar = readResult.getResult();
-				outputStreamStruct.writeChar(peekedChar);
-				return new ReadPeekResult(peekedChar);
-			}
-		} else {
-			final Integer peekedChar = unreadTokens.removeFirst();
-			return new ReadPeekResult(peekedChar);
-		}
-	}
-
-	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		unreadTokens.addFirst(codePoint);
 		return codePoint;
 	}
 
-	@Override
-	public Long filePosition(final Long filePosition) {
-		return null;
-	}
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {
@@ -148,13 +159,5 @@ public final class EchoStreamStructImpl extends AbstractDualStreamStructImpl imp
 			return TStruct.INSTANCE;
 		}
 		return super.typep(typeSpecifier);
-	}
-
-	@Override
-	public String toString() {
-		final String type = typeOf().toString();
-		final String printedInputStream = inputStreamStruct.toString();
-		final String printedOutputStream = outputStreamStruct.toString();
-		return "#<" + type + " input " + printedInputStream + ", output " + printedOutputStream + '>';
 	}
 }

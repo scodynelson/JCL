@@ -55,8 +55,8 @@ public final class BuiltInClassStruct extends ClassStruct {
 	public static final BuiltInClassStruct SINGLE_FLOAT = addClass(CommonLispSymbols.SINGLE_FLOAT);
 	public static final BuiltInClassStruct STREAM = addClass(CommonLispSymbols.STREAM);
 	public static final BuiltInClassStruct STRING = addClass(CommonLispSymbols.STRING);
-	//	public static final BuiltInClassStruct STRING_INPUT_STREAM  = addClass(CommonLispSymbols.STRING_INPUT_STREAM);
-//	public static final BuiltInClassStruct STRING_OUTPUT_STREAM = addClass(CommonLispSymbols.STRING_OUTPUT_STREAM);
+	public static final BuiltInClassStruct STRING_INPUT_STREAM  = addClass(CommonLispSymbols.STRING_INPUT_STREAM);
+	public static final BuiltInClassStruct STRING_OUTPUT_STREAM = addClass(CommonLispSymbols.STRING_OUTPUT_STREAM);
 	public static final BuiltInClassStruct STRING_STREAM = addClass(CommonLispSymbols.STRING_STREAM);
 	public static final BuiltInClassStruct SYMBOL = addClass(CommonLispSymbols.SYMBOL);
 	public static final BuiltInClassStruct SYNONYM_STREAM = addClass(CommonLispSymbols.SYNONYM_STREAM);
@@ -150,8 +150,8 @@ public final class BuiltInClassStruct extends ClassStruct {
 		STREAM.setClassPrecedenceList(STREAM, STRUCTURE_OBJECT, CLASS_T);
 		STRING.setDirectSuperClasses(VECTOR);
 		STRING.setClassPrecedenceList(STRING, VECTOR, ARRAY, SEQUENCE, CLASS_T);
-//		STRING_INPUT_STREAM.setClassPrecedenceList(STRING_INPUT_STREAM, STRING_STREAM, STREAM, STRUCTURE_OBJECT, CLASS_T);
-//		STRING_OUTPUT_STREAM.setClassPrecedenceList(STRING_OUTPUT_STREAM, STRING_STREAM, STREAM, STRUCTURE_OBJECT, CLASS_T);
+		STRING_INPUT_STREAM.setClassPrecedenceList(STRING_INPUT_STREAM, STRING_STREAM, STREAM, STRUCTURE_OBJECT, CLASS_T);
+		STRING_OUTPUT_STREAM.setClassPrecedenceList(STRING_OUTPUT_STREAM, STRING_STREAM, STREAM, STRUCTURE_OBJECT, CLASS_T);
 		STRING_STREAM.setClassPrecedenceList(STRING_STREAM, STREAM, STRUCTURE_OBJECT, CLASS_T);
 		STRUCTURE_OBJECT.setClassPrecedenceList(STRUCTURE_OBJECT, CLASS_T);
 		SYMBOL.setDirectSuperClasses(CLASS_T);

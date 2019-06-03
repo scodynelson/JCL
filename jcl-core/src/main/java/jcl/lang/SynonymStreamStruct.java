@@ -8,16 +8,21 @@ import jcl.lang.internal.stream.SynonymStreamStructImpl;
 public interface SynonymStreamStruct extends IOStreamStruct {
 
 	/**
-	 * Getter for synonym-stream {@link SymbolStruct} property.
+	 * Returns the {@link SymbolStruct} stream symbol.
 	 *
-	 * @return synonym-stream {@link SymbolStruct} property
+	 * @return the {@link SymbolStruct} stream symbol
 	 */
-	SymbolStruct getSymbol();
+	SymbolStruct synonymStreamSymbol();
 
-	default SymbolStruct synonymStreamSymbol() {
-		return getSymbol();
-	}
-
+	/**
+	 * Returns a new Synonym-Stream instance that will delegate stream operations to the value of the provided {@link
+	 * SymbolStruct}.
+	 *
+	 * @param symbol
+	 * 		the {@link SymbolStruct} containing a {@link StreamStruct} value
+	 *
+	 * @return a new Synonym-Stream instance
+	 */
 	static SynonymStreamStruct toSynonymStream(final SymbolStruct symbol) {
 		return new SynonymStreamStructImpl(symbol);
 	}

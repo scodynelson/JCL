@@ -20,7 +20,7 @@ import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
@@ -71,7 +71,7 @@ public class ReaderProcessor {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		final ReadPeekResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
+		final ReadCharResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -126,7 +126,7 @@ public class ReaderProcessor {
 			return tokenBuilder.getEofValue();
 		}
 
-		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
+		final ReadCharResult readResult = tokenBuilder.getPreviousReadResult();
 
 		if (readResult == null) {
 			throw new ReaderErrorException("No token elements could be read.");
@@ -187,7 +187,7 @@ public class ReaderProcessor {
 	private static LispStruct readMacroCharacter(final TokenBuilder tokenBuilder) {
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
+		final ReadCharResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
@@ -237,7 +237,7 @@ public class ReaderProcessor {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		final ReadPeekResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
+		final ReadCharResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -283,7 +283,7 @@ public class ReaderProcessor {
 	 */
 	private static LispStruct readConstituent(final TokenBuilder tokenBuilder) {
 
-		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
+		final ReadCharResult readResult = tokenBuilder.getPreviousReadResult();
 		// This 'codePoint' will not be 'null'. We check for EOFs after each 'read'.
 		int codePoint = readResult.getResult();
 
@@ -349,7 +349,7 @@ public class ReaderProcessor {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		ReadPeekResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
+		ReadCharResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -370,7 +370,7 @@ public class ReaderProcessor {
 			return readConstituent(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
+			readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {
@@ -436,7 +436,7 @@ public class ReaderProcessor {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		ReadPeekResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
+		ReadCharResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -458,7 +458,7 @@ public class ReaderProcessor {
 			return readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = inputStreamStruct.readChar(isEofErrorP, eofValue, true);
+			readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {

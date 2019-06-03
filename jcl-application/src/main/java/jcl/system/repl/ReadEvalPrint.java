@@ -9,10 +9,10 @@ import jcl.lang.PackageStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.REPLVariables;
-import jcl.lang.statics.StreamVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.printer.Printer;
 import jcl.reader.InternalRead;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class ReadEvalPrint {
 			REPLVariables.STAR_STAR.setValue(NILStruct.INSTANCE);
 			REPLVariables.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
 
-			final InputStreamStruct inputStreamStruct = StreamVariables.STANDARD_INPUT.getVariableValue();
+			final InputStreamStruct inputStreamStruct = (InputStreamStruct) CommonLispSymbols.STANDARD_INPUT.getValue();
 
 			int counter = 1;
 			while (true) {
@@ -97,7 +97,7 @@ public class ReadEvalPrint {
 					// Consume the rest of the input so we don't attempt to parse the rest of the input when an error occurs.
 					Integer readChar;
 					do {
-						final ReadPeekResult readResult = inputStreamStruct.readChar(false, null, true);
+						final ReadCharResult readResult = inputStreamStruct.readChar(false, null);
 						readChar = readResult.getResult();
 					} while ((readChar != null) && (readChar != -1) && (readChar != 10));
 

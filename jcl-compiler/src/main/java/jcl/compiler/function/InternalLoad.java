@@ -26,6 +26,7 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.PathnameVariables;
@@ -153,22 +154,21 @@ public final class InternalLoad {
 
 		FileStreamStruct filespecFileStream = null;
 
-		final Path filespecPath;
 		final PathnameStruct filespecPathname;
 
 		// NOTE: optimizations if the filespec is already a FileStreamStruct
 		if (filespec instanceof FileStreamStruct) {
 			filespecFileStream = (FileStreamStruct) filespec;
-			filespecPath = filespecFileStream.getPath();
-			filespecPathname = PathnameStruct.toPathname(filespecPath);
+			filespecPathname = filespecFileStream.toPathname();
 		} else {
 			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
 			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = PathnameStruct.mergePathnames(filespecAsPathname, defaultPathspec, nilVersion);
-			final File pathnameFile = new File(filespecPathname.getNamestring());
-			filespecPath = pathnameFile.toPath();
 		}
+
+		final File pathnameFile = new File(filespecPathname.getNamestring());
+		final Path filespecPath = pathnameFile.toPath();
 
 		final boolean filespecNotExists = Files.notExists(filespecPath);
 		if (filespecNotExists && ifDoesNotExist) {
@@ -195,7 +195,10 @@ public final class InternalLoad {
 				return loadCompiledCode(filespecPath, verbose, print);
 			} else if (StringUtils.endsWithIgnoreCase(filespecNamestring, ".lsp") || StringUtils.endsWithIgnoreCase(filespecNamestring, ".lisp")) {
 				if (filespecFileStream == null) {
-					filespecFileStream = FileStreamStruct.toFileStream(filespecPath);
+					filespecFileStream = FileStreamStruct.toFileStream(
+							filespecPathname, CommonLispSymbols.INPUT_KEYWORD, CommonLispSymbols.CHARACTER,
+							CommonLispSymbols.NIL, CommonLispSymbols.NIL, CommonLispSymbols.DEFAULT_KEYWORD
+					);
 				}
 				return loadSourceCode(filespecFileStream, filespecPath, verbose, print);
 			} else {

@@ -315,10 +315,7 @@ public interface PathnameStruct extends LispStruct {
 		}
 		if (struct instanceof FileStreamStruct) {
 			final FileStreamStruct fileStream = (FileStreamStruct) struct;
-			final Path path = fileStream.getPath();
-			final File file = path.toFile();
-			final String namestring = file.getAbsolutePath();
-			return toPathname(namestring);
+			return fileStream.toPathname();
 		}
 		throw new TypeErrorException("Type cannot be converted to PATHNAME.");
 	}
@@ -331,7 +328,7 @@ public interface PathnameStruct extends LispStruct {
 			pathname = logicalPathname.translateLogicalPathname();
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
-			final SymbolStruct streamSymbol = synonymStream.getSymbol();
+			final SymbolStruct streamSymbol = synonymStream.synonymStreamSymbol();
 			pathname = translateLogicalPathname(streamSymbol.getValue());
 		} else {
 			pathname = toPathname(pathnameDesignator);

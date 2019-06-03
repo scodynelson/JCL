@@ -10,7 +10,7 @@ import java.util.Optional;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 
@@ -32,8 +32,8 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 		int currentLevel = 1;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult previousReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
-		ReadPeekResult nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+		ReadCharResult previousReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
+		ReadCharResult nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		while (true) {
@@ -52,7 +52,7 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 				stringBuilder.appendCodePoint(nextCodePoint);
 
 				// NOTE: This will throw errors when it reaches an EOF
-				nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+				nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 				currentLevel += 1;
 			} else {
 				stringBuilder.appendCodePoint(previousCodePoint);
@@ -60,7 +60,7 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 
 			// NOTE: This will throw errors when it reaches an EOF
 			previousReadResult = nextReadResult;
-			nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+			nextReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 		}
 
 		final String stringValue = stringBuilder.toString();

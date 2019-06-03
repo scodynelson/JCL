@@ -5,16 +5,19 @@
 package jcl.lang.internal.stream;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.BroadcastStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**
@@ -23,73 +26,54 @@ import jcl.lang.statics.CommonLispSymbols;
 public final class BroadcastStreamStructImpl extends StreamStructImpl implements BroadcastStreamStruct {
 
 	/**
-	 * This {@link OutputStreamStruct}s in the BroadcastStreamStruct.
+	 * This {@link Deque} of {@link OutputStreamStruct} objects where output is broadcast to.
 	 */
 	private final Deque<OutputStreamStruct> outputStreamStructs;
 
 	/**
-	 * Public constructor.
+	 * Public constructor, initializing the provided the {@link Deque} of {@link OutputStreamStruct} objects.
 	 *
 	 * @param outputStreamStructs
-	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
+	 * 		the {@link Deque} of {@link OutputStreamStruct} objects to initialize
 	 */
 	public BroadcastStreamStructImpl(final Deque<OutputStreamStruct> outputStreamStructs) {
-		this(false, outputStreamStructs);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param outputStreamStructs
-	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
-	 */
-	public BroadcastStreamStructImpl(final boolean interactive, final Deque<OutputStreamStruct> outputStreamStructs) {
-		super(interactive, getElementType2(outputStreamStructs));
+		super(getElementType(outputStreamStructs));
 		this.outputStreamStructs = new ArrayDeque<>(outputStreamStructs);
 	}
 
 	/**
-	 * Used to retrieve the element type for object construction.
+	 * Retrieves the current element type for the {@link Deque} of {@link OutputStreamStruct} objects.
 	 *
 	 * @param outputStreamStructs
-	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
+	 * 		the {@link Deque} of {@link OutputStreamStruct} objects to retrieve the element type from
 	 *
-	 * @return the element type for object construction
+	 * @return the current element type for the {@link Deque} of {@link OutputStreamStruct} objects
 	 */
-	private static LispStruct getElementType2(final Deque<OutputStreamStruct> outputStreamStructs) {
-		if (outputStreamStructs == null) {
-			throw new ErrorException("Provided Output Stream List must not be null.");
-		}
-		return getElementType3(outputStreamStructs);
-	}
-
-	/**
-	 * Used to retrieve the element type for object construction.
-	 *
-	 * @param outputStreamStructs
-	 * 		the {@link OutputStreamStruct}s to create a BroadcastStreamStruct from
-	 *
-	 * @return the element type for object construction
-	 */
-	private static LispStruct getElementType3(final Deque<OutputStreamStruct> outputStreamStructs) {
+	private static LispStruct getElementType(final Deque<OutputStreamStruct> outputStreamStructs) {
 		if (outputStreamStructs.isEmpty()) {
 			return CommonLispSymbols.T;
 		}
 
 		final OutputStreamStruct last = outputStreamStructs.getLast();
-		return last.getElementType();
+		return last.streamElementType();
 	}
 
-	@Override
-	public Deque<OutputStreamStruct> getOutputStreamStructs() {
-		return outputStreamStructs;
-	}
+	/*
+	BROADCAST-STREAM-STRUCT
+	 */
 
 	@Override
-	public void writeChar(final int aChar) {
-		outputStreamStructs.forEach(e -> e.writeChar(aChar));
+	public ListStruct broadcastStreamStreams() {
+		return ListStruct.toLispList(new ArrayList<LispStruct>(outputStreamStructs));
+	}
+
+	/*
+	OUTPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public void writeChar(final int codePoint) {
+		outputStreamStructs.forEach(e -> e.writeChar(codePoint));
 	}
 
 	@Override
@@ -98,39 +82,81 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) {
-		outputStreamStructs.forEach(e -> e.writeString(outputString, start, end));
+	public void writeString(final String outputString) {
+		outputStreamStructs.forEach(e -> e.writeString(outputString));
 	}
 
 	@Override
-	public void clearOutput() {
+	public void writeLine(final String outputString) {
+		outputStreamStructs.forEach(e -> e.writeLine(outputString));
+	}
+
+	@Override
+	public BooleanStruct freshLine() {
+		BooleanStruct wroteALine = NILStruct.INSTANCE;
+		for (final OutputStreamStruct outputStreamStruct : outputStreamStructs) {
+			final BooleanStruct result = outputStreamStruct.freshLine();
+			if (result == TStruct.INSTANCE) {
+				wroteALine = TStruct.INSTANCE;
+			}
+		}
+		return wroteALine;
+	}
+
+	@Override
+	public BooleanStruct terpri() {
+		outputStreamStructs.forEach(OutputStreamStruct::terpri);
+		return NILStruct.INSTANCE;
+	}
+
+	@Override
+	public LispStruct clearOutput() {
 		outputStreamStructs.forEach(OutputStreamStruct::clearOutput);
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
-	public void finishOutput() {
+	public LispStruct finishOutput() {
 		outputStreamStructs.forEach(OutputStreamStruct::finishOutput);
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
-	public void forceOutput() {
+	public LispStruct forceOutput() {
 		outputStreamStructs.forEach(OutputStreamStruct::forceOutput);
+		return NILStruct.INSTANCE;
+	}
+
+	/*
+	STREAM-STRUCT
+	 */
+
+	@Override
+	public BooleanStruct close(final BooleanStruct abort) {
+		if (abort.toJavaPBoolean()) {
+			clearOutput();
+		} else {
+			forceOutput();
+		}
+		return super.close(abort);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * The element type can differ based on the state of the {@link #outputStreamStructs} {@link Deque}.
+	 *
+	 * @return the current stream-element-type
+	 */
+	@Override
+	public LispStruct streamElementType() {
+		return getElementType(outputStreamStructs);
 	}
 
 	@Override
-	public boolean isStartOfLine() {
-		return outputStreamStructs.stream().map(OutputStreamStruct::isStartOfLine).reduce(false, Boolean::logicalAnd);
-	}
-
-	@Override
-	public LispStruct getElementType() {
-		return getElementType3(outputStreamStructs);
-	}
-
-	@Override
-	public Long fileLength() {
+	public LispStruct fileLength() {
 		if (outputStreamStructs.isEmpty()) {
-			return 0L;
+			return IntegerStruct.ZERO;
 		}
 
 		final OutputStreamStruct last = outputStreamStructs.getLast();
@@ -138,14 +164,18 @@ public final class BroadcastStreamStructImpl extends StreamStructImpl implements
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) {
+	public LispStruct filePosition() {
 		if (outputStreamStructs.isEmpty()) {
-			return 0L;
+			return IntegerStruct.ZERO;
 		}
 
 		final OutputStreamStruct last = outputStreamStructs.getLast();
-		return last.filePosition(filePosition);
+		return last.filePosition();
 	}
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {

@@ -7,13 +7,23 @@ import jcl.lang.internal.stream.StringInputStreamStructImpl;
  */
 public interface StringInputStreamStruct extends InputStreamStruct {
 
-	static StringInputStreamStruct toStringInputStream(final StringStruct inputString) {
-		return new StringInputStreamStructImpl(inputString.toJavaString());
-	}
-
-	static StringInputStreamStruct toStringInputStream(final StringStruct inputString,
-	                                                   final IntegerStruct current,
-	                                                   final IntegerStruct end) {
+	/**
+	 * Returns a new String-Input-Stream instance for reading characters from the provided {@link StringStruct}. The
+	 * {@code current} and {@code end} values indicate the starting and ending positions in the string that can be read
+	 * from.
+	 *
+	 * @param inputString
+	 * 		the {@link StringStruct} to read data from
+	 * @param current
+	 * 		the starting position in the string that can be read from
+	 * @param end
+	 * 		the ending position in the string that can be read from
+	 *
+	 * @return a new String-Input-Stream instance
+	 */
+	static StringInputStreamStruct toStringInputStream(
+			final StringStruct inputString, final FixnumStruct current, final FixnumStruct end
+	) {
 		return new StringInputStreamStructImpl(inputString.toJavaString(), current.toJavaInt(), end.toJavaInt());
 	}
 }

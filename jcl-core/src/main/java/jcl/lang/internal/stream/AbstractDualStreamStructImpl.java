@@ -4,93 +4,95 @@
 
 package jcl.lang.internal.stream;
 
-import jcl.lang.DualStreamStruct;
+import jcl.lang.BooleanStruct;
+import jcl.lang.IOStreamStruct;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.OutputStreamStruct;
-import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link AbstractDualStreamStructImpl} is an abstraction for dual stream types.
  */
-abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements DualStreamStruct {
+abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements IOStreamStruct {
 
 	/**
-	 * This {@link InputStreamStruct} in the AbstractDualStreamStruct.
+	 * The {@link InputStreamStruct} for reading input.
 	 */
 	protected final InputStreamStruct inputStreamStruct;
 
 	/**
-	 * This {@link OutputStreamStruct} in the AbstractDualStreamStruct.
+	 * The {@link OutputStreamStruct} for writing output.
 	 */
 	protected final OutputStreamStruct outputStreamStruct;
 
 	/**
-	 * Protected constructor.
+	 * Protected constructor, initializing the {@link #inputStreamStruct} and {@link #outputStreamStruct}.
 	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to create an AbstractDualStreamStruct from
+	 * 		the {@link InputStreamStruct} to initialize
 	 * @param outputStreamStruct
-	 * 		the {@link OutputStreamStruct} to create an AbstractDualStreamStruct from
+	 * 		the {@link OutputStreamStruct} to initialize
 	 */
-	protected AbstractDualStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		super(interactive, getElementType(inputStreamStruct, outputStreamStruct));
+	protected AbstractDualStreamStructImpl(final InputStreamStruct inputStreamStruct,
+	                                       final OutputStreamStruct outputStreamStruct) {
+		super(getElementType(inputStreamStruct, outputStreamStruct));
 		this.inputStreamStruct = inputStreamStruct;
 		this.outputStreamStruct = outputStreamStruct;
 	}
 
 	/**
-	 * This method is used to retrieve the element type for object construction.
+	 * Retrieves the element type for this dual-stream based on the provided {@link InputStreamStruct} and {@link
+	 * OutputStreamStruct}.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to create an AbstractDualStreamStruct from
+	 * 		the {@link InputStreamStruct} used to find the stream element-type
 	 * @param outputStreamStruct
-	 * 		the {@link OutputStreamStruct} to create an AbstractDualStreamStruct from
+	 * 		the {@link OutputStreamStruct} used to find the stream element-type
 	 *
-	 * @return the element type for object construction
+	 * @return the element type for this dual-stream
 	 */
-	private static LispStruct getElementType(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		if (inputStreamStruct == null) {
-			throw new ErrorException("Provided Input Stream must not be null.");
+	private static LispStruct getElementType(final InputStreamStruct inputStreamStruct,
+	                                         final OutputStreamStruct outputStreamStruct) {
+		final LispStruct inType = inputStreamStruct.streamElementType();
+		final LispStruct outType = outputStreamStruct.streamElementType();
+
+		final boolean isSameTypeStream = inType.typep(outType).toJavaPBoolean();
+		return isSameTypeStream ? inType : ListStruct.toLispList(CommonLispSymbols.AND, inType, outType);
+	}
+
+	/*
+	INPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public LispStruct clearInput() {
+		return inputStreamStruct.clearInput();
+	}
+
+	@Override
+	public BooleanStruct listen() {
+		return inputStreamStruct.listen();
+	}
+
+	/*
+	OUTPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public BooleanStruct close(final BooleanStruct abort) {
+		if (abort.toJavaPBoolean()) {
+			clearOutput();
+		} else {
+			forceOutput();
 		}
-		if (outputStreamStruct == null) {
-			throw new ErrorException("Provided Output Stream must not be null.");
-		}
-
-		final LispStruct inType = inputStreamStruct.getElementType();
-		final LispStruct outType = outputStreamStruct.getElementType();
-
-		return inType.typep(outType).toJavaPBoolean() ? inType : ListStruct.toLispList(CommonLispSymbols.AND, inType, outType);
-	}
-
-	/**
-	 * Getter for {@link #inputStreamStruct} property.
-	 *
-	 * @return {@link #inputStreamStruct} property
-	 */
-	@Override
-	public InputStreamStruct getInputStreamStruct() {
-		return inputStreamStruct;
-	}
-
-	/**
-	 * Getter for {@link #outputStreamStruct} property.
-	 *
-	 * @return {@link #outputStreamStruct} property
-	 */
-	@Override
-	public OutputStreamStruct getOutputStreamStruct() {
-		return outputStreamStruct;
+		return super.close(abort);
 	}
 
 	@Override
-	public void writeChar(final int aChar) {
-		outputStreamStruct.writeChar(aChar);
+	public void writeChar(final int codePoint) {
+		outputStreamStruct.writeChar(codePoint);
 	}
 
 	@Override
@@ -99,42 +101,46 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) {
-		outputStreamStruct.writeString(outputString, start, end);
+	public void writeString(final String outputString) {
+		outputStreamStruct.writeString(outputString);
 	}
 
 	@Override
-	public void clearOutput() {
-		outputStreamStruct.clearOutput();
+	public void writeLine(final String outputString) {
+		outputStreamStruct.writeLine(outputString);
 	}
 
 	@Override
-	public void finishOutput() {
-		outputStreamStruct.finishOutput();
+	public BooleanStruct freshLine() {
+		return outputStreamStruct.freshLine();
 	}
 
 	@Override
-	public void forceOutput() {
-		outputStreamStruct.forceOutput();
+	public BooleanStruct terpri() {
+		return outputStreamStruct.terpri();
 	}
 
 	@Override
-	public void clearInput() {
-		inputStreamStruct.clearInput();
+	public LispStruct clearOutput() {
+		return outputStreamStruct.clearOutput();
 	}
 
 	@Override
-	public boolean listen() {
-		return inputStreamStruct.listen();
+	public LispStruct finishOutput() {
+		return outputStreamStruct.finishOutput();
 	}
 
 	@Override
-	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM, this);
+	public LispStruct forceOutput() {
+		return outputStreamStruct.forceOutput();
 	}
 
+	/*
+	LISP-STRUCT
+	 */
+
 	@Override
-	public boolean isStartOfLine() {
-		return outputStreamStruct.isStartOfLine();
+	public String toString() {
+		return "#<" + typeOf() + " input " + inputStreamStruct + ", output " + outputStreamStruct + '>';
 	}
 }

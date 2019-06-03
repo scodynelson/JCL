@@ -10,7 +10,7 @@ import jcl.lang.readtable.AttributeType;
 import jcl.lang.readtable.ReadtableCase;
 import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -35,10 +35,10 @@ final class ExtendedTokenReaderMacroFunction {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		ReadPeekResult readResult = readToken(inputStreamStruct, false, !isEscaped, stringBuilder, isEscaped);
+		ReadCharResult readResult = readToken(inputStreamStruct, false, stringBuilder, isEscaped);
 
 		if (isEscaped) {
-			readResult = readToken(inputStreamStruct, false, false, stringBuilder, true);
+			readResult = readToken(inputStreamStruct, false, stringBuilder, true);
 		}
 
 		boolean hasEscapes = false;
@@ -67,7 +67,7 @@ final class ExtendedTokenReaderMacroFunction {
 				hasPackageDelimiter = isPackageMarker(codePoint);
 			}
 
-			readResult = readToken(inputStreamStruct, false, false, stringBuilder, isEscaped);
+			readResult = readToken(inputStreamStruct, false, stringBuilder, isEscaped);
 		}
 
 		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);
@@ -82,7 +82,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 * 		the {@link StringBuilder} to append the next token character
 	 */
 	private static void readSingleEscape(final InputStreamStruct inputStreamStruct, final StringBuilder stringBuilder) {
-		readToken(inputStreamStruct, true, false, stringBuilder, true);
+		readToken(inputStreamStruct, true, stringBuilder, true);
 	}
 
 	/**
@@ -97,7 +97,7 @@ final class ExtendedTokenReaderMacroFunction {
 	private static void readMultipleEscape(final InputStreamStruct inputStreamStruct,
 	                                       final StringBuilder stringBuilder) {
 
-		ReadPeekResult tempReadResult = inputStreamStruct.readChar(true, null, false);
+		ReadCharResult tempReadResult = inputStreamStruct.readChar(true, null);
 		int tempCodePoint = tempReadResult.getResult();
 
 		while (!isMultipleEscape(tempCodePoint)) {
@@ -110,7 +110,7 @@ final class ExtendedTokenReaderMacroFunction {
 				appendToken(tempReadResult, stringBuilder, true);
 			}
 
-			tempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE, false);
+			tempReadResult = inputStreamStruct.readChar(true, NILStruct.INSTANCE);
 			tempCodePoint = tempReadResult.getResult();
 		}
 		appendToken(tempReadResult, stringBuilder, false);
@@ -118,46 +118,42 @@ final class ExtendedTokenReaderMacroFunction {
 
 	/**
 	 * Reads the next token character from the provided {@link InputStreamStruct}, using the provided {@code eofErrorP}
-	 * and {@code
-	 * recursiveP} to determine how the token character should be read. Then it appends the resulting {@link
-	 * ReadPeekResult} to the provided {@link StringBuilder} using the provided {@code isEscaped} value in determining
+	 * to determine how the token character should be read. Then it appends the resulting {@link
+	 * ReadCharResult} to the provided {@link StringBuilder} using the provided {@code isEscaped} value in determining
 	 * the appropriate case of the token character to append.
 	 *
 	 * @param inputStreamStruct
 	 * 		the {@link InputStreamStruct} to read the next token character from
 	 * @param eofErrorP
 	 * 		whether or not the reader will fail when an End-Of-File is reached
-	 * @param recursiveP
-	 * 		whether or not to recursively process the next read operation
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} to append the next token to
 	 * @param isEscaped
 	 * 		whether or not to attempt to modify the case of the read token
 	 *
-	 * @return the resulting {@link ReadPeekResult} of the read operation performed by the {@link InputStreamStruct}
+	 * @return the resulting {@link ReadCharResult} of the read operation performed by the {@link InputStreamStruct}
 	 */
-	private static ReadPeekResult readToken(final InputStreamStruct inputStreamStruct,
+	private static ReadCharResult readToken(final InputStreamStruct inputStreamStruct,
 	                                        final boolean eofErrorP,
-	                                        final boolean recursiveP,
 	                                        final StringBuilder stringBuilder,
 	                                        final boolean isEscaped) {
-		final ReadPeekResult readResult = inputStreamStruct.readChar(eofErrorP, NILStruct.INSTANCE, recursiveP);
+		final ReadCharResult readResult = inputStreamStruct.readChar(eofErrorP, NILStruct.INSTANCE);
 		appendToken(readResult, stringBuilder, isEscaped);
 		return readResult;
 	}
 
 	/**
-	 * Appends the token result in the provided {@link ReadPeekResult} to the provided {@link StringBuilder}, making to
+	 * Appends the token result in the provided {@link ReadCharResult} to the provided {@link StringBuilder}, making to
 	 * to properly case the token based on the provided {@code isEscaped}.
 	 *
 	 * @param readResult
-	 * 		the {@link ReadPeekResult} containing the token result to append
+	 * 		the {@link ReadCharResult} containing the token result to append
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} to append the next token to
 	 * @param isEscaped
 	 * 		whether or not to attempt to modify the case of the read token
 	 */
-	private static void appendToken(final ReadPeekResult readResult,
+	private static void appendToken(final ReadCharResult readResult,
 	                                final StringBuilder stringBuilder,
 	                                final boolean isEscaped) {
 		if (!readResult.isEof()) {

@@ -13,8 +13,7 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.PeekType;
-import jcl.lang.stream.ReadPeekResult;
+import jcl.lang.stream.ReadCharResult;
 
 /**
  * The {@link TwoWayStreamStructImpl} is the object representation of a Lisp 'two-way-stream' type.
@@ -22,44 +21,49 @@ import jcl.lang.stream.ReadPeekResult;
 public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl implements TwoWayStreamStruct {
 
 	/**
-	 * Public constructor.
+	 * Public constructor, initializing the provided {@link InputStreamStruct} and {@link OutputStreamStruct}.
 	 *
 	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to create a TwoWayStreamStruct from
+	 * 		the {@link InputStreamStruct} to initialize
 	 * @param outputStreamStruct
-	 * 		the {@link OutputStreamStruct} to create a TwoWayStreamStruct from
+	 * 		the {@link OutputStreamStruct} to initialize
 	 */
-	public TwoWayStreamStructImpl(final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		this(false, inputStreamStruct, outputStreamStruct);
+	public TwoWayStreamStructImpl(final InputStreamStruct inputStreamStruct,
+	                              final OutputStreamStruct outputStreamStruct) {
+		super(inputStreamStruct, outputStreamStruct);
 	}
 
-	/**
-	 * Public constructor.
-	 *
-	 * @param interactive
-	 * 		whether or not the struct created is 'interactive'
-	 * @param inputStreamStruct
-	 * 		the {@link InputStreamStruct} to create a TwoWayStreamStruct from
-	 * @param outputStreamStruct
-	 * 		the {@link OutputStreamStruct} to create a TwoWayStreamStruct from
+	/*
+	TWO-WAY-STREAM-STRUCT
 	 */
-	public TwoWayStreamStructImpl(final boolean interactive, final InputStreamStruct inputStreamStruct, final OutputStreamStruct outputStreamStruct) {
-		super(interactive, inputStreamStruct, outputStreamStruct);
+
+	@Override
+	public InputStreamStruct twoWayStreamInputStream() {
+		return inputStreamStruct;
 	}
 
 	@Override
-	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		return inputStreamStruct.readChar(eofErrorP, eofValue, recursiveP);
+	public OutputStreamStruct twoWayStreamOutputStream() {
+		return outputStreamStruct;
+	}
+
+	/*
+	INPUT-STREAM-STRUCT
+	 */
+
+	@Override
+	public ReadCharResult readChar(final boolean eofErrorP, final LispStruct eofValue) {
+		return inputStreamStruct.readChar(eofErrorP, eofValue);
 	}
 
 	@Override
-	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadCharResult readCharNoHang(final boolean eofErrorP, final LispStruct eofValue) {
+		return inputStreamStruct.readCharNoHang(eofErrorP, eofValue);
+	}
+
+	@Override
+	public ReadCharResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		return inputStreamStruct.readByte(eofErrorP, eofValue);
-	}
-
-	@Override
-	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		return inputStreamStruct.peekChar(peekType, eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
@@ -67,10 +71,9 @@ public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl i
 		return inputStreamStruct.unreadChar(codePoint);
 	}
 
-	@Override
-	public Long filePosition(final Long filePosition) {
-		return null;
-	}
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {
@@ -91,13 +94,5 @@ public final class TwoWayStreamStructImpl extends AbstractDualStreamStructImpl i
 			return TStruct.INSTANCE;
 		}
 		return super.typep(typeSpecifier);
-	}
-
-	@Override
-	public String toString() {
-		final String type = typeOf().toString();
-		final String printedInputStream = inputStreamStruct.toString();
-		final String printedOutputStream = outputStreamStruct.toString();
-		return "#<" + type + " input " + printedInputStream + ", output " + printedOutputStream + '>';
 	}
 }

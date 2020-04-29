@@ -13,18 +13,14 @@
     </wildcardResourcePatterns>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.12/48e4e5d60309ebd833bc528dcf77668eab3cd72c/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="jcl-reader_main" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="jcl-application_main" target="11" />
-      <module name="jcl-application_test" target="11" />
-      <module name="jcl-compiler_main" target="11" />
-      <module name="jcl-compiler_test" target="11" />
-      <module name="jcl-core_main" target="11" />
-      <module name="jcl-core_test" target="11" />
-      <module name="jcl-functions_main" target="11" />
-      <module name="jcl-functions_test" target="11" />
-      <module name="jcl-reader_main" target="11" />
-      <module name="jcl-reader_test" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="13" />
   </component>
 </project>

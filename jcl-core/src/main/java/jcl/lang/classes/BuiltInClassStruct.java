@@ -66,6 +66,8 @@ public final class BuiltInClassStruct extends ClassStruct {
 	public static final BuiltInClassStruct STRUCTURE_OBJECT = addClass(CommonLispSymbols.STRUCTURE_OBJECT);
 //	public static final StructureClassStruct STRUCTURE_OBJECT   = addClass(CommonLispSymbols.STRUCTURE_OBJECT);
 
+	public static final BuiltInClassStruct NIL_VECTOR           = addClass(CommonLispSymbols.NIL_VECTOR);
+
 	static {
 		ARRAY.setDirectSuperClasses(CLASS_T);
 		ARRAY.setClassPrecedenceList(ARRAY, CLASS_T);
@@ -160,6 +162,9 @@ public final class BuiltInClassStruct extends ClassStruct {
 		TWO_WAY_STREAM.setClassPrecedenceList(TWO_WAY_STREAM, STREAM, STRUCTURE_OBJECT, CLASS_T);
 		VECTOR.setDirectSuperClasses(ARRAY, SEQUENCE);
 		VECTOR.setClassPrecedenceList(VECTOR, ARRAY, SEQUENCE, CLASS_T);
+
+		NIL_VECTOR.setDirectSuperClasses(STRING);
+		NIL_VECTOR.setClassPrecedenceList(NIL_VECTOR, STRING, VECTOR, ARRAY, SEQUENCE, CLASS_T);
 	}
 
 	private BuiltInClassStruct(final SymbolStruct name) {

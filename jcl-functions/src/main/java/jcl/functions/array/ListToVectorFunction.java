@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.functions.BuiltInFunctionStructImpl;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
@@ -36,7 +37,8 @@ public final class ListToVectorFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final ListStruct list = arguments.getRequiredArgument(LIST_ARGUMENT, ListStruct.class);
-		final List<LispStruct> collect = list.stream().collect(Collectors.toList());
-		return VectorStruct.toLispVector(collect);
+		final List<LispStruct> contents = list.stream().collect(Collectors.toList());
+		final IntegerStruct size = IntegerStruct.toLispInteger(contents.size());
+		return VectorStruct.toLispVector(size, CommonLispSymbols.T, contents);
 	}
 }

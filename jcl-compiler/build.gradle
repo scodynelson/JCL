@@ -1,14 +1,14 @@
 description = "JCL Compiler"
 
 dependencies {
-	compile(project(":jcl-core"))
-	compile(project(":jcl-reader"))
+	implementation(project(":jcl-core"))
+	implementation(project(":jcl-reader"))
 
-	compile("commons-io:commons-io")
-	compile("org.benf:cfr")
-	compile("org.ow2.asm:asm")
-	compile("org.ow2.asm:asm-util")
+	implementation("commons-io:commons-io")
+	implementation("org.benf:cfr")
+	implementation("org.ow2.asm:asm")
+	implementation("org.ow2.asm:asm-util")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	compile("org.slf4j:slf4j-api")
+	implementation("org.slf4j:slf4j-api")
 }

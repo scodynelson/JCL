@@ -1,19 +1,19 @@
 description = "JCL Core"
 
 dependencies {
-	compile("com.ibm.icu:icu4j")
-	compile("commons-io:commons-io")
-	compile("com.google.guava:guava")
-	compile("org.ow2.asm:asm")
-	compile("org.apache.commons:commons-lang3")
-	compile("org.apache.commons:commons-text")
-	compile("org.apache.commons:commons-math3")
-	compile("org.apache.commons:commons-collections4")
-	compile("org.apfloat:apfloat")
+	implementation("com.ibm.icu:icu4j")
+	implementation("commons-io:commons-io")
+	implementation("com.google.guava:guava")
+	implementation("org.ow2.asm:asm")
+	implementation("org.apache.commons:commons-lang3")
+	implementation("org.apache.commons:commons-text")
+	implementation("org.apache.commons:commons-math3")
+	implementation("org.apache.commons:commons-collections4")
+	implementation("org.apfloat:apfloat")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	compile("org.slf4j:slf4j-api")
+	implementation("org.slf4j:slf4j-api")
 
-	testCompile("junit:junit")
-	testCompile("org.hamcrest:hamcrest-core")
+	testImplementation("junit:junit")
+	testImplementation("org.hamcrest:hamcrest-core")
 }

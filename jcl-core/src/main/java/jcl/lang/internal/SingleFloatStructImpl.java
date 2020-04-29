@@ -28,7 +28,6 @@ import jcl.lang.classes.ClassStruct;
 import jcl.lang.number.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -43,7 +42,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-@EqualsAndHashCode
 public class SingleFloatStructImpl extends LispStructImpl implements SingleFloatStruct, ShortFloatStruct {
 
 	/**

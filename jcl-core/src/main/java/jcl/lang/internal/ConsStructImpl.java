@@ -34,7 +34,6 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link ConsStructImpl} is the object representation of a Lisp 'cons' type.
  */
-//@EqualsAndHashCode(callSuper = false)
 public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 
 	/**

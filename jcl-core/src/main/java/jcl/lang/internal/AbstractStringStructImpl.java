@@ -6,22 +6,17 @@ import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
-import jcl.lang.AdjustArrayContext;
-import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
-import jcl.lang.StringEqualityContext;
-import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
@@ -39,107 +34,89 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 * @param totalSize
 	 * 		the value used to initialize {@link #totalSize} property
 	 */
-	protected AbstractStringStructImpl(final LispStruct elementType, final Integer totalSize) {
+	protected AbstractStringStructImpl(final LispStruct elementType, final IntegerStruct totalSize) {
 		super(elementType, totalSize);
 	}
 
-	// =================
-	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
-	                               final LispStruct initialElement, final IntegerStruct fillPointer) {
-		// TODO: Remove
-		throw new UnsupportedOperationException();
+	/**
+	 * Validates and returns the provided object as a 'character' value.
+	 *
+	 * @param object
+	 * 		the object to validate
+	 *
+	 * @return the provided object as a 'character' value
+	 *
+	 * @throws TypeErrorException
+	 * 		if the provided object is not a valid 'character' value
+	 */
+	protected static CharacterStruct getCharacter(final LispStruct object) {
+		if (object instanceof CharacterStruct) {
+			return (CharacterStruct) object;
+		}
+		throw new TypeErrorException(object + " is not a character type.");
 	}
-
-	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
-	                               final SequenceStruct initialContents, final IntegerStruct fillPointer) {
-		// TODO: Remove
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
-	                               final IntegerStruct fillPointer, final ArrayStruct displacedTo,
-	                               final IntegerStruct displacedIndexOffset) {
-		// TODO: Remove
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<LispStruct> getContents() {
-		// TODO: Remove
-		return null;
-	}
-// =================
 
 	/*
 	STRING-STRUCT
 	 */
 
 	@Override
-	public CharacterStruct char_(final IntegerStruct index) {
-		final int indexInt = validateSubscript(index);
-		return charInternal(indexInt);
-	}
-
-	/**
-	 * Internal handling of character retrieval from the underlying contents, accounting for both displaced contents and
-	 * structures where the size of the structure is greater than the current number of filled contents.
-	 *
-	 * @param index
-	 * 		the index in the contents to retrieve the {@link CharacterStruct}
-	 *
-	 * @return the {@link CharacterStruct} value within the contents, or {@link CharacterConstants#NULL_CHAR} if the
-	 * value has yet to be populated
-	 */
-	protected abstract CharacterStruct charInternal(final int index);
-
-	@Override
-	public CharacterStruct setfChar(final CharacterStruct newElement, final IntegerStruct index) {
-		final int indexInt = validateSubscript(index);
-		return setfCharInternal(newElement, indexInt);
-	}
-
-	/**
-	 * Internal handling of character modification within the underlying contents, accounting for displaced contents.
-	 *
-	 * @param newElement
-	 * 		the new element to be set at the provided index location within the contents
-	 * @param index
-	 * 		the index in the contents to modify the existing value with the provided {@code newElement}
-	 *
-	 * @return newElement
-	 */
-	protected abstract CharacterStruct setfCharInternal(final CharacterStruct newElement, final int index);
-
-	@Override
-	public StringStruct stringUpcase(final StringIntervalOpContext context) {
+	public StringStruct stringUpcase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
 		return casifyString(context, String::toUpperCase);
 	}
 
 	@Override
-	public StringStruct stringDowncase(final StringIntervalOpContext context) {
+	public StringStruct stringDowncase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
 		return casifyString(context, String::toLowerCase);
 	}
 
 	@Override
-	public StringStruct stringCapitalize(final StringIntervalOpContext context) {
+	public StringStruct stringCapitalize(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
 		return casifyString(context, WordUtils::capitalize);
 	}
 
 	@Override
-	public StringStruct nStringUpcase(final StringIntervalOpContext context) {
+	public StringStruct nStringUpcase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
 		return nCasifyString(context, String::toUpperCase);
 	}
 
 	@Override
-	public StringStruct nStringDowncase(final StringIntervalOpContext context) {
+	public StringStruct nStringDowncase(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
 		return nCasifyString(context, String::toLowerCase);
 	}
 
 	@Override
-	public StringStruct nStringCapitalize(final StringIntervalOpContext context) {
+	public StringStruct nStringCapitalize(final IntegerStruct start, final IntegerStruct end) {
+		final StringIntervalOpContext context
+				= StringIntervalOpContext.builder()
+				                         .start(start)
+				                         .end(end)
+				                         .build();
 		return nCasifyString(context, WordUtils::capitalize);
 	}
 
@@ -156,17 +133,20 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 */
 	private StringStruct casifyString(final StringIntervalOpContext context,
 	                                  final Function<String, String> casifyOp) {
-		final int startInt = getStringOpStart(this, context);
-		final int endInt = getStringOpEnd(this, context, startInt);
+		final IntegerStruct start = getStringOpStart(this, context);
+		final IntegerStruct end = getStringOpEnd(this, context, start);
 
 		final String str = toJavaString(false);
 		final StringBuilder builder = new StringBuilder(str);
+
+		final int startInt = start.toJavaInt();
+		final int endInt = end.toJavaInt();
 
 		String strToCasify = builder.substring(startInt, endInt);
 		strToCasify = casifyOp.apply(strToCasify);
 		builder.replace(startInt, endInt, strToCasify);
 
-		return new SimpleStringStructImpl(builder.length(), elementType, builder);
+		return new SimpleStringStructImpl(IntegerStruct.toLispInteger(builder.length()), elementType, builder);
 	}
 
 	/**
@@ -230,19 +210,33 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 
 		final String str = toJavaString(false);
 		final String trimmedString = trimOp.apply(str, stripChars);
-		return new SimpleStringStructImpl(trimmedString.length(),
+		return new SimpleStringStructImpl(IntegerStruct.toLispInteger(trimmedString.length()),
 		                                  elementType,
 		                                  new StringBuilder(trimmedString));
 	}
 
 	@Override
-	public boolean stringEqual(final StringEqualityContext context) {
+	public BooleanStruct stringEqual(final StringStruct string2,
+	                                 final IntegerStruct start1, final IntegerStruct end1,
+	                                 final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return equalComparison(context,
 		                       String::compareTo);
 	}
 
 	@Override
-	public LispStruct stringNotEqual(final StringEqualityContext context) {
+	public LispStruct stringNotEqual(final StringStruct string2,
+	                                 final IntegerStruct start1, final IntegerStruct end1,
+	                                 final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareTo,
 		                            x -> x != 0,
@@ -250,7 +244,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringLessThan(final StringEqualityContext context) {
+	public LispStruct stringLessThan(final StringStruct string2,
+	                                 final IntegerStruct start1, final IntegerStruct end1,
+	                                 final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareTo,
 		                            x -> x < 0,
@@ -258,7 +259,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringGreaterThan(final StringEqualityContext context) {
+	public LispStruct stringGreaterThan(final StringStruct string2,
+	                                    final IntegerStruct start1, final IntegerStruct end1,
+	                                    final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareTo,
 		                            x -> x > 0,
@@ -266,7 +274,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringLessThanOrEqualTo(final StringEqualityContext context) {
+	public LispStruct stringLessThanOrEqualTo(final StringStruct string2,
+	                                          final IntegerStruct start1, final IntegerStruct end1,
+	                                          final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareTo,
 		                            x -> x <= 0,
@@ -274,7 +289,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringGreaterThanOrEqualTo(final StringEqualityContext context) {
+	public LispStruct stringGreaterThanOrEqualTo(final StringStruct string2,
+	                                             final IntegerStruct start1, final IntegerStruct end1,
+	                                             final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareTo,
 		                            x -> x >= 0,
@@ -282,13 +304,27 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public boolean stringEqualIgnoreCase(final StringEqualityContext context) {
+	public BooleanStruct stringEqualIgnoreCase(final StringStruct string2,
+	                                           final IntegerStruct start1, final IntegerStruct end1,
+	                                           final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return equalComparison(context,
 		                       String::compareToIgnoreCase);
 	}
 
 	@Override
-	public LispStruct stringNotEqualIgnoreCase(final StringEqualityContext context) {
+	public LispStruct stringNotEqualIgnoreCase(final StringStruct string2,
+	                                           final IntegerStruct start1, final IntegerStruct end1,
+	                                           final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareToIgnoreCase,
 		                            x -> x != 0,
@@ -296,7 +332,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringLessThanIgnoreCase(final StringEqualityContext context) {
+	public LispStruct stringLessThanIgnoreCase(final StringStruct string2,
+	                                           final IntegerStruct start1, final IntegerStruct end1,
+	                                           final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareToIgnoreCase,
 		                            x -> x < 0,
@@ -304,7 +347,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringGreaterThanIgnoreCase(final StringEqualityContext context) {
+	public LispStruct stringGreaterThanIgnoreCase(final StringStruct string2,
+	                                              final IntegerStruct start1, final IntegerStruct end1,
+	                                              final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareToIgnoreCase,
 		                            x -> x > 0,
@@ -312,7 +362,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context) {
+	public LispStruct stringLessThanOrEqualToIgnoreCase(final StringStruct string2,
+	                                                    final IntegerStruct start1, final IntegerStruct end1,
+	                                                    final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareToIgnoreCase,
 		                            x -> x <= 0,
@@ -320,7 +377,14 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	@Override
-	public LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context) {
+	public LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringStruct string2,
+	                                                       final IntegerStruct start1, final IntegerStruct end1,
+	                                                       final IntegerStruct start2, final IntegerStruct end2) {
+		final StringEqualityContext context =
+				StringEqualityContext.builder(string2)
+				                     .start1(start1).end1(end1)
+				                     .start2(start2).end2(end2)
+				                     .build();
 		return inequalityComparison(context,
 		                            String::compareToIgnoreCase,
 		                            x -> x >= 0,
@@ -328,7 +392,7 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	}
 
 	/**
-	 * Compares this string using the provided comparison function with the {@link StringEqualityContext#struct}
+	 * Compares this string using the provided comparison function with the {@link StringEqualityContext#getStruct()}
 	 * string, utilizing the provided {@link StringEqualityContext} for the start and end values for each string in the
 	 * comparison.
 	 *
@@ -340,18 +404,18 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 *
 	 * @return true if the strings are equal; false otherwise
 	 */
-	private boolean equalComparison(final StringEqualityContext context,
+	private BooleanStruct equalComparison(final StringEqualityContext context,
 	                                      final BiFunction<String, String, Integer> stringCompareToOp) {
 		final EqualityStrings equalityStrings = getEqualityStrings(context);
 		final String str1 = equalityStrings.str1;
 		final String str2 = equalityStrings.str2;
 
 		final int result = stringCompareToOp.apply(str1, str2);
-		return result == 0;
+		return BooleanStruct.toLispBoolean(result == 0);
 	}
 
 	/**
-	 * Compares this string using the provided comparison function with the {@link StringEqualityContext#struct}
+	 * Compares this string using the provided comparison function with the {@link StringEqualityContext#getStruct()}
 	 * string, utilizing the provided {@link StringEqualityContext} for the start and end values for each string in the
 	 * comparison.
 	 *
@@ -402,17 +466,17 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 		final StringIntervalOpContext context1 = context.getContext1();
 		final StringIntervalOpContext context2 = context.getContext2();
 
-		final int start1 = getStringOpStart(this, context1);
-		final int end1 = getStringOpEnd(this, context1, start1);
+		final IntegerStruct start1 = getStringOpStart(this, context1);
+		final IntegerStruct end1 = getStringOpEnd(this, context1, start1);
 
-		final int start2 = getStringOpStart(struct, context2);
-		final int end2 = getStringOpEnd(struct, context2, start2);
+		final IntegerStruct start2 = getStringOpStart(struct, context2);
+		final IntegerStruct end2 = getStringOpEnd(struct, context2, start2);
 
 		final String str1 = toJavaString(false);
 		final String str2 = struct.toJavaString(false);
 
-		final String subStr1 = str1.substring(start1, end1);
-		final String subStr2 = str2.substring(start2, end2);
+		final String subStr1 = str1.substring(start1.toJavaInt(), end1.toJavaInt());
+		final String subStr2 = str2.substring(start2.toJavaInt(), end2.toJavaInt());
 		return new EqualityStrings(subStr1, subStr2);
 	}
 
@@ -448,65 +512,56 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	/**
 	 * Retrieves the starting value from the {@link StringIntervalOpContext} for a string operation.
 	 *
+	 * @param struct
+	 * 		the string structure to find the starting value for
 	 * @param context
 	 * 		the {@link StringIntervalOpContext} containing starting and ending values for string operations
 	 *
 	 * @return the start value for the string operation
 	 */
-	protected static int getStringOpStart(final StringStruct struct, final StringIntervalOpContext context) {
+	protected static IntegerStruct getStringOpStart(final StringStruct struct, final StringIntervalOpContext context) {
 		final IntegerStruct start = context.getStart();
-		final int startInt;
+		final IntegerStruct realStart;
 		if (start == null) {
-			startInt = 0;
+			realStart = IntegerStruct.ZERO;
 		} else {
-			startInt = start.toJavaInt();
-			// TODO: Casting
-			final int observedLength = ((AbstractStringStructImpl) struct).getObservedLength();
-			if ((startInt < 0) || (startInt > observedLength)) {
+			realStart = start;
+			final IntegerStruct observedLength = struct.length();
+			if (start.isLessThan(IntegerStruct.ZERO) || start.isGreaterThan(observedLength)) {
 				throw new ErrorException(
 						"Bad start value " + start + " for string with size: " + observedLength);
 			}
 		}
-		return startInt;
+		return realStart;
 	}
 
 	/**
 	 * Retrieves the ending value from the {@link StringIntervalOpContext} for a string operation.
 	 *
+	 * @param struct
+	 * 		the string structure to find the ending value for
 	 * @param context
 	 * 		the {@link StringIntervalOpContext} containing starting and ending values for string operations
-	 * @param startInt
+	 * @param start
 	 * 		the starting value for the string operation
 	 *
 	 * @return the end value for the string operation
 	 */
-	protected static int getStringOpEnd(final StringStruct struct, final StringIntervalOpContext context, final int startInt) {
+	protected static IntegerStruct getStringOpEnd(final StringStruct struct, final StringIntervalOpContext context,
+	                                              final IntegerStruct start) {
 		final IntegerStruct end = context.getEnd();
-		final int endInt;
+		final IntegerStruct realEnd;
 		if (end == null) {
-			// TODO: Casting
-			endInt = ((AbstractStringStructImpl) struct).getObservedLength();
+			realEnd = struct.length();
 		} else {
-			endInt = end.toJavaInt();
-			// TODO: Casting
-			final int observedLength = ((AbstractStringStructImpl) struct).getObservedLength();
-			if ((endInt < 0) || (endInt > observedLength) || (endInt < startInt)) {
+			realEnd = end;
+			final IntegerStruct observedLength = struct.length();
+			if (end.isLessThan(IntegerStruct.ZERO) || end.isGreaterThan(observedLength) || end.isLessThan(start)) {
 				throw new ErrorException(
-						"Bad end value " + end + " with start value " + startInt + " for string with size: " + observedLength);
+						"Bad end value " + end + " with start value " + start + " for string with size: " + observedLength);
 			}
 		}
-		return endInt;
-	}
-
-	/**
-	 * Helper method for {@link #getStringOpStart(StringStruct, StringIntervalOpContext)} and {@link
-	 * #getStringOpEnd(StringStruct, StringIntervalOpContext, int)} methods for getting observed length values. This is used for
-	 * dealing with things like fill-pointers in complex structures.
-	 *
-	 * @return the observed length value for interval operations
-	 */
-	protected int getObservedLength() {
-		return totalSize;
+		return realEnd;
 	}
 
 	/*
@@ -514,205 +569,31 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 	 */
 
 	@Override
-	public StringStruct adjustArray(final AdjustArrayContext context) {
-
-		final List<IntegerStruct> newDimensions = context.getDimensions();
-		final LispStruct newElementType = context.getElementType();
-		final SequenceStruct newInitialContents = context.getInitialContents();
-		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
-
-		if (newDimensions.size() != 1) {
-			throw new ErrorException("Array cannot be adjusted to a different array dimension rank.");
-		}
-
-		LispStruct upgradedET = elementType;
-		if (newElementType != null) {
-			if (!elementType.eq(newElementType)) {
-				throw new TypeErrorException(
-						"Provided element-type " + newElementType + " must be a subtype of the initial upgraded-array-element-type " + elementType + '.');
-			}
-			upgradedET = ArrayStruct.upgradedArrayElementType(newElementType);
-		}
-
-		if (newDisplacedTo != null) {
-			return adjustDisplacedTo(context, upgradedET);
-		} else if (newInitialContents != null) {
-			return adjustInitialContents(context, upgradedET);
-		} else {
-			return adjustInitialElement(context, upgradedET);
-		}
-	}
-
-	/**
-	 * Performs adjust-array functionality when attempting to adjust to a displaced array. If the original array was
-	 * adjustable, the innards will be adjusted so that the contents are no longer valid and the displaced contents
-	 * contains the content value. If the original array was not adjustable, the information between the original array
-	 * and the {@link AdjustArrayContext} adjusting parameters will produce a new array adjusted accordingly.
-	 *
-	 * @param context
-	 * 		the {@link AdjustArrayContext} containing the adjusting parameters
-	 * @param upgradedET
-	 * 		the element-type that represents the upgraded array-element-type for the resulting adjustment
-	 *
-	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
-	 */
-	protected abstract StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispStruct upgradedET);
-
-	/**
-	 * Performs adjust-array functionality when attempting to adjust with a new sequence of contents. If the original
-	 * array was adjustable, the innards will be adjusted so that any displacements are no longer valid and the contents
-	 * contain the content value. If the original array was not adjustable, the information between the original array
-	 * and the {@link AdjustArrayContext} adjusting parameters will produce a new array adjusted accordingly.
-	 *
-	 * @param context
-	 * 		the {@link AdjustArrayContext} containing the adjusting parameters
-	 * @param upgradedET
-	 * 		the element-type that represents the upgraded array-element-type for the resulting adjustment
-	 *
-	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
-	 */
-	protected abstract StringStruct adjustInitialContents(final AdjustArrayContext context, final LispStruct upgradedET);
-
-	/**
-	 * Performs adjust-array functionality when attempting to adjust with a new provided element value. If the original
-	 * array was adjustable, the innards will be adjusted so that any displacements are no longer valid and the
-	 * contents contain filled in value with the provided element. If the original array was not adjustable, the
-	 * information between the original array and the {@link AdjustArrayContext} adjusting parameters will produce a new
-	 * array adjusted accordingly.
-	 *
-	 * @param context
-	 * 		the {@link AdjustArrayContext} containing the adjusting parameters
-	 * @param upgradedET
-	 * 		the element-type that represents the upgraded array-element-type for the resulting adjustment
-	 *
-	 * @return either the current instance, if the original array was adjustable, or a new instance adjusted accordingly
-	 */
-	protected abstract StringStruct adjustInitialElement(final AdjustArrayContext context, final LispStruct upgradedET);
-
-	/**
-	 * Validates that the newly provided initial-element value for array adjustment is a subtype of the provided
-	 * upgraded-array-element-type.
-	 *
-	 * @param newInitialElement
-	 * 		the new initial-element
-	 * @param upgradedET
-	 * 		the upgraded-array-element-type
-	 */
-	protected static void validateNewInitialElement(final LispStruct newInitialElement, final LispStruct upgradedET) {
-		if (newInitialElement != null) {
-			if (!(newInitialElement instanceof CharacterStruct)) {
-				throw new TypeErrorException(
-						"Provided element " + newInitialElement + " is not a CHARACTER.");
-			}
-
-			// NOTE: Should never hit this in reality, but keeping this check here.
-			if (!newInitialElement.typep(upgradedET).toJavaPBoolean()) {
-				throw new TypeErrorException(
-						"Provided element " + newInitialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-			}
-		}
-	}
-
-	/**
-	 * A special case for adjusting by initial-element, where the size is altered. If the new size is less than the old
-	 * size, the contents are reduce and the new element is not added. However, if the new size is greater than the old
-	 * size, the new content slots will be filled with the new element.
-	 *
-	 * @param newContents
-	 * 		the new contents container
-	 * @param newElement
-	 * 		the new element to be used when filling in the new contents
-	 * @param oldTotalSize
-	 * 		the size of the original array
-	 * @param newTotalSizeInt
-	 * 		the size the array is to be adjusted to
-	 */
-	protected static void updateContentsWithElement(final StringBuilder newContents, final LispStruct newElement,
-	                                                final int oldTotalSize, final int newTotalSizeInt) {
-		if (newTotalSizeInt < oldTotalSize) {
-			newContents.delete(newTotalSizeInt, newContents.length());
-		} else if (newTotalSizeInt > oldTotalSize) {
-			newContents.ensureCapacity(newTotalSizeInt);
-			for (int i = oldTotalSize; i < newTotalSizeInt; i++) {
-				if (newElement != null) {
-					final int codePoint = ((CharacterStruct) newElement).toUnicodeCodePoint();
-					newContents.appendCodePoint(codePoint);
-				}
-			}
-		}
-	}
+	public abstract CharacterStruct aref(final IntegerStruct... subscripts);
 
 	@Override
-	public CharacterStruct aref(final IntegerStruct... subscripts) {
-		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
-		final int rowMajorIndex = validateSubscript(subscript);
-		return charInternal(rowMajorIndex);
-	}
+	public abstract CharacterStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts);
 
 	@Override
-	public CharacterStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) {
-		if (!(newElement instanceof CharacterStruct)) {
-			throw new TypeErrorException(newElement + " is not a character type.");
-		}
-
-		final IntegerStruct subscript = rowMajorIndexInternal(subscripts);
-		final int rowMajorIndex = validateSubscript(subscript);
-		return setfCharInternal((CharacterStruct) newElement, rowMajorIndex);
-	}
+	public abstract CharacterStruct rowMajorAref(final IntegerStruct index);
 
 	@Override
-	public CharacterStruct rowMajorAref(final IntegerStruct index) {
-		final int indexInt = validateSubscript(index);
-		return charInternal(indexInt);
-	}
-
-	@Override
-	public CharacterStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) {
-		if (!(newElement instanceof CharacterStruct)) {
-			throw new TypeErrorException(newElement + " is not a character type.");
-		}
-
-		final int indexInt = validateSubscript(index);
-		return setfCharInternal((CharacterStruct) newElement, indexInt);
-	}
+	public abstract CharacterStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index);
 
 	/*
 	SEQUENCE-STRUCT
 	 */
 
 	@Override
-	public IntegerStruct length() {
-		return IntegerStruct.toLispInteger(totalSize);
-	}
-
-	@Override
 	public CharacterStruct elt(final IntegerStruct index) {
-		final int indexInt = validateIndex(index);
-		return charInternal(indexInt);
+		final IntegerStruct validIndex = validateIndex(index);
+		return aref(validIndex);
 	}
 
 	@Override
 	public CharacterStruct setfElt(final LispStruct newElement, final IntegerStruct index) {
-		if (!(newElement instanceof CharacterStruct)) {
-			throw new TypeErrorException(newElement + " is not a character type.");
-		}
-
-		final int indexInt = validateIndex(index);
-		return setfCharInternal((CharacterStruct) newElement, indexInt);
-	}
-
-	/**
-	 * Helper method for {@link #elt(IntegerStruct)} and {@link #setfElt(LispStruct, IntegerStruct)} for validating
-	 * provided index values. This is primarily here to deal with fill-pointer values, which affect the behavior of
-	 * 'elt' operations in complex string structures.
-	 *
-	 * @param index
-	 * 		the index to validate
-	 *
-	 * @return the validated index
-	 */
-	protected int validateIndex(final IntegerStruct index) {
-		return validateSubscript(index);
+		final IntegerStruct validIndex = validateIndex(index);
+		return setfAref(newElement, validIndex);
 	}
 
 	/*
@@ -721,16 +602,16 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 
 	@Override
 	public BooleanStruct typep(final LispStruct typeSpecifier) {
+		if ((typeSpecifier == CommonLispSymbols.BASE_STRING) && (CommonLispSymbols.BASE_CHAR == elementType)) {
+			return TStruct.INSTANCE;
+		}
 		if (typeSpecifier == CommonLispSymbols.STRING) {
 			return TStruct.INSTANCE;
 		}
-		if (typeSpecifier == CommonLispSymbols.BASE_STRING) {
+		if ((typeSpecifier == BuiltInClassStruct.BASE_STRING) && (CommonLispSymbols.BASE_CHAR == elementType)) {
 			return TStruct.INSTANCE;
 		}
 		if (typeSpecifier == BuiltInClassStruct.STRING) {
-			return TStruct.INSTANCE;
-		}
-		if (typeSpecifier == BuiltInClassStruct.BASE_STRING) {
 			return TStruct.INSTANCE;
 		}
 		return super.typep(typeSpecifier);

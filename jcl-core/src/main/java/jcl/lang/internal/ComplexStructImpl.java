@@ -15,7 +15,6 @@ import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import lombok.EqualsAndHashCode;
 import org.apfloat.Apcomplex;
 import org.apfloat.ApcomplexMath;
 import org.apfloat.Apfloat;
@@ -26,7 +25,6 @@ import org.objectweb.asm.Type;
 /**
  * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
  */
-@EqualsAndHashCode
 public class ComplexStructImpl extends LispStructImpl implements ComplexStruct {
 
 	/**

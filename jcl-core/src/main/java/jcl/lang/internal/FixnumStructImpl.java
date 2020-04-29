@@ -28,7 +28,6 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.number.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apache.commons.math3.util.FastMath;
@@ -44,7 +43,6 @@ import org.objectweb.asm.Type;
 /**
  * The {@link FixnumStructImpl} is the object representation of a Lisp 'fixnum' type.
  */
-@EqualsAndHashCode(callSuper = false)
 public final class FixnumStructImpl extends IntegerStructImpl implements FixnumStruct {
 
 	/**

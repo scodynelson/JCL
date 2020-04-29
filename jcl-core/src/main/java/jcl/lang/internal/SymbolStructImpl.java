@@ -26,14 +26,12 @@ import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
-import lombok.EqualsAndHashCode;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link SymbolStructImpl} is the object representation of a Lisp 'symbol' type.
  */
-@EqualsAndHashCode(of = {"name", "symbolPackage"}, callSuper = false)
 public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	protected final String name;

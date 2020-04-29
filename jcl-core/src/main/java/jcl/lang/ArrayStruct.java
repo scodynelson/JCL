@@ -1,17 +1,11 @@
 package jcl.lang;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.MultiArrayStructImpl;
+import jcl.lang.internal.ComplexArrayStructImpl;
 import jcl.lang.internal.NILArrayStructImpl;
+import jcl.lang.internal.SimpleArrayStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**
@@ -19,63 +13,164 @@ import jcl.lang.statics.CommonLispSymbols;
  */
 public interface ArrayStruct extends LispStruct {
 
-	default ArrayStruct adjustArray(final AdjustArrayContext context) {
-		return null;
+	/**
+	 * Determines if this ArrayStruct is adjustable.
+	 *
+	 * @return {@code true} if the ArrayStruct is adjustable; {@code false} otherwise
+	 */
+	default BooleanStruct adjustableArrayP() {
+		return NILStruct.INSTANCE;
 	}
 
-	ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
-	                        final LispStruct initialElement, final IntegerStruct fillPointer);
-
-	ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
-	                        final SequenceStruct initialContents, final IntegerStruct fillPointer);
-
-	ArrayStruct adjustArray(final List<IntegerStruct> dimensions, final LispStruct elementType,
-	                        final IntegerStruct fillPointer, final ArrayStruct displacedTo,
-	                        final IntegerStruct displacedIndexOffset);
-
-	boolean adjustableArrayP();
-
+	/**
+	 * Retrieves the {@link LispStruct} at the provided position determined by the provided {@code subscripts}.
+	 *
+	 * @param subscripts
+	 * 		the position of the {@link LispStruct} to retrieve
+	 *
+	 * @return the {@link LispStruct} at the provided subscripts
+	 */
 	LispStruct aref(final IntegerStruct... subscripts);
 
+	/**
+	 * Sets the {@link LispStruct} at the provided position determined by the provided {@code subscripts} to the
+	 * provided new {@link LispStruct} element.
+	 *
+	 * @param newElement
+	 * 		the new {@link LispStruct} to set
+	 * @param subscripts
+	 * 		the position to modify and set as the provided new element value
+	 *
+	 * @return the new {@link LispStruct} element
+	 */
 	LispStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts);
 
+	/**
+	 * Returns the axis-number dimension of array. (Any fill pointer is ignored.)
+	 *
+	 * @param axisNumber
+	 * 		an integer greater than or equal to zero and less than the rank of the array
+	 *
+	 * @return the axis-number dimension of array
+	 */
 	IntegerStruct arrayDimension(final IntegerStruct axisNumber);
 
+	/**
+	 * Returns a list of the dimensions of array. (If array is a vector with a fill pointer, that fill pointer is
+	 * ignored.)
+	 *
+	 * @return a list of the dimensions of array
+	 */
 	ListStruct arrayDimensions();
 
 	/**
-	 * Gets the array elementType.
+	 * Returns a type specifier which represents the actual array element type of the array, which is the set of objects
+	 * that such an array can hold. (Because of array upgrading, this type specifier can in some cases denote a
+	 * supertype of the expressed array element type of the array.)
 	 *
-	 * @return array elementType
+	 * @return a type specifier which represents the actual array element type of the array
 	 */
 	LispStruct arrayElementType();
 
-	boolean arrayHasFillPointerP();
-
-	ValuesStruct arrayDisplacement();
-
-	boolean arrayInBoundsP(final IntegerStruct... subscripts);
+	/**
+	 * Returns true if array has a fill pointer; otherwise returns false.
+	 *
+	 * @return true if array has a fill pointer; otherwise returns false
+	 */
+	default BooleanStruct arrayHasFillPointerP() {
+		return NILStruct.INSTANCE;
+	}
 
 	/**
-	 * Gets the array rank.
+	 * If the array is a displaced array, returns the values of the :displaced-to and :displaced-index-offset options
+	 * for the array. If the array is not a displaced array, nil and 0 are returned.
 	 *
-	 * @return array rank
+	 * @return the values of the :displaced-to and :displaced-index-offset options, or nil and 0
+	 */
+	default ValuesStruct arrayDisplacement() {
+		return ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO);
+	}
+
+	/**
+	 * Returns true if the subscripts are all in bounds for array; otherwise returns false. (If array is a vector with a
+	 * fill pointer, that fill pointer is ignored.)
+	 *
+	 * @param subscripts
+	 * 		a list of integers of length equal to the rank of the array
+	 *
+	 * @return true if the subscripts are all in bounds for array; otherwise returns false
+	 */
+	default BooleanStruct arrayInBoundsP(final IntegerStruct... subscripts) {
+		try {
+			arrayRowMajorIndex(subscripts);
+			return TStruct.INSTANCE;
+		} catch (final ErrorException ignored) {
+			return NILStruct.INSTANCE;
+		}
+	}
+
+	/**
+	 * Returns the number of dimensions of array.
+	 *
+	 * @return the number of dimensions of array
 	 */
 	IntegerStruct arrayRank();
 
+	/**
+	 * Computes the position according to the row-major ordering of array for the element that is specified by
+	 * subscripts, and returns the offset of the element in the computed position from the beginning of array.
+	 * <p>
+	 * For a one-dimensional array, the result of array-row-major-index equals subscript.
+	 * <p>
+	 * array-row-major-index ignores fill pointers.
+	 *
+	 * @param subscripts
+	 * 		a list of valid array indices for the array
+	 *
+	 * @return the position according to the row-major ordering of array
+	 */
 	IntegerStruct arrayRowMajorIndex(final IntegerStruct... subscripts);
 
 	/**
-	 * Gets the array's total size.
+	 * Returns the array total size of the array.
 	 *
-	 * @return array's total size
+	 * @return the array total size of the array
 	 */
 	IntegerStruct arrayTotalSize();
 
+	/**
+	 * Considers array as a vector by viewing its elements in row-major order, and returns the element of that vector
+	 * which is referred to by the given index.
+	 *
+	 * @param index
+	 * 		the row-major index used to retrieve the element
+	 *
+	 * @return the element in row-major order which corresponds to the provided index
+	 */
 	LispStruct rowMajorAref(final IntegerStruct index);
 
+	/**
+	 * Considers array as a vector by viewing its elements in row-major order, and sets the element of that vector
+	 * which is referred to by the given index to the new element value provided.
+	 *
+	 * @param newElement
+	 * 		the element to be set
+	 * @param index
+	 * 		the row-major index used to set the element
+	 *
+	 * @return the newly set element
+	 */
 	LispStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index);
 
+	/**
+	 * Returns the element type of the most specialized array representation capable of holding items of the type
+	 * denoted by typespec.
+	 *
+	 * @param type
+	 * 		the typespec used to determine the appropriate upgraded array element-type
+	 *
+	 * @return the element type of the most specialized array representation
+	 */
 	static LispStruct upgradedArrayElementType(final LispStruct type) {
 		if (CommonLispSymbols.CHARACTER.eq(type)
 				|| CommonLispSymbols.BASE_CHAR.eq(type)
@@ -94,6 +189,90 @@ public interface ArrayStruct extends LispStruct {
 		}
 		return CommonLispSymbols.T;
 	}
+
+	/**
+	 * Returns a new ArrayStruct representation of the provided element-type, content, and adjustable.
+	 *
+	 * @param elementType
+	 * 		the array elementType
+	 * @param content
+	 * 		the content of the array
+	 * @param adjustable
+	 * 		whether or not the array is adjustable
+	 *
+	 * @return a new ArrayStruct representation of the provided element-type, content, and adjustable
+	 */
+	static ArrayStruct toLispArray(final SymbolStruct elementType, final LispStruct content,
+	                               final BooleanStruct adjustable) {
+		final BooleanStruct realAdjustable = (adjustable == null) ? NILStruct.INSTANCE : adjustable;
+		return new NILArrayStructImpl(elementType, content, realAdjustable);
+	}
+
+	/**
+	 * Returns a new ArrayStruct representation of the provided dimensions, element-type, and contents.
+	 *
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param elementType
+	 * 		the array elementType
+	 * @param contents
+	 * 		the array contents
+	 *
+	 * @return a new ArrayStruct representation of the provided dimensions, element-type, and contents
+	 */
+	static ArrayStruct toLispArray(final List<IntegerStruct> dimensions, final SymbolStruct elementType,
+	                               final List<LispStruct> contents) {
+		return new SimpleArrayStructImpl(dimensions, elementType, contents);
+	}
+
+	/**
+	 * Returns a new ArrayStruct representation of the provided dimensions, element-type, contents, and adjustable.
+	 *
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param elementType
+	 * 		the array elementType
+	 * @param contents
+	 * 		the array contents
+	 * @param adjustable
+	 * 		whether or not the array is adjustable
+	 *
+	 * @return a new ArrayStruct representation of the provided dimensions, element-type, contents, and adjustable
+	 */
+	static ArrayStruct toLispArray(final List<IntegerStruct> dimensions, final SymbolStruct elementType,
+	                               final List<LispStruct> contents, final BooleanStruct adjustable) {
+		final BooleanStruct realAdjustable = (adjustable == null) ? NILStruct.INSTANCE : adjustable;
+		return new ComplexArrayStructImpl(dimensions, elementType, contents, realAdjustable);
+	}
+
+	/**
+	 * Returns a new ArrayStruct representation of the provided dimensions, element-type, displacedTo,
+	 * displacedIndexOffset, and adjustable.
+	 *
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param elementType
+	 * 		the array elementType
+	 * @param displacedTo
+	 * 		the array structure that this array structure will be displaced to for content values
+	 * @param displacedIndexOffset
+	 * 		the offset of the index lookup for the content value into the displaced array structure
+	 * @param adjustable
+	 * 		whether or not the array is adjustable
+	 *
+	 * @return a new ArrayStruct representation of the provided dimensions, element-type, displacedTo,
+	 * 		displacedIndexOffset, and adjustable
+	 */
+	static ArrayStruct toLispArray(final List<IntegerStruct> dimensions, final SymbolStruct elementType,
+	                               final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
+	                               final BooleanStruct adjustable) {
+		final BooleanStruct realAdjustable = (adjustable == null) ? NILStruct.INSTANCE : adjustable;
+		return new ComplexArrayStructImpl(dimensions, elementType, displacedTo, displacedIndexOffset, realAdjustable);
+	}
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	default boolean equalp(final LispStruct object) {
@@ -120,304 +299,5 @@ public interface ArrayStruct extends LispStruct {
 			return true;
 		}
 		return false;
-	}
-
-	// =================
-
-	/**
-	 * Gets the array contents.
-	 *
-	 * @return array contents
-	 */
-	List<LispStruct> getContents();
-
-	/**
-	 * Gets the array dimensions.
-	 *
-	 * @return array dimensions
-	 */
-	List<Integer> getDimensions();
-
-	static ArrayStruct toLispArray(final List<Integer> dimensions, final List<LispStruct> contents) {
-		// TODO: Fix me
-		final List<IntegerStruct> dimensionStructs = dimensions.stream()
-		                                                       .map(IntegerStruct::toLispInteger)
-		                                                       .collect(Collectors.toList());
-		return MultiArrayStructImpl.valueOf(dimensionStructs, contents);
-	}
-
-	/**
-	 * Determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for the provided
-	 * {@code contentsToCheck}.
-	 *
-	 * @param dimensions
-	 * 		the array dimensions to check
-	 * @param elementType
-	 * 		the array elementType to check
-	 * @param initialContents
-	 * 		the array contents to check
-	 * @param <TYPE>
-	 * 		the type of the array contents
-	 *
-	 * @return the valid array contents
-	 */
-	static <TYPE extends LispStruct> List<TYPE> getValidContents(final List<Integer> dimensions,
-	                                                             final LispStruct elementType,
-	                                                             final SequenceStruct initialContents) {
-		final int numberOfDimensions = dimensions.size();
-		if (numberOfDimensions == 0) {
-			return Collections.emptyList();
-		}
-
-		if (numberOfDimensions == 1) {
-			final int dimension = dimensions.get(0);
-			if (initialContents.length().toJavaInt() == dimension) {
-				return getValidContents(elementType, initialContents);
-			} else {
-				throw new SimpleErrorException(
-						initialContents + " doesn't match array dimensions of #<" + elementType + ' ' + dimension + ">.");
-			}
-		}
-
-		final List<TYPE> validContents = new ArrayList<>();
-
-		final int dimension = dimensions.get(0);
-		if (initialContents.length().toJavaInt() == dimension) {
-			final List<Integer> subDimension = dimensions.subList(1, numberOfDimensions);
-
-			for (final LispStruct contentToCheck : initialContents) {
-				if (!(contentToCheck instanceof SequenceStruct)) {
-					throw new SimpleErrorException(
-							initialContents + " doesn't match array dimensions of #<" + elementType + ' ' + dimension + ">.");
-				}
-
-				final SequenceStruct subContents = (SequenceStruct) contentToCheck;
-				final List<TYPE> validSubContents = getValidContents(subDimension, elementType, subContents);
-				validContents.addAll(validSubContents);
-			}
-		} else {
-			throw new SimpleErrorException(
-					initialContents + " doesn't match array dimensions of #<" + elementType + ' ' + dimension + ">.");
-		}
-
-		return validContents;
-	}
-
-	@SuppressWarnings("unchecked")
-	static <TYPE extends LispStruct> List<TYPE> getValidContents(final LispStruct elementType,
-	                                                             final SequenceStruct initialContents) {
-		final List<TYPE> validContents = new ArrayList<>();
-
-		for (final LispStruct current : initialContents) {
-			if (!current.typep(elementType).toJavaPBoolean()) {
-				throw new TypeErrorException(
-						"Provided element " + current + " is not a subtype of the provided elementType " + elementType + '.');
-			} else {
-				validContents.add((TYPE) current);
-			}
-		}
-		return validContents;
-	}
-
-	static VectorStruct.Builder builder(final IntegerStruct size) {
-		return VectorStruct.builder(size);
-	}
-
-	static ArrayStruct.Builder builder(final IntegerStruct... dimensions) {
-		return new ArrayStruct.Builder(dimensions);
-	}
-
-	final class Builder extends AbstractBuilder<ArrayStruct, LispStruct, LispStruct> {
-
-		private final IntegerStruct[] dimensions;
-
-		private Builder(final IntegerStruct... dimensions) {
-			super(CommonLispSymbols.T, NILStruct.INSTANCE);
-			this.dimensions = dimensions;
-		}
-
-		@Override
-		public ArrayStruct.Builder elementType(final LispStruct elementType) {
-			this.elementType = elementType;
-			return this;
-		}
-/*
-		public BitArrayStruct.Builder elementType(final LispStruct elementType) {
-			if ((initialElement != null) && !(initialElement instanceof IntegerStruct)) {
-				throw new ErrorException("The value " + initialElement + " is not of the expected type BIT.");
-			}
-			if (!CommonLispSymbols.BIT.eq(displacedTo.arrayElementType())) {
-				throw new ErrorException(
-						"The :DISPLACED-TO array " + displacedTo + " is not of :ELEMENT-TYPE BIT");
-			}
-			return BitArrayStruct.builder(dimensions)
-			                     .elementType(elementType)
-			                     .initialElement((IntegerStruct) initialElement)
-			                     .initialContents(initialContents)
-			                     .adjustable(adjustable)
-			                     .displacedTo(displacedTo)
-			                     .displacedIndexOffset(displacedIndexOffset);
-		}
-*/
-		@Override
-		public ArrayStruct.Builder initialElement(final LispStruct initialElement) {
-			this.initialElement = initialElement;
-			return this;
-		}
-
-		@Override
-		public ArrayStruct.Builder initialContents(final SequenceStruct initialContents) {
-			this.initialContents = initialContents;
-			return this;
-		}
-
-		@Override
-		public ArrayStruct.Builder adjustable(final boolean adjustable) {
-			this.adjustable = adjustable;
-			return this;
-		}
-
-		@Override
-		public ArrayStruct.Builder fillPointer(final IntegerStruct fillPointer) {
-			throw new ErrorException("Non-vector arrays cannot adjust fill-pointer.");
-		}
-
-		@Override
-		public ArrayStruct.Builder displacedTo(final ArrayStruct displacedTo) {
-			this.displacedTo = displacedTo;
-			return this;
-		}
-
-		@Override
-		public ArrayStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			this.displacedIndexOffset = displacedIndexOffset;
-			return this;
-		}
-
-		@Override
-		public ArrayStruct build() {
-			final LispStruct upgradedET = upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable;
-
-			if (displacedTo != null) {
-				if (!displacedTo.typep(upgradedET).toJavaPBoolean()) {
-					throw new TypeErrorException(
-							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
-				}
-
-				try {
-					displacedTo.rowMajorAref(displacedIndexOffset);
-				} catch (final ErrorException ignored) {
-					throw new ErrorException("Requested size is too large to displace to " + displacedTo + '.');
-				}
-
-				if (dimensions.length == 0) {
-					return new NILArrayStructImpl(upgradedET,
-					                              displacedTo,
-					                              displacedIndexOffset.toJavaInt(),
-					                              adjustableBoolean);
-				}
-
-				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::toJavaInt)
-				                                          .collect(Collectors.toList());
-				return new MultiArrayStructImpl(dimensionInts,
-				                                upgradedET,
-				                                displacedTo,
-				                                displacedIndexOffset.toJavaInt(),
-				                                adjustableBoolean);
-			}
-
-			if (initialContents != null) {
-				for (final LispStruct element : initialContents) {
-					if (!element.typep(upgradedET).toJavaPBoolean()) {
-						throw new TypeErrorException(
-								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-					}
-				}
-
-				if (dimensions.length == 0) {
-					return new NILArrayStructImpl(upgradedET,
-					                              initialContents,
-					                              adjustableBoolean);
-				}
-
-				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::toJavaInt)
-				                                          .collect(Collectors.toList());
-				final List<LispStruct> validContents
-						= getValidContents(dimensionInts,
-						                   upgradedET,
-						                   initialContents);
-				return new MultiArrayStructImpl(dimensionInts,
-				                                upgradedET,
-				                                validContents,
-				                                adjustableBoolean);
-			} else {
-				if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
-					throw new TypeErrorException(
-							"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-				}
-
-				if (dimensions.length == 0) {
-					return new NILArrayStructImpl(upgradedET,
-					                              initialElement,
-					                              adjustableBoolean);
-				}
-
-				final List<Integer> dimensionInts = Arrays.stream(dimensions)
-				                                          .map(IntegerStruct::toJavaInt)
-				                                          .collect(Collectors.toList());
-				final int totalSize = dimensionInts.stream()
-				                                   .mapToInt(Integer::intValue)
-				                                   .reduce(1, (x, y) -> x * y);
-				final List<LispStruct> contents
-						= Stream.generate(() -> initialElement)
-						        .limit(totalSize)
-						        .collect(Collectors.toList());
-				return new MultiArrayStructImpl(dimensionInts,
-				                                upgradedET,
-				                                contents,
-				                                adjustableBoolean);
-			}
-		}
-	}
-
-	abstract class AbstractBuilder<AS extends ArrayStruct, ET extends LispStruct, IE extends LispStruct> {
-
-		protected ET elementType;
-		protected IE initialElement;
-		protected SequenceStruct initialContents;
-		protected boolean adjustable;
-		protected ArrayStruct displacedTo;
-		protected IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
-
-		AbstractBuilder(final ET elementType, final IE initialElement) {
-			this.elementType = elementType;
-			this.initialElement = initialElement;
-		}
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> elementType(
-				final ET elementType);
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> initialElement(
-				final IE initialElement);
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> initialContents(
-				final SequenceStruct initialContents);
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> adjustable(
-				final boolean adjustable);
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> fillPointer(
-				final IntegerStruct fillPointer);
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> displacedTo(
-				final ArrayStruct displacedTo);
-
-		public abstract ArrayStruct.AbstractBuilder<AS, ET, IE> displacedIndexOffset(
-				final IntegerStruct displacedIndexOffset);
-
-		public abstract AS build();
 	}
 }

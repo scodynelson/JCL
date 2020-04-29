@@ -5,13 +5,20 @@
 package jcl.functions.reader;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import jcl.lang.BitVectorStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
  * Implements the '#*' Lisp reader macro.
  */
 public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
+
+	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
 	public SharpAsteriskReaderMacroFunction() {
 		super("SHARP-ASTERISK");
@@ -50,7 +59,9 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 		}
 
 		if (!numberArgument.isPresent()) {
-			return BitVectorStruct.toLispBitVector(tokenString);
+			final List<FixnumStruct> contents = getBitList(tokenString);
+			final FixnumStruct size = IntegerStruct.toLispInteger(contents.size());
+			return BitVectorStruct.toLispBitVector(size, contents);
 		}
 
 		final BigInteger numberArgumentValue = numberArgument.get();
@@ -94,7 +105,9 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 		}
 
 		final String bitString = bitStringBuilder.toString();
-		return BitVectorStruct.toLispBitVector(bitString);
+		final List<FixnumStruct> contents = getBitList(bitString);
+		final FixnumStruct size = IntegerStruct.toLispInteger(contents.size());
+		return BitVectorStruct.toLispBitVector(size, contents);
 	}
 
 	/**
@@ -107,5 +120,30 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 	 */
 	private static boolean isInvalidBit(final int value) {
 		return (value != 0) && (value != 1);
+	}
+
+	/**
+	 * Gets a list of {@link IntegerStruct}s from the provided {@link String} value.
+	 *
+	 * @param bitString
+	 * 		the Java string to convert to a list of {@link IntegerStruct}s
+	 *
+	 * @return a list of {@link IntegerStruct}s from the provided {@link String} value
+	 */
+	private static List<FixnumStruct> getBitList(final String bitString) {
+		if (!bitString.isEmpty() && !BIT_PATTERN.matcher(bitString).matches()) {
+			throw new TypeErrorException(
+					"Input contains characters not of type " + CommonLispSymbols.BIT + ": " + bitString + '.');
+		}
+
+		final List<FixnumStruct> bitList = new ArrayList<>(bitString.length());
+		for (final char character : bitString.toCharArray()) {
+			if (character == '0') {
+				bitList.add(IntegerStruct.ZERO);
+			} else if (character == '1') {
+				bitList.add(IntegerStruct.ONE);
+			}
+		}
+		return bitList;
 	}
 }

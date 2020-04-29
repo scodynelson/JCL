@@ -29,9 +29,11 @@ import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.FunctionStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -188,25 +190,43 @@ public interface GenerationConstants {
 
 	String BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME = "toLispBitVector";
 
-	String BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(BitVectorStruct.class, BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME, List.class);
+	String BIT_VECTOR_STRUCT_TO_SIMPLE_BIT_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(BitVectorStruct.class, BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME, IntegerStruct.class, List.class);
+
+	String BIT_VECTOR_STRUCT_TO_COMPLEX_BIT_VECTOR_CONTENTS_METHOD_DESC = CodeGenerators.getMethodDescription(BitVectorStruct.class, BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME, IntegerStruct.class, List.class, BooleanStruct.class, IntegerStruct.class);
+
+	String BIT_VECTOR_STRUCT_TO_COMPLEX_BIT_VECTOR_DISPLACED_METHOD_DESC = CodeGenerators.getMethodDescription(BitVectorStruct.class, BIT_VECTOR_STRUCT_TO_BIT_VECTOR_METHOD_NAME, IntegerStruct.class, ArrayStruct.class, IntegerStruct.class, BooleanStruct.class, IntegerStruct.class);
 
 	String ARRAY_STRUCT_NAME = Type.getInternalName(ArrayStruct.class);
 
 	String ARRAY_STRUCT_TO_ARRAY_METHOD_NAME = "toLispArray";
 
-	String ARRAY_STRUCT_TO_ARRAY_METHOD_DESC = CodeGenerators.getMethodDescription(ArrayStruct.class, ARRAY_STRUCT_TO_ARRAY_METHOD_NAME, List.class, List.class);
+	String ARRAY_STRUCT_TO_SIMPLE_ARRAY_METHOD_DESC = CodeGenerators.getMethodDescription(ArrayStruct.class, ARRAY_STRUCT_TO_ARRAY_METHOD_NAME, List.class, SymbolStruct.class, List.class);
+
+	String ARRAY_STRUCT_TO_COMPLEX_ARRAY_CONTENTS_METHOD_DESC = CodeGenerators.getMethodDescription(ArrayStruct.class, ARRAY_STRUCT_TO_ARRAY_METHOD_NAME, List.class, SymbolStruct.class, List.class, BooleanStruct.class);
+
+	String ARRAY_STRUCT_TO_COMPLEX_ARRAY_DISPLACED_METHOD_DESC = CodeGenerators.getMethodDescription(ArrayStruct.class, ARRAY_STRUCT_TO_ARRAY_METHOD_NAME, List.class, SymbolStruct.class, ArrayStruct.class, IntegerStruct.class, BooleanStruct.class);
 
 	String VECTOR_STRUCT_NAME = Type.getInternalName(VectorStruct.class);
 
 	String VECTOR_STRUCT_TO_VECTOR_METHOD_NAME = "toLispVector";
 
-	String VECTOR_STRUCT_TO_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(VectorStruct.class, VECTOR_STRUCT_TO_VECTOR_METHOD_NAME, List.class);
+	String VECTOR_STRUCT_TO_NIL_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(VectorStruct.class, VECTOR_STRUCT_TO_VECTOR_METHOD_NAME, IntegerStruct.class);
+
+	String VECTOR_STRUCT_TO_SIMPLE_VECTOR_METHOD_DESC = CodeGenerators.getMethodDescription(VectorStruct.class, VECTOR_STRUCT_TO_VECTOR_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, List.class);
+
+	String VECTOR_STRUCT_TO_COMPLEX_VECTOR_CONTENTS_METHOD_DESC = CodeGenerators.getMethodDescription(VectorStruct.class, VECTOR_STRUCT_TO_VECTOR_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, List.class, BooleanStruct.class, IntegerStruct.class);
+
+	String VECTOR_STRUCT_TO_COMPLEX_VECTOR_DISPLACED_METHOD_DESC = CodeGenerators.getMethodDescription(VectorStruct.class, VECTOR_STRUCT_TO_VECTOR_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, ArrayStruct.class, IntegerStruct.class, BooleanStruct.class, IntegerStruct.class);
 
 	String STRING_STRUCT_NAME = Type.getInternalName(StringStruct.class);
 
 	String STRING_STRUCT_TO_LISP_STRING_METHOD_NAME = "toLispString";
 
-	String STRING_STRUCT_TO_LISP_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, String.class);
+	String STRING_STRUCT_TO_SIMPLE_STRING_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, String.class);
+
+	String STRING_STRUCT_TO_COMPLEX_STRING_CONTENTS_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, String.class, BooleanStruct.class, IntegerStruct.class);
+
+	String STRING_STRUCT_TO_COMPLEX_STRING_DISPLACED_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, ArrayStruct.class, IntegerStruct.class, BooleanStruct.class, IntegerStruct.class);
 
 	String JAVA_NAME_STRUCT_NAME = Type.getInternalName(JavaNameStruct.class);
 

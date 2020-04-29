@@ -1,9 +1,9 @@
 description = "JCL Reader"
 
 dependencies {
-	compile(project(":jcl-core"))
+	implementation(project(":jcl-core"))
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	compile("org.slf4j:slf4j-api")
+	implementation("org.slf4j:slf4j-api")
 }

@@ -387,7 +387,7 @@ public interface NumberStruct extends LispStruct {
 	NumberStruct atanh();
 
 	/*
-		LispStruct
+	LISP-STRUCT
 	 */
 
 	@Override
@@ -395,6 +395,11 @@ public interface NumberStruct extends LispStruct {
 		return eq(object) ||
 				((object instanceof NumberStruct)
 						&& ((NumberStruct) object).ap().equals(ap()));
+	}
+
+	@Override
+	default boolean equal(final LispStruct object) {
+		return eql(object);
 	}
 
 	@Override

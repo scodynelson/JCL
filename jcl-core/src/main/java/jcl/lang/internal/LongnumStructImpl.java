@@ -19,7 +19,6 @@ import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.number.QuotientRemainder;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apache.commons.math3.util.FastMath;
@@ -36,7 +35,6 @@ import org.objectweb.asm.Type;
  * The {@link LongnumStructImpl} is the object representation of a Lisp 'bignum' type where the value is representable
  * by a Java {@literal long}.
  */
-@EqualsAndHashCode(callSuper = false)
 public final class LongnumStructImpl extends IntegerStructImpl implements LongnumStruct {
 
 	/**

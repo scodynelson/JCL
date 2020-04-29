@@ -11,25 +11,25 @@ sourceSets {
 }
 
 dependencies {
-	compile(project(":jcl-core"))
-	compile(project(":jcl-compiler"))
-	compile(project(":jcl-reader"))
-	compile(project(":jcl-functions"))
+	implementation(project(":jcl-core"))
+	implementation(project(":jcl-compiler"))
+	implementation(project(":jcl-reader"))
+	implementation(project(":jcl-functions"))
 
-	compile("org.apache.commons:commons-lang3")
+	implementation("org.apache.commons:commons-lang3")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	compile("org.slf4j:slf4j-api")
-	compile("org.springframework.boot:spring-boot")
-	compile("org.springframework.boot:spring-boot-autoconfigure")
-	compile("org.springframework:spring-context")
-	compile("org.springframework:spring-beans")
+	implementation("org.slf4j:slf4j-api")
+	implementation("org.springframework.boot:spring-boot")
+	implementation("org.springframework.boot:spring-boot-autoconfigure")
+	implementation("org.springframework:spring-context")
+	implementation("org.springframework:spring-beans")
 
-	runtime("org.springframework.boot:spring-boot-starter-logging")
+	runtimeOnly("org.springframework.boot:spring-boot-starter-logging")
 
-	runtime fileTree(dir: 'compiled-lisp', include: ['*.jar'])
+	runtimeOnly fileTree(dir: 'compiled-lisp', include: ['*.jar'])
 
-	testCompile("junit:junit")
+	testImplementation("junit:junit")
 }
 
 bootJar {

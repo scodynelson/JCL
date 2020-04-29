@@ -2,8 +2,6 @@ package jcl.lang;
 
 import java.math.BigDecimal;
 
-import jcl.lang.number.DecodeFloatResult;
-
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
  */
@@ -12,7 +10,7 @@ public interface FloatStruct extends RealStruct {
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
 	 *
-	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link LispStruct} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
 	LispStruct decodeFloat();
 
@@ -22,7 +20,7 @@ public interface FloatStruct extends RealStruct {
 	 * IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed for
 	 * the significand to produce an {@link IntegerStruct}.
 	 *
-	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link LispStruct} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
 	LispStruct integerDecodeFloat();
 

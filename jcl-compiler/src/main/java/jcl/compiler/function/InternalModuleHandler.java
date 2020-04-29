@@ -6,7 +6,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
-import jcl.lang.StringEqualityContext;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.statics.CommonLispSymbols;
@@ -64,11 +63,7 @@ public final class InternalModuleHandler {
 		for (final LispStruct module : currentModulesList) {
 			if (module instanceof StringStruct) {
 				final StringStruct currentModule = (StringStruct) module;
-
-				final StringEqualityContext equalityContext
-						= StringEqualityContext.builder(moduleName)
-						                       .build();
-				if (currentModule.stringEqual(equalityContext)) {
+				if (currentModule.stringEqual(moduleName, null, null, null, null).toJavaPBoolean()) {
 					return true;
 				}
 			}

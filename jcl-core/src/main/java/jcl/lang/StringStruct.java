@@ -1,13 +1,10 @@
 package jcl.lang;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.ComplexStringStructImpl;
 import jcl.lang.internal.SimpleStringStructImpl;
-import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**
@@ -18,171 +15,81 @@ public interface StringStruct extends VectorStruct {
 	/**
 	 * Constant representing an empty StringStruct.
 	 */
-	StringStruct EMPTY_STRING = new SimpleStringStructImpl("");
+	StringStruct EMPTY_STRING = new SimpleStringStructImpl(
+			IntegerStruct.ZERO, CommonLispSymbols.CHARACTER, new StringBuilder()
+	);
 
 	/**
-	 * Retrieves the {@link CharacterStruct} at the provided {@link IntegerStruct} index from the structure.
+	 * Returns a new string with the contents upper-cased according to the provided start and end.
 	 *
-	 * @param index
-	 * 		the position of the {@link CharacterStruct} to retrieve
-	 *
-	 * @return the {@link CharacterStruct} at the provided index
-	 */
-	CharacterStruct char_(final IntegerStruct index);
-
-	/**
-	 * Sets the {@link CharacterStruct} at the provided {@link IntegerStruct} index within the structure to the provided
-	 * new {@link CharacterStruct} element.
-	 *
-	 * @param newElement
-	 * 		the new {@link CharacterStruct} to set at the provided index
-	 * @param index
-	 * 		the position to modify and set as the provided new element value
-	 *
-	 * @return the new {@link CharacterStruct} element
-	 */
-	CharacterStruct setfChar(final CharacterStruct newElement, final IntegerStruct index);
-
-	/**
-	 * Retrieves the {@link CharacterStruct} at the provided {@link IntegerStruct} index from the structure, only if the
-	 * structure is a 'simple' string.
-	 *
-	 * @param index
-	 * 		the position of the {@link CharacterStruct} to retrieve
-	 *
-	 * @return the {@link CharacterStruct} at the provided index
-	 */
-	CharacterStruct schar(final IntegerStruct index);
-
-	/**
-	 * Sets the {@link CharacterStruct} at the provided {@link IntegerStruct} index within the structure to the provided
-	 * new {@link CharacterStruct} element, only if the structure is a 'simple' string.
-	 *
-	 * @param newElement
-	 * 		the new {@link CharacterStruct} to set at the provided index
-	 * @param index
-	 * 		the position to modify and set as the provided new element value
-	 *
-	 * @return the new {@link CharacterStruct} element
-	 */
-	CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index);
-
-	default StringStruct stringUpcase(final IntegerStruct start, final IntegerStruct end) {
-		final StringIntervalOpContext context
-				= StringIntervalOpContext.builder()
-				                         .start(start)
-				                         .end(end)
-				                         .build();
-		return stringUpcase(context);
-	}
-
-	/**
-	 * Returns a new string with the contents upper-cased according to the provided {@link StringIntervalOpContext}.
-	 *
-	 * @param context
-	 * 		the interval context for the casing operation, including start and end
+	 * @param start
+	 * 		the starting index of the string casing
+	 * @param end
+	 * 		the ending index of the string casing
 	 *
 	 * @return a new string with the contents upper-cased
 	 */
-	StringStruct stringUpcase(final StringIntervalOpContext context);
-
-	default StringStruct stringDowncase(final IntegerStruct start, final IntegerStruct end) {
-		final StringIntervalOpContext context
-				= StringIntervalOpContext.builder()
-				                         .start(start)
-				                         .end(end)
-				                         .build();
-		return stringDowncase(context);
-	}
+	StringStruct stringUpcase(final IntegerStruct start, final IntegerStruct end);
 
 	/**
-	 * Returns a new string with the contents lower-cased according to the provided {@link StringIntervalOpContext}.
+	 * Returns a new string with the contents lower-cased according to the provided start and end.
 	 *
-	 * @param context
-	 * 		the interval context for the casing operation, including start and end
+	 * @param start
+	 * 		the starting index of the string casing
+	 * @param end
+	 * 		the ending index of the string casing
 	 *
 	 * @return a new string with the contents lower-cased
 	 */
-	StringStruct stringDowncase(final StringIntervalOpContext context);
-
-	default StringStruct stringCapitalize(final IntegerStruct start, final IntegerStruct end) {
-		final StringIntervalOpContext context
-				= StringIntervalOpContext.builder()
-				                         .start(start)
-				                         .end(end)
-				                         .build();
-		return stringCapitalize(context);
-	}
+	StringStruct stringDowncase(final IntegerStruct start, final IntegerStruct end);
 
 	/**
-	 * Returns a new string with the contents capitalized according to the provided {@link StringIntervalOpContext}.
+	 * Returns a new string with the contents capitalized according to the provided start and end.
 	 *
-	 * @param context
-	 * 		the interval context for the casing operation, including start and end
+	 * @param start
+	 * 		the starting index of the string casing
+	 * @param end
+	 * 		the ending index of the string casing
 	 *
 	 * @return a new string with the contents capitalized
 	 */
-	StringStruct stringCapitalize(final StringIntervalOpContext context);
-
-	default StringStruct nStringUpcase(final IntegerStruct start, final IntegerStruct end) {
-		final StringIntervalOpContext context
-				= StringIntervalOpContext.builder()
-				                         .start(start)
-				                         .end(end)
-				                         .build();
-		return nStringUpcase(context);
-	}
+	StringStruct stringCapitalize(final IntegerStruct start, final IntegerStruct end);
 
 	/**
-	 * Destructively modifies this string with the contents upper-cased according to the provided {@link
-	 * StringIntervalOpContext}.
+	 * Destructively modifies this string with the contents upper-cased according to the provided start and end.
 	 *
-	 * @param context
-	 * 		the interval context for the casing operation, including start and end
+	 * @param start
+	 * 		the starting index of the string casing
+	 * @param end
+	 * 		the ending index of the string casing
 	 *
 	 * @return this string with the contents upper-cased
 	 */
-	StringStruct nStringUpcase(final StringIntervalOpContext context);
-
-	default StringStruct nStringDowncase(final IntegerStruct start, final IntegerStruct end) {
-		final StringIntervalOpContext context
-				= StringIntervalOpContext.builder()
-				                         .start(start)
-				                         .end(end)
-				                         .build();
-		return nStringDowncase(context);
-	}
+	StringStruct nStringUpcase(final IntegerStruct start, final IntegerStruct end);
 
 	/**
-	 * Destructively modifies this string with the contents lower-cased according to the provided {@link
-	 * StringIntervalOpContext}.
+	 * Destructively modifies this string with the contents lower-cased according to the provided start and end.
 	 *
-	 * @param context
-	 * 		the interval context for the casing operation, including start and end
+	 * @param start
+	 * 		the starting index of the string casing
+	 * @param end
+	 * 		the ending index of the string casing
 	 *
 	 * @return this string with the contents lower-cased
 	 */
-	StringStruct nStringDowncase(final StringIntervalOpContext context);
-
-	default StringStruct nStringCapitalize(final IntegerStruct start, final IntegerStruct end) {
-		final StringIntervalOpContext context
-				= StringIntervalOpContext.builder()
-				                         .start(start)
-				                         .end(end)
-				                         .build();
-		return nStringCapitalize(context);
-	}
+	StringStruct nStringDowncase(final IntegerStruct start, final IntegerStruct end);
 
 	/**
-	 * Destructively modifies this string with the contents capitalized according to the provided {@link
-	 * StringIntervalOpContext}.
+	 * Destructively modifies this string with the contents capitalized according to the provided start and end.
 	 *
-	 * @param context
-	 * 		the interval context for the casing operation, including start and end
+	 * @param start
+	 * 		the starting index of the string casing
+	 * @param end
+	 * 		the ending index of the string casing
 	 *
 	 * @return this string with the contents capitalized
 	 */
-	StringStruct nStringCapitalize(final StringIntervalOpContext context);
+	StringStruct nStringCapitalize(final IntegerStruct start, final IntegerStruct end);
 
 	/**
 	 * Returns a new string with the characters in the provided character-bag trimmed from the beginning and end of the
@@ -192,7 +99,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the bag of characters to trim from the string
 	 *
 	 * @return and new string with the characters in the provided character-bag trimmed from the beginning and end of
-	 * the string
+	 * 		the string
 	 */
 	StringStruct stringTrim(final SequenceStruct characterBag);
 
@@ -216,330 +123,260 @@ public interface StringStruct extends VectorStruct {
 	 */
 	StringStruct stringRightTrim(final SequenceStruct characterBag);
 
-	default BooleanStruct stringEqual(final StringStruct string2,
-	                                  final IntegerStruct start1,
-	                                  final IntegerStruct end1,
-	                                  final IntegerStruct start2,
-	                                  final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		final boolean result = stringEqual(context);
-		return BooleanStruct.toLispBoolean(result);
-	}
-
 	/**
-	 * Determines equality of strings according to the provided {@link StringEqualityContext}. Case is accounted for.
+	 * Determines equality of strings. Case is accounted for.
 	 *
-	 * @param context
-	 * 		the equality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return T if the strings are equal; NIL otherwise
 	 */
-	boolean stringEqual(final StringEqualityContext context);
-
-	default LispStruct stringNotEqual(final StringStruct string2,
-	                                  final IntegerStruct start1,
-	                                  final IntegerStruct end1,
-	                                  final IntegerStruct start2,
-	                                  final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringNotEqual(context);
-	}
+	BooleanStruct stringEqual(final StringStruct string2,
+	                          final IntegerStruct start1, final IntegerStruct end1,
+	                          final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines inequality of strings according to the provided {@link StringEqualityContext}. Case is accounted for.
+	 * Determines inequality of strings. Case is accounted for.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
 	 */
-	LispStruct stringNotEqual(final StringEqualityContext context);
-
-	default LispStruct stringLessThan(final StringStruct string2,
-	                                  final IntegerStruct start1,
-	                                  final IntegerStruct end1,
-	                                  final IntegerStruct start2,
-	                                  final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringLessThan(context);
-	}
+	LispStruct stringNotEqual(final StringStruct string2,
+	                          final IntegerStruct start1, final IntegerStruct end1,
+	                          final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines less-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
-	 * accounted for.
+	 * Determines less-than inequality of strings. Case is accounted for.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than the second; an {@link IntegerStruct} mismatch index where the
-	 * strings differ otherwise
+	 * 		strings differ otherwise
 	 */
-	LispStruct stringLessThan(final StringEqualityContext context);
-
-	default LispStruct stringGreaterThan(final StringStruct string2,
-	                                     final IntegerStruct start1,
-	                                     final IntegerStruct end1,
-	                                     final IntegerStruct start2,
-	                                     final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringGreaterThan(context);
-	}
+	LispStruct stringLessThan(final StringStruct string2,
+	                          final IntegerStruct start1, final IntegerStruct end1,
+	                          final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines greater-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
-	 * accounted for.
+	 * Determines greater-than inequality of strings. Case is accounted for.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than the second; an {@link IntegerStruct} mismatch index where the
-	 * strings differ otherwise
+	 * 		strings differ otherwise
 	 */
-	LispStruct stringGreaterThan(final StringEqualityContext context);
-
-	default LispStruct stringLessThanOrEqualTo(final StringStruct string2,
-	                                           final IntegerStruct start1,
-	                                           final IntegerStruct end1,
-	                                           final IntegerStruct start2,
-	                                           final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringLessThanOrEqualTo(context);
-	}
+	LispStruct stringGreaterThan(final StringStruct string2,
+	                             final IntegerStruct start1, final IntegerStruct end1,
+	                             final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines less-than-or-equal-to inequality of strings according to the provided {@link StringEqualityContext}.
-	 * Case is accounted for.
+	 * Determines less-than-or-equal-to inequality of strings. Case is accounted for.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * where the strings differ otherwise
+	 * 		where the strings differ otherwise
 	 */
-	LispStruct stringLessThanOrEqualTo(final StringEqualityContext context);
-
-	default LispStruct stringGreaterThanOrEqualTo(final StringStruct string2,
-	                                              final IntegerStruct start1,
-	                                              final IntegerStruct end1,
-	                                              final IntegerStruct start2,
-	                                              final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringGreaterThanOrEqualTo(context);
-	}
+	LispStruct stringLessThanOrEqualTo(final StringStruct string2,
+	                                   final IntegerStruct start1, final IntegerStruct end1,
+	                                   final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines greater-than-or-equal-to inequality of strings according to the provided {@link
-	 * StringEqualityContext}. Case is accounted for.
+	 * Determines greater-than-or-equal-to inequality of strings. Case is accounted for.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * where the strings differ otherwise
+	 * 		where the strings differ otherwise
 	 */
-	LispStruct stringGreaterThanOrEqualTo(final StringEqualityContext context);
-
-	default BooleanStruct stringEqualIgnoreCase(final StringStruct string2,
-	                                            final IntegerStruct start1,
-	                                            final IntegerStruct end1,
-	                                            final IntegerStruct start2,
-	                                            final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		final boolean result = stringEqualIgnoreCase(context);
-		return BooleanStruct.toLispBoolean(result);
-	}
+	LispStruct stringGreaterThanOrEqualTo(final StringStruct string2,
+	                                      final IntegerStruct start1, final IntegerStruct end1,
+	                                      final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines equality of strings according to the provided {@link StringEqualityContext}. Case is ignored.
+	 * Determines equality of strings. Case is ignored.
 	 *
-	 * @param context
-	 * 		the equality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return T if the strings are equal; NIL otherwise
 	 */
-	boolean stringEqualIgnoreCase(final StringEqualityContext context);
-
-	default LispStruct stringNotEqualIgnoreCase(final StringStruct string2,
-	                                            final IntegerStruct start1,
-	                                            final IntegerStruct end1,
-	                                            final IntegerStruct start2,
-	                                            final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringNotEqualIgnoreCase(context);
-	}
+	BooleanStruct stringEqualIgnoreCase(final StringStruct string2,
+	                                    final IntegerStruct start1, final IntegerStruct end1,
+	                                    final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines inequality of strings according to the provided {@link StringEqualityContext}. Case is ignored.
+	 * Determines inequality of strings. Case is ignored.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
 	 */
-	LispStruct stringNotEqualIgnoreCase(final StringEqualityContext context);
-
-	default LispStruct stringLessThanIgnoreCase(final StringStruct string2,
-	                                            final IntegerStruct start1,
-	                                            final IntegerStruct end1,
-	                                            final IntegerStruct start2,
-	                                            final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringLessThanIgnoreCase(context);
-	}
+	LispStruct stringNotEqualIgnoreCase(final StringStruct string2,
+	                                    final IntegerStruct start1, final IntegerStruct end1,
+	                                    final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines less-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
-	 * ignored.
+	 * Determines less-than inequality of strings. Case is ignored.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than the second; an {@link IntegerStruct} mismatch index where the
-	 * strings differ otherwise
+	 * 		strings differ otherwise
 	 */
-	LispStruct stringLessThanIgnoreCase(final StringEqualityContext context);
-
-	default LispStruct stringGreaterThanIgnoreCase(final StringStruct string2,
-	                                               final IntegerStruct start1,
-	                                               final IntegerStruct end1,
-	                                               final IntegerStruct start2,
-	                                               final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringGreaterThanIgnoreCase(context);
-	}
+	LispStruct stringLessThanIgnoreCase(final StringStruct string2,
+	                                    final IntegerStruct start1, final IntegerStruct end1,
+	                                    final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines greater-than inequality of strings according to the provided {@link StringEqualityContext}. Case is
-	 * ignored.
+	 * Determines greater-than inequality of strings}. Case is ignored.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than the second; an {@link IntegerStruct} mismatch index where the
-	 * strings differ otherwise
+	 * 		strings differ otherwise
 	 */
-	LispStruct stringGreaterThanIgnoreCase(final StringEqualityContext context);
-
-	default LispStruct stringLessThanOrEqualToIgnoreCase(final StringStruct string2,
-	                                                     final IntegerStruct start1,
-	                                                     final IntegerStruct end1,
-	                                                     final IntegerStruct start2,
-	                                                     final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringLessThanOrEqualToIgnoreCase(context);
-	}
+	LispStruct stringGreaterThanIgnoreCase(final StringStruct string2,
+	                                       final IntegerStruct start1, final IntegerStruct end1,
+	                                       final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines less-than-or-equal-to inequality of strings according to the provided {@link StringEqualityContext}.
-	 * Case is ignored.
+	 * Determines less-than-or-equal-to inequality of strings. Case is ignored.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * where the strings differ otherwise
+	 * 		where the strings differ otherwise
 	 */
-	LispStruct stringLessThanOrEqualToIgnoreCase(final StringEqualityContext context);
-
-	default LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringStruct string2,
-	                                                        final IntegerStruct start1,
-	                                                        final IntegerStruct end1,
-	                                                        final IntegerStruct start2,
-	                                                        final IntegerStruct end2) {
-		final StringEqualityContext context =
-				StringEqualityContext.builder(string2)
-				                     .start1(start1)
-				                     .end1(end1)
-				                     .start2(start2)
-				                     .end2(end2)
-				                     .build();
-		return stringGreaterThanOrEqualToIgnoreCase(context);
-	}
+	LispStruct stringLessThanOrEqualToIgnoreCase(final StringStruct string2,
+	                                             final IntegerStruct start1, final IntegerStruct end1,
+	                                             final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
-	 * Determines greater-than-or-equal-to inequality of strings according to the provided {@link
-	 * StringEqualityContext}. Case is ignored.
+	 * Determines greater-than-or-equal-to inequality of strings. Case is ignored.
 	 *
-	 * @param context
-	 * 		the inequality context for the equality operation, including the comparison string, start, and end
+	 * @param string2
+	 * 		the string to compare to
+	 * @param start1
+	 * 		the starting index of the first string in the comparison
+	 * @param end1
+	 * 		the ending index of the first string in the comparison
+	 * @param start2
+	 * 		the starting index of the second string in the comparison
+	 * @param end2
+	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * where the strings differ otherwise
+	 * 		where the strings differ otherwise
 	 */
-	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringEqualityContext context);
+	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringStruct string2,
+	                                                final IntegerStruct start1, final IntegerStruct end1,
+	                                                final IntegerStruct start2, final IntegerStruct end2);
 
 	/**
 	 * Returns whether or not the String is a 'simple' string.
 	 *
 	 * @return true if the String is a 'simple' string; false otherwise
 	 */
-	boolean isSimpleString();
+	BooleanStruct isSimpleString();
 
 	/**
 	 * Returns the {@link String} representation of the StringStruct.
@@ -577,9 +414,92 @@ public interface StringStruct extends VectorStruct {
 	 * @return a new StringStruct representation of the provided {@link String}
 	 */
 	static StringStruct toLispString(final String str) {
-		return new SimpleStringStructImpl(str);
+		final IntegerStruct size = IntegerStruct.toLispInteger(str.length());
+		final StringBuilder contents = new StringBuilder(str);
+		return new SimpleStringStructImpl(size, CommonLispSymbols.CHARACTER, contents);
 	}
 
+	/**
+	 * Returns a new StringStruct representation of the provided size, element-type, and contents.
+	 *
+	 * @param size
+	 * 		the string size
+	 * @param elementType
+	 * 		the string elementType
+	 * @param contents
+	 * 		the string contents
+	 *
+	 * @return a new StringStruct representation of the provided size, element-type, and contents
+	 */
+	static StringStruct toLispString(final IntegerStruct size, final SymbolStruct elementType,
+	                                 final String contents) {
+		return new SimpleStringStructImpl(size, elementType, new StringBuilder(contents));
+	}
+
+	/**
+	 * Returns a new StringStruct representation of the provided size, element-type, contents, adjustable, and
+	 * fillPointer.
+	 *
+	 * @param size
+	 * 		the string size
+	 * @param contents
+	 * 		the string contents
+	 * @param elementType
+	 * 		the string elementType
+	 * @param adjustable
+	 * 		whether or not the string is adjustable
+	 * @param fillPointer
+	 * 		the string fillPointer
+	 *
+	 * @return a new StringStruct representation of the provided size, element-type, contents, adjustable, and fillPointer
+	 */
+	static StringStruct toLispString(final IntegerStruct size, final SymbolStruct elementType,
+	                                 final String contents, final BooleanStruct adjustable,
+	                                 final IntegerStruct fillPointer) {
+		final BooleanStruct realAdjustable = (adjustable == null) ? NILStruct.INSTANCE : adjustable;
+		return new ComplexStringStructImpl(size, elementType, new StringBuilder(contents), realAdjustable, fillPointer);
+	}
+
+	/**
+	 * Returns a new StringStruct representation of the provided size, element-type, displacedTo, displacedIndexOffset,
+	 * adjustable, and fillPointer.
+	 *
+	 * @param size
+	 * 		the string size
+	 * @param displacedTo
+	 * 		the array structure that this array structure will be displaced to for content values
+	 * @param displacedIndexOffset
+	 * 		the offset of the index lookup for the content value into the displaced array structure
+	 * @param elementType
+	 * 		the string elementType
+	 * @param adjustable
+	 * 		whether or not the string is adjustable
+	 * @param fillPointer
+	 * 		the string fillPointer
+	 *
+	 * @return a new StringStruct representation of the provided size, element-type, displacedTo, displacedIndexOffset,
+	 * 		adjustable, and fillPointer
+	 */
+	static VectorStruct toLispString(final IntegerStruct size, final SymbolStruct elementType,
+	                                 final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
+	                                 final BooleanStruct adjustable, final IntegerStruct fillPointer) {
+		final BooleanStruct realAdjustable = (adjustable == null) ? NILStruct.INSTANCE : adjustable;
+		return new ComplexStringStructImpl(
+				size, elementType, displacedTo, displacedIndexOffset, realAdjustable, fillPointer
+		);
+	}
+
+	/**
+	 * Returns a new StringStruct representation of the provided {@link LispStruct}.
+	 *
+	 * @param lispStruct
+	 * 		a {@link LispStruct} that can be represented as a string
+	 *
+	 * @return a new StringStruct representation of the provided {@link LispStruct}
+	 *
+	 * @throws TypeErrorException
+	 * 		if the provided @link LispStruct} cannot be converted to a string
+	 */
 	static StringStruct toLispString(final LispStruct lispStruct) {
 		if (lispStruct instanceof StringStruct) {
 			return (StringStruct) lispStruct;
@@ -595,41 +515,43 @@ public interface StringStruct extends VectorStruct {
 		}
 	}
 
-	static StringStruct makeString(final IntegerStruct size, final CharacterStruct initialElement,
-	                               final SymbolStruct elementType) {
-		final StringStruct.Builder builder = builder(size);
-
-		builder.initialElement(initialElement);
-
-		// TODO: elementType currently ignored!!
-		final LispStruct characterType = CommonLispSymbols.CHARACTER;
-		builder.elementType(characterType);
-
-		return builder.build();
-	}
-
 	/**
-	 * Returns a new {@link StringStruct.Builder} to be used in constructing a new StringStruct.
+	 * Returns a simple string of length size whose elements have been initialized to initial-element.
+	 * <p>
+	 * The element-type names the type of the elements of the string; a string is constructed of the most specialized
+	 * type that can accommodate elements of the given type.
 	 *
 	 * @param size
-	 * 		the expected size of the resulting StringStruct from the builder operation
+	 * 		the size of the string to make
+	 * @param initialElement
+	 * 		a character to initialize the string
+	 * @param elementType
+	 * 		the element-type of the string
 	 *
-	 * @return a new {@link StringStruct.Builder} to be used in constructing a new StringStruct
+	 * @return a simple string of length size whose elements have been initialized to initial-element
 	 */
-	static StringStruct.Builder builder(final IntegerStruct size) {
-		return new StringStruct.Builder(size);
+	static StringStruct makeString(final IntegerStruct size, final CharacterStruct initialElement,
+	                               final SymbolStruct elementType) {
+		final LispStruct characterType = ArrayStruct.upgradedArrayElementType(elementType);
+
+		final StringBuilder contents = Stream.generate(() -> initialElement)
+		                                     .limit(size.toJavaInt())
+		                                     .mapToInt(CharacterStruct::toUnicodeCodePoint)
+		                                     .collect(StringBuilder::new,
+		                                              StringBuilder::appendCodePoint,
+		                                              StringBuilder::append);
+		return new SimpleStringStructImpl(size, characterType, contents);
 	}
-
-	/*
-	ARRAY-STRUCT
-	 */
-
-	@Override
-	StringStruct adjustArray(final AdjustArrayContext context);
 
 	/*
 	SEQUENCE-STRUCT
 	 */
+
+	@Override
+	CharacterStruct elt(final IntegerStruct index);
+
+	@Override
+	CharacterStruct setfElt(final LispStruct newElement, final IntegerStruct index);
 
 	@Override
 	StringStruct reverse();
@@ -648,20 +570,18 @@ public interface StringStruct extends VectorStruct {
 		}
 		if (object instanceof StringStruct) {
 			final StringStruct string = (StringStruct) object;
-			if (!length().eql(string.length())) {
+
+			final IntegerStruct thisLength = length();
+			if (!thisLength.eql(string.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().toJavaInt(); i++) {
+			for (int i = 0; i < thisLength.toJavaInt(); i++) {
 				final IntegerStruct index = IntegerStruct.toLispInteger(i);
-				if (!char_(index).equal(string.char_(index))) {
+				if (!rowMajorAref(index).equal(string.rowMajorAref(index))) {
 					return false;
 				}
 			}
 			return true;
-		}
-		if (object instanceof ArrayStruct) {
-			// TODO: NILArray
-			return object.equal(this);
 		}
 		return false;
 	}
@@ -673,12 +593,14 @@ public interface StringStruct extends VectorStruct {
 		}
 		if (object instanceof StringStruct) {
 			final StringStruct string = (StringStruct) object;
-			if (!length().eql(string.length())) {
+
+			final IntegerStruct thisLength = length();
+			if (!thisLength.eql(string.length())) {
 				return false;
 			}
-			for (int i = 0; i < length().toJavaInt(); i++) {
+			for (int i = 0; i < thisLength.toJavaInt(); i++) {
 				final IntegerStruct index = IntegerStruct.toLispInteger(i);
-				if (!char_(index).equalp(string.char_(index))) {
+				if (!rowMajorAref(index).equalp(string.rowMajorAref(index))) {
 					return false;
 				}
 			}
@@ -687,156 +609,9 @@ public interface StringStruct extends VectorStruct {
 		if (object instanceof BitVectorStruct) {
 			return false;
 		}
-		if (object instanceof ArrayStruct) {
+		if (object instanceof VectorStruct) {
 			return object.equalp(this);
 		}
 		return false;
-	}
-
-	/**
-	 * Builder factory for creating {@link StringStruct} objects.
-	 */
-	final class Builder extends ArrayStruct.AbstractBuilder<StringStruct, LispStruct, CharacterStruct> {
-
-		/**
-		 * The size of the resulting {@link StringStruct}.
-		 */
-		private final IntegerStruct size;
-
-		/**
-		 * The fill-pointer value of the resulting {@link StringStruct}.
-		 */
-		private IntegerStruct fillPointer;
-
-		/**
-		 * Private constructor.
-		 *
-		 * @param size
-		 * 		the expected size of the resulting {@link StringStruct}
-		 */
-		private Builder(final IntegerStruct size) {
-			super(CommonLispSymbols.CHARACTER, CharacterConstants.NULL_CHAR);
-			this.size = size;
-		}
-
-		@Override
-		public StringStruct.Builder elementType(final LispStruct elementType) {
-			this.elementType = elementType;
-			return this;
-		}
-
-		@Override
-		public StringStruct.Builder initialElement(final CharacterStruct initialElement) {
-			this.initialElement = initialElement;
-			return this;
-		}
-
-		@Override
-		public StringStruct.Builder initialContents(final SequenceStruct initialContents) {
-			this.initialContents = initialContents;
-			return this;
-		}
-
-		@Override
-		public StringStruct.Builder adjustable(final boolean adjustable) {
-			this.adjustable = adjustable;
-			return this;
-		}
-
-		@Override
-		public StringStruct.Builder fillPointer(final IntegerStruct fillPointer) {
-			this.fillPointer = fillPointer;
-			return this;
-		}
-
-		@Override
-		public StringStruct.Builder displacedTo(final ArrayStruct displacedTo) {
-			this.displacedTo = displacedTo;
-			return this;
-		}
-
-		@Override
-		public StringStruct.Builder displacedIndexOffset(final IntegerStruct displacedIndexOffset) {
-			this.displacedIndexOffset = displacedIndexOffset;
-			return this;
-		}
-
-		@Override
-		public StringStruct build() {
-			final int sizeInt = size.toJavaInt();
-			final LispStruct upgradedET = ArrayStruct.upgradedArrayElementType(elementType);
-			final boolean adjustableBoolean = adjustable;
-			final Integer fillPointerInt = (fillPointer == null) ? null : fillPointer.toJavaInt();
-
-			if (displacedTo != null) {
-				final LispStruct displacedToType = displacedTo.arrayElementType();
-				if (!upgradedET.eq(displacedToType)) {
-					throw new TypeErrorException(
-							"Provided displaced to " + displacedTo + " is not an array with a subtype of the upgraded-array-element-type " + upgradedET + '.');
-				}
-				// Check displaced index
-				displacedTo.rowMajorAref(displacedIndexOffset);
-
-				return new ComplexStringStructImpl(sizeInt,
-				                                   upgradedET,
-				                                   displacedTo,
-				                                   displacedIndexOffset.toJavaInt(),
-				                                   adjustableBoolean,
-				                                   fillPointerInt);
-			}
-
-			if (initialContents != null) {
-				for (final LispStruct element : initialContents) {
-					if (!element.typep(upgradedET).toJavaPBoolean()) {
-						throw new TypeErrorException(
-								"Provided element " + element + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-					}
-				}
-
-				final List<CharacterStruct> validContents
-						= ArrayStruct.getValidContents(Collections.singletonList(sizeInt),
-						                               upgradedET,
-						                               initialContents);
-
-				final StringBuilder contents = validContents.stream()
-				                                            .mapToInt(CharacterStruct::toUnicodeCodePoint)
-				                                            .collect(StringBuilder::new,
-				                                                     StringBuilder::appendCodePoint,
-				                                                     StringBuilder::append);
-				if ((fillPointerInt == null) && !adjustableBoolean) {
-					return new SimpleStringStructImpl(sizeInt,
-					                                  CommonLispSymbols.CHARACTER,
-					                                  contents);
-				}
-				return new ComplexStringStructImpl(sizeInt,
-				                                   CommonLispSymbols.CHARACTER,
-				                                   contents,
-				                                   adjustableBoolean,
-				                                   fillPointerInt);
-			}
-
-			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
-				// NOTE: This should never get hit due to the implementation of array-upgraded-element-type
-				throw new TypeErrorException(
-						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-			}
-
-			final StringBuilder contents = Stream.generate(() -> initialElement)
-			                                     .limit(sizeInt)
-			                                     .mapToInt(CharacterStruct::toUnicodeCodePoint)
-			                                     .collect(StringBuilder::new,
-			                                              StringBuilder::appendCodePoint,
-			                                              StringBuilder::append);
-			if ((fillPointerInt == null) && !adjustableBoolean) {
-				return new SimpleStringStructImpl(sizeInt,
-				                                  CommonLispSymbols.CHARACTER,
-				                                  contents);
-			}
-			return new ComplexStringStructImpl(sizeInt,
-			                                   CommonLispSymbols.CHARACTER,
-			                                   contents,
-			                                   adjustableBoolean,
-			                                   fillPointerInt);
-		}
 	}
 }

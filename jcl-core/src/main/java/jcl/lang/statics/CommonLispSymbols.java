@@ -825,7 +825,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SIMPLE_CONDITION_FORMAT_ARGUMENTS = null;
 	SymbolStruct SIMPLE_CONDITION_FORMAT_CONTROL = null;
 	SymbolStruct SIMPLE_ERROR = null;
-	SymbolStruct SIMPLE_STRING = null;
+	SymbolStruct SIMPLE_STRING = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-STRING").getSymbol();
 	SymbolStruct SIMPLE_STRING_P = GlobalPackageStruct.COMMON_LISP.intern("SIMPLE-STRING-P").getSymbol();
 	SymbolStruct SIMPLE_TYPE_ERROR = null;
 	SymbolStruct SIMPLE_VECTOR = null;
@@ -865,7 +865,7 @@ public interface CommonLispSymbols {
 	SymbolStruct STREAM_ERROR_STREAM = null;
 	SymbolStruct STREAM_EXTERNAL_FORMAT = null;
 	SymbolStruct STREAMP = GlobalPackageStruct.COMMON_LISP.intern("STREAMP").getSymbol();
-	SymbolStruct STRING = null;
+	SymbolStruct STRING = GlobalPackageStruct.COMMON_LISP.intern("STRING").getSymbol();
 	SymbolStruct STRING_CAPITALIZE = null;
 	SymbolStruct STRING_DOWNCASE = null;
 	SymbolStruct STRING_EQUAL = null;
@@ -1105,6 +1105,8 @@ public interface CommonLispSymbols {
 	SymbolStruct JINVOKE_STATIC = GlobalPackageStruct.EXTENSIONS.intern("JINVOKE-STATIC").getSymbol();
 	SymbolStruct JMETHOD = GlobalPackageStruct.EXTENSIONS.intern("JMETHOD").getSymbol();
 	SymbolStruct JNEW = GlobalPackageStruct.EXTENSIONS.intern("JNEW").getSymbol();
+
+	SymbolStruct NIL_VECTOR = GlobalPackageStruct.EXTENSIONS.intern("NIL-VECTOR").getSymbol();
 
 	SymbolStruct WHITESPACEP = GlobalPackageStruct.EXTENSIONS.intern("WHITESPACEP").getSymbol();
 

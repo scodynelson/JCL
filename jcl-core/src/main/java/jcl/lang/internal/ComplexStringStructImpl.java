@@ -1,25 +1,28 @@
 package jcl.lang.internal;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 
-import jcl.lang.AdjustArrayContext;
+import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.ArrayStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.SequenceStruct;
-import jcl.lang.StringIntervalOpContext;
 import jcl.lang.StringStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.classes.BuiltInClassStruct;
+import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.readtable.SyntaxType;
@@ -27,13 +30,13 @@ import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
 import jcl.lang.statics.ReaderVariables;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * The {@link ComplexStringStructImpl} is the object representation of a Lisp 'string' type.
  */
 public final class ComplexStringStructImpl extends AbstractStringStructImpl {
-
-//	private CharSeq charSeq;
 
 	/**
 	 * {@link StringBuilder} containing the implementation contents of the {@link StringStruct}.
@@ -43,12 +46,12 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	/**
 	 * The fill-pointer for designating how many elements are available to be seen or consumed by certain functions.
 	 */
-	private Integer fillPointer;
+	private IntegerStruct fillPointer;
 
 	/**
 	 * Whether or not the {@link StringStruct} is adjustable.
 	 */
-	private boolean adjustable;
+	private BooleanStruct adjustable;
 
 	/**
 	 * The {@link ArrayStruct} structure that this {@link StringStruct} is displaced to. If {@code null}, this structure
@@ -59,10 +62,10 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	/**
 	 * The index offset into the {@link #displacedTo} structure when looking for or updating elements.
 	 */
-	private Integer displacedIndexOffset;
+	private IntegerStruct displacedIndexOffset;
 
 	/**
-	 * Constructor for creating a new instance.
+	 * Public constructor, initializing the size, element-type, contents, adjustable, and fillPointer.
 	 *
 	 * @param size
 	 * 		the size of the structure
@@ -75,16 +78,17 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @param fillPointer
 	 * 		the fill-pointer value of the structure
 	 */
-	public ComplexStringStructImpl(final Integer size, final LispStruct elementType, final StringBuilder contents,
-	                               final boolean adjustable, final Integer fillPointer) {
+	public ComplexStringStructImpl(final IntegerStruct size, final LispStruct elementType, final StringBuilder contents,
+	                               final BooleanStruct adjustable, final IntegerStruct fillPointer) {
 		super(elementType, size);
-		this.contents = contents;
 		this.fillPointer = fillPointer;
 		this.adjustable = adjustable;
+		this.contents = contents;
 	}
 
 	/**
-	 * Constructor for creating a new instance.
+	 * Public constructor, initializing the size, element-type, displacedTo, displacedIndexOffset, adjustable, and
+	 * fillPointer.
 	 *
 	 * @param size
 	 * 		the size of the structure
@@ -99,14 +103,14 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @param fillPointer
 	 * 		the fill-pointer value of the structure
 	 */
-	public ComplexStringStructImpl(final Integer size, final LispStruct elementType,
-	                               final ArrayStruct displacedTo, final Integer displacedIndexOffset,
-	                               final boolean adjustable, final Integer fillPointer) {
+	public ComplexStringStructImpl(final IntegerStruct size, final LispStruct elementType,
+	                               final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
+	                               final BooleanStruct adjustable, final IntegerStruct fillPointer) {
 		super(elementType, size);
-		this.displacedTo = displacedTo;
-		this.displacedIndexOffset = displacedIndexOffset;
 		this.fillPointer = fillPointer;
 		this.adjustable = adjustable;
+		this.displacedTo = displacedTo;
+		this.displacedIndexOffset = displacedIndexOffset;
 	}
 
 	/*
@@ -114,51 +118,13 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 */
 
 	@Override
-	protected CharacterStruct charInternal(final int index) {
-		if (displacedTo == null) {
-			try {
-				final char character = contents.charAt(index);
-				return CharacterStruct.toLispCharacter(character);
-			} catch (final StringIndexOutOfBoundsException ignored) {
-				// This is here for when the 'totalSize' is more than the contents.
-				// Typically will only happen with adjusted strings.
-				return CharacterConstants.NULL_CHAR;
-			}
-		}
-
-		final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset + index);
-		return (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
-	}
-
-	@Override
-	protected CharacterStruct setfCharInternal(final CharacterStruct newElement, final int index) {
-		if (displacedTo == null) {
-			final char character = newElement.toJavaChar();
-			contents.setCharAt(index, character);
-		} else {
-			final IntegerStruct indexToSet = IntegerStruct.toLispInteger(displacedIndexOffset + index);
-			displacedTo.setfRowMajorAref(newElement, indexToSet);
-		}
-		return newElement;
-	}
-
-	@Override
-	public CharacterStruct schar(final IntegerStruct index) {
-		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + CommonLispSymbols.SIMPLE_STRING + '.');
-	}
-
-	@Override
-	public CharacterStruct setfSchar(final CharacterStruct newElement, final IntegerStruct index) {
-		throw new TypeErrorException(
-				"The value " + this + " is not of the expected type " + CommonLispSymbols.SIMPLE_STRING + '.');
-	}
-
-	@Override
 	protected StringStruct nCasifyString(final StringIntervalOpContext context,
 	                                     final Function<String, String> casifyOp) {
-		final int startInt = getStringOpStart(this, context);
-		final int endInt = getStringOpEnd(this, context, startInt);
+		final IntegerStruct start = getStringOpStart(this, context);
+		final IntegerStruct end = getStringOpEnd(this, context, start);
+
+		final int startInt = start.toJavaInt();
+		final int endInt = end.toJavaInt();
 
 		if (displacedTo == null) {
 			String str = contents.substring(startInt, endInt);
@@ -167,7 +133,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		} else {
 			final StringBuilder builder = new StringBuilder();
 			for (int index = startInt; index < endInt; index++) {
-				final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset + index);
+				// TODO: Check Casting
+				final IntegerStruct indexToGet = (IntegerStruct) displacedIndexOffset.add(IntegerStruct.toLispInteger(index));
 				final CharacterStruct character = (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
 				builder.appendCodePoint(character.toUnicodeCodePoint());
 			}
@@ -178,7 +145,9 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			for (int updateIndex = startInt, stringIndex = 0;
 			     updateIndex < endInt;
 			     updateIndex++, stringIndex++) {
-				final IntegerStruct indexToSet = IntegerStruct.toLispInteger(displacedIndexOffset + updateIndex);
+				// TODO: Check Casting
+				final IntegerStruct indexToSet = (IntegerStruct) displacedIndexOffset.add(
+						IntegerStruct.toLispInteger(updateIndex));
 				final char c = str.charAt(stringIndex);
 				final CharacterStruct character = CharacterStruct.toLispCharacter(c);
 				displacedTo.setfRowMajorAref(character, indexToSet);
@@ -188,8 +157,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	public boolean isSimpleString() {
-		return false;
+	public BooleanStruct isSimpleString() {
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
@@ -204,7 +173,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			return getDisplacedToAsJavaString(ignoreFillPointer);
 		}
 		if (!ignoreFillPointer && (fillPointer != null)) {
-			return contents.substring(0, fillPointer);
+			return contents.substring(0, fillPointer.toJavaInt());
 		}
 		return contents.toString();
 	}
@@ -219,19 +188,18 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 * @return a {@link String} representation of the displaced string
 	 */
 	private String getDisplacedToAsJavaString(final boolean ignoreFillPointer) {
-		final int size = (!ignoreFillPointer && (fillPointer != null)) ? fillPointer : totalSize;
+		final int size = (!ignoreFillPointer && (fillPointer != null))
+		                 ? fillPointer.toJavaInt()
+		                 : totalSize.toJavaInt();
 		final StringBuilder builder = new StringBuilder();
 		for (int index = 0; index < size; index++) {
-			final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset + index);
+			// TODO: Check Casting
+			final IntegerStruct indexToGet = (IntegerStruct) displacedIndexOffset.add(
+					IntegerStruct.toLispInteger(index));
 			final CharacterStruct character = (CharacterStruct) displacedTo.rowMajorAref(indexToGet);
 			builder.appendCodePoint(character.toUnicodeCodePoint());
 		}
 		return builder.toString();
-	}
-
-	@Override
-	protected int getObservedLength() {
-		return (fillPointer == null) ? totalSize : fillPointer;
 	}
 
 	/*
@@ -243,18 +211,17 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		if (fillPointer == null) {
 			throw new TypeErrorException("STRING has no fill-pointer to retrieve.");
 		}
-		return IntegerStruct.toLispInteger(fillPointer);
+		return fillPointer;
 	}
 
 	@Override
 	public IntegerStruct setfFillPointer(final IntegerStruct fillPointer) {
-		final int intValue = fillPointer.toJavaInt();
-		if ((intValue < 0) || (intValue > totalSize)) {
+		if (fillPointer.isLessThan(IntegerStruct.ZERO) || fillPointer.isGreaterThan(totalSize)) {
 			throw new ErrorException(
 					"Fill-pointer " + fillPointer + " value is out of bounds for STRING with size " + totalSize + '.');
 		}
 
-		this.fillPointer = intValue;
+		this.fillPointer = fillPointer;
 		return fillPointer;
 	}
 
@@ -263,61 +230,82 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot pop from a STRING with no fill-pointer.");
 		}
-		if (fillPointer == 0) {
+		if (fillPointer.eql(IntegerStruct.ZERO)) {
 			throw new ErrorException("Nothing left to pop.");
 		}
 
-		return charInternal(--fillPointer);
+		final IntegerStruct formerFillPointer = fillPointer;
+		fillPointer = (IntegerStruct) formerFillPointer.subtract(IntegerStruct.ONE);
+
+		if (displacedTo == null) {
+			return getCharacterFromContents(formerFillPointer);
+		} else {
+			final IntegerStruct indexToGet = (IntegerStruct) displacedIndexOffset.add(formerFillPointer);
+			final LispStruct element = displacedTo.rowMajorAref(indexToGet);
+			return getCharacter(element);
+		}
 	}
 
 	@Override
 	public LispStruct vectorPush(final LispStruct newElement) {
-		if (!(newElement instanceof CharacterStruct)) {
-			throw new TypeErrorException(newElement + " is not a character type.");
-		}
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push into a STRING with no fill-pointer.");
 		}
-		if (fillPointer >= totalSize) {
+		if (fillPointer.isGreaterThanOrEqualTo(totalSize)) {
 			return NILStruct.INSTANCE;
 		}
+		final CharacterStruct newCharacterValue = getCharacter(newElement);
 
-		final Integer formerFillPointer = fillPointer++;
-		setfCharInternal((CharacterStruct) newElement, formerFillPointer);
-		return IntegerStruct.toLispInteger(formerFillPointer);
+		final IntegerStruct formerFillPointer = fillPointer;
+		fillPointer = (IntegerStruct) formerFillPointer.add(IntegerStruct.ONE);
+
+		if (displacedTo == null) {
+			contents.setCharAt(formerFillPointer.toJavaInt(), newCharacterValue.toJavaChar());
+		} else {
+			final IntegerStruct indexToSet = (IntegerStruct) displacedIndexOffset.add(formerFillPointer);
+			displacedTo.setfRowMajorAref(newCharacterValue, indexToSet);
+		}
+		return formerFillPointer;
 	}
 
 	@Override
-	public IntegerStruct vectorPushExtend(final LispStruct newElement,
-	                                      final IntegerStruct extension) {
-		if (!(newElement instanceof CharacterStruct)) {
-			throw new TypeErrorException(newElement + " is not a character type.");
-		}
+	public IntegerStruct vectorPushExtend(final LispStruct newElement, final IntegerStruct extension) {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Cannot push or extend a STRING with no fill-pointer.");
 		}
-		if (fillPointer >= totalSize) {
-			if (!adjustable) {
-				throw new TypeErrorException("VECTOR would be extended and is not adjustable.");
+		if (fillPointer.isGreaterThanOrEqualTo(totalSize)) {
+			if (!adjustable.toJavaPBoolean()) {
+				throw new TypeErrorException("STRING would be extended and is not adjustable.");
 			}
+
+			final int totalSizeInt = totalSize.toJavaInt();
+			final int realExtension = Math.max(extension.toJavaInt(), totalSizeInt);
+			final int newTotalSize = totalSizeInt + realExtension;
+
 			if (displacedTo == null) {
-				final int currentContentSize = contents.length();
-				contents.ensureCapacity(currentContentSize + extension.toJavaInt());
-				contents.setLength(currentContentSize + 1);
+				contents.setLength(newTotalSize);
 			} else {
 				final String displacedContents = getDisplacedToAsJavaString(false);
-				contents = new StringBuilder(displacedContents.length() + extension.toJavaInt());
-				contents.append(displacedContents);
-				contents.setLength(contents.length() + 1);
+				contents = new StringBuilder(displacedContents);
+				contents.setLength(newTotalSize);
 
 				displacedTo = null;
 				displacedIndexOffset = null;
 			}
+			totalSize = IntegerStruct.toLispInteger(newTotalSize);
 		}
+		final CharacterStruct newCharacterValue = getCharacter(newElement);
 
-		final Integer formerFillPointer = fillPointer++;
-		setfCharInternal((CharacterStruct) newElement, formerFillPointer);
-		return IntegerStruct.toLispInteger(formerFillPointer);
+		final IntegerStruct formerFillPointer = fillPointer;
+		fillPointer = (IntegerStruct) formerFillPointer.add(IntegerStruct.ONE);
+
+		if (displacedTo == null) {
+			contents.setCharAt(formerFillPointer.toJavaInt(), newCharacterValue.toJavaChar());
+		} else {
+			final IntegerStruct indexToSet = (IntegerStruct) displacedIndexOffset.add(formerFillPointer);
+			displacedTo.setfRowMajorAref(newCharacterValue, indexToSet);
+		}
+		return formerFillPointer;
 	}
 
 	/*
@@ -325,156 +313,90 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 */
 
 	@Override
-	protected StringStruct adjustDisplacedTo(final AdjustArrayContext context, final LispStruct upgradedET) {
-
-		final IntegerStruct newTotalSize = context.getDimensions().get(0);
-		final boolean newAdjustable = context.getAdjustable();
-		final IntegerStruct newFillPointer = context.getFillPointer();
-		final ArrayStruct newDisplacedTo = context.getDisplacedTo();
-		final IntegerStruct newDisplacedIndexOffset = context.getDisplacedIndexOffset();
-
-		final LispStruct displacedElementType = newDisplacedTo.arrayElementType();
-		if (!upgradedET.eq(displacedElementType)) {
-			throw new TypeErrorException(
-					"Provided array for displacement " + newDisplacedTo + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-		}
-
-		try {
-			newDisplacedTo.rowMajorAref(newDisplacedIndexOffset);
-		} catch (final ErrorException ignored) {
-			throw new ErrorException("Requested size is too large to displace to " + newDisplacedTo + '.');
-		}
-
-		if (adjustable) {
-			totalSize = newTotalSize.toJavaInt();
-			elementType = upgradedET;
-			adjustable = newAdjustable;
-			fillPointer = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
-			contents = null;
-			displacedTo = newDisplacedTo;
-			displacedIndexOffset = newDisplacedIndexOffset.toJavaInt();
-			return this;
-		} else {
-			return StringStruct.builder(newTotalSize)
-			                   .elementType(upgradedET)
-			                   .adjustable(newAdjustable)
-			                   .fillPointer(newFillPointer)
-			                   .displacedTo(newDisplacedTo)
-			                   .displacedIndexOffset(newDisplacedIndexOffset)
-			                   .build();
-		}
-	}
-
-	@Override
-	protected StringStruct adjustInitialContents(final AdjustArrayContext context, final LispStruct upgradedET) {
-
-		final IntegerStruct newTotalSize = context.getDimensions().get(0);
-		final SequenceStruct newInitialContents = context.getInitialContents();
-		final boolean newAdjustable = context.getAdjustable();
-		final IntegerStruct newFillPointer = context.getFillPointer();
-
-		for (final LispStruct initialElement : newInitialContents) {
-			if (!initialElement.typep(upgradedET).toJavaPBoolean()) {
-				throw new TypeErrorException(
-						"Provided element " + initialElement + " is not a subtype of the upgraded-array-element-type " + upgradedET + '.');
-			}
-		}
-
-		if (adjustable) {
-			final int newTotalSizeInt = newTotalSize.toJavaInt();
-			final boolean newAdjustableBoolean = newAdjustable;
-			final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
-
-			final List<CharacterStruct> validContents
-					= ArrayStruct.getValidContents(Collections.singletonList(newTotalSizeInt),
-					                               upgradedET,
-					                               newInitialContents);
-			contents = validContents.stream()
-			                        .mapToInt(CharacterStruct::toUnicodeCodePoint)
-			                        .collect(StringBuilder::new,
-			                                 StringBuilder::appendCodePoint,
-			                                 StringBuilder::append);
-
-			totalSize = newTotalSizeInt;
-			elementType = upgradedET;
-			adjustable = newAdjustableBoolean;
-			fillPointer = newFillPointerInt;
-			displacedTo = null;
-			displacedIndexOffset = 0;
-			return this;
-		} else {
-			return StringStruct.builder(newTotalSize)
-			                   .elementType(upgradedET)
-			                   .adjustable(newAdjustable)
-			                   .fillPointer(newFillPointer)
-			                   .initialContents(newInitialContents)
-			                   .build();
-		}
-	}
-
-	@Override
-	protected StringStruct adjustInitialElement(final AdjustArrayContext context, final LispStruct upgradedET) {
-		final LispStruct newInitialElement = context.getInitialElement();
-		validateNewInitialElement(newInitialElement, upgradedET);
-
-		final IntegerStruct newTotalSize = context.getDimensions().get(0);
-		final int newTotalSizeInt = newTotalSize.toJavaInt();
-
-		final boolean newAdjustable = context.getAdjustable();
-		final boolean newAdjustableBoolean = newAdjustable;
-
-		final IntegerStruct newFillPointer = context.getFillPointer();
-		final Integer newFillPointerInt = (newFillPointer == null) ? null : newFillPointer.toJavaInt();
-
-		if (adjustable) {
-			if (displacedTo == null) {
-				updateContentsWithElement(contents, newInitialElement, totalSize, newTotalSizeInt);
-			} else {
-				final String displacedContents = getDisplacedToAsJavaString(true);
-				contents = new StringBuilder(displacedContents);
-			}
-			updateContentsWithElement(contents, newInitialElement, totalSize, newTotalSizeInt);
-
-			totalSize = newTotalSizeInt;
-			elementType = upgradedET;
-			adjustable = newAdjustableBoolean;
-			fillPointer = newFillPointerInt;
-			displacedTo = null;
-			displacedIndexOffset = 0;
-			return this;
-		} else {
-			final StringBuilder newContents;
-			if (displacedTo == null) {
-				newContents = new StringBuilder(contents);
-			} else {
-				final String displacedContents = getDisplacedToAsJavaString(true);
-				newContents = new StringBuilder(displacedContents);
-			}
-			updateContentsWithElement(newContents, newInitialElement, totalSize, newTotalSizeInt);
-
-			return new ComplexStringStructImpl(newTotalSizeInt,
-			                                   upgradedET,
-			                                   newContents,
-			                                   newAdjustableBoolean,
-			                                   newFillPointerInt);
-		}
-	}
-
-	@Override
-	public boolean adjustableArrayP() {
+	public BooleanStruct adjustableArrayP() {
 		return adjustable;
 	}
 
 	@Override
-	public boolean arrayHasFillPointerP() {
-		return fillPointer != null;
+	public CharacterStruct aref(final IntegerStruct... subscripts) {
+		final IntegerStruct rowMajorIndex = arrayRowMajorIndex(subscripts);
+		if (displacedTo == null) {
+			return getCharacterFromContents(rowMajorIndex);
+		}
+
+		final IntegerStruct indexToGet = (IntegerStruct) displacedIndexOffset.add(rowMajorIndex);
+		final LispStruct element = displacedTo.rowMajorAref(indexToGet);
+		return getCharacter(element);
+	}
+
+	@Override
+	public CharacterStruct setfAref(final LispStruct newElement, final IntegerStruct... subscripts) {
+		final CharacterStruct newCharacterValue = getCharacter(newElement);
+		final IntegerStruct rowMajorIndex = arrayRowMajorIndex(subscripts);
+		if (displacedTo == null) {
+			contents.setCharAt(rowMajorIndex.toJavaInt(), newCharacterValue.toJavaChar());
+		} else {
+			final IntegerStruct indexToSet = (IntegerStruct) displacedIndexOffset.add(rowMajorIndex);
+			displacedTo.setfRowMajorAref(newCharacterValue, indexToSet);
+		}
+		return newCharacterValue;
+	}
+
+	@Override
+	public BooleanStruct arrayHasFillPointerP() {
+		return BooleanStruct.toLispBoolean(fillPointer != null);
 	}
 
 	@Override
 	public ValuesStruct arrayDisplacement() {
 		return (displacedTo == null)
 		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
-		       : ValuesStruct.valueOf(displacedTo, IntegerStruct.toLispInteger(displacedIndexOffset));
+		       : ValuesStruct.valueOf(displacedTo, displacedIndexOffset);
+	}
+
+	@Override
+	public CharacterStruct rowMajorAref(final IntegerStruct index) {
+		final IntegerStruct validIndex = validateSubscript(index);
+		if (displacedTo == null) {
+			return getCharacterFromContents(validIndex);
+		}
+
+		final IntegerStruct indexToGet = (IntegerStruct) displacedIndexOffset.add(validIndex);
+		final LispStruct element = displacedTo.rowMajorAref(indexToGet);
+		return getCharacter(element);
+	}
+
+	@Override
+	public CharacterStruct setfRowMajorAref(final LispStruct newElement, final IntegerStruct index) {
+		final CharacterStruct newCharacterValue = getCharacter(newElement);
+		final IntegerStruct validIndex = validateSubscript(index);
+		if (displacedTo == null) {
+			contents.setCharAt(validIndex.toJavaInt(), newCharacterValue.toJavaChar());
+		} else {
+			final IntegerStruct indexToSet = (IntegerStruct) displacedIndexOffset.add(validIndex);
+			displacedTo.setfRowMajorAref(newCharacterValue, indexToSet);
+		}
+		return newCharacterValue;
+	}
+
+	/**
+	 * Retrieves the {@link CharacterStruct} from the {@link #contents} at the provided index location. If the index is
+	 * out of bounds, {@link CharacterConstants#NULL_CHAR} is returned.
+	 *
+	 * @param index
+	 * 		the index of the {@link CharacterStruct} to retrieve
+	 *
+	 * @return the {@link CharacterStruct} from the {@link #contents} at the provided index location
+	 */
+	private CharacterStruct getCharacterFromContents(final IntegerStruct index) {
+		try {
+			final char character = contents.charAt(index.toJavaInt());
+			return CharacterStruct.toLispCharacter(character);
+		} catch (final StringIndexOutOfBoundsException ignored) {
+			// This is here for when the 'totalSize' is more than the contents.
+			// Typically will only happen with adjusted strings.
+			return CharacterConstants.NULL_CHAR;
+		}
 	}
 
 	/*
@@ -483,17 +405,13 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public IntegerStruct length() {
-		if (fillPointer != null) {
-			return IntegerStruct.toLispInteger(fillPointer);
-		}
-		return super.length();
+		return (fillPointer == null) ? totalSize : fillPointer;
 	}
 
 	@Override
-	protected int validateIndex(final IntegerStruct index) {
+	protected IntegerStruct validateIndex(final IntegerStruct index) {
 		if (fillPointer != null) {
-			final int indexInt = index.toJavaInt();
-			if (indexInt > fillPointer) {
+			if (index.isGreaterThan(fillPointer)) {
 				throw new ErrorException(index + " is not a valid sequence index for " + this);
 			}
 		}
@@ -502,22 +420,16 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public StringStruct reverse() {
-		final StringBuilder reversedContents;
+		final String contentsToReverse;
 		if (displacedTo != null) {
-			final String contentsToReverse = getDisplacedToAsJavaString(false);
-			reversedContents = new StringBuilder(contentsToReverse).reverse();
+			contentsToReverse = getDisplacedToAsJavaString(false);
 		} else if (fillPointer == null) {
-			final String contentsToReverse = contents.toString();
-			reversedContents = new StringBuilder(contentsToReverse).reverse();
+			contentsToReverse = contents.toString();
 		} else {
-			final String contentsToReverse = contents.substring(0, fillPointer);
-			reversedContents = new StringBuilder(contentsToReverse).reverse();
+			contentsToReverse = contents.substring(0, fillPointer.toJavaInt());
 		}
-		return new ComplexStringStructImpl(totalSize,
-		                                   elementType,
-		                                   reversedContents,
-		                                   adjustable,
-		                                   fillPointer);
+		final StringBuilder reversedContents = new StringBuilder(contentsToReverse).reverse();
+		return new ComplexStringStructImpl(totalSize, elementType, reversedContents, adjustable, fillPointer);
 	}
 
 	@Override
@@ -527,18 +439,19 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			final StringBuilder reversedContent = new StringBuilder(contentsToReverse).reverse();
 
 			for (int index = 0; index < reversedContent.length(); index++) {
-				final IntegerStruct indexToSet = IntegerStruct.toLispInteger(displacedIndexOffset + index);
-				final char c = reversedContent.charAt(index);
-				final CharacterStruct character = CharacterStruct.toLispCharacter(c);
+				final FixnumStruct indexStruct = IntegerStruct.toLispInteger(index);
+				final IntegerStruct indexToSet = (IntegerStruct) displacedIndexOffset.add(indexStruct);
+				final CharacterStruct character = CharacterStruct.toLispCharacter(reversedContent.charAt(index));
 				displacedTo.setfRowMajorAref(character, indexToSet);
 			}
 		} else if (fillPointer == null) {
 			contents.reverse();
 		} else {
-			final String contentsToReverse = contents.substring(0, fillPointer);
-			final String reversedContent = new StringBuilder(contentsToReverse).reverse()
-			                                                                   .toString();
-			contents.replace(0, fillPointer, reversedContent);
+			final int fillPointerInt = fillPointer.toJavaInt();
+
+			final String contentsToReverse = contents.substring(0, fillPointerInt);
+			final String reversedContent = new StringBuilder(contentsToReverse).reverse().toString();
+			contents.replace(0, fillPointerInt, reversedContent);
 		}
 		return this;
 	}
@@ -550,128 +463,117 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	@Override
 	public Iterator<LispStruct> iterator() {
 		if (displacedTo == null) {
-			return new ComplexStringStructImpl.StringIterator(contents);
+			return new StringIterator(contents);
 		} else {
-			return new ComplexStringStructImpl.DisplacedStringIterator(totalSize, displacedTo, displacedIndexOffset);
+			return new DisplacedArrayIterator(totalSize, displacedTo, displacedIndexOffset);
 		}
 	}
 
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.spliterator(iterator(),
-		                                totalSize,
+		                                totalSize.toJavaInt(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
-				                                Spliterator.IMMUTABLE |
 				                                Spliterator.SUBSIZED
 		);
 	}
 
-	/**
-	 * Iterator for {@link StringStruct} structures without displaced contents.
+	/*
+	LISP-STRUCT
 	 */
-	private static final class StringIterator implements Iterator<LispStruct> {
 
-		/**
-		 * The contents of the {@link ComplexStringStructImpl} being iterated over.
-		 */
-		private final StringBuilder contents;
+	/**
+	 * {@inheritDoc}
+	 * Generation method for ComplexStringStructImpl} objects, by performing the following operations:
+	 * <ol>
+	 * <li>Building the {@link #contents}, ensuring that each content {@link CharacterStruct} value is generated properly</li>
+	 * <li>Constructing a new ComplexStringStructImpl with the built content {@link List}</li>
+	 * </ol>
+	 *
+	 * @param generatorState
+	 * 		stateful object used to hold the current state of the code generation process
+	 */
+	@Override
+	public void generate(final GeneratorState generatorState) {
+		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		/**
-		 * The current index of the iteration.
-		 */
-		private int current;
+		final int sizeStore = generateSize(generatorState);
 
-		/**
-		 * Constructor for building the iterator.
-		 *
-		 * @param contents
-		 * 		the contents of the {@link ComplexStringStructImpl} to be iterated over
-		 */
-		private StringIterator(final StringBuilder contents) {
-			this.contents = contents;
+		int contentsStore = 0;
+		int displacedToStore = 0;
+		int displacedIndexOffsetStore = 0;
+		if (displacedTo == null) {
+			contentsStore = methodBuilder.getNextAvailableStore();
+
+			final String javaString = contents.toString();
+			mv.visitLdcInsn(javaString);
+			mv.visitVarInsn(Opcodes.ASTORE, contentsStore);
+		} else {
+			displacedToStore = methodBuilder.getNextAvailableStore();
+			displacedTo.generate(generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, displacedToStore);
+
+			displacedIndexOffsetStore = methodBuilder.getNextAvailableStore();
+			displacedIndexOffset.generate(generatorState);
+			mv.visitVarInsn(Opcodes.ASTORE, displacedIndexOffsetStore);
 		}
 
-		@Override
-		public boolean hasNext() {
-			try {
-				contents.charAt(current);
-				return true;
-			} catch (final StringIndexOutOfBoundsException ignored) {
-				return false;
-			}
+		final int adjustableStore = methodBuilder.getNextAvailableStore();
+		adjustable.generate(generatorState);
+		mv.visitVarInsn(Opcodes.ASTORE, adjustableStore);
+
+		final int fillPointerStore = methodBuilder.getNextAvailableStore();
+		if (fillPointer == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+		} else {
+			fillPointer.generate(generatorState);
+		}
+		mv.visitVarInsn(Opcodes.ASTORE, fillPointerStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, sizeStore);
+
+		if (displacedTo == null) {
+			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);
+		} else {
+			mv.visitVarInsn(Opcodes.ALOAD, displacedToStore);
+			mv.visitVarInsn(Opcodes.ALOAD, displacedIndexOffsetStore);
 		}
 
-		@Override
-		public LispStruct next() {
-			final char character;
-			try {
-				character = contents.charAt(current);
-			} catch (final StringIndexOutOfBoundsException ignored) {
-				throw new NoSuchElementException("All elements consumed.");
-			} finally {
-				current++;
-			}
-			return CharacterStruct.toLispCharacter(character);
+		mv.visitVarInsn(Opcodes.ALOAD, adjustableStore);
+		mv.visitVarInsn(Opcodes.ALOAD, fillPointerStore);
+
+		if (displacedTo == null) {
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+			                   GenerationConstants.STRING_STRUCT_NAME,
+			                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_NAME,
+			                   GenerationConstants.STRING_STRUCT_TO_COMPLEX_STRING_CONTENTS_METHOD_DESC,
+			                   true);
+		} else {
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+			                   GenerationConstants.STRING_STRUCT_NAME,
+			                   GenerationConstants.STRING_STRUCT_TO_LISP_STRING_METHOD_NAME,
+			                   GenerationConstants.STRING_STRUCT_TO_COMPLEX_STRING_DISPLACED_METHOD_DESC,
+			                   true);
 		}
 	}
 
-	/**
-	 * Iterator for {@link StringStruct} structures with displaced contents.
-	 */
-	private static final class DisplacedStringIterator implements Iterator<LispStruct> {
-
-		/**
-		 * The total size of the contents of the {@link ComplexStringStructImpl} structure.
-		 */
-		private final int totalSize;
-
-		/**
-		 * The {@link ArrayStruct} the {@link ComplexStringStructImpl} is displaced to.
-		 */
-		private final ArrayStruct displacedTo;
-
-		/**
-		 * The offset value into the displaced array structure where the {@link ComplexStringStructImpl} starts.
-		 */
-		private final int displacedIndexOffset;
-
-		/**
-		 * The current index of the iteration.
-		 */
-		private int current;
-
-		/**
-		 * Constructor for building the iterator.
-		 *
-		 * @param totalSize
-		 * 		the total size of the contents of the {@link ComplexStringStructImpl} structure
-		 * @param displacedTo
-		 * 		the {@link ArrayStruct} the {@link ComplexStringStructImpl} is displaced to
-		 * @param displacedIndexOffset
-		 * 		the offset value into the displaced array structure where the {@link ComplexStringStructImpl} starts
-		 */
-		private DisplacedStringIterator(final int totalSize,
-		                                final ArrayStruct displacedTo,
-		                                final int displacedIndexOffset) {
-			this.totalSize = totalSize;
-			this.displacedTo = displacedTo;
-			this.displacedIndexOffset = displacedIndexOffset;
+	@Override
+	public LispStruct typeOf() {
+		if (CommonLispSymbols.BASE_CHAR == elementType) {
+			return ListStruct.toLispList(CommonLispSymbols.BASE_STRING, totalSize);
+		} else {
+			return ListStruct.toLispList(CommonLispSymbols.STRING, totalSize);
 		}
+	}
 
-		@Override
-		public boolean hasNext() {
-			return current < totalSize;
-		}
-
-		@Override
-		public LispStruct next() {
-			if (current < totalSize) {
-				final IntegerStruct indexToGet = IntegerStruct.toLispInteger(displacedIndexOffset + current);
-				current++;
-				return displacedTo.rowMajorAref(indexToGet);
-			}
-			throw new NoSuchElementException("All elements consumed.");
+	@Override
+	public ClassStruct classOf() {
+		if (CommonLispSymbols.BASE_CHAR == elementType) {
+			return BuiltInClassStruct.BASE_STRING;
+		} else {
+			return BuiltInClassStruct.STRING;
 		}
 	}
 
@@ -707,7 +609,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 			        .forEach(appendFn);
 		} else {
 			contents.codePoints()
-			        .limit(fillPointer)
+			        .limit(fillPointer.toJavaInt())
 			        .forEach(appendFn);
 		}
 

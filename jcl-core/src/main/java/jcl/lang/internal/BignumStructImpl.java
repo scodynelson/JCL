@@ -29,7 +29,6 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.number.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apfloat.Apcomplex;
@@ -45,7 +44,6 @@ import org.objectweb.asm.Type;
  * The {@link BignumStructImpl} is the object representation of a Lisp 'bignum' type where the value is not
  * representable by a Java {@literal long}.
  */
-@EqualsAndHashCode(callSuper = false)
 public final class BignumStructImpl extends IntegerStructImpl implements BignumStruct {
 
 	/**

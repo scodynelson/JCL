@@ -20,10 +20,12 @@ import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BitVectorStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.ComplexStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.DoubleFloatStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -41,6 +43,7 @@ import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.java.JavaMethodStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.Label;
 
 @SuppressWarnings("all")
@@ -216,32 +219,166 @@ public class TestGround {
 		return StringStruct.toLispString("string");
 	}
 
-	private Object bitVectorGen() {
-		final List<IntegerStruct> contents = new ArrayList<>();
-		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
-		contents.add(content);
+	private Object simpleStringGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+		final SymbolStruct elementType = CommonLispSymbols.T;
+		final String contents = "string";
 
-		return BitVectorStruct.toLispBitVector(contents);
+		return StringStruct.toLispString(size, elementType, contents);
 	}
 
-	private Object vectorGen() {
+	private Object complexStringGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+		final SymbolStruct elementType = CommonLispSymbols.CHARACTER;
+		final String contents = "string";
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+		final IntegerStruct fillPointer = null;
+
+		return StringStruct.toLispString(size, elementType, contents, adjustable, fillPointer);
+	}
+
+	private Object displacedStringGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+		final SymbolStruct elementType = CommonLispSymbols.CHARACTER;
+
+		final ArrayStruct displacedTo = null;
+		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+		final IntegerStruct fillPointer = null;
+
+		return StringStruct.toLispString(size, elementType, displacedTo, displacedIndexOffset, adjustable, fillPointer);
+	}
+
+	private Object nilVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		return VectorStruct.toLispVector(size);
+	}
+
+	private Object simpleBitVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		final List<FixnumStruct> contents = new ArrayList<>();
+		final FixnumStruct content = IntegerStruct.ZERO;
+		contents.add(content);
+
+		return BitVectorStruct.toLispBitVector(size, contents);
+	}
+
+	private Object complexBitVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		final List<FixnumStruct> contents = new ArrayList<>();
+		final FixnumStruct content = (FixnumStruct) IntegerStruct.toLispInteger(BigInteger.ZERO);
+		contents.add(content);
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+
+		final IntegerStruct fillPointer = null;
+
+		return BitVectorStruct.toLispBitVector(size, contents, adjustable, fillPointer);
+	}
+
+	private Object displacedBitVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		final ArrayStruct displacedTo = null;
+		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+
+		final IntegerStruct fillPointer = null;
+
+		return BitVectorStruct.toLispBitVector(size, displacedTo, displacedIndexOffset, adjustable, fillPointer);
+	}
+
+	private Object simpleVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		final SymbolStruct elementType = CommonLispSymbols.T;
+
 		final List<LispStruct> contents = new ArrayList<>();
 		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
-		return VectorStruct.toLispVector(contents);
+		return VectorStruct.toLispVector(size, elementType, contents);
 	}
 
-	private Object arrayGen() {
-		final List<Integer> dimensions = new ArrayList<>();
-		final int dimension = 1234123412;
+	private Object complexVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		final SymbolStruct elementType = CommonLispSymbols.T;
+
+		final List<LispStruct> contents = new ArrayList<>();
+		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
+		contents.add(content);
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+
+		final IntegerStruct fillPointer = null;
+
+		return VectorStruct.toLispVector(size, elementType, contents, adjustable, fillPointer);
+	}
+
+	private Object displacedVectorGen() {
+		final IntegerStruct size = IntegerStruct.ZERO;
+
+		final SymbolStruct elementType = CommonLispSymbols.T;
+
+		final ArrayStruct displacedTo = null;
+		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+
+		final IntegerStruct fillPointer = null;
+
+		return VectorStruct.toLispVector(size, elementType, displacedTo, displacedIndexOffset, adjustable, fillPointer);
+	}
+
+	private Object simpleArrayGen() {
+		final List<IntegerStruct> dimensions = new ArrayList<>();
+		final IntegerStruct dimension = IntegerStruct.ZERO;
 		dimensions.add(dimension);
 
+		final SymbolStruct elementType = CommonLispSymbols.T;
+
 		final List<LispStruct> contents = new ArrayList<>();
 		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
 		contents.add(content);
 
-		return ArrayStruct.toLispArray(dimensions, contents);
+		return ArrayStruct.toLispArray(dimensions, elementType, contents);
+	}
+
+	private Object complexArrayGen() {
+		final List<IntegerStruct> dimensions = new ArrayList<>();
+		final IntegerStruct dimension = IntegerStruct.ZERO;
+		dimensions.add(dimension);
+
+		final SymbolStruct elementType = CommonLispSymbols.T;
+
+		final List<LispStruct> contents = new ArrayList<>();
+		final IntegerStruct content = IntegerStruct.toLispInteger(BigInteger.ZERO);
+		contents.add(content);
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+
+		return ArrayStruct.toLispArray(dimensions, elementType, contents, adjustable);
+	}
+
+	private Object displacedArrayGen() {
+		final List<IntegerStruct> dimensions = new ArrayList<>();
+		final IntegerStruct dimension = IntegerStruct.ZERO;
+		dimensions.add(dimension);
+
+		final SymbolStruct elementType = CommonLispSymbols.T;
+
+		final ArrayStruct displacedTo = null;
+		final IntegerStruct displacedIndexOffset = IntegerStruct.ZERO;
+
+		final BooleanStruct adjustable = NILStruct.INSTANCE;
+
+		return ArrayStruct.toLispArray(dimensions, elementType, displacedTo, displacedIndexOffset, adjustable);
 	}
 
 	private Object unwindProtectGen(final Closure currentClosure) {

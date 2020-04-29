@@ -19,7 +19,6 @@ import jcl.lang.classes.ClassStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
 import jcl.util.CodePointConstants;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.CharUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,7 +26,6 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link CharacterStructImpl} is the object representation of a Lisp 'character' type.
  */
-@EqualsAndHashCode
 public final class CharacterStructImpl extends LispStructImpl implements CharacterStruct {
 
 	/**

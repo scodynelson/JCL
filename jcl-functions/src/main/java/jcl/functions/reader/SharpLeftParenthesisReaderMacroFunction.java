@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 
 import jcl.lang.ConsStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
@@ -55,7 +57,8 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFu
 		if (backquoteLevel == 0) {
 			if (!numberArgument.isPresent()) {
 				final List<LispStruct> tokensAsJavaList = listToken.stream().collect(Collectors.toList());
-				return VectorStruct.toLispVector(tokensAsJavaList);
+				final IntegerStruct size = IntegerStruct.toLispInteger(tokensAsJavaList.size());
+				return VectorStruct.toLispVector(size, CommonLispSymbols.T, tokensAsJavaList);
 			}
 
 			final BigInteger numberArgumentValue = numberArgument.get();
@@ -95,6 +98,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFu
 			tokensAsJavaList.add(lastToken);
 		}
 
-		return VectorStruct.toLispVector(tokensAsJavaList);
+		final IntegerStruct size = IntegerStruct.toLispInteger(tokensAsJavaList.size());
+		return VectorStruct.toLispVector(size, CommonLispSymbols.T, tokensAsJavaList);
 	}
 }

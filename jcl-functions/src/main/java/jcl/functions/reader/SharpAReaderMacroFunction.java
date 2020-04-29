@@ -6,17 +6,18 @@ package jcl.functions.reader;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jcl.lang.ArrayStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
@@ -52,11 +53,11 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 
 			final SequenceStruct contents = (SequenceStruct) token;
-			final List<Integer> dimensions = getDimensions(numberArgumentValue, contents);
+			final List<IntegerStruct> dimensions = getDimensions(numberArgumentValue, contents);
 			final List<LispStruct> initialContents = contents.stream().collect(Collectors.toList());
-			return ArrayStruct.toLispArray(dimensions, initialContents);
+			return ArrayStruct.toLispArray(dimensions, CommonLispSymbols.T, initialContents);
 		} else {
-			return ArrayStruct.toLispArray(Collections.emptyList(), Collections.singletonList(token));
+			return ArrayStruct.toLispArray(CommonLispSymbols.T, token, NILStruct.INSTANCE);
 		}
 	}
 
@@ -69,17 +70,17 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @param contents
 	 * 		the contents to build and analyze against the {@code dimensions} parameter
 	 *
-	 * @return a List of {@link Integer} that make up the expected dimensions of the simple array
+	 * @return a List of {@link IntegerStruct} that make up the expected dimensions of the simple array
 	 *
 	 * @throws ReaderErrorException
 	 * 		if dimensions do not match the provided contents list
 	 */
-	private static List<Integer> getDimensions(final BigInteger dimensions, final SequenceStruct contents) {
+	private static List<IntegerStruct> getDimensions(final BigInteger dimensions, final SequenceStruct contents) {
 
 		LispStruct sequence = contents;
 		BigInteger zeroAxis = null;
 
-		final List<Integer> arrayDimensions = new ArrayList<>();
+		final List<IntegerStruct> arrayDimensions = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
 		     dimensions.compareTo(axis) > 0;
@@ -96,7 +97,7 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final List<LispStruct> tokensAsJavaList = sequenceToken.stream().collect(Collectors.toList());
 
 			final int dimension = tokensAsJavaList.size();
-			arrayDimensions.add(dimension);
+			arrayDimensions.add(IntegerStruct.toLispInteger(dimension));
 
 			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {
 				if (tokensAsJavaList.isEmpty()) {

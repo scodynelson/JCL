@@ -1,7 +1,5 @@
 package jcl.lang;
 
-import java.io.InputStream;
-
 import jcl.lang.internal.stream.StringOutputStreamStructImpl;
 
 /**

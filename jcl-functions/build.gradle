@@ -1,15 +1,15 @@
 description = "JCL Functions"
 
 dependencies {
-	compile(project(":jcl-core"))
-	compile(project(":jcl-compiler"))
-	compile(project(":jcl-reader"))
+	implementation(project(":jcl-core"))
+	implementation(project(":jcl-compiler"))
+	implementation(project(":jcl-reader"))
 
-	compile("javax.help:javahelp")
-	compile("org.apache.commons:commons-collections4")
-	compile("org.apache.commons:commons-lang3")
-	compile("org.benf:cfr")
+	implementation("org.glassfish.external:javahelp")
+	implementation("org.apache.commons:commons-collections4")
+	implementation("org.apache.commons:commons-lang3")
+	implementation("org.benf:cfr")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	compile("org.slf4j:slf4j-api")
+	implementation("org.slf4j:slf4j-api")
 }

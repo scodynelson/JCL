@@ -985,6 +985,11 @@ public interface CharacterStruct extends LispStruct {
 	}
 
 	@Override
+	default boolean equal(final LispStruct object) {
+		return eql(object);
+	}
+
+	@Override
 	default boolean equalp(final LispStruct object) {
 		return equal(object) ||
 				((object instanceof CharacterStruct)

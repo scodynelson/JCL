@@ -1,4 +1,7 @@
-package jcl.lang;
+package jcl.lang.internal;
+
+import jcl.lang.IntegerStruct;
+import jcl.lang.StringStruct;
 
 /**
  * Context argument class for string functions that require equality checking arguments to produce the intended

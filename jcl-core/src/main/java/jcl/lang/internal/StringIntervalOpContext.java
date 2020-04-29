@@ -1,4 +1,6 @@
-package jcl.lang;
+package jcl.lang.internal;
+
+import jcl.lang.IntegerStruct;
 
 /**
  * Context argument class for string functions that require interval arguments to produce the intended result.

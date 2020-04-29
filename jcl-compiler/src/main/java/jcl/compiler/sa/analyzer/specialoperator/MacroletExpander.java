@@ -32,10 +32,10 @@ import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 
-@Slf4j
+@Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 

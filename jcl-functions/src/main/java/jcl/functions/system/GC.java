@@ -11,9 +11,9 @@ import jcl.lang.TStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 public final class GC extends BuiltInFunctionStructImpl {
 
 	public GC() {

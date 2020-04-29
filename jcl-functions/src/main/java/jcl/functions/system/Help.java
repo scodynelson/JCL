@@ -18,9 +18,7 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public final class Help extends BuiltInFunctionStructImpl {
 
 	private static final String SEARCH_TERM_ARGUMENT = "SEARCH-TERM";
@@ -61,7 +59,6 @@ public final class Help extends BuiltInFunctionStructImpl {
 			helpBroker.setViewDisplayed(true);
 			helpBroker.setDisplayed(true);
 		} catch (final Exception e) {
-			log.error(e.getMessage(), e);
 			throw new ProgramErrorException("Error Loading Help System: " + e);
 		}
 

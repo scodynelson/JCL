@@ -59,11 +59,10 @@ import jcl.lang.statics.ReaderVariables;
 import jcl.printer.functions.PrintObjectFunction;
 import jcl.system.function.QuitFunction;
 import jcl.util.CodePointConstants;
-import org.springframework.context.ApplicationContext;
 
 class BootstrapFunctions {
 
-	static void bootstrap(final ApplicationContext context) {
+	static void bootstrap() {
 		bootstrapSystemFunctions();
 
 		bootstrapPredicateFunctions();
@@ -74,7 +73,7 @@ class BootstrapFunctions {
 		bootstrapListFunctions();
 		bootstrapReaderFunctions();
 		bootstrapSymbolFunctions();
-		bootstrapExtensionFunctions(context);
+		bootstrapExtensionFunctions();
 		bootstrapPrinterFunctions();
 	}
 
@@ -215,13 +214,13 @@ class BootstrapFunctions {
 		bootstrapSystemPackageFunctions(functions);
 	}
 
-	private static void bootstrapExtensionFunctions(final ApplicationContext context) {
+	private static void bootstrapExtensionFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new FreeMemory(),
 				new GC(),
 				new Help(),
 				new MaxMemory(),
-				new QuitFunction(context),
+				new QuitFunction(),
 				new TotalMemory()
 		);
 		bootstrapExtensionPackageFunctions(functions);

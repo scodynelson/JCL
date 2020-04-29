@@ -610,26 +610,4 @@ public interface ListStruct extends SequenceStruct {
 
 	@Override
 	ListStruct nReverse();
-
-	/*
-	OLD
-	 */
-
-	/**
-	 * Determines if the list is a dotted list.
-	 *
-	 * @return if the list is a dotted list
-	 */
-	@Deprecated
-	boolean isDotted();
-
-	/**
-	 * Determines if the list is a proper list.
-	 *
-	 * @return if the list is a proper list
-	 */
-	@Deprecated
-	default boolean isProper() {
-		return !isDotted() && !IntegerStruct.MINUS_ONE.eql(listLength());
-	}
 }

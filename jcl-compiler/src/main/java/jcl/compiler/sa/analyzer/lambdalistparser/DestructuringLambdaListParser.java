@@ -18,6 +18,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -31,10 +32,11 @@ public final class DestructuringLambdaListParser {
 	public static DestructuringLambdaList parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                            final DeclareStruct declareElement) {
 
-		if (lambdaList.isDotted()) {
-			return getDottedLambdaListBindings(environment, lambdaList, declareElement);
-		} else {
+		final LispStruct last = lambdaList.last(IntegerStruct.ZERO);
+		if (NILStruct.INSTANCE.eq(last)) {
 			return getLambdaListBindings(environment, lambdaList, declareElement);
+		} else {
+			return getDottedLambdaListBindings(environment, lambdaList, declareElement);
 		}
 	}
 

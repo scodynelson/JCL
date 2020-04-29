@@ -12,9 +12,9 @@ import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @UtilityClass
 public final class SemanticAnalyzer {
 

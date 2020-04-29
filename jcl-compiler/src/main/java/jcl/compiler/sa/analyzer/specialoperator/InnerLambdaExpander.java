@@ -32,10 +32,10 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 
-@Slf4j
+@Log4j2
 abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStruct> {
 
 	private final String expanderName;

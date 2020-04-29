@@ -29,12 +29,12 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.pathname.PathnameVersion;
 import jcl.lang.pathname.PathnameVersionComponentType;
 import jcl.lang.statics.CommonLispSymbols;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * The {@link LogicalPathnameStructImpl} is the object representation of a Lisp 'logical-pathname' type.
  */
-@Slf4j
+@Log4j2
 public final class LogicalPathnameStructImpl extends PathnameStructImpl implements LogicalPathnameStruct {
 
 	/**

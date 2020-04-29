@@ -23,12 +23,12 @@ import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
 
-@Slf4j
+@Log4j2
 @UtilityClass
 public final class CompileForm {
 

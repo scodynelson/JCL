@@ -41,11 +41,7 @@ public final class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (!(token instanceof ListStruct)) {
 			throw new ReaderErrorException("Illegal complex number format: #C" + token);
 		}
-
 		final ListStruct listToken = (ListStruct) token;
-		if (!listToken.isProper()) {
-			throw new ReaderErrorException("Illegal complex number format: #C" + token);
-		}
 
 		final int maxNumberOfTokensForComplex = 2;
 		if (listToken.length().toJavaPLong() != maxNumberOfTokensForComplex) {

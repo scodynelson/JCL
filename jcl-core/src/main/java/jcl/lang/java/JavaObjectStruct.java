@@ -9,9 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.LispStructImpl;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class JavaObjectStruct extends LispStructImpl {
 
 	private final Object javaObject;
@@ -45,7 +43,6 @@ public class JavaObjectStruct extends LispStructImpl {
 							"' does not have a default no argument constructor.", ex);
 		} catch (final InvocationTargetException | InstantiationException | IllegalAccessException ex) {
 			final String message = "Java Class '" + javaClassName + "' could not be instantiated.";
-			log.error(message, ex);
 			throw new ErrorException(message, ex);
 		}
 	}

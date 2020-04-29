@@ -26,9 +26,7 @@ import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.java.JavaObjectStruct;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @UtilityClass
 public final class InternalEval {
 
@@ -209,7 +207,6 @@ public final class InternalEval {
 			}
 			message += '.';
 
-			log.error(message, ex);
 			throw new ErrorException(message, ex);
 		}
 	}

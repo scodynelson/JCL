@@ -9,12 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.readtable.SyntaxType;
 import jcl.util.CodePointConstants;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Represents a lookup table for {@link SyntaxType}s matching {@link Integer} code points.
  */
-@Slf4j
+@Log4j2
 @SuppressWarnings("all")
 class SyntaxTable {
 

@@ -755,18 +755,4 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 			return currentAsCons.car();
 		}
 	}
-
-	/*
-	OLD
-	 */
-
-	@Override
-	@Deprecated
-	public boolean isDotted() {
-		if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			return cdrAsList.isDotted();
-		}
-		return true;
-	}
 }

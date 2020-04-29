@@ -2,22 +2,22 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl.iml" group="jcl" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-application/jcl-application.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-application/jcl-application.iml" group="jcl/jcl-application" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-application/jcl-application_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-application/jcl-application_main.iml" group="jcl/jcl-application" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-application/jcl-application_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-application/jcl-application_test.iml" group="jcl/jcl-application" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl-compiler.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl-compiler.iml" group="jcl/jcl-compiler" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl-compiler_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl-compiler_main.iml" group="jcl/jcl-compiler" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl-compiler_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl-compiler_test.iml" group="jcl/jcl-compiler" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-core/jcl-core.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-core/jcl-core.iml" group="jcl/jcl-core" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-core/jcl-core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-core/jcl-core_main.iml" group="jcl/jcl-core" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-core/jcl-core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-core/jcl-core_test.iml" group="jcl/jcl-core" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-functions/jcl-functions.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-functions/jcl-functions.iml" group="jcl/jcl-functions" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-functions/jcl-functions_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-functions/jcl-functions_main.iml" group="jcl/jcl-functions" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-functions/jcl-functions_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-functions/jcl-functions_test.iml" group="jcl/jcl-functions" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader.iml" group="jcl/jcl-reader" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_main.iml" group="jcl/jcl-reader" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl-reader_test.iml" group="jcl/jcl-reader" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-application/jcl.jcl-application.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-application/jcl.jcl-application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-application/jcl.jcl-application.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-application/jcl.jcl-application.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-application/jcl.jcl-application.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-application/jcl.jcl-application.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl.jcl-compiler.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl.jcl-compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl.jcl-compiler.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl.jcl-compiler.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl.jcl-compiler.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-compiler/jcl.jcl-compiler.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-core/jcl.jcl-core.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-core/jcl.jcl-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-core/jcl.jcl-core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-core/jcl.jcl-core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-core/jcl.jcl-core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-core/jcl.jcl-core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-functions/jcl.jcl-functions.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-functions/jcl.jcl-functions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-functions/jcl.jcl-functions.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-functions/jcl.jcl-functions.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-functions/jcl.jcl-functions.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-functions/jcl.jcl-functions.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl.jcl-reader.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl.jcl-reader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl.jcl-reader.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl.jcl-reader.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jcl-reader/jcl.jcl-reader.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jcl-reader/jcl.jcl-reader.test.iml" />
     </modules>
   </component>
 </project>

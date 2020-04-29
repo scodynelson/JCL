@@ -7,9 +7,9 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();

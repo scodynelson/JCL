@@ -1,5 +1,3 @@
-apply plugin: 'org.springframework.boot'
-
 description = "JCL Application"
 
 sourceSets {
@@ -19,29 +17,23 @@ dependencies {
 	implementation("org.apache.commons:commons-lang3")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	implementation("org.slf4j:slf4j-api")
-	implementation("org.springframework.boot:spring-boot")
-	implementation("org.springframework.boot:spring-boot-autoconfigure")
-	implementation("org.springframework:spring-context")
-	implementation("org.springframework:spring-beans")
 
-	runtimeOnly("org.springframework.boot:spring-boot-starter-logging")
+	implementation("info.picocli:picocli:4.2.0")
 
+	implementation("org.apache.logging.log4j:log4j-api")
+
+	runtimeOnly("org.apache.logging.log4j:log4j-core")
 	runtimeOnly fileTree(dir: 'compiled-lisp', include: ['*.jar'])
 
-	testImplementation("junit:junit")
+	testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-bootJar {
-	mainClassName = "jcl.system.JCL"
+jar {
+	manifest {
+		attributes 'Main-Class': 'jcl.system.JCL'
+	}
 }
 
-//jar {
-//	manifest {
-//		attributes 'Main-Class': 'cli.Main'
-//	}
-//}
-//
 //def java_home = System.getenv('JAVA_HOME')
 //task link(type: Exec) {
 //	dependsOn 'clean'

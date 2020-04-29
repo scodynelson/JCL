@@ -3,7 +3,7 @@ package jcl.system;
 import java.io.OutputStream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class LoggerOutputStream extends OutputStream {
 

@@ -23,13 +23,13 @@ import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Reader Macro Function for handling the reading of *features* in the system, handling whether or not those specific
  * features should be hidden or not (aka. the token is read in but ignored).
  */
-@Slf4j
+@Log4j2
 @UtilityClass
 final class FeaturesReaderMacroFunction {
 

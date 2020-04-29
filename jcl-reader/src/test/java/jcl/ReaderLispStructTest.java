@@ -1,7 +1,7 @@
 package jcl;
 
 import jcl.lang.LispStruct;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by codynelson on 6/29/16.

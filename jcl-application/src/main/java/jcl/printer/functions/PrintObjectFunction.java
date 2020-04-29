@@ -11,9 +11,9 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.printer.Printer;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 public final class PrintObjectFunction extends BuiltInFunctionStructImpl {
 
 	private static final String OBJECT_ARGUMENT = "OBJECT";

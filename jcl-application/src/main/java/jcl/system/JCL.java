@@ -15,25 +15,26 @@ import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.system.repl.ReadEvalPrint;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.CollectionUtils;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
-@Slf4j
-@SpringBootApplication
-public class JCL implements ApplicationRunner {
+@Log4j2
+@Command(name = "jcl", mixinStandardHelpOptions = true)
+public class JCL implements Runnable {
 
-	@Autowired
-	private ConfigurableApplicationContext context;
+	@Option(names = "--compileFileSrcDir")
+	private List<String> compileFileSrcDir;
+
+	@Option(names = "--compileFileDestDir")
+	private List<String> compileFileDestDir;
 
 	public JCL() throws Exception {
 		BootstrapSymbols.bootstrapStreams();
 
-		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(log)) {
+		try (final LoggerOutputStream loggerOutputStream = new LoggerOutputStream(log)) {
 			final CharacterStreamStruct characterStream = CharacterStreamStruct.toCharacterStream(System.in, loggerOutputStream);
 
 			final TwoWayStreamStruct terminalIoStream = TwoWayStreamStruct.toTwoWayStream(characterStream, characterStream);
@@ -42,38 +43,33 @@ public class JCL implements ApplicationRunner {
 		}
 	}
 
-	public static void main(final String... args) {
-		final SpringApplicationBuilder applicationBuilder = new SpringApplicationBuilder(JCL.class);
-		applicationBuilder.headless(false);
-
-		try (final ConfigurableApplicationContext context = applicationBuilder.run(args)) {
-			context.registerShutdownHook();
-		}
+	public static void main(final String... args) throws Exception {
+		new CommandLine(new JCL()).execute(args);
 	}
 
 	@Override
-	public void run(final ApplicationArguments args) throws Exception {
+	public void run() {
 		BootstrapSymbols.bootstrap();
-		BootstrapFunctions.bootstrap(context);
+		BootstrapFunctions.bootstrap();
 		BootstrapExpanders.bootstrap();
 
-		final boolean compileFileSrcDir = args.containsOption("compileFileSrcDir");
-		final boolean compileFileDestDir = args.containsOption("compileFileDestDir");
-		if (compileFileSrcDir && compileFileDestDir) {
-			compileSourceFiles(args);
-		} else if (compileFileSrcDir || compileFileDestDir) {
+		final boolean hasCompileFileSrcDir = CollectionUtils.isNotEmpty(compileFileSrcDir);
+		final boolean hasCompileFileDestDir = CollectionUtils.isNotEmpty(compileFileDestDir);
+		if (hasCompileFileSrcDir && hasCompileFileDestDir) {
+			compileSourceFiles();
+		} else if (hasCompileFileSrcDir || hasCompileFileDestDir) {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
 //			CompilerVariables.LOAD_VERBOSE.setValue(TStruct.INSTANCE);
 
 			InternalLoad.autoLoadJavaModules();
-			ReadEvalPrint.funcall(args);
+			ReadEvalPrint.funcall();
 		}
 	}
 
-	private static void compileSourceFiles(final ApplicationArguments args) {
-		final List<String> sourceFiles = args.getOptionValues("compileFileSrcDir");
-		final String destDir = args.getOptionValues("compileFileDestDir").get(0);
+	private void compileSourceFiles() {
+		final List<String> sourceFiles = compileFileSrcDir;
+		final String destDir = compileFileDestDir.get(0);
 
 		CompilerVariables.COMPILE_VERBOSE.setValue(TStruct.INSTANCE);
 		CompilerVariables.LOAD_VERBOSE.setValue(TStruct.INSTANCE);

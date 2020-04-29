@@ -258,14 +258,4 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 		}
 		return super.typep(typeSpecifier);
 	}
-
-	/*
-	OLD
-	 */
-
-	@Override
-	@Deprecated
-	public boolean isDotted() {
-		return false;
-	}
 }

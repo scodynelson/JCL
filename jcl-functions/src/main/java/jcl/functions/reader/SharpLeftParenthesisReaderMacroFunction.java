@@ -48,7 +48,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFu
 			throw new ReaderErrorException("Ill-formed vector: #");
 		}
 
-		if (!listToken.isProper()) {
+		if (!NILStruct.INSTANCE.eq(listToken.last(IntegerStruct.ZERO))) {
 			throw new ReaderErrorException("Ill-formed vector: #" + listToken);
 		}
 

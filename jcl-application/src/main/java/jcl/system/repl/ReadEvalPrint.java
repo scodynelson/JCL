@@ -15,13 +15,12 @@ import jcl.lang.statics.REPLVariables;
 import jcl.lang.stream.ReadCharResult;
 import jcl.printer.Printer;
 import jcl.reader.InternalRead;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationArguments;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 public class ReadEvalPrint {
 
-	public static void funcall(final ApplicationArguments args) {
+	public static void funcall() {
 		try {
 			REPLVariables.DASH.setValue(NILStruct.INSTANCE);
 

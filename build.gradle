@@ -1,22 +1,19 @@
 buildscript {
 	ext {
-		springVersion = "2.2.6.RELEASE"
 		apfloatVersion = "1.9.1"
 		asmVersion = "8.0.1"
-		commonsTextVersion = "1.8"
+		cfrVersion = "0.149"
+		commonsCollectionsVersion = "4.4"
+		commonsLangVersion = "3.10"
 		commonsIOVersion = "2.6"
 		commonsMathVersion = "3.6.1"
-		commonsCollectionsVersion = "4.4"
+		commonsTextVersion = "1.8"
 		guavaVersion = "29.0-jre"
 		icu4jVersion = "67.1"
 		javaHelpVersion = "2.0.06"
-		cfrVersion = "0.149"
-	}
-	repositories {
-		maven { url 'https://repo.spring.io/plugins-release' }
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springVersion}"
+		junitVersion = "5.6.2"
+		log4j2Version = "2.13.2"
+		lombokVersion = "1.18.12"
 	}
 }
 
@@ -33,6 +30,8 @@ allprojects {
 			// fail eagerly on version conflict (includes transitive dependencies)
 			// e.g. multiple different versions of the same dependency (group and name are equal)
 			failOnVersionConflict()
+
+			force "org.apache.commons:commons-lang3:${commonsLangVersion}"
 		}
 	}
 }
@@ -75,20 +74,27 @@ subprojects {
 	}
 
 	dependencies {
-		implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${springVersion}")
-		annotationProcessor enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${springVersion}")
-
+		implementation("com.google.guava:guava:${guavaVersion}")
 		implementation("com.ibm.icu:icu4j:${icu4jVersion}")
 		implementation("commons-io:commons-io:${commonsIOVersion}")
-		implementation("com.google.guava:guava:${guavaVersion}")
-		implementation("org.apache.commons:commons-text:${commonsTextVersion}")
-		implementation("org.apache.commons:commons-math3:${commonsMathVersion}")
 		implementation("org.apache.commons:commons-collections4:${commonsCollectionsVersion}")
+		implementation("org.apache.commons:commons-lang3:${commonsLangVersion}")
+		implementation("org.apache.commons:commons-math3:${commonsMathVersion}")
+		implementation("org.apache.commons:commons-text:${commonsTextVersion}")
 		implementation("org.apfloat:apfloat:${apfloatVersion}")
+		implementation("org.benf:cfr:${cfrVersion}")
+		implementation("org.glassfish.external:javahelp:${javaHelpVersion}")
 		implementation("org.ow2.asm:asm:${asmVersion}")
 		implementation("org.ow2.asm:asm-util:${asmVersion}")
-		implementation("org.glassfish.external:javahelp:${javaHelpVersion}")
-		implementation("org.benf:cfr:${cfrVersion}")
+
+		compileOnly("org.projectlombok:lombok:${lombokVersion}")
+		annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+
+		testImplementation("org.junit.jupiter:junit-jupiter:${junitVersion}")
+
+		implementation("org.apache.logging.log4j:log4j-api:${log4j2Version}")
+		runtimeOnly("org.apache.logging.log4j:log4j-core:${log4j2Version}")
+		testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4j2Version}")
 	}
 
 	configurations {
@@ -109,7 +115,7 @@ subprojects {
 	}
 
 	ext.javadocLinks = [
-			"http://docs.oracle.com/javase/8/docs/api/"
+			"http://docs.oracle.com/en/java/javase/13/docs/api/"
 	] as String[]
 
 	javadoc {
@@ -153,51 +159,6 @@ subprojects {
 	}
 }
 
-//project("core") {
-//	description = "Core"
-//
-//	def objenesisVersion = "2.4"
-//
-//	configurations {
-//		jarjar
-//		objenesis
-//	}
-//
-//	task objenesisRepackJar(type: Jar) { repackJar ->
-//		repackJar.baseName = "objenesis-repack"
-//		repackJar.version = objenesisVersion
-//
-//		doLast() {
-//			project.ant {
-//				taskdef name: "jarjar", classname: "com.tonicsystems.jarjar.JarJarTask",
-//						classpath: configurations.jarjar.asPath
-//				jarjar(destfile: repackJar.archivePath) {
-//					configurations.objenesis.each { originalJar ->
-//						zipfileset(src: originalJar)
-//					}
-//					// repackage org.objenesis => org.objenesis
-//					rule(pattern: "org.objenesis.**", result: "org.objenesis.@1")
-//				}
-//			}
-//		}
-//	}
-//
-//	jar {
-//		// inline repackaged cglib classes directly into the core jar
-//		dependsOn objenesisRepackJar
-//		from(zipTree(cglibRepackJar.archivePath)) {
-//			include "org/cglib/**"
-//		}
-//
-//		manifest.attributes["Premain-Class"] =
-//				"org.instrument.InstrumentationSavingAgent"
-//		manifest.attributes["Agent-Class"] =
-//				"org.instrument.InstrumentationSavingAgent"
-//		manifest.attributes["Can-Redefine-Classes"] = "true"
-//		manifest.attributes["Can-Retransform-Classes"] = "true"
-//		manifest.attributes["Can-Set-Native-Method-Prefix"] = "false"
-//	}
-//}
 //configure(rootProject) {
 //	description = "JCL"
 //

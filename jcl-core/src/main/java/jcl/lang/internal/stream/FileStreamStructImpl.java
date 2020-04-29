@@ -34,13 +34,13 @@ import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.stream.ReadCharResult;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
  * The {@link FileStreamStructImpl} is the object representation of a Lisp 'file-stream' type.
  */
-@Slf4j
+@Log4j2
 public final class FileStreamStructImpl extends StreamStructImpl implements FileStreamStruct {
 
 	/**

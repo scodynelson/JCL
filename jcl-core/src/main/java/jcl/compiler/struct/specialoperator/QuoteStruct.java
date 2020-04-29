@@ -16,6 +16,7 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import org.objectweb.asm.MethodVisitor;
@@ -166,7 +167,19 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 		final int lastElementStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, lastElementStore);
 
-		if (quotedCons.isDotted()) {
+		final LispStruct last = quotedCons.last(IntegerStruct.ZERO);
+		if (NILStruct.INSTANCE.eq(last)) {
+			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
+			mv.visitFieldInsn(Opcodes.GETSTATIC,
+			                  GenerationConstants.NIL_STRUCT_NAME,
+			                  GenerationConstants.SINGLETON_INSTANCE,
+			                  GenerationConstants.NIL_STRUCT_DESC);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+			                   GenerationConstants.CONS_STRUCT_NAME,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
+			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
+			                   true);
+		} else {
 			previousCdr = listIterator.previous();
 			generateQuotedObject(previousCdr, generatorState);
 
@@ -175,17 +188,6 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 
 			mv.visitVarInsn(Opcodes.ALOAD, secondToLastElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
-			                   true);
-		} else {
-			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitFieldInsn(Opcodes.GETSTATIC,
-			                  GenerationConstants.NIL_STRUCT_NAME,
-			                  GenerationConstants.SINGLETON_INSTANCE,
-			                  GenerationConstants.NIL_STRUCT_DESC);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 			                   GenerationConstants.CONS_STRUCT_NAME,
 			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,

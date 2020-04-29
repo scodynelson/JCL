@@ -33,10 +33,10 @@ import jcl.lang.statics.PathnameVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
-@Slf4j
+@Log4j2
 @UtilityClass
 public final class InternalLoad {
 

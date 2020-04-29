@@ -14,11 +14,11 @@ import java.util.jar.Manifest;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
-@Slf4j
+@Log4j2
 public class LoaderClassLoader extends ClassLoader {
 
 	private final Map<String, Class<?>> classes = new ConcurrentHashMap<>();

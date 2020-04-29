@@ -17,14 +17,14 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.benf.cfr.reader.api.CfrDriver;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.api.OutputSinkFactory;
 import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
 import org.objectweb.asm.Type;
 
-@Slf4j
+@Log4j2
 @UtilityClass
 public final class ClassFileUtils {
 

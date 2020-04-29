@@ -24,7 +24,7 @@ import jcl.lang.stream.ReadCharResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * This interface defines a set of anonymous classes that comprise the states of the Reader state machine as defined in
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
-@Slf4j
+@Log4j2
 @UtilityClass
 public class ReaderProcessor {
 

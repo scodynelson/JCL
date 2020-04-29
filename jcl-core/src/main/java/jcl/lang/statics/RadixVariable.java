@@ -7,10 +7,10 @@ import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.Range;
 
-@Slf4j
+@Log4j2
 public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 
 	private static final int lowerBound = 2;

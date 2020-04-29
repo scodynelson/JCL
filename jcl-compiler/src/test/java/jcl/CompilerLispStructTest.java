@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * Created by codynelson on 6/29/16.
  */
-public class LispStructTest {
+public class CompilerLispStructTest {
 
 	@Test
 	public void testSomething() {

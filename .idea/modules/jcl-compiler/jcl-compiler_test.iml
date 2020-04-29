@@ -8,7 +8,9 @@
   <component name="NewModuleRootManager">
     <output-test url="file://$MODULE_DIR$/../../../jcl-compiler/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../jcl-compiler/src/test" />
+    <content url="file://$MODULE_DIR$/../../../jcl-compiler/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../jcl-compiler/src/test/java" isTestSource="true" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="jcl-compiler_main" />
@@ -26,6 +28,7 @@
     <orderEntry type="module" module-name="jcl-core_main" />
     <orderEntry type="module" module-name="jcl-reader_main" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.30" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
@@ -35,6 +38,8 @@
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.9" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-analysis:8.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-tree:8.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:2.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest:2.1" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="jcl-compiler_main" />
 </module>

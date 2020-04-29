@@ -21,7 +21,6 @@ buildscript {
 }
 
 plugins {
-	id "org.sonarqube" version "2.8"
 	id "com.github.ben-manes.versions" version "0.28.0"
 }
 
@@ -42,7 +41,6 @@ subprojects {
 	apply plugin: "java"
 
 	apply plugin: "jacoco"
-//	apply plugin: "org.sonarqube"
 
 	configurations {
 	}
@@ -144,17 +142,13 @@ subprojects {
 //		archives javadocJar
 //	}
 
-	jacocoTestReport.dependsOn(test)
-
-	sonarqube {
-		properties {
-			property "sonar.projectName", "JCL"
-//			property "sonar.profile", "JCL"
-//			property "sonar.jacoco.reportPath", "$buildDir/jacoco/test.exec"
-//			property "sonar.java.coveragePlugin", "jacoco"
-//
-//			property "sonar.host.url", "https://sonarqube.com"
-//			property "sonar.login", ""
+	jacocoTestReport {
+		reports {
+			xml.enabled true
+			xml.destination file("${buildDir}/reports/jacoco/report.xml")
+			csv.enabled false
+			html.enabled true
+			html.destination file("${buildDir}/reports/jacoco/html")
 		}
 	}
 }

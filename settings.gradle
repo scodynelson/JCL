@@ -5,5 +5,3 @@ include 'jcl-compiler'
 include 'jcl-functions'
 include 'jcl-reader'
 include 'jcl-application'
-
-//enableFeaturePreview('IMPROVED_POM_SUPPORT')

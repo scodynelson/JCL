@@ -67,6 +67,8 @@ subprojects {
 
 	test {
 		systemProperty("java.awt.headless", "true")
+
+		useJUnitPlatform()
 	}
 
 	repositories {

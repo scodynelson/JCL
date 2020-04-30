@@ -132,8 +132,7 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 	 * so</li>
 	 * <li>Looping throw the {@link ConsStruct} in reverse order using a {@link ListIterator}, generating each element
 	 * into its appropriate embedded {@link ConsStruct}</li>
-	 * <li>Creating a dotted {@link ConsStruct} for the final 2 elements first if {@link ConsStruct#isDotted()} is
-	 * true</li>
+	 * <li>Creating a dotted {@link ConsStruct} for the final 2 elements first if the last element is not NIL</li>
 	 * </ol>
 	 * As an example, it will transform {@code '(x)} into the following Java code:
 	 * <pre>
@@ -174,11 +173,6 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 			                  GenerationConstants.NIL_STRUCT_NAME,
 			                  GenerationConstants.SINGLETON_INSTANCE,
 			                  GenerationConstants.NIL_STRUCT_DESC);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
-			                   true);
 		} else {
 			previousCdr = listIterator.previous();
 			generateQuotedObject(previousCdr, generatorState);
@@ -188,12 +182,13 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 
 			mv.visitVarInsn(Opcodes.ALOAD, secondToLastElementStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lastElementStore);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-			                   GenerationConstants.CONS_STRUCT_NAME,
-			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
-			                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
-			                   true);
 		}
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   GenerationConstants.CONS_STRUCT_NAME,
+		                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_NAME,
+		                   GenerationConstants.CONS_STRUCT_TO_CONS_METHOD_DESC,
+		                   true);
+
 		final int previousConsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 

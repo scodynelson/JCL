@@ -3,7 +3,7 @@ description = "JCL Application"
 sourceSets {
 	main {
 		resources {
-			srcDir 'src/main/lisp'
+			srcDir("src/main/lisp")
 		}
 	}
 }
@@ -23,14 +23,14 @@ dependencies {
 	implementation("org.apache.logging.log4j:log4j-api")
 
 	runtimeOnly("org.apache.logging.log4j:log4j-core")
-	runtimeOnly fileTree(dir: 'compiled-lisp', include: ['*.jar'])
+	runtimeOnly(fileTree(mapOf("dir" to "compiled-lisp", "include" to "*.jar")))
 
 	testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-jar {
+tasks.jar {
 	manifest {
-		attributes 'Main-Class': 'jcl.system.JCL'
+		attributes["Main-Class"] = "jcl.system.JCL"
 	}
 }
 
@@ -49,13 +49,13 @@ jar {
 //********* LISP JAR GENERATION *********//
 
 //def lispSourceTree = fileTree(dir: 'src/main/lisp', include: '**/*.lisp')
-def lispCompiledTree = fileTree(dir: 'compiled-lisp', include: '**/*.jar')
+val lispCompiledTree = fileTree(mapOf("dir" to "compiled-lisp", "include" to "**/*.jar"))
 
-task cleanLispJars {
-	String compiledLispDirectory = "$projectDir/compiled-lisp"
-	new File(compiledLispDirectory).mkdirs()
+tasks.create("cleanLispJars") {
+	val compiledLispDirectory = "$projectDir/compiled-lisp"
+	File(compiledLispDirectory).mkdirs()
 
-	lispCompiledTree.each { file ->
+	lispCompiledTree.forEach { file ->
 		doLast {
 			println("Removing Lisp Jar")
 			println(file.absolutePath)
@@ -64,9 +64,11 @@ task cleanLispJars {
 		}
 	}
 }
-clean.dependsOn(cleanLispJars)
+tasks.named<Delete>("clean") {
+	dependsOn("cleanLispJars")
+}
 
-def lispSourceFiles = [
+val lispSourceFiles = listOf(
 		"jcl/compiler/base-macro-lambdas.lisp",
 		"jcl/sequences/sequences.lisp",
 		"jcl/lists/base-lists.lisp",
@@ -84,14 +86,15 @@ def lispSourceFiles = [
 		"jcl/hashtables/hashtables.lisp",
 		"jcl/environment/environment.lisp",
 		"jcl/structures/structures.lisp"
-]
+)
 
-def createLispGenerationTask(def lispSourceFile, def taskName, def dependencies) {
-	return tasks.create(name: taskName, type: JavaExec, dependsOn: dependencies) {
+fun createLispGenerationTask(lispSourceFile: String, taskName: String, dependencies: String) {
+	tasks.create(taskName, JavaExec::class) {
+		dependsOn(dependencies)
 		main = "jcl.system.JCL"
-		classpath = sourceSets.main.runtimeClasspath
-		args += "--compileFileSrcDir=$projectDir/src/main/lisp/${lispSourceFile}"
-		args += "--compileFileDestDir=$projectDir/compiled-lisp/"
+		classpath = sourceSets["main"].runtimeClasspath
+		args("--compileFileSrcDir=$projectDir/src/main/lisp/${lispSourceFile}",
+				"--compileFileDestDir=$projectDir/compiled-lisp/")
 		// TODO: Fix the need to prepend a '/' to the directory name. This is a problem with the Pathname object.
 	}
 }
@@ -103,19 +106,20 @@ def createLispGenerationTask(def lispSourceFile, def taskName, def dependencies)
 //	}
 //}
 
-task generateLispSource(dependsOn: classes) {
-//	def generationLispSourceDependencies = []
-//	def unpackingLispSourceDependencies = []
-	def previousGenerationTask = []
-//	def previousUnpackingTask = []
+tasks.create("generateLispSource") {
+	dependsOn("classes")
+//	var generationLispSourceDependencies = []
+//	var unpackingLispSourceDependencies = []
+	var previousGenerationTask = "classes"
+//	var previousUnpackingTask = []
 
-	lispSourceFiles.each { lispSourceFile ->
-		String lispSourceFileName = lispSourceFile.substring(
+	lispSourceFiles.forEach { lispSourceFile ->
+		val lispSourceFileName = lispSourceFile.substring(
 				lispSourceFile.lastIndexOf("/") + 1,
 				lispSourceFile.lastIndexOf(".")
 		)
 
-		String generationTaskName = "generate-${lispSourceFileName}-Jar"
+		val generationTaskName = "generate-${lispSourceFileName}-Jar"
 		createLispGenerationTask(lispSourceFile, generationTaskName, previousGenerationTask)
 		previousGenerationTask = generationTaskName
 //		generationLispSourceDependencies.add(generationTaskName)
@@ -124,6 +128,8 @@ task generateLispSource(dependsOn: classes) {
 //		createJarUnpackingTask(lispSourceFileName, unpackingTaskName, generationLispSourceDependencies + unpackingLispSourceDependencies)
 //		unpackingLispSourceDependencies.add(unpackingTaskName)
 	}
-	assemble.dependsOn(previousGenerationTask)
+	tasks.named<DefaultTask>("assemble") {
+		dependsOn(previousGenerationTask)
+	}
 }
 //assemble.dependsOn(generateLispSource)

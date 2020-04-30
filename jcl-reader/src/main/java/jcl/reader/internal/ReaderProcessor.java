@@ -60,7 +60,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -116,7 +116,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -151,7 +151,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -180,7 +180,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -226,7 +226,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -258,7 +258,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -277,7 +277,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -338,7 +338,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -425,7 +425,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */
@@ -491,7 +491,7 @@ public class ReaderProcessor {
 	 * </p>
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the token
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
 	 *
 	 * @return the parsed token
 	 */

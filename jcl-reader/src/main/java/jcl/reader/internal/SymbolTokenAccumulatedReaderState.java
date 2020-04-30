@@ -54,11 +54,11 @@ import lombok.experimental.UtilityClass;
 final class SymbolTokenAccumulatedReaderState {
 
 	/**
-	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's {@link
-	 * TokenBuilder#getTokenAttributes()}.
+	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's list of {@link
+	 * TokenAttribute} objects.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link SymbolStruct}
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link SymbolStruct}
 	 *
 	 * @return the built {@link SymbolStruct} value
 	 */

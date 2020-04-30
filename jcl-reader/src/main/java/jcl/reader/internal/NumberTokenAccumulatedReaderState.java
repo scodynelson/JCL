@@ -62,11 +62,11 @@ final class NumberTokenAccumulatedReaderState {
 	);
 
 	/**
-	 * This method gets a {@link NumberStruct} from the provided {@link TokenBuilder} and it's {@link
-	 * TokenBuilder#getTokenAttributes()}.
+	 * This method gets a {@link NumberStruct} from the provided {@link TokenBuilder} and it's list of {@link
+	 * TokenAttribute} objects.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link NumberStruct}
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}
 	 *
 	 * @return the built {@link NumberStruct} value
 	 */
@@ -223,7 +223,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * supplied with no {@link AttributeType#RATIOMARKER} nor {@link AttributeType#DECIMAL}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link NumberStruct}
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}
 	 *
 	 * @return the processed integer token
 	 */
@@ -260,7 +260,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link NumberStruct}
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}
 	 *
 	 * @return the processed float token
 	 */
@@ -355,7 +355,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * resulting {@link BigInteger} has a denominator of {@link BigInteger#ONE}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link NumberStruct}
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}
 	 *
 	 * @return the processed rational token
 	 */
@@ -397,7 +397,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * accurate float result.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#getTokenAttributes()} to derive the {@link NumberStruct}
+	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}
 	 *
 	 * @return the processed rational float token
 	 */

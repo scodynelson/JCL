@@ -334,7 +334,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+		cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         className,
 		         GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE,
 		         GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_NAME,

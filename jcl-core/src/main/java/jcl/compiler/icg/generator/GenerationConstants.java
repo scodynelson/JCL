@@ -37,6 +37,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
@@ -348,9 +349,15 @@ public interface GenerationConstants {
 
 	String PATHNAME_STRUCT_NAME = Type.getInternalName(PathnameStruct.class);
 
-	String PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME = "toPathname";
+	String PATHNAME_STRUCT_TO_PATHNAME_METHOD_NAME = "toPathname";
 
-	String PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_DESC = CodeGenerators.getMethodDescription(PathnameStruct.class, PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME, URI.class);
+	String PATHNAME_STRUCT_TO_PATHNAME_METHOD_DESC = CodeGenerators.getMethodDescription(PathnameStruct.class, PATHNAME_STRUCT_TO_PATHNAME_METHOD_NAME, LispStruct.class, LispStruct.class, LispStruct.class, LispStruct.class, LispStruct.class, LispStruct.class);
+
+	String LOGICAL_PATHNAME_STRUCT_NAME = Type.getInternalName(LogicalPathnameStruct.class);
+
+	String LOGICAL_PATHNAME_STRUCT_TO_LOGICAL_PATHNAME_METHOD_NAME = "toLogicalPathname";
+
+	String LOGICAL_PATHNAME_STRUCT_TO_LOGICAL_PATHNAME_METHOD_DESC = CodeGenerators.getMethodDescription(LogicalPathnameStruct.class, LOGICAL_PATHNAME_STRUCT_TO_LOGICAL_PATHNAME_METHOD_NAME, LispStruct.class, LispStruct.class, LispStruct.class, LispStruct.class, LispStruct.class);
 
 	String LISP_STRUCT_NAME = Type.getInternalName(LispStruct.class);
 

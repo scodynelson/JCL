@@ -6,7 +6,6 @@ package testground;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
-import jcl.lang.PathnameStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
@@ -210,10 +208,10 @@ public class TestGround {
 		return ConsStruct.toLispCons(car, cdr);
 	}
 
-	private Object pathnameGen() {
-		final URI uri = URI.create("");
-		return PathnameStruct.toPathname(uri);
-	}
+//	private Object pathnameGen() {
+//		final URI uri = URI.create("");
+//		return PathnameStruct.toPathname(uri);
+//	}
 
 	private Object stringGen() {
 		return StringStruct.toLispString("string");

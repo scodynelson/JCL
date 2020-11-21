@@ -32,11 +32,11 @@ import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
@@ -44,11 +44,9 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.pathname.PathnameType;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.PathnameVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
 import lombok.experimental.UtilityClass;
@@ -139,7 +137,7 @@ public final class InternalCompile {
 		final boolean print = printVal.toJavaPBoolean();
 
 		final PathnameStruct inputFilePathname = PathnameStruct.toPathname(inputFile);
-		final File inputFilePathnameFile = new File(inputFilePathname.getNamestring());
+		final File inputFilePathnameFile = new File(inputFilePathname.namestring());
 		final Path inputFilePath = inputFilePathnameFile.toPath();
 
 		final boolean inputFileNotExists = Files.notExists(inputFilePath);
@@ -166,15 +164,14 @@ public final class InternalCompile {
 		}
 
 		final PathnameStruct outputFilePathname = compileFilePathname(inputFilePathname, outputFile);
-		final File outputFilePathnameFile = new File(outputFilePathname.getNamestring());
+		final File outputFilePathnameFile = new File(outputFilePathname.namestring());
 		final Path outputFilePath = outputFilePathnameFile.toPath();
 
 		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();
 		final LispStruct previousCompileFileTruename = CompilerVariables.COMPILE_FILE_TRUENAME.getValue();
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
-		final Path outputFileAbsolutePath = outputFilePath.toAbsolutePath();
-		final PathnameStruct outputFileTruename = PathnameStruct.toPathname(outputFileAbsolutePath);
+		final PathnameStruct outputFileTruename = PathnameStruct.toPathname(outputFilePathnameFile.toURI().toString());
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
@@ -188,7 +185,7 @@ public final class InternalCompile {
 					CommonLispSymbols.NIL, CommonLispSymbols.NIL, CommonLispSymbols.DEFAULT_KEYWORD
 			);
 
-			final String inputFileLispName = inputFilePathname.getPathnameName().getName();
+			final String inputFileLispName = StringStruct.toLispString(inputFilePathname.pathnameName()).toJavaString();
 
 			final String inputFileName = inputFilePath.getFileName().toString();
 			String inputClassName = FilenameUtils.getBaseName(inputFileName);
@@ -212,7 +209,7 @@ public final class InternalCompile {
 
 			final ClassWriter cw = currentClass.getClassWriter();
 
-			cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+			cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 			                  className,
 			                  null,
 			                  GenerationConstants.JAVA_OBJECT_NAME,
@@ -420,59 +417,29 @@ public final class InternalCompile {
 	}
 
 	public static PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
-		final LispStruct realOutputFile = ((outputFile == null) || (outputFile == NILStruct.INSTANCE))
-		                                  ? null
-		                                  : outputFile;
+//		final PathnameStruct defaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 
 		final PathnameStruct inputFilePathname = PathnameStruct.toPathname(inputFile);
-		final PathnameStruct defaultPathnameDefaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
-		final PathnameStruct mergedInputFile = PathnameStruct.mergePathnames(inputFilePathname, defaultPathnameDefaults);
 
-		final PathnameType outputPathnameType = new PathnameType("jar");
+		final PathnameStruct outputFilePathname;
+		if (NILStruct.INSTANCE.eq(outputFile)) {
+//			final PathnameStruct outputDefaults = PathnameStructs.mergePathnames(inputFilePathname, defaults);
+			final PathnameStruct outputDefaults = inputFilePathname;
 
-		final boolean isLogicalInputFile = mergedInputFile instanceof LogicalPathnameStruct;
-
-		if ((realOutputFile == null) && isLogicalInputFile) {
-			final PathnameStruct translatedMergedInputFile = PathnameStruct.translateLogicalPathname(mergedInputFile);
-			return LogicalPathnameStruct.toLogicalPathname(
-					translatedMergedInputFile.getPathnameHost(),
-					translatedMergedInputFile.getPathnameDirectory(),
-					translatedMergedInputFile.getPathnameName(),
-					outputPathnameType,
-					translatedMergedInputFile.getPathnameVersion()
-			);
-		} else if (isLogicalInputFile) {
-			final PathnameStruct outputFilePathname = PathnameStruct.toPathname(realOutputFile);
-			final PathnameStruct translatedMergedInputFile = PathnameStruct.translateLogicalPathname(mergedInputFile);
-			final PathnameStruct mergedOutputFile = PathnameStruct.mergePathnames(outputFilePathname, translatedMergedInputFile);
-			return PathnameStruct.toPathname(
-					mergedOutputFile.getPathnameHost(),
-					mergedOutputFile.getPathnameDevice(),
-					mergedOutputFile.getPathnameDirectory(),
-					mergedOutputFile.getPathnameName(),
-					outputPathnameType,
-					mergedOutputFile.getPathnameVersion()
-			);
-		} else if (realOutputFile == null) {
-			return PathnameStruct.toPathname(
-					mergedInputFile.getPathnameHost(),
-					mergedInputFile.getPathnameDevice(),
-					mergedInputFile.getPathnameDirectory(),
-					mergedInputFile.getPathnameName(),
-					outputPathnameType,
-					mergedInputFile.getPathnameVersion()
+			outputFilePathname = PathnameStruct.toPathname(
+					outputDefaults.pathnameHost(),
+					outputDefaults.pathnameDevice(),
+					outputDefaults.pathnameDirectory(),
+					outputDefaults.pathnameName(),
+					StringStruct.toLispString("jar"),
+					outputDefaults.pathnameVersion()
 			);
 		} else {
-			final PathnameStruct outputFilePathname = PathnameStruct.toPathname(realOutputFile);
-			final PathnameStruct mergedOutputFile = PathnameStruct.mergePathnames(outputFilePathname, mergedInputFile);
-			return PathnameStruct.toPathname(
-					mergedOutputFile.getPathnameHost(),
-					mergedOutputFile.getPathnameDevice(),
-					mergedOutputFile.getPathnameDirectory(),
-					mergedOutputFile.getPathnameName(),
-					outputPathnameType,
-					mergedOutputFile.getPathnameVersion()
-			);
+			outputFilePathname = PathnameStruct.toPathname(outputFile);
 		}
+
+//		final PathnameStruct outputFilePathnameDefaults = PathnameStructs.mergePathnames(inputFilePathname, defaults);
+//		return PathnameStructs.mergePathnames(outputFilePathname, outputFilePathnameDefaults, NILStruct.INSTANCE);
+		return outputFilePathname;
 	}
 }

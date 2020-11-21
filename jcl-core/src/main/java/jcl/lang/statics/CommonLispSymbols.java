@@ -1084,6 +1084,18 @@ public interface CommonLispSymbols {
 	KeywordStruct NEWEST_KEYWORD = KeywordStruct.toLispKeyword("NEWEST");
 	KeywordStruct OLDEST_KEYWORD = KeywordStruct.toLispKeyword("OLDEST");
 	KeywordStruct CASE_KEYWORD = KeywordStruct.toLispKeyword("CASE");
+	KeywordStruct HOST_KEYWORD = KeywordStruct.toLispKeyword("HOST");
+	KeywordStruct DEVICE_KEYWORD = KeywordStruct.toLispKeyword("DEVICE");
+	KeywordStruct DIRECTORY_KEYWORD = KeywordStruct.toLispKeyword("DIRECTORY");
+	KeywordStruct NAME_KEYWORD = KeywordStruct.toLispKeyword("NAME");
+	KeywordStruct TYPE_KEYWORD = KeywordStruct.toLispKeyword("TYPE");
+	KeywordStruct VERSION_KEYWORD = KeywordStruct.toLispKeyword("VERSION");
+
+	// Pathname URL Keywords
+	KeywordStruct SCHEME_KEYWORD = KeywordStruct.toLispKeyword("SCHEME");
+	KeywordStruct AUTHORITY_KEYWORD = KeywordStruct.toLispKeyword("AUTHORITY");
+	KeywordStruct QUERY_KEYWORD = KeywordStruct.toLispKeyword("QUERY");
+	KeywordStruct FRAGMENT_KEYWORD = KeywordStruct.toLispKeyword("FRAGMENT");
 
 	// Compile-File/Load Keywords
 	KeywordStruct OUTPUT_FILE_KEYWORD = KeywordStruct.toLispKeyword("OUTPUT-FILE");

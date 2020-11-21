@@ -3,8 +3,6 @@ package jcl.compiler.function;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,12 +22,9 @@ import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
-import jcl.lang.pathname.PathnameVersion;
-import jcl.lang.pathname.PathnameVersionComponentType;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.PathnameVariables;
 import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
 import lombok.experimental.UtilityClass;
@@ -161,20 +156,18 @@ public final class InternalLoad {
 			filespecFileStream = (FileStreamStruct) filespec;
 			filespecPathname = filespecFileStream.toPathname();
 		} else {
-			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
-			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
-			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
-			filespecPathname = PathnameStruct.mergePathnames(filespecAsPathname, defaultPathspec, nilVersion);
+//			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
+//			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
+//			filespecPathname = PathnameStructs.mergePathnames(filespecAsPathname, defaultPathspec);
+			filespecPathname = PathnameStruct.toPathname(filespec);
 		}
 
-		final File pathnameFile = new File(filespecPathname.getNamestring());
-		final Path filespecPath = pathnameFile.toPath();
+		final File pathnameFile = new File(filespecPathname.namestring());
 
-		final boolean filespecNotExists = Files.notExists(filespecPath);
-		if (filespecNotExists && ifDoesNotExist) {
-			throw new FileErrorException("Filespec provided to LOAD does not exist: " + filespecPath, filespecFileStream);
+		if (!pathnameFile.exists() && ifDoesNotExist) {
+			throw new FileErrorException("Filespec provided to LOAD does not exist: " + pathnameFile, filespecFileStream);
 		}
-		if (filespecNotExists) {
+		if (!pathnameFile.exists()) {
 			return NILStruct.INSTANCE;
 		}
 
@@ -182,17 +175,16 @@ public final class InternalLoad {
 		final LispStruct previousLoadTruename = CompilerVariables.LOAD_TRUENAME.getValue();
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
-		final Path filespecAbsolutePath = filespecPath.toAbsolutePath();
-		final PathnameStruct filespecTruename = PathnameStruct.toPathname(filespecAbsolutePath);
+		final PathnameStruct filespecTruename = PathnameStruct.toPathname(pathnameFile.toURI().toString());
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
 
 		try {
-			final String filespecNamestring = filespecPath.toString();
+			final String filespecNamestring = pathnameFile.toString();
 			if (StringUtils.endsWithIgnoreCase(filespecNamestring, ".lar") || StringUtils.endsWithIgnoreCase(filespecNamestring, ".jar")) {
-				return loadCompiledCode(filespecPath, verbose, print);
+				return loadCompiledCode(pathnameFile, verbose, print);
 			} else if (StringUtils.endsWithIgnoreCase(filespecNamestring, ".lsp") || StringUtils.endsWithIgnoreCase(filespecNamestring, ".lisp")) {
 				if (filespecFileStream == null) {
 					filespecFileStream = FileStreamStruct.toFileStream(
@@ -200,9 +192,9 @@ public final class InternalLoad {
 							CommonLispSymbols.NIL, CommonLispSymbols.NIL, CommonLispSymbols.DEFAULT_KEYWORD
 					);
 				}
-				return loadSourceCode(filespecFileStream, filespecPath, verbose, print);
+				return loadSourceCode(filespecFileStream, pathnameFile, verbose, print);
 			} else {
-				throw new FileErrorException("Cannot LOAD file with unsupported extension: " + filespecPath, filespecFileStream);
+				throw new FileErrorException("Cannot LOAD file with unsupported extension: " + pathnameFile, filespecFileStream);
 			}
 		} finally {
 			CompilerVariables.LOAD_TRUENAME.setValue(previousLoadTruename);
@@ -213,11 +205,11 @@ public final class InternalLoad {
 		}
 	}
 
-	private static LispStruct loadSourceCode(final FileStreamStruct filespecFileStream, final Path filespecPath,
+	private static LispStruct loadSourceCode(final FileStreamStruct filespecFileStream, final File pathnameFile,
 	                                         final boolean verbose, final boolean print) {
 
 		if (verbose) {
-			log.info("; Loading '{}'", filespecPath);
+			log.info("; Loading '{}'", pathnameFile);
 		}
 
 		LispStruct form;
@@ -236,10 +228,10 @@ public final class InternalLoad {
 		return TStruct.INSTANCE;
 	}
 
-	private static LispStruct loadCompiledCode(final Path filespecPath, final boolean verbose, final boolean print) {
+	private static LispStruct loadCompiledCode(final File pathnameFile, final boolean verbose, final boolean print) {
 
 		try {
-			final LoaderClassLoader cl = new LoaderClassLoader(filespecPath, verbose, print);
+			final LoaderClassLoader cl = new LoaderClassLoader(pathnameFile, verbose, print);
 			final Class<?> classLoaded = cl.loadMainClass();
 
 			if (classLoaded == null) {
@@ -254,7 +246,7 @@ public final class InternalLoad {
 			log.error(fee.getMessage(), fee.getCause());
 			return NILStruct.INSTANCE;
 		} catch (final Exception ex) {
-			log.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
+			log.error("Error loading main definition for compiled file: '{}'", pathnameFile, ex);
 			return NILStruct.INSTANCE;
 		}
 	}

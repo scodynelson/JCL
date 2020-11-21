@@ -5,6 +5,7 @@
 package jcl.lang.internal.stream;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -153,7 +154,9 @@ public final class FileStreamStructImpl extends StreamStructImpl implements File
 		this.pathname = pathname;
 		this.externalFormat = ExternalFormat.fromValue(externalFormat);
 		try {
-			randomAccessFile = new RandomAccessFile(pathname.getPath().toFile(), mode);
+			final String namestring = pathname.namestring();
+			final File file = new File(namestring);
+			randomAccessFile = new RandomAccessFile(file, mode);
 		} catch (final FileNotFoundException fnfe) {
 			throw new ErrorException("Failed to open provided file.", fnfe);
 		}

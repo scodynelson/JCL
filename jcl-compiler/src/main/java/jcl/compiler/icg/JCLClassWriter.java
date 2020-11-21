@@ -23,7 +23,7 @@ public class JCLClassWriter extends ClassVisitor {
 	private JCLMethodWriter currentMv;
 
 	public JCLClassWriter(final GeneratorState generatorState, final String className, final String fileName) {
-		super(Opcodes.ASM5, new ClassWriter(ClassWriter.COMPUTE_FRAMES));
+		super(Opcodes.ASM9, new ClassWriter(ClassWriter.COMPUTE_FRAMES));
 		this.generatorState = generatorState;
 		this.className = className;
 		this.fileName = fileName;

@@ -12,6 +12,6 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("org.apache.logging.log4j:log4j-api")
 
-	testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+	testImplementation("org.junit.jupiter:junit-jupiter")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
 }

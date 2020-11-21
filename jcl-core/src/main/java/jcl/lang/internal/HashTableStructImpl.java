@@ -66,11 +66,6 @@ public final class HashTableStructImpl extends LispStructImpl implements HashTab
 		map = new ConcurrentHashMap<>(size.toJavaInt(), rehashThreshold.toJavaPFloat());
 	}
 
-	public static HashTableStructImpl valueOf(final FunctionStruct test, final FixnumStruct size,
-	                                          final FloatStruct rehashThreshold) {
-		return new HashTableStructImpl(test, size, rehashThreshold);
-	}
-
 	@Override
 	public ListStruct entries() {
 		final List<ConsStruct> entriesList

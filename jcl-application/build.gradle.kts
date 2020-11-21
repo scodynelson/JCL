@@ -18,7 +18,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
-	implementation("info.picocli:picocli:4.2.0")
+	implementation("info.picocli:picocli:4.5.2")
 
 	implementation("org.apache.logging.log4j:log4j-api")
 
@@ -88,9 +88,8 @@ val lispSourceFiles = listOf(
 		"jcl/structures/structures.lisp"
 )
 
-fun createLispGenerationTask(lispSourceFile: String, taskName: String, dependencies: String) {
-	tasks.create(taskName, JavaExec::class) {
-		dependsOn(dependencies)
+fun createLispGenerationTask(taskName: String, lispSourceFile: String): Task {
+	return tasks.create(taskName, JavaExec::class) {
 		main = "jcl.system.JCL"
 		classpath = sourceSets["main"].runtimeClasspath
 		args("--compileFileSrcDir=$projectDir/src/main/lisp/${lispSourceFile}",
@@ -119,8 +118,11 @@ tasks.create("generateLispSource") {
 				lispSourceFile.lastIndexOf(".")
 		)
 
-		val generationTaskName = "generate-${lispSourceFileName}-Jar"
-		createLispGenerationTask(lispSourceFile, generationTaskName, previousGenerationTask)
+		val generationTaskName = "generate-${lispSourceFileName}-jar"
+		val generatedTask: Task = createLispGenerationTask(generationTaskName, lispSourceFile)
+
+		generatedTask.dependsOn(previousGenerationTask)
+
 		previousGenerationTask = generationTaskName
 //		generationLispSourceDependencies.add(generationTaskName)
 

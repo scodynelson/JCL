@@ -3,7 +3,6 @@ package jcl.compiler.classloaders;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,14 +28,13 @@ public class LoaderClassLoader extends ClassLoader {
 
 	private final boolean print;
 
-	public LoaderClassLoader(final Path jarFilePath, final boolean verbose, final boolean print) {
+	public LoaderClassLoader(final File file, final boolean verbose, final boolean print) {
 		super(CompilerClassLoader.INSTANCE);
 
 		this.verbose = verbose;
 		this.print = print;
 
 		try {
-			final File file = jarFilePath.toFile();
 			jarFile = new JarFile(file);
 
 			final String jarFileName = jarFile.getName();
@@ -48,7 +46,7 @@ public class LoaderClassLoader extends ClassLoader {
 			}
 			loadJarEntries(jarFileName);
 		} catch (final IOException ex) {
-			throw new ErrorException("Unable to create class loader from jar file: " + jarFilePath, ex);
+			throw new ErrorException("Unable to create class loader from jar file: " + file, ex);
 		}
 	}
 

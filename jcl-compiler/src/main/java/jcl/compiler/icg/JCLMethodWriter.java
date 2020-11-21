@@ -17,7 +17,7 @@ public class JCLMethodWriter extends MethodVisitor {
 	private int nextAvailableStore;
 
 	public JCLMethodWriter(final JCLClassWriter cw, final MethodVisitor mv) {
-		super(Opcodes.ASM5, mv);
+		super(Opcodes.ASM9, mv);
 		this.cw = cw;
 	}
 

@@ -259,7 +259,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 			includeStructureClassFileName = Type.getInternalName(includeStructureClass.getClass());
 		}
 
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+		cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         structureClassClassName,
 		         null,
 		         includeStructureClassFileName,
@@ -592,7 +592,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+		cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         structureObjectClassName,
 		         null,
 		         GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,

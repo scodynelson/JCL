@@ -135,7 +135,7 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		classBuilder.getFinalClassBuilderDeque().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/compiler/function/expander/SymbolMacroExpander", null);
+		cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/compiler/function/expander/SymbolMacroExpander", null);
 
 		cw.visitSource(fileName + ".java", null);
 

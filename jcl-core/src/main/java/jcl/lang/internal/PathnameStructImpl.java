@@ -5,45 +5,34 @@
 package jcl.lang.internal;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
+import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.LogicalPathnameStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PathnameStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
-import jcl.lang.pathname.PathnameComponentType;
-import jcl.lang.pathname.PathnameDevice;
-import jcl.lang.pathname.PathnameDirectory;
-import jcl.lang.pathname.PathnameDirectoryComponent;
-import jcl.lang.pathname.PathnameDirectoryLevel;
-import jcl.lang.pathname.PathnameDirectoryLevelType;
-import jcl.lang.pathname.PathnameDirectoryType;
-import jcl.lang.pathname.PathnameHost;
-import jcl.lang.pathname.PathnameName;
-import jcl.lang.pathname.PathnameType;
-import jcl.lang.pathname.PathnameVersion;
-import jcl.lang.pathname.PathnameVersionComponentType;
+import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.MethodVisitor;
@@ -52,7 +41,22 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link PathnameStructImpl} is the object representation of a Lisp 'pathname' type.
  */
+@Log4j2
 public class PathnameStructImpl extends LispStructImpl implements PathnameStruct {
+
+	/**
+	 * The Unix directory separator character.
+	 */
+	private static final String DIR_SEPARATOR_UNIX = Character.toString(IOUtils.DIR_SEPARATOR_UNIX);
+	/**
+	 * The Windows directory separator character.
+	 */
+	private static final String DIR_SEPARATOR_WINDOWS = Character.toString(IOUtils.DIR_SEPARATOR_WINDOWS);
+
+	/**
+	 * The extension separator character.
+	 */
+	public static final String EXTENSION_SEPARATOR = Character.toString(FilenameUtils.EXTENSION_SEPARATOR);
 
 	private static final String CURRENT_DIR_STRING = ".";
 
@@ -60,10 +64,15 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 
 	private static final String CURRENT_DIR_STRING_BACKSLASH = ".\\";
 
+	private static final String FILE_PREFIX = "file:";
+
+	private static final String JAR_PREFIX = "jar:";
+	private static final String JAR_SEPARATOR = "!/";
+
 	/**
 	 * Back/Up string for pathname parsing.
 	 */
-	private static final String BACK_UP_STRING = "..";
+	protected static final String BACK_UP_STRING = "..";
 
 	/**
 	 * Back/Up string for pathname parsing.
@@ -73,97 +82,35 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	/**
 	 * Wildcard string for pathname parsing.
 	 */
-	private static final String WILDCARD_STRING = "*";
+	protected static final String WILDCARD_STRING = "*";
 
 	/**
 	 * Wildcard-Inferiors string for pathname parsing.
 	 */
-	private static final String WILDCARD_INFERIORS_STRING = "**";
+	protected static final String WILDCARD_INFERIORS_STRING = "**";
 
 	/**
 	 * Tilde string for Unix home directories.
 	 */
 	private static final String TILDE = "~";
 
-	/**
-	 * {@link Pattern} used to parse pathname directories.
-	 * <p>
-	 * NOTE: This patterns complexity is due to Windows platforms and their usage of backslashes
-	 */
-	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
+	private static final String USER_HOME_PREFIX = "~/";
 
-	/**
-	 * {@link Pattern} used to parse Drive letters for Windows platforms.
-	 */
-	private static final Pattern DRIVE_LETTER_PATTERN = Pattern.compile("([A-Z]|[a-z]):.");
+	private static final char DRIVE_SEPARATOR_CHAR = ':';
 
-	/**
-	 * {@link Pattern} used to parse '~' strings combinations.
-	 */
-	private static final Pattern TILDE_PATTERN = Pattern.compile(TILDE, Pattern.LITERAL);
+	private static final String WINDOWS_UNC_PREFIX_SLASH = "//";
+	private static final String WINDOWS_UNC_PREFIX_BACKSLASH = "\\\\";
 
-	/**
-	 * Int constant to note the length of a Drive letter (with backslash) for Windows platforms.
-	 */
-	private static final int DRIVE_LETTER_LENGTH = 2;
+	protected LispStruct host = NILStruct.INSTANCE;
+	protected LispStruct device = NILStruct.INSTANCE;
+	protected LispStruct directory = NILStruct.INSTANCE;
+	protected LispStruct name = NILStruct.INSTANCE;
+	protected LispStruct type = NILStruct.INSTANCE;
+	protected LispStruct version = NILStruct.INSTANCE;
 
-	/**
-	 * The {@link PathnameHost} value.
-	 */
-	protected PathnameHost host = new PathnameHost(PathnameComponentType.UNSPECIFIC);
+	protected String namestring;
 
-	/**
-	 * The {@link PathnameDevice} value.
-	 */
-	protected PathnameDevice device = new PathnameDevice(PathnameComponentType.NIL);
-
-	/**
-	 * The {@link PathnameDirectory} value.
-	 */
-	protected PathnameDirectory directory = new PathnameDirectory(PathnameComponentType.NIL);
-
-	/**
-	 * The {@link PathnameName} value.
-	 */
-	protected PathnameName name = new PathnameName(PathnameComponentType.NIL);
-
-	/**
-	 * The {@link PathnameType} value.
-	 */
-	protected PathnameType type = new PathnameType(PathnameComponentType.NIL);
-
-	/**
-	 * The {@link PathnameVersion} value.
-	 */
-	protected PathnameVersion version = new PathnameVersion(PathnameVersionComponentType.NIL);
-
-	/**
-	 * The internal {@link URI} representation of the pathname.
-	 */
-	protected final URI uri;
-
-	private String namestring;
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param path
-	 * 		the path to parse into the pathname object elements
-	 */
-	public PathnameStructImpl(final Path path) {
-		// TODO: This doesn't work correctly!!!
-		this(path.toUri());
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param file
-	 * 		the file to parse into the pathname object elements
-	 */
-	public PathnameStructImpl(final File file) {
-		// TODO: This doesn't work correctly!!!
-		this(file.toURI());
+	protected PathnameStructImpl() {
 	}
 
 	/**
@@ -173,23 +120,390 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	 * 		the pathname string to parse into the pathname object elements
 	 */
 	public PathnameStructImpl(final String pathname) {
-		this(getURIFromPathname(pathname));
-//		init(pathnameString);
+		String s = pathname;
+		if (s == null) {
+			return;
+		}
+
+		if (CURRENT_DIR_STRING.equals(s) || CURRENT_DIR_STRING_SLASH.equals(s)
+				|| (SystemUtils.IS_OS_WINDOWS && CURRENT_DIR_STRING_BACKSLASH.equals(s))) {
+			directory = ListStruct.toLispList(CommonLispSymbols.RELATIVE_KEYWORD);
+			return;
+		}
+
+		if (BACK_UP_STRING.equals(s) || BACK_UP_STRING_SLASH.equals(s)) {
+			directory = ListStruct.toLispList(CommonLispSymbols.RELATIVE_KEYWORD, CommonLispSymbols.UP_KEYWORD);
+			return;
+		}
+
+		// A Windows UNC Path
+		if (SystemUtils.IS_OS_WINDOWS
+				&& (s.startsWith(WINDOWS_UNC_PREFIX_BACKSLASH) || s.startsWith(WINDOWS_UNC_PREFIX_SLASH))) {
+			initUNCPath(s);
+			return;
+		}
+
+		// A JAR file
+		if (s.startsWith(JAR_PREFIX) && s.endsWith(JAR_SEPARATOR)) {
+			initJarFile(s);
+			return;
+		}
+
+		// An entry in a JAR file
+		final int separatorIndex = s.lastIndexOf(JAR_SEPARATOR);
+		if ((separatorIndex > 0) && s.startsWith(JAR_PREFIX)) {
+			initJarEntry(s, separatorIndex);
+			return;
+		}
+
+		// A URL
+		if (isValidURL(s)) {
+			initURL(s);
+			return;
+		}
+
+		s = FilenameUtils.separatorsToUnix(s);
+		s = expandUserHome(s);
+
+		namestring = s;
+
+		if (SystemUtils.IS_OS_WINDOWS) {
+			if ((s.length() >= 2) && (s.charAt(1) == DRIVE_SEPARATOR_CHAR)) {
+				final String driveLetter = Character.toString(s.charAt(0));
+				device = StringStruct.toLispString(driveLetter);
+				s = s.substring(2);
+			}
+		}
+
+		String directoryString = FilenameUtils.getFullPath(s);
+		s = FilenameUtils.getName(s);
+
+		if (StringUtils.isNotEmpty(directoryString)) {
+			if (BACK_UP_STRING.equals(s)) {
+				directoryString += s;
+				s = StringUtils.EMPTY;
+			}
+			directory = parseDirectory(directoryString);
+		}
+
+		// No TYPE can be parsed
+		if (s.startsWith(EXTENSION_SEPARATOR)
+				&& ((s.indexOf(EXTENSION_SEPARATOR, 1) == -1) || s.endsWith(EXTENSION_SEPARATOR))) {
+			name = StringStruct.toLispString(s);
+			return;
+		}
+
+		final int lastExtensionIndex = s.lastIndexOf(FilenameUtils.EXTENSION_SEPARATOR);
+		if (lastExtensionIndex > 0) {
+			final String pnName = s.substring(0, lastExtensionIndex);
+			if (WILDCARD_STRING.equals(pnName)) {
+				name = CommonLispSymbols.WILD_KEYWORD;
+			} else {
+				name = StringStruct.toLispString(pnName);
+			}
+
+			final String pnType = s.substring(lastExtensionIndex + 1);
+			if (WILDCARD_STRING.equals(pnType)) {
+				type = CommonLispSymbols.WILD_KEYWORD;
+			} else {
+				type = StringStruct.toLispString(pnType);
+			}
+		} else if (!s.isEmpty()) {
+			if (WILDCARD_STRING.equals(s)) {
+				name = CommonLispSymbols.WILD_KEYWORD;
+			} else {
+				name = StringStruct.toLispString(s);
+			}
+		}
+	}
+
+	private static boolean isValidURL(final String s) {
+		// On Windows, the scheme "[A-Z]:.*" is ambiguous; reject as urls
+		// This special case reduced exceptions while compiling Maxima by 90%+
+		if (SystemUtils.IS_OS_WINDOWS && (s.length() >= 2) && (s.charAt(1) == ':')) {
+			final char c = s.charAt(0);
+			if ((('A' <= s.charAt(0)) && (s.charAt(0) <= 'Z'))
+					|| (('a' <= s.charAt(0)) && (s.charAt(0) <= 'z'))) {
+				return false;
+			}
+		}
+
+		// no schema separator; can't be valid
+		if (s.indexOf(':') == -1) {
+			return false;
+		}
+
+		try {
+			final URL url = new URL(s);
+		} catch (final MalformedURLException e) {
+			// Generating an exception is a heavy operation,
+			// we want to try hard not to get into this branch, without
+			// implementing the URL class ourselves
+			return false;
+		}
+		return true;
+	}
+
+	private static String expandUserHome(final String s) {
+		if (SystemUtils.IS_OS_UNIX) {
+			final String userHome = SystemUtils.USER_HOME;
+			if (TILDE.equals(s)) {
+				return userHome + IOUtils.DIR_SEPARATOR_UNIX;
+			} else if (s.startsWith(USER_HOME_PREFIX)) {
+				return userHome + s.substring(1);
+			}
+		}
+		return s;
+	}
+
+	private void initUNCPath(final String s) {
+		final int shareIndex;
+		final int dirIndex;
+
+		// match \\<server>\<share>\[directories-and-files]
+		if (s.startsWith(WINDOWS_UNC_PREFIX_BACKSLASH)) {
+			shareIndex = s.indexOf(IOUtils.DIR_SEPARATOR_WINDOWS, 2);
+			dirIndex = s.indexOf(IOUtils.DIR_SEPARATOR_WINDOWS, shareIndex + 1);
+			// match //<server>/<share>/[directories-and-files]
+		} else {
+			shareIndex = s.indexOf(IOUtils.DIR_SEPARATOR_UNIX, 2);
+			dirIndex = s.indexOf(IOUtils.DIR_SEPARATOR_UNIX, shareIndex + 1);
+		}
+		if ((shareIndex == -1) || (dirIndex == -1)) {
+			throw new ErrorException("Unsupported UNC path format: \"" + s + '"');
+		}
+
+		host = StringStruct.toLispString(s.substring(2, shareIndex));
+		device = StringStruct.toLispString(s.substring(shareIndex + 1, dirIndex));
+
+		final PathnameStructImpl p = new PathnameStructImpl(s.substring(dirIndex));
+		directory = p.directory;
+		name = p.name;
+		type = p.type;
+		version = p.version;
+		namestring = null;
+	}
+
+	private void initJarFile(String s) {
+		ListStruct jars = NILStruct.INSTANCE;
+		final int i = s.lastIndexOf(JAR_SEPARATOR, s.length() - JAR_SEPARATOR.length() - 1);
+		String jar;
+		if (i == -1) {
+			jar = s;
+		} else {
+			// There can be no more than two jar references and the
+			// inner one must be a file reference within the outer.
+			jar = "jar:file:" + s.substring(i + JAR_SEPARATOR.length());
+			s = s.substring(JAR_PREFIX.length(), i + JAR_SEPARATOR.length());
+			PathnameStructImpl p = new PathnameStructImpl(s);
+			// TODO: casting
+			jars = ConsStruct.toLispCons(((ListStruct)p.device).car(), jars);
+		}
+		if (jar.startsWith("jar:file:")) {
+			final String file = jar.substring("jar:file:".length(), jar.length() - JAR_SEPARATOR.length());
+			final PathnameStructImpl jarPathname;
+			if (!file.isEmpty()) {
+				URI uri = null;
+				try {
+					final URL url = new URL(FILE_PREFIX + file);
+					uri = url.toURI();
+				} catch (final MalformedURLException | URISyntaxException e) {
+					throw new SimpleErrorException("Failed to create URI from "
+							                      + '\'' + file + '\''
+							                      + ": " + e.getMessage());
+				}
+				final String path = uri.getPath();
+				if (path == null) {
+					// We allow "jar:file:baz.jar!/" to construct a relative
+					// path for jar files, so MERGE-PATHNAMES means something.
+					jarPathname = new PathnameStructImpl(uri.getSchemeSpecificPart());
+				} else {
+					jarPathname = new PathnameStructImpl(new File(path).getPath());
+				}
+			} else {
+				jarPathname = new PathnameStructImpl("");
+			}
+			jars = ConsStruct.toLispCons(jarPathname, jars);
+		} else {
+			URL url = null;
+			try {
+				url = new URL(jar.substring(JAR_PREFIX.length(), jar.length() - 2));
+				final PathnameStructImpl p = new PathnameStructImpl(url.toString());
+				jars = ConsStruct.toLispCons(p, jars);
+			} catch (final MalformedURLException e) {
+				throw new ErrorException("Failed to parse URL "
+						                    + '\'' + url + '\''
+						                    + e.getMessage());
+			}
+		}
+		jars = jars.nReverse();
+		device = jars;
+		namestring = null;
+	}
+
+	private void initJarEntry(final String s, final int separatorIndex) {
+		final String jarURL = s.substring(0, separatorIndex + JAR_SEPARATOR.length());
+
+		final URL url;
+		try {
+			url = new URL(jarURL);
+		} catch (final MalformedURLException e) {
+			throw new ErrorException("Failed to parse URL " + '\'' + jarURL + '\'' + e.getMessage(), e);
+		}
+
+		final PathnameStructImpl d = new PathnameStructImpl(url.toString());
+
+		device = d.device;
+
+		// Use URI escaping rules
+		final String pathnameString = FILE_PREFIX + IOUtils.DIR_SEPARATOR_UNIX + s.substring(separatorIndex + JAR_SEPARATOR.length());
+		final PathnameStructImpl p = new PathnameStructImpl(pathnameString);
+
+		directory = p.directory;
+		name = p.name;
+		type = p.type;
+		version = p.version;
+	}
+
+	private void initURL(final String s) {
+		final URL url;
+		try {
+			url = new URL(s);
+		} catch (final MalformedURLException e) {
+			throw new ErrorException("Why?", e); // TODO
+		}
+
+		final String scheme = url.getProtocol();
+		if ("file".equals(scheme)) {
+			initFileURL(s, url);
+			return;
+		}
+
+		if (scheme == null) {
+			throw new ErrorException("Scheme was null for Pathname URL: " + url); // TODO
+		}
+
+		final URI uri;
+		try {
+			uri = url.toURI().normalize();
+		} catch (final URISyntaxException e) {
+			throw new ErrorException("Couldn't form URI from " + '\'' + url + '\'' + " because: " + e);
+		}
+
+		String authority = uri.getAuthority();
+		if (authority == null) {
+			authority = url.getAuthority();
+			if (authority == null) {
+				log.warn(String.format("{} has a null authority.", url));
+			}
+		}
+
+		host = NILStruct.INSTANCE;
+		host = ConsStruct.toLispCons(CommonLispSymbols.SCHEME_KEYWORD, host);
+		host = ConsStruct.toLispCons(StringStruct.toLispString(scheme), host);
+
+		if (authority != null) {
+			host = ConsStruct.toLispCons(CommonLispSymbols.AUTHORITY_KEYWORD, host);
+			host = ConsStruct.toLispCons(StringStruct.toLispString(authority), host);
+		}
+
+		device = NILStruct.INSTANCE;
+
+		// URI encode necessary characters
+		String path = uri.getRawPath();
+		if (path == null) {
+			path = StringUtils.EMPTY;
+		}
+		final String query = uri.getRawQuery();
+		if (query != null) {
+			host = ConsStruct.toLispCons(CommonLispSymbols.QUERY_KEYWORD, host);
+			host = ConsStruct.toLispCons(StringStruct.toLispString(query), host);
+		}
+		final String fragment = uri.getRawFragment();
+		if (fragment != null) {
+			host = ConsStruct.toLispCons(CommonLispSymbols.FRAGMENT_KEYWORD, host);
+			host = ConsStruct.toLispCons(StringStruct.toLispString(fragment), host);
+		}
+		final PathnameStructImpl p = new PathnameStructImpl(path);
+
+		directory = p.directory;
+		name = p.name;
+		type = p.type;
+
+		host = ((ListStruct) host).nReverse();
+		namestring = null;
+	}
+
+	private void initFileURL(final String s, final URL url) {
+		final URI uri;
+		try {
+			uri = new URI(s);
+		} catch (final URISyntaxException e) {
+			throw new SimpleErrorException("Improper URI syntax for " + '\'' + url + '\'' + ": " + e);
+		}
+
+		String uriPath = uri.getPath();
+		if (null == uriPath) {
+			// Under Windows, deal with pathnames containing
+			// devices expressed as "file:z:/foo/path"
+			uriPath = uri.getSchemeSpecificPart();
+			if ((uriPath == null) || uriPath.isEmpty()) {
+				throw new ErrorException("The URI has no path: " + uri);
+			}
+		}
+
+		final File file = new File(uriPath);
+		String path = file.getPath();
+		if (uri.toString().endsWith(DIR_SEPARATOR_UNIX) && !path.endsWith(DIR_SEPARATOR_UNIX)) {
+			path += DIR_SEPARATOR_UNIX;
+		}
+
+		final PathnameStructImpl p = new PathnameStructImpl(path);
+		host = p.host;
+		device = p.device;
+		directory = p.directory;
+		name = p.name;
+		type = p.type;
+		version = p.version;
+	}
+
+	private static ListStruct parseDirectory(final String directoryString) {
+		if (DIR_SEPARATOR_UNIX.equals(directoryString) || (SystemUtils.IS_OS_WINDOWS && DIR_SEPARATOR_WINDOWS.equals(directoryString))) {
+			return ListStruct.toLispList(CommonLispSymbols.ABSOLUTE_KEYWORD);
+		}
+
+		ListStruct result;
+		if (directoryString.startsWith(DIR_SEPARATOR_UNIX) || (SystemUtils.IS_OS_WINDOWS && directoryString.startsWith(DIR_SEPARATOR_WINDOWS))) {
+			result = ListStruct.toLispList(CommonLispSymbols.ABSOLUTE_KEYWORD);
+		} else {
+			result = ListStruct.toLispList(CommonLispSymbols.RELATIVE_KEYWORD);
+		}
+
+		final StringTokenizer st = new StringTokenizer(directoryString, "/\\");
+		while (st.hasMoreTokens()) {
+			final String token = st.nextToken();
+			final LispStruct obj;
+			if (WILDCARD_STRING.equals(token)) {
+				obj = CommonLispSymbols.WILD_KEYWORD;
+			} else if (WILDCARD_INFERIORS_STRING.equals(token)) {
+				obj = CommonLispSymbols.WILD_INFERIORS_KEYWORD;
+			} else if (BACK_UP_STRING.equals(token)) {
+				if (result.car() instanceof StringStruct) {
+					result = (ListStruct) result.cdr();
+					continue;
+				}
+				obj = CommonLispSymbols.UP_KEYWORD;
+			} else {
+				obj = StringStruct.toLispString(token);
+			}
+			result = ConsStruct.toLispCons(obj, result);
+		}
+		return result.nReverse();
 	}
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname object elements
-	 */
-	public PathnameStructImpl(final URI uri) {
-		this(getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
-	}
-
-	/**
-	 * Protected constructor.
-	 *
 	 * @param host
 	 * 		the pathname host
 	 * @param device
@@ -203,756 +517,404 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	 * @param version
 	 * 		the pathname version
 	 */
-	public PathnameStructImpl(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                           final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		this(host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param host
-	 * 		the pathname host
-	 * @param device
-	 * 		the pathname device
-	 * @param directory
-	 * 		the pathname directory
-	 * @param name
-	 * 		the pathname name
-	 * @param type
-	 * 		the pathname type
-	 * @param version
-	 * 		the pathname version
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname object elements
-	 */
-	public PathnameStructImpl(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                             final PathnameName name, final PathnameType type, final PathnameVersion version,
-	                             final URI uri) {
+	public PathnameStructImpl(final LispStruct host, final LispStruct device, final LispStruct directory,
+	                          final LispStruct name, final LispStruct type, final LispStruct version) {
 		this.host = host;
 		this.device = device;
 		this.directory = directory;
 		this.name = name;
 		this.type = type;
 		this.version = version;
-		this.uri = uri;
 	}
 
 	@Override
-	public Path getPath() {
-		final String namestring = getNamestring();
-		final File file = new File(namestring);
-		return file.toPath();
-	}
-
-	@Override
-	public boolean exists() {
-		final String namestring = getNamestring();
-		final File file = new File(namestring);
-		return file.exists();
-	}
-
-	/**
-	 * Gets the pathname host.
-	 *
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname host
-	 *
-	 * @return the pathname host
-	 */
-	private static PathnameHost getHost(final URI uri) {
-		if (uri.isOpaque()) {
-			final String schemeSpecificPart = uri.getSchemeSpecificPart();
-			return new PathnameHost(schemeSpecificPart);
-		}
-
-		final String authority = uri.getAuthority();
-		if (authority == null) {
-			return new PathnameHost(PathnameComponentType.UNSPECIFIC);
-		}
-		return new PathnameHost(authority);
-	}
-
-	/**
-	 * Gets the pathname device.
-	 *
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname device
-	 *
-	 * @return the pathname device
-	 */
-	private static PathnameDevice getDevice(final URI uri) {
-		final String scheme = uri.getScheme();
-		return new PathnameDevice(scheme);
-	}
-
-	/**
-	 * Gets the pathname directory.
-	 *
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname directory
-	 *
-	 * @return the pathname directory
-	 */
-	private static PathnameDirectory getDirectory(final URI uri) {
-		final String uriPath = StringUtils.defaultString(uri.getPath());
-		final String realURIPath = resolveUserHome(uriPath);
-
-		String directoryPath = FilenameUtils.getFullPathNoEndSeparator(realURIPath);
-
-		// This is used for building the path piece by piece so that we can detect symbolic links
-		final StringBuilder currentPathBuilder = new StringBuilder();
-
-		// Remove drive letter from the front if it exists
-		if (DRIVE_LETTER_PATTERN.matcher(directoryPath).matches()) {
-			directoryPath = StringUtils.substring(directoryPath, DRIVE_LETTER_LENGTH);
-
-			final String pathPrefix = FilenameUtils.getPrefix(realURIPath);
-			currentPathBuilder.append(pathPrefix);
-		} else if ((realURIPath.length() == DRIVE_LETTER_LENGTH) && (realURIPath.charAt(1) == ':')) {
-			directoryPath = "";
-		}
-		currentPathBuilder.append(File.separatorChar);
-
-		final String[] tokens = PATHNAME_PATTERN.split(directoryPath);
-		if (tokens.length == 0) {
-			// No directories. Go ahead and return.
-			return null;
-		}
-
-		final List<String> directoryStrings = new ArrayList<>(tokens.length);
-		directoryStrings.addAll(Arrays.asList(tokens));
-
-		// This means that the path started with a '/'; thus, the resulting empty string artifact would need to be removed
-		if (tokens[0].isEmpty()) {
-			directoryStrings.remove(0);
-
-			if (directoryStrings.isEmpty()) {
-				// Re-check for no directories. Go ahead and return.
-				return null;
-			}
-		}
-
-		final boolean isURIAbsolute = uri.isAbsolute();
-
-		final File uriAsFile = new File(uri.toString());
-		final boolean isFileAbsolute = uriAsFile.isAbsolute();
-
-		final PathnameDirectoryType directoryType = (isURIAbsolute || isFileAbsolute) ? PathnameDirectoryType.ABSOLUTE : PathnameDirectoryType.RELATIVE;
-
-		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
-
-		for (final String directoryString : directoryStrings) {
-
-			currentPathBuilder.append(File.separatorChar);
-			currentPathBuilder.append(directoryString);
-
-			PathnameDirectoryLevelType directoryLevelType = PathnameDirectoryLevelType.NULL;
-
-			// Leave ".." in the directory list and convert any :BACK encountered
-			// to a ".." in directory list to maintain functionality with other functions
-			if (BACK_UP_STRING.equals(directoryString)) {
-				final Path currentPath = Paths.get(currentPathBuilder.toString());
-
-				// Back is for absolutes / up is for symbolic links
-				if (Files.isSymbolicLink(currentPath)) {
-					directoryLevelType = PathnameDirectoryLevelType.UP;
-				} else {
-					directoryLevelType = PathnameDirectoryLevelType.BACK;
-				}
-			} else if (WILDCARD_STRING.equals(directoryString)) {
-				directoryLevelType = PathnameDirectoryLevelType.WILD;
-			}
-
-			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString, directoryLevelType);
-			directoryLevels.add(directoryLevel);
-		}
-
-		final PathnameDirectoryComponent pathnameDirectoryComponent = new PathnameDirectoryComponent(directoryType, directoryLevels);
-		return new PathnameDirectory(pathnameDirectoryComponent);
-	}
-
-	/**
-	 * Resolves special UserHome system properties when '~' values are encountered and should be parsed as such.
-	 *
-	 * @param pathname
-	 * 		the pathname string to resolve special UserHome system properties
-	 *
-	 * @return a new pathname string with resolved special UserHome system properties
-	 */
-	private static String resolveUserHome(final String pathname) {
-		//there are special situations involving tildes in pathname
-		//handle a tilde at start of pathname; expand it to the user's directory
-
-		final String userHome = SystemUtils.USER_HOME;
-
-		String realPathname = pathname;
-		if (TILDE.equals(pathname)) {
-			realPathname = userHome;
-		} else if (pathname.startsWith("~/") || pathname.startsWith("~\\")) {
-			realPathname = TILDE_PATTERN.matcher(pathname).replaceAll(userHome);
-		} else if (pathname.startsWith(TILDE)) {
-			final int lastPathSeparatorIndex = userHome.lastIndexOf(File.separatorChar);
-			final String usersDir = userHome.substring(0, lastPathSeparatorIndex);
-
-			final boolean containsSeparator = pathname.contains(File.separator);
-			if (containsSeparator) {
-				final String username = pathname.substring(1, pathname.indexOf(File.separatorChar));
-				final String restOfPath = pathname.substring(pathname.indexOf(File.separatorChar));
-				realPathname = usersDir + File.separatorChar + username + restOfPath;
-			} else {
-				final String username = pathname.substring(1);
-				realPathname = usersDir + File.separatorChar + username;
-			}
-		}
-		return FilenameUtils.separatorsToSystem(realPathname);
-	}
-
-	/**
-	 * Gets the pathname name.
-	 *
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname name
-	 *
-	 * @return the pathname name
-	 */
-	private static PathnameName getName(final URI uri) {
-		final String urlPath = uri.getPath();
-		if (StringUtils.isEmpty(urlPath)) {
-			return null;
-		}
-
-		final String baseName = FilenameUtils.getBaseName(urlPath);
-		return new PathnameName(baseName);
-	}
-
-	/**
-	 * Gets the pathname type.
-	 *
-	 * @param uri
-	 * 		the {@link URI} to parse into the pathname type
-	 *
-	 * @return the pathname type
-	 */
-	private static PathnameType getType(final URI uri) {
-		final String urlPath = uri.getPath();
-		if (StringUtils.isEmpty(urlPath)) {
-			return null;
-		}
-
-		final String fileExtension = FilenameUtils.getExtension(urlPath);
-
-		final StringBuilder typeStringBuilder = new StringBuilder(fileExtension);
-
-		// add query, if any, to type element
-		final String query = uri.getQuery();
-		if (query != null) {
-			typeStringBuilder.append('?');
-			typeStringBuilder.append(query);
-		}
-
-		// add fragment, if any, to type element
-		final String fragment = uri.getFragment();
-		if (fragment != null) {
-			typeStringBuilder.append('#');
-			typeStringBuilder.append(fragment);
-		}
-
-		return new PathnameType(typeStringBuilder.toString());
-	}
-
-	/**
-	 * Gets the pathname version.
-	 *
-	 * @return the pathname version
-	 */
-	private static PathnameVersion getVersion() {
-		return null;
-	}
-
-	/**
-	 * Gets a {@link URI} from the provided {@code pathname}.
-	 *
-	 * @param pathname
-	 * 		the pathname string to convert to a {@link URI}
-	 *
-	 * @return the {@link URI} value of the provided {@code pathname}
-	 */
-	private static URI getURIFromPathname(final String pathname) {
-		return URI.create(pathname);
-	}
-
-	@Override
-	public PathnameHost getPathnameHost() {
+	public LispStruct pathnameHost() {
 		return host;
 	}
 
 	@Override
-	public PathnameDevice getPathnameDevice() {
+	public LispStruct pathnameDevice() {
 		return device;
 	}
 
 	@Override
-	public PathnameDirectory getPathnameDirectory() {
+	public LispStruct pathnameDirectory() {
 		return directory;
 	}
 
 	@Override
-	public PathnameName getPathnameName() {
+	public LispStruct pathnameName() {
 		return name;
 	}
 
 	@Override
-	public PathnameType getPathnameType() {
+	public LispStruct pathnameType() {
 		return type;
 	}
 
 	@Override
-	public PathnameVersion getPathnameVersion() {
+	public LispStruct pathnameVersion() {
 		return version;
 	}
 
-	@Override
-	public URI getUri() {
-		return uri;
-	}
-
-	/**
-	 * Gets a pathname namestring from the provided pathname components.
-	 *
-	 * @param pathnameHost
-	 * 		the pathname host
-	 * @param pathnameDevice
-	 * 		the pathname device
-	 * @param pathnameDirectory
-	 * 		the pathname directory
-	 * @param pathnameName
-	 * 		the pathname name
-	 * @param pathnameType
-	 * 		the pathname type
-	 * @param pathnameVersion
-	 * 		the pathname version
-	 *
-	 * @return the pathname namestring constructed from the provided pathname components
-	 */
-	protected static URI getURIFromComponents(final PathnameHost pathnameHost, final PathnameDevice pathnameDevice,
-	                                          final PathnameDirectory pathnameDirectory, final PathnameName pathnameName,
-	                                          final PathnameType pathnameType, final PathnameVersion pathnameVersion) {
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		if (pathnameDevice != null) {
-			final String device = pathnameDevice.getDevice();
-			if (device != null) {
-				stringBuilder.append(device);
-				stringBuilder.append("://");
-			}
+	private static String uriEncode(final String s) {
+		// The constructor we use here only allows absolute paths, so
+		// we manipulate the input and output correspondingly.
+		final String u;
+		if (s.startsWith("/")) {
+			u = new String(s);
+		} else {
+			u = '/' + s;
 		}
-
-		if (pathnameHost != null) {
-			final String host = pathnameHost.getHost();
-			if (host != null) {
-				stringBuilder.append(host);
+		try {
+			final URI uri = new URI("file", "", u, "");
+			final String result = uri.getRawPath();
+			if (!s.startsWith("/")) {
+				return result.substring(1);
 			}
+			return result;
+		} catch (final URISyntaxException e) {
+			throw new ErrorException(e.getMessage(), e);
 		}
-
-		if (pathnameDirectory != null) {
-			final PathnameDirectoryComponent directoryComponent = pathnameDirectory.getDirectoryComponent();
-			if (directoryComponent != null) {
-
-				final PathnameDirectoryType directoryType = directoryComponent.getPathnameDirectoryType();
-				switch (directoryType) {
-					case ABSOLUTE:
-						stringBuilder.append('/');
-						break;
-					case RELATIVE:
-						break;
-				}
-
-				final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
-				if (directoryLevels != null) {
-					for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
-
-						final PathnameDirectoryLevelType levelType = directoryLevel.getDirectoryLevelType();
-						switch (levelType) {
-							case WILD:
-								stringBuilder.append('*');
-								break;
-							case BACK:
-								stringBuilder.append("..");
-								break;
-							case UP:
-								stringBuilder.append("..");
-								break;
-							case NULL:
-								final String level = directoryLevel.getDirectoryLevel();
-								stringBuilder.append(level);
-								break;
-						}
-						stringBuilder.append('/');
-					}
-				}
-			} else {
-				final PathnameComponentType componentType = pathnameDirectory.getComponentType();
-				switch (componentType) {
-					case UNSPECIFIC:
-						break;
-					case WILD:
-						stringBuilder.append('*');
-						break;
-					case NIL:
-						break;
-				}
-			}
-		}
-
-		if (pathnameName != null) {
-			final String name = pathnameName.getName();
-			if (name != null) {
-				stringBuilder.append(name);
-			}
-		}
-
-		if (pathnameType != null) {
-			final String type = pathnameType.getType();
-			if (type != null) {
-				stringBuilder.append('.');
-				stringBuilder.append(type);
-			}
-		}
-
-		if (pathnameVersion != null) {
-			final Integer version = pathnameVersion.getVersion();
-			if (version != null) {
-				stringBuilder.append('.');
-				stringBuilder.append(version);
-			}
-		}
-
-		return getURIFromPathname(stringBuilder.toString());
 	}
 
 	@Override
-	public String getNamestring() {
-		return uri.toString();
-	}
-
-	private void init(final String pathnameString) {
-		if (pathnameString == null) {
-			return;
-		}
-
-		if (CURRENT_DIR_STRING.equals(pathnameString) || CURRENT_DIR_STRING_SLASH.equals(pathnameString)
-				|| (SystemUtils.IS_OS_WINDOWS && CURRENT_DIR_STRING_BACKSLASH.equals(pathnameString))) {
-			final PathnameDirectoryComponent directoryComponent
-					= new PathnameDirectoryComponent(PathnameDirectoryType.RELATIVE);
-			directory = new PathnameDirectory(directoryComponent);
-			return;
-		}
-		if (BACK_UP_STRING.equals(pathnameString) || BACK_UP_STRING_SLASH.equals(pathnameString)) {
-			final PathnameDirectoryLevel directoryLevel
-					= new PathnameDirectoryLevel(PathnameDirectoryLevelType.UP);
-			final PathnameDirectoryComponent directoryComponent
-					= new PathnameDirectoryComponent(PathnameDirectoryType.RELATIVE, Collections.singletonList(directoryLevel));
-			directory = new PathnameDirectory(directoryComponent);
-			return;
-		}
-
-		if (SystemUtils.IS_OS_WINDOWS && (pathnameString.startsWith("\\\\") || pathnameString.startsWith("//"))) {
-			// UNC path support
-			final int shareIndex;
-			final int dirIndex;
-			// match \\<server>\<share>\[directories-and-files]
-			if (pathnameString.startsWith("\\\\")) {
-				shareIndex = pathnameString.indexOf('\\', 2);
-				dirIndex = pathnameString.indexOf('\\', shareIndex + 1);
-				// match //<server>/<share>/[directories-and-files]
-			} else {
-				shareIndex = pathnameString.indexOf('/', 2);
-				dirIndex = pathnameString.indexOf('/', shareIndex + 1);
-			}
-			if ((shareIndex == -1) || (dirIndex == -1)) {
-				throw new ErrorException("Unsupported UNC path format: \"" + pathnameString + '"');
-			}
-
-			host = new PathnameHost(pathnameString.substring(2, shareIndex));
-			device = new PathnameDevice(pathnameString.substring(shareIndex + 1, dirIndex));
-
-			final PathnameStructImpl p = new PathnameStructImpl(pathnameString.substring(dirIndex));
-			directory = p.directory;
-			name = p.name;
-			type = p.type;
-			version = p.version;
-			return;
-		}
-
-		String s1 = FilenameUtils.separatorsToUnix(pathnameString);
-
-		// Expand user home directories
-		if (SystemUtils.IS_OS_UNIX) {
-			final String userHome = SystemUtils.USER_HOME;
-			if ("~".equals(s1)) {
-				s1 = userHome + '/';
-			} else if (s1.startsWith("~/")) {
-				s1 = userHome + s1.substring(1);
-			}
-		}
-
-		namestring = s1;
-
-		String currentPathnameString = s1;
-		if (SystemUtils.IS_OS_WINDOWS) {
-			// Device on Windows is the Drive Letter if it is part of the pathname
-			if ((currentPathnameString.length() >= 2) && (currentPathnameString.charAt(1) == ':')) {
-				device = new PathnameDevice(String.valueOf(currentPathnameString.charAt(0)));
-				currentPathnameString = currentPathnameString.substring(2);
-			}
-		}
-
-		String directoryString = null;
-
-		final int currPathLength = currentPathnameString.length();
-		if (currentPathnameString.charAt(currPathLength) == File.separatorChar) {
-			directoryString = currentPathnameString.substring(0, currPathLength + 1);
-			currentPathnameString = currentPathnameString.substring(currPathLength + 1);
-
-			if ("..".equals(currentPathnameString)) {
-				directoryString += currentPathnameString;
-				currentPathnameString = "";
-			}
-		}
-
-		if (directoryString != null) {
-			directory = parseDirectory(directoryString);
-		}
-
-		if (currentPathnameString.startsWith(".") && ((currentPathnameString.indexOf('.', 1) == -1) || currentPathnameString.endsWith("."))) {
-			name = new PathnameName(currentPathnameString);
-			return;
-		}
-
-		final int index = currentPathnameString.lastIndexOf('.');
-		String pathnameName = null;
-		String pathnameType = null;
-		if (index > 0) {
-			pathnameName = currentPathnameString.substring(0, index);
-			pathnameType = currentPathnameString.substring(index + 1);
-		} else if (!currentPathnameString.isEmpty()) {
-			pathnameName = currentPathnameString;
-		}
-
-		if ("*".equals(pathnameName)) {
-			name = new PathnameName(PathnameComponentType.WILD);
-		} else {
-			name = new PathnameName(pathnameName);
-		}
-
-		if ("*".equals(pathnameType)) {
-			type = new PathnameType(PathnameComponentType.WILD);
-		} else {
-			type = new PathnameType(pathnameType);
-		}
-	}
-
-	private static PathnameDirectory parseDirectory(final String directoryString) {
-		if ("/".equals(directoryString) || (SystemUtils.IS_OS_WINDOWS && "\\".equals(directoryString))) {
-			final PathnameDirectoryComponent directoryComponent = new PathnameDirectoryComponent(PathnameDirectoryType.ABSOLUTE);
-			return new PathnameDirectory(directoryComponent);
-		}
-
-		// This is used for building the path piece by piece so that we can detect symbolic links
-		final StringBuilder currentPathBuilder = new StringBuilder();
-
-		final PathnameDirectoryType directoryType;
-		if (directoryString.startsWith(File.separator)) {
-			directoryType = PathnameDirectoryType.ABSOLUTE;
-			currentPathBuilder.append(File.separator);
-		} else {
-			directoryType = PathnameDirectoryType.RELATIVE;
-		}
-
-		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>();
-
-		final StringTokenizer st = new StringTokenizer(directoryString, File.separator);
-		while (st.hasMoreTokens()) {
-			final String token = st.nextToken();
-
-			currentPathBuilder.append(token);
-
-			PathnameDirectoryLevelType directoryLevelType = PathnameDirectoryLevelType.NULL;
-			String directoryLevelString = null;
-			if ("*".equals(token)) {
-				directoryLevelType = PathnameDirectoryLevelType.WILD;
-			} else if ("**".equals(token)) {
-				directoryLevelType = PathnameDirectoryLevelType.WILD_INFERIORS;
-			} else if ("..".equals(token)) {
-				final Path currentPath = Paths.get(currentPathBuilder.toString());
-
-				// Back is for absolutes / up is for symbolic links
-				if (Files.isSymbolicLink(currentPath)) {
-					directoryLevelType = PathnameDirectoryLevelType.UP;
-				} else {
-					directoryLevelType = PathnameDirectoryLevelType.BACK;
-				}
-			} else {
-				directoryLevelString = token;
-			}
-
-			currentPathBuilder.append(File.separatorChar);
-
-			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryLevelString, directoryLevelType);
-			directoryLevels.add(directoryLevel);
-		}
-
-		final PathnameDirectoryComponent pathnameDirectoryComponent = new PathnameDirectoryComponent(directoryType, directoryLevels);
-		return new PathnameDirectory(pathnameDirectoryComponent);
-	}
-
-	public String getNamestringNew() {
+	public String namestring() {
 		if (namestring != null) {
 			return namestring;
 		}
-		if ((name.getComponentType() == PathnameComponentType.NIL) && (type.getComponentType() != PathnameComponentType.NIL)) {
+		if ((name == NILStruct.INSTANCE) && (type != NILStruct.INSTANCE)) {
+			if (namestring != null) {
+				throw new ErrorException("not null namestring??"); // TODO
+			}
 			return null;
 		}
-
-		final StringBuilder sb = new StringBuilder();
-		final String hostString = host.getHost();
-		if (hostString != null) {
-			if (this instanceof LogicalPathnameStruct) {
-				sb.append(hostString);
+		if (directory instanceof StringStruct) {
+			throw new ErrorException("bad directory??: " + directory); // TODO
+		}
+		StringBuilder sb = new StringBuilder();
+		// "If a pathname is converted to a namestring, the symbols NIL and
+		// :UNSPECIFIC cause the field to be treated as if it were empty. That
+		// is, both NIL and :UNSPECIFIC cause the component not to appear in
+		// the namestring." 19.2.2.2.3.1
+		if (host != NILStruct.INSTANCE) {
+			if (!((host instanceof StringStruct) || isURL())) {
+//				Debug.assertTrue(host1 instanceof StringStruct || isURL());
+				throw new ErrorException("bad host??: " + host); // TODO
+			}
+			if (isURL()) {
+				// TODO: check casting
+				final LispStruct scheme = ((ListStruct) host).getf(CommonLispSymbols.SCHEME_KEYWORD, NILStruct.INSTANCE);
+				final LispStruct authority = ((ListStruct) host).getf(CommonLispSymbols.AUTHORITY_KEYWORD, NILStruct.INSTANCE);
+				if (scheme == NILStruct.INSTANCE) {
+					throw new ErrorException("must have scheme"); // TODO
+				}
+				sb.append(scheme);
 				sb.append(':');
+				if (authority != NILStruct.INSTANCE) {
+					sb.append("//");
+					sb.append(authority);
+				}
 			} else {
 				// A UNC path
-				sb.append("//").append(hostString).append('/');
+				sb.append("//")
+				  .append(host)
+				  .append('/');
 			}
 		}
-
-		final String deviceString = device.getDevice();
-		if (deviceString != null) {
-			sb.append(deviceString);
-			if ((this instanceof LogicalPathnameStruct) || (hostString == null)) {
+		boolean uriEncoded = false;
+		if (device == NILStruct.INSTANCE) {
+		} else if (device == CommonLispSymbols.UNSPECIFIC_KEYWORD) {
+		} else if (isJar()) {
+			final LispStruct[] jars = ((ConsStruct) device).toArray();
+			final StringBuilder prefix = new StringBuilder();
+			for (int i = 0; i < jars.length; i++) {
+				prefix.append(JAR_PREFIX);
+				final LispStruct component = jars[i];
+				if (!(component instanceof PathnameStructImpl)) {
+					return null; // If DEVICE is a CONS, it should only contain Pathname
+				}
+				if (!((PathnameStructImpl) component).isURL() && (i == 0)) {
+					sb.append(FILE_PREFIX);
+					uriEncoded = true;
+				}
+				final PathnameStructImpl jar = (PathnameStructImpl) component;
+				final String encodedNamestring;
+				if (uriEncoded) {
+					encodedNamestring = uriEncode(jar.namestring());
+				} else {
+					encodedNamestring = jar.namestring();
+				}
+				sb.append(encodedNamestring);
+				sb.append("!/");
+			}
+			sb = prefix.append(sb);
+		} else if (device instanceof StringStruct) {
+			sb.append(device);
+			if (host == NILStruct.INSTANCE) {
 				sb.append(':'); // non-UNC paths
 			}
 		} else {
-			throw new ErrorException("Device cannot be null.");
+			throw new ErrorException("Bad device??: " + device); // TODO
 		}
-
-		final String directoryNamestring = getDirectoryNamestring();
-		sb.append(directoryNamestring);
-		final String nameValue = name.getName();
-		if (nameValue != null) {
-			if (nameValue.indexOf('/') >= 0) {
-				if (namestring == null) {
-					throw new ErrorException("Namestring null???.");
+		String directoryNamestring = getDirectoryNamestring();
+		if (uriEncoded) {
+			directoryNamestring = uriEncode(directoryNamestring);
+		}
+		if (isJar()) {
+			if (directoryNamestring.startsWith("/")) {
+				sb.append(directoryNamestring.substring(1));
+			} else {
+				sb.append(directoryNamestring);
+			}
+		} else {
+			sb.append(directoryNamestring);
+		}
+		if (name instanceof StringStruct) {
+			final String n = ((StringStruct) name).toJavaString();
+			if (n.indexOf('/') >= 0) {
+				if (namestring != null) {
+					throw new ErrorException("not null namestring??"); // TODO
 				}
 				return null;
 			}
-			sb.append(nameValue);
-		} else if (name.getComponentType() == PathnameComponentType.WILD) {
-			sb.append(WILDCARD_STRING);
-		}
-
-		final String typeValue = type.getType();
-		if (typeValue != null) {
-			sb.append('.');
-			sb.append(typeValue);
-		} else if (type.getComponentType() == PathnameComponentType.WILD) {
-			sb.append('.');
+			if (uriEncoded) {
+				sb.append(uriEncode(n));
+			} else {
+				sb.append(n);
+			}
+		} else if (name == CommonLispSymbols.WILD_KEYWORD) {
 			sb.append('*');
 		}
-
-		if (this instanceof LogicalPathnameStruct) {
-			final Integer versionValue = version.getVersion();
-			if (versionValue != null) {
-				sb.append('.');
-				sb.append(versionValue);
-			} else if (version.getComponentType() == PathnameVersionComponentType.WILD) {
-				sb.append('.');
-				sb.append(WILDCARD_STRING);
-			} else if (version.getComponentType() == PathnameVersionComponentType.NEWEST) {
-				sb.append('.');
-				sb.append("NEWEST");
+		if ((type != NILStruct.INSTANCE) && (type != CommonLispSymbols.UNSPECIFIC_KEYWORD)) {
+			sb.append('.');
+			if (type instanceof StringStruct) {
+				final String t = ((StringStruct) type).toJavaString();
+				// Allow Windows shortcuts to include TYPE
+				if (!(t.endsWith(".lnk") && SystemUtils.IS_OS_WINDOWS)) {
+					if (t.indexOf('.') >= 0) {
+						if (namestring != null) {
+							throw new ErrorException("not null namestring??"); // TODO
+						}
+						return null;
+					}
+				}
+				if (uriEncoded) {
+					sb.append(uriEncode(t));
+				} else {
+					sb.append(t);
+				}
+			} else if (type == CommonLispSymbols.WILD_KEYWORD) {
+				sb.append('*');
+			} else {
+				throw new ErrorException("Bad type??: " + type); // TODO
 			}
 		}
+
+		if (isURL()) {
+			// TODO: check casting
+			LispStruct o = ((ListStruct) host).getf(CommonLispSymbols.QUERY_KEYWORD, NILStruct.INSTANCE);
+			if (o != NILStruct.INSTANCE) {
+				sb.append('?');
+				sb.append(o);
+			}
+			// TODO: check casting
+			o = ((ListStruct) host).getf(CommonLispSymbols.FRAGMENT_KEYWORD, NILStruct.INSTANCE);
+			if (o != NILStruct.INSTANCE) {
+				sb.append('#');
+				sb.append(o);
+			}
+		}
+
 		namestring = sb.toString();
+		// XXX Decide if this is necessary
+		// if (isURL()) {
+		//     namestring = Utilities.uriEncode(namestring);
+		// }
 		return namestring;
 	}
 
-	private boolean validateDirectory() {
-		final PathnameDirectoryComponent directoryComponent = directory.getDirectoryComponent();
-		final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
+	@Override
+	public StringStruct directoryNamestring() {
+		return StringStruct.toLispString(getDirectoryNamestring());
+	}
 
-		if (directoryLevels.isEmpty()) {
-			return true;
+	@Override
+	public LispStruct fileNamestring() {
+		final StringBuilder sb = new StringBuilder();
+		if (name instanceof StringStruct) {
+			sb.append(((StringStruct) name).toJavaString());
+		} else if (name == CommonLispSymbols.WILD_KEYWORD) {
+			sb.append(WILDCARD_STRING);
+		} else {
+			return NILStruct.INSTANCE;
 		}
-
-		final Iterator<PathnameDirectoryLevel> iterator = directoryLevels.iterator();
-		PathnameDirectoryLevel directoryLevel = iterator.next();
-		while (iterator.hasNext()) {
-			final PathnameDirectoryLevelType directoryLevelType = directoryLevel.getDirectoryLevelType();
-			if (directoryLevelType == PathnameDirectoryLevelType.WILD_INFERIORS) {
-				final PathnameDirectoryLevel next = iterator.next();
-				final PathnameDirectoryLevelType nextDirectoryLevelType = next.getDirectoryLevelType();
-				if ((nextDirectoryLevelType == PathnameDirectoryLevelType.UP)
-						|| (nextDirectoryLevelType == PathnameDirectoryLevelType.BACK)) {
-					// TODO: should this take a stream!??!?
-					throw new FileErrorException("WILD-INFERIORS may not be followed immediately by " + nextDirectoryLevelType + '.', null);
-				}
-
-				directoryLevel = next;
-			}
+		if (type instanceof StringStruct) {
+			sb.append('.');
+			sb.append(((StringStruct) type).toJavaString());
+		} else if (type == CommonLispSymbols.WILD_KEYWORD) {
+			sb.append(".*");
 		}
-		return true;
+		return StringStruct.toLispString(sb.toString());
 	}
 
 	protected String getDirectoryNamestring() {
 		validateDirectory();
-
-		final PathnameDirectoryComponent directoryComponent = directory.getDirectoryComponent();
-		final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		final PathnameDirectoryType pathnameDirectoryType = directoryComponent.getPathnameDirectoryType();
-
-		switch (pathnameDirectoryType) {
-			case ABSOLUTE:
-				stringBuilder.append(File.separatorChar);
-				break;
-			case RELATIVE:
-				if (directoryLevels.isEmpty()) {
-					// #p"./"
-					stringBuilder.append('.');
-					stringBuilder.append(File.separatorChar);
+		final StringBuilder sb = new StringBuilder();
+		// "If a pathname is converted to a namestring, the symbols NIL and
+		// :UNSPECIFIC cause the field to be treated as if it were empty. That
+		// is, both NIL and :UNSPECIFIC cause the component not to appear in
+		// the namestring." 19.2.2.2.3.1
+		if (directory != NILStruct.INSTANCE) {
+			if (directory instanceof ListStruct) {
+				ListStruct temp = (ListStruct) directory;
+				LispStruct part = temp.car();
+				temp = (ListStruct) temp.cdr();
+				final char separatorChar = '/';
+				if (part == CommonLispSymbols.ABSOLUTE_KEYWORD) {
+					sb.append(separatorChar);
+				} else if (part == CommonLispSymbols.RELATIVE_KEYWORD) {
+					if (temp == NILStruct.INSTANCE) {
+						// #p"./"
+						sb.append('.');
+						sb.append(separatorChar);
+					}
+					// else: Nothing to do.
+				} else {
+//				throw new FileErrorException("Unsupported directory component " + part + '.', this); // TODO: send 'this' into error??
+					throw new FileErrorException("Unsupported directory component " + part + '.', null);
 				}
-				break;
-		}
-
-		for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
-			final PathnameDirectoryLevelType directoryLevelType = directoryLevel.getDirectoryLevelType();
-			switch (directoryLevelType) {
-				case NULL:
-					final String level = directoryLevel.getDirectoryLevel();
-					stringBuilder.append(level);
-					break;
-				case WILD:
-					stringBuilder.append(WILDCARD_STRING);
-					break;
-				case WILD_INFERIORS:
-					stringBuilder.append(WILDCARD_INFERIORS_STRING);
-					break;
-				case UP:
-					stringBuilder.append(BACK_UP_STRING);
-					break;
-				case BACK:
-					stringBuilder.append(BACK_UP_STRING);
-					break;
+				while (temp != NILStruct.INSTANCE) {
+					part = temp.car();
+					if (part instanceof StringStruct) {
+						sb.append(((StringStruct) part).toJavaString());
+					} else if (part == CommonLispSymbols.WILD_KEYWORD) {
+						sb.append(WILDCARD_STRING);
+					} else if (part == CommonLispSymbols.WILD_INFERIORS_KEYWORD) {
+						sb.append(WILDCARD_INFERIORS_STRING);
+					} else if (part == CommonLispSymbols.UP_KEYWORD) {
+						sb.append(BACK_UP_STRING);
+					} else {
+//					throw new FileErrorException("Unsupported directory component " + part + '.', this); // TODO: send 'this' into error??
+						throw new FileErrorException("Unsupported directory component " + part + '.', null);
+					}
+					sb.append(separatorChar);
+					temp = (ListStruct) temp.cdr();
+				}
+			} else if (directory instanceof StringStruct) {
+				sb.append(directory);
 			}
-			stringBuilder.append(File.separatorChar);
 		}
+		return sb.toString();
+	}
 
-		return stringBuilder.toString();
+	private void validateDirectory() {
+		if (directory instanceof ListStruct) {
+			ListStruct temp = (ListStruct) directory;
+			while (temp != NILStruct.INSTANCE) {
+				final LispStruct first = temp.car();
+				temp = (ListStruct) temp.cdr();
+				if ((first == CommonLispSymbols.ABSOLUTE_KEYWORD) || (first == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+					final LispStruct second = temp.car();
+					if ((second == CommonLispSymbols.UP_KEYWORD) || (second == CommonLispSymbols.BACK_KEYWORD)) {
+						final String sb = first + " may not be followed immediately by " + second + '.';
+						throw new FileErrorException(sb, null);
+					}
+				}
+			}
+		}
+	}
+
+	private boolean isURL() {
+		return host instanceof ConsStruct;
+	}
+
+	private boolean isJar() {
+		return device instanceof ConsStruct;
+	}
+
+	@Override
+	public BooleanStruct wildPathnameP(final LispStruct fieldKey) {
+		if (NILStruct.INSTANCE.eq(fieldKey)) {
+			return isWild() ? TStruct.INSTANCE : NILStruct.INSTANCE;
+		}
+		if (fieldKey == CommonLispSymbols.DIRECTORY_KEYWORD) {
+			if (directory instanceof ConsStruct) {
+				final ConsStruct d = (ConsStruct) directory;
+				if (d.stream().anyMatch(CommonLispSymbols.WILD_KEYWORD::eql)) {
+					return TStruct.INSTANCE;
+				}
+				if (d.stream().anyMatch(CommonLispSymbols.WILD_INFERIORS_KEYWORD::eql)) {
+					return TStruct.INSTANCE;
+				}
+			}
+			return NILStruct.INSTANCE;
+		}
+		final LispStruct value;
+		if (fieldKey == CommonLispSymbols.HOST_KEYWORD) {
+			value = host;
+		} else if (fieldKey == CommonLispSymbols.DEVICE_KEYWORD) {
+			value = device;
+		} else if (fieldKey == CommonLispSymbols.NAME_KEYWORD) {
+			value = name;
+		} else if (fieldKey == CommonLispSymbols.TYPE_KEYWORD) {
+			value = type;
+		} else if (fieldKey == CommonLispSymbols.VERSION_KEYWORD) {
+			value = version;
+		} else {
+			throw new ProgramErrorException("Unrecognized keyword " + fieldKey + '.');
+		}
+		if ((value == CommonLispSymbols.WILD_KEYWORD) || (value == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+			return TStruct.INSTANCE;
+		} else {
+			return NILStruct.INSTANCE;
+		}
+	}
+
+	private boolean isWild() {
+		if ((host == CommonLispSymbols.WILD_KEYWORD) || (host == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+			return true;
+		}
+		if ((device == CommonLispSymbols.WILD_KEYWORD) || (device == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+			return true;
+		}
+		if (directory instanceof ConsStruct) {
+			final ConsStruct d = (ConsStruct) directory;
+			if (d.stream().anyMatch(CommonLispSymbols.WILD_KEYWORD::eql)) {
+				return true;
+			}
+			if (d.stream().anyMatch(CommonLispSymbols.WILD_INFERIORS_KEYWORD::eql)) {
+				return true;
+			}
+			for (final LispStruct lispStruct : d) {
+				if (lispStruct instanceof StringStruct) {
+					final String s = lispStruct.toString();
+					if (s.contains(WILDCARD_STRING)) {
+						return true;
+					}
+				}
+			}
+		}
+		if ((name == CommonLispSymbols.WILD_KEYWORD) || (name == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+			return true;
+		}
+		if (name instanceof StringStruct) {
+			if (name.toString().contains(WILDCARD_STRING)) {
+				return true;
+			}
+		}
+		if ((type == CommonLispSymbols.WILD_KEYWORD) || (type == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+			return true;
+		}
+		if (type instanceof StringStruct) {
+			if (type.toString().contains(WILDCARD_STRING)) {
+				return true;
+			}
+		}
+		if ((version == CommonLispSymbols.WILD_KEYWORD) || (version == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -963,8 +925,8 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	 * {@inheritDoc}
 	 * Generation method for {@link PathnameStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Building the {@link PathnameStruct#getUri()} value</li>
-	 * <li>Constructing a new {@link PathnameStruct} with the built {@link URI} value</li>
+	 * <li>Building the {@link PathnameStruct} value</li>
+	 * <li>Constructing a new {@link PathnameStruct} with the built {@link #namestring} value</li>
 	 * </ol>
 	 *
 	 * @param generatorState
@@ -972,25 +934,19 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	 */
 	@Override
 	public void generate(final GeneratorState generatorState) {
-
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final String filePath = uri.toString();
-		mv.visitLdcInsn(filePath);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
-		                   GenerationConstants.JAVA_URI_NAME,
-		                   GenerationConstants.JAVA_URI_CREATE_METHOD_NAME,
-		                   GenerationConstants.JAVA_URI_CREATE_METHOD_DESC,
-		                   false);
-		final int uriStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, uriStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, uriStore);
+		host.generate(generatorState);
+		device.generate(generatorState);
+		directory.generate(generatorState);
+		name.generate(generatorState);
+		type.generate(generatorState);
+		version.generate(generatorState);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                   GenerationConstants.PATHNAME_STRUCT_NAME,
-		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_NAME,
-		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_URI_METHOD_DESC,
+		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_METHOD_NAME,
+		                   GenerationConstants.PATHNAME_STRUCT_TO_PATHNAME_METHOD_DESC,
 		                   true);
 	}
 
@@ -1029,7 +985,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 			stringBuilder.append("#P");
 		}
 		stringBuilder.append('"');
-		stringBuilder.append(getNamestring());
+		stringBuilder.append(namestring());
 		stringBuilder.append('"');
 
 		return stringBuilder.toString();

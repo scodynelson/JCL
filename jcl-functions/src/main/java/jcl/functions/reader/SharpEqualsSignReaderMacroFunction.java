@@ -4,15 +4,14 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import jcl.lang.ConsStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
@@ -34,30 +33,31 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 
-		if (!numberArgument.isPresent()) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("Missing label for #=.");
 		}
-		final BigInteger numberArgumentValue = numberArgument.get();
+
+		final int numberArgumentInt = numberArgument.toJavaInt();
 
 		final ReaderContext context = ReaderContextHolder.getContext();
-		final Map<BigInteger, LispStruct> sharpEqualFinalTable = context.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct> sharpEqualTempTable = context.getSharpEqualTempTable();
+		final Map<Integer, LispStruct> sharpEqualFinalTable = context.getSharpEqualFinalTable();
+		final Map<Integer, SymbolStruct> sharpEqualTempTable = context.getSharpEqualTempTable();
 
-		if (sharpEqualFinalTable.containsKey(numberArgumentValue)
-				|| sharpEqualTempTable.containsKey(numberArgumentValue)) {
-			throw new ReaderErrorException("Label already defined: #" + numberArgumentValue + '=');
+		if (sharpEqualFinalTable.containsKey(numberArgumentInt)
+				|| sharpEqualTempTable.containsKey(numberArgumentInt)) {
+			throw new ReaderErrorException("Label already defined: #" + numberArgument + '=');
 		}
 
 		final String labelTagName = UUID.randomUUID().toString();
 		final SymbolStruct labelTag = SymbolStruct.toLispSymbol(labelTagName);
-		sharpEqualTempTable.put(numberArgumentValue, labelTag);
+		sharpEqualTempTable.put(numberArgumentInt, labelTag);
 
 		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 
@@ -67,7 +67,7 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
 		replaceTagsWithTokens(token, sharpEqualReplTable, sharpEqualCircleSet);
 
-		sharpEqualFinalTable.put(numberArgumentValue, token);
+		sharpEqualFinalTable.put(numberArgumentInt, token);
 
 		return token;
 	}

@@ -4,7 +4,6 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 import jcl.functions.BuiltInFunctionStructImpl;
@@ -50,7 +49,7 @@ public abstract class ReaderMacroFunctionImpl extends BuiltInFunctionStructImpl 
 	 * @return the parsed {@link LispStruct} token
 	 */
 	protected abstract LispStruct readMacro(InputStreamStruct inputStreamStruct, int codePoint,
-	                                        Optional<BigInteger> numberArgument);
+	                                        IntegerStruct numberArgument);
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
@@ -65,11 +64,9 @@ public abstract class ReaderMacroFunctionImpl extends BuiltInFunctionStructImpl 
 		final CharacterStruct macroCharacter = arguments.getRequiredArgument(MACRO_CHARACTER_ARGUMENT, CharacterStruct.class);
 		final int codePoint = macroCharacter.toUnicodeCodePoint();
 
-		Optional<BigInteger> numberArgument = Optional.empty();
+		IntegerStruct numberArgument = null;
 		if (arguments.hasOptionalArgument(N_ARGUMENT)) {
-			final IntegerStruct macroNumberArgument = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
-			final BigInteger bigInteger = macroNumberArgument.toJavaBigInteger();
-			numberArgument = Optional.of(bigInteger);
+			numberArgument = arguments.getOptionalArgument(N_ARGUMENT, IntegerStruct.class);
 		}
 
 		return readMacro(inputStream, codePoint, numberArgument);

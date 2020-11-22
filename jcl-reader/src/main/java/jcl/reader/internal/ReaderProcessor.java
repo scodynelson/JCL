@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ * Copyright (c) 2011-2020 Cody Nelson - All rights reserved.
  */
 
 package jcl.reader.internal;
@@ -52,6 +52,12 @@ import lombok.extern.log4j.Log4j2;
 @UtilityClass
 public class ReaderProcessor {
 
+	public static LispStruct read(final InputStreamStruct inputStreamStruct,
+	                              final boolean eofErrorP, final LispStruct eofValue) {
+		final TokenBuilder tokenBuilder = new TokenBuilder(inputStreamStruct, eofErrorP, eofValue);
+		return read(tokenBuilder);
+	}
+
 	/**
 	 * Step 1 of the Reader Algorithm.
 	 * <p>
@@ -64,7 +70,7 @@ public class ReaderProcessor {
 	 *
 	 * @return the parsed token
 	 */
-	public static LispStruct read(final TokenBuilder tokenBuilder) {
+	static LispStruct read(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ * Copyright (c) 2011-2020 Cody Nelson - All rights reserved.
  */
 
 package jcl.reader.internal;
@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-class TokenAttribute {
+final class TokenAttribute {
 
 	/**
 	 * The character token code point.

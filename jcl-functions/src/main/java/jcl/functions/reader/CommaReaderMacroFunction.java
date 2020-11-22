@@ -4,11 +4,9 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.ConsStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
@@ -30,7 +28,7 @@ public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.GRAVE_ACCENT;
 
 		final ReaderContext context = ReaderContextHolder.getContext();

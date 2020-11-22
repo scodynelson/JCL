@@ -1,6 +1,9 @@
+/*
+ * Copyright (c) 2011-2020 Cody Nelson - All rights reserved.
+ */
+
 package jcl.reader;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -9,18 +12,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 
-public class ReaderContext {
+public final class ReaderContext {
 
 	/**
 	 * Map containing the number argument to #= to parsed {@link LispStruct}s produced by the #= reader macro function.
 	 */
-	private final Map<BigInteger, LispStruct> sharpEqualFinalTable = new ConcurrentHashMap<>();
+	private final Map<Integer, LispStruct> sharpEqualFinalTable = new ConcurrentHashMap<>();
 
 	/**
 	 * Map containing the number argument of #= to a temporary {@link UUID} tag value to handle {@link LispStruct}s not
 	 * yet parsed by the reader.
 	 */
-	private final Map<BigInteger, SymbolStruct> sharpEqualTempTable = new ConcurrentHashMap<>();
+	private final Map<Integer, SymbolStruct> sharpEqualTempTable = new ConcurrentHashMap<>();
 
 	/**
 	 * Map containing the temporary {@link UUID} tag value to a {@link LispStruct} that has been parsed by the reader,
@@ -34,11 +37,11 @@ public class ReaderContext {
 	 */
 	private int backquoteLevel;
 
-	public Map<BigInteger, LispStruct> getSharpEqualFinalTable() {
+	public Map<Integer, LispStruct> getSharpEqualFinalTable() {
 		return new HashMap<>(sharpEqualFinalTable);
 	}
 
-	public Map<BigInteger, SymbolStruct> getSharpEqualTempTable() {
+	public Map<Integer, SymbolStruct> getSharpEqualTempTable() {
 		return new HashMap<>(sharpEqualTempTable);
 	}
 
@@ -52,8 +55,8 @@ public class ReaderContext {
 		sharpEqualReplTable.clear();
 	}
 
-	public void restoreSharpEqualTables(final Map<BigInteger, LispStruct> newSharpEqualFinalTable,
-	                                    final Map<BigInteger, SymbolStruct> newSharpEqualTempTable,
+	public void restoreSharpEqualTables(final Map<Integer, LispStruct> newSharpEqualFinalTable,
+	                                    final Map<Integer, SymbolStruct> newSharpEqualTempTable,
 	                                    final Map<SymbolStruct, LispStruct> newSharpEqualReplTable) {
 		clearSharpEqualTables();
 		sharpEqualFinalTable.putAll(newSharpEqualFinalTable);

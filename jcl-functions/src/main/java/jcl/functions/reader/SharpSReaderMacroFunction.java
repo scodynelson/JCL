@@ -4,14 +4,13 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import jcl.lang.FunctionStruct;
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -34,7 +33,7 @@ public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_S) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {

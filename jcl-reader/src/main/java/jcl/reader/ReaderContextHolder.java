@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2011-2020 Cody Nelson - All rights reserved.
+ */
+
 package jcl.reader;
 
 import lombok.experimental.UtilityClass;

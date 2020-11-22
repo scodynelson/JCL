@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -28,7 +26,7 @@ public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.APOSTROPHE;
 
 		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);

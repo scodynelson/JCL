@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import jcl.lang.BitVectorStruct;
@@ -36,7 +34,7 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.ASTERISK;
 
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken
@@ -58,14 +56,13 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 			throw new ReaderErrorException("Bad Bit for Bit Vector...");
 		}
 
-		if (!numberArgument.isPresent()) {
+		if (numberArgument == null) {
 			final List<FixnumStruct> contents = getBitList(tokenString);
 			final FixnumStruct size = IntegerStruct.toLispInteger(contents.size());
 			return BitVectorStruct.toLispBitVector(size, contents);
 		}
 
-		final BigInteger numberArgumentValue = numberArgument.get();
-		return handleNumberArgument(tokenString, numberArgumentValue);
+		return handleNumberArgument(tokenString, numberArgument);
 	}
 
 	/**
@@ -79,14 +76,14 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 	 *
 	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
 	 */
-	private static BitVectorStruct handleNumberArgument(final String tokenString, final BigInteger numberArgument) {
+	private static BitVectorStruct handleNumberArgument(final String tokenString, final IntegerStruct numberArgument) {
 
-		if (StringUtils.isEmpty(tokenString) && (numberArgument.compareTo(BigInteger.ZERO) > 0)) {
+		if (StringUtils.isEmpty(tokenString) && numberArgument.plusp().toJavaPBoolean()) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
 		}
 
 		final int numberOfTokens = tokenString.length();
-		final int numberArgumentIntValue = numberArgument.intValueExact();
+		final int numberArgumentIntValue = numberArgument.toJavaInt();
 		if (numberOfTokens > numberArgumentIntValue) {
 			final String message = "Bit vector is longer than specified length: #" + numberArgument + '*' + tokenString;
 			throw new ReaderErrorException(message);

@@ -4,8 +4,6 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -34,7 +32,7 @@ final class RationalReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	static LispStruct readRational(final InputStreamStruct inputStreamStruct, final BigInteger radix) {
+	static LispStruct readRational(final InputStreamStruct inputStreamStruct, final int radix) {
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;

@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jcl.lang.ArrayStruct;
@@ -33,7 +31,7 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_A) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
@@ -41,19 +39,18 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		if (!numberArgument.isPresent()) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("#A used without a rank argument.");
 		}
-		final BigInteger numberArgumentValue = numberArgument.get();
 
-		if (BigInteger.ZERO.compareTo(numberArgumentValue) < 0) {
+		if (numberArgument.minusp().toJavaPBoolean()) {
 			if (!(token instanceof SequenceStruct)) {
-				final String message = "The form following a #" + numberArgumentValue + "A reader macro should have been a sequence, but it was: " + token;
+				final String message = "The form following a #" + numberArgument + "A reader macro should have been a sequence, but it was: " + token;
 				throw new ReaderErrorException(message);
 			}
 
 			final SequenceStruct contents = (SequenceStruct) token;
-			final List<IntegerStruct> dimensions = getDimensions(numberArgumentValue, contents);
+			final List<IntegerStruct> dimensions = getDimensions(numberArgument, contents);
 			final List<LispStruct> initialContents = contents.stream().collect(Collectors.toList());
 			return ArrayStruct.toLispArray(dimensions, CommonLispSymbols.T, initialContents);
 		} else {
@@ -75,16 +72,15 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @throws ReaderErrorException
 	 * 		if dimensions do not match the provided contents list
 	 */
-	private static List<IntegerStruct> getDimensions(final BigInteger dimensions, final SequenceStruct contents) {
+	private static List<IntegerStruct> getDimensions(final IntegerStruct dimensions, final SequenceStruct contents) {
+		final int dimensionsInt = dimensions.toJavaInt();
 
 		LispStruct sequence = contents;
-		BigInteger zeroAxis = null;
+		Integer zeroAxis = null;
 
 		final List<IntegerStruct> arrayDimensions = new ArrayList<>();
 
-		for (BigInteger axis = BigInteger.ZERO;
-		     dimensions.compareTo(axis) > 0;
-		     axis = axis.add(BigInteger.ONE)) {
+		for (int axis = 0; axis < dimensionsInt; axis++) {
 
 			final SequenceStruct sequenceToken;
 			if (sequence instanceof SequenceStruct) {
@@ -99,7 +95,7 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final int dimension = tokensAsJavaList.size();
 			arrayDimensions.add(IntegerStruct.toLispInteger(dimension));
 
-			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {
+			if (axis != (dimensionsInt - 1)) {
 				if (tokensAsJavaList.isEmpty()) {
 					zeroAxis = axis;
 				} else if (zeroAxis == null) {

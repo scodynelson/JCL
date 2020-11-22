@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
@@ -28,29 +26,29 @@ public final class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 
-		if (!numberArgument.isPresent()) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("Missing label for ##.");
 		}
-		final BigInteger numberArgumentValue = numberArgument.get();
+		final int numberArgumentInt = numberArgument.toJavaInt();
 
 		final ReaderContext context = ReaderContextHolder.getContext();
-		final LispStruct labelToken = context.getSharpEqualFinalTable().get(numberArgumentValue);
+		final LispStruct labelToken = context.getSharpEqualFinalTable().get(numberArgumentInt);
 		if (labelToken != null) {
 			return labelToken;
 		}
 
-		final SymbolStruct possibleLabelTag = context.getSharpEqualTempTable().get(numberArgumentValue);
+		final SymbolStruct possibleLabelTag = context.getSharpEqualTempTable().get(numberArgumentInt);
 		if (possibleLabelTag != null) {
 			return possibleLabelTag;
 		}
 
-		throw new ReaderErrorException("Reference to undefined label #" + numberArgumentValue + '#');
+		throw new ReaderErrorException("Reference to undefined label #" + numberArgument + '#');
 	}
 }

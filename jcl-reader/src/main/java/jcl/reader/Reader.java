@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ * Copyright (c) 2011-2020 Cody Nelson - All rights reserved.
  */
 
 package jcl.reader;
 
-import java.math.BigInteger;
 import java.util.Map;
 
 import jcl.lang.InputStreamStruct;
@@ -12,7 +11,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.stream.ReadCharResult;
 import jcl.reader.internal.ReaderProcessor;
-import jcl.reader.internal.TokenBuilder;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -41,13 +39,12 @@ public final class Reader {
 	                                                  final LispStruct eofValue,
 	                                                  final boolean recursiveP) {
 		if (recursiveP) {
-			final TokenBuilder tokenBuilder = new TokenBuilder(inputStreamStruct, eofErrorP, eofValue);
-			return ReaderProcessor.read(tokenBuilder);
+			return ReaderProcessor.read(inputStreamStruct, eofErrorP, eofValue);
 		}
 
 		final ReaderContext context = ReaderContextHolder.getContext();
-		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = context.getSharpEqualFinalTable();
-		final Map<BigInteger, SymbolStruct> tempSharpEqualTempTable = context.getSharpEqualTempTable();
+		final Map<Integer, LispStruct> tempSharpEqualFinalTable = context.getSharpEqualFinalTable();
+		final Map<Integer, SymbolStruct> tempSharpEqualTempTable = context.getSharpEqualTempTable();
 		final Map<SymbolStruct, LispStruct> tempSharpEqualReplTable = context.getSharpEqualReplTable();
 
 		try {

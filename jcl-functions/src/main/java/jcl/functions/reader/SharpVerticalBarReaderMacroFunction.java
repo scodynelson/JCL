@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.stream.ReadCharResult;
@@ -25,7 +23,7 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.VERTICAL_LINE;
 
 		final int baseLevel = 0;

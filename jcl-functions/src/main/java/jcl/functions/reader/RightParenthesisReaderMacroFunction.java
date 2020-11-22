@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.util.CodePointConstants;
@@ -23,7 +21,7 @@ public final class RightParenthesisReaderMacroFunction extends ReaderMacroFuncti
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.RIGHT_PARENTHESIS;
 
 		throw new ReaderErrorException("Unmatched close parenthesis.");

@@ -4,10 +4,8 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.util.CodePointConstants;
 
@@ -22,7 +20,7 @@ public final class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctio
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.LEFT_PARENTHESIS;
 
 		return ListReaderMacroFunction.readList(inputStreamStruct);

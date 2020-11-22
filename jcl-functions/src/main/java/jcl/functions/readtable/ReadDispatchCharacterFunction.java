@@ -1,7 +1,5 @@
 package jcl.functions.readtable;
 
-import java.math.BigInteger;
-
 import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
@@ -57,10 +55,10 @@ public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructIm
 			codePoint = readResult.getResult();
 		}
 
-		BigInteger numberArgument = null;
+		Integer numberArgument = null;
 		if (digitStringBuilder.length() >= 1) {
 			final String digitString = digitStringBuilder.toString();
-			numberArgument = new BigInteger(digitString);
+			numberArgument = Integer.parseInt(digitString);
 		}
 
 		if (readResult.isEof()) {

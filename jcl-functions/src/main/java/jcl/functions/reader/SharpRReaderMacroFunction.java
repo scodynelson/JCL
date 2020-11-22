@@ -4,14 +4,11 @@
 
 package jcl.functions.reader;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 import jcl.lang.InputStreamStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.util.CodePointConstants;
-import org.apache.commons.lang3.Range;
 
 /**
  * Implements the '#r' Lisp reader macro.
@@ -19,10 +16,14 @@ import org.apache.commons.lang3.Range;
 public final class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
-	 * The valid range of radix values.
+	 * The lower bound of radix values.
 	 */
-	@SuppressWarnings("MagicNumber")
-	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
+	private static final int RADIX_LOWER_BOUND = 2;
+
+	/**
+	 * The upper bound of radix values.
+	 */
+	private static final int RADIX_UPPER_BOUND = 36;
 
 	public SharpRReaderMacroFunction() {
 		super("SHARP-R");
@@ -30,15 +31,15 @@ public final class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
-	                            final Optional<BigInteger> numberArgument) {
+	                            final IntegerStruct numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_R) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_R);
 
-		if (!numberArgument.isPresent()) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("Radix missing in #R.");
 		}
-		final BigInteger radix = numberArgument.get();
+		final int radix = numberArgument.toJavaInt();
 
-		if (!RADIX_RANGE.contains(radix)) {
+		if ((radix >= RADIX_LOWER_BOUND) && (radix <= RADIX_UPPER_BOUND)) {
 			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		}
 

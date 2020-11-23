@@ -7,7 +7,7 @@ package jcl.lang.internal.readtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jcl.lang.readtable.SyntaxType;
+import jcl.lang.SyntaxType;
 import jcl.util.CodePointConstants;
 import lombok.extern.log4j.Log4j2;
 

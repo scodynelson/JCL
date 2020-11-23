@@ -15,13 +15,13 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
 import jcl.lang.FixnumStruct;
+import jcl.lang.GetPropertiesResult;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
@@ -246,7 +246,7 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 	}
 
 	@Override
-	public ValuesStruct getProperties(final ListStruct indicators) {
+	public GetPropertiesResult getProperties(final ListStruct indicators) {
 		if (!(cdr instanceof ConsStruct)) {
 			throw new ErrorException("List is not a valid property list.");
 		}
@@ -254,7 +254,7 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 
 		final ConsStruct cdrCons = (ConsStruct) cdr;
 		if (carIsIndicator) {
-			return ValuesStruct.valueOf(car, cdrCons.car(), this);
+			return new GetPropertiesResult(car, cdrCons.car(), this);
 		} else if (!(cdrCons.cdr() instanceof ListStruct)) {
 			throw new ErrorException("List is not a valid property list.");
 		} else {

@@ -10,15 +10,13 @@ import java.util.Spliterators;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.ArrayDisplacement;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.NumberStruct;
-import jcl.lang.RealStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
@@ -252,10 +250,8 @@ public class ComplexVectorStructImpl extends AbstractVectorStructImpl {
 	}
 
 	@Override
-	public ValuesStruct arrayDisplacement() {
-		return (displacedTo == null)
-		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
-		       : ValuesStruct.valueOf(displacedTo, displacedIndexOffset);
+	public ArrayDisplacement arrayDisplacement() {
+		return new ArrayDisplacement(displacedTo, displacedIndexOffset);
 	}
 
 	@Override

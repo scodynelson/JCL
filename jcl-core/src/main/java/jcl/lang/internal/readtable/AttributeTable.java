@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.readtable.AttributeType;
+import jcl.lang.AttributeType;
 
 /**
  * Represents a lookup table for {@link AttributeType}s matching {@link Integer} code points.

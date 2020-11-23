@@ -14,7 +14,7 @@ import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 
 public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructImpl {
 

@@ -21,7 +21,7 @@ import jcl.lang.SingleFloatStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.number.QuotientRemainder;
+import jcl.lang.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apfloat.Apcomplex;

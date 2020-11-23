@@ -4,31 +4,27 @@
 
 package jcl.compiler.function;
 
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
+import jcl.lang.ValuesStruct;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class CompileResult {
+@Getter
+@AllArgsConstructor
+public final class CompileResult {
 
 	private final FunctionStruct function;
+	private final BooleanStruct warningsP;
+	private final BooleanStruct failureP;
 
-	private final boolean compiledWithWarnings;
-
-	private final boolean failedToCompile;
-
-	public CompileResult(final FunctionStruct function, final boolean compiledWithWarnings, final boolean failedToCompile) {
-		this.function = function;
-		this.compiledWithWarnings = compiledWithWarnings;
-		this.failedToCompile = failedToCompile;
-	}
-
-	public FunctionStruct getFunction() {
-		return function;
-	}
-
-	public boolean isCompiledWithWarnings() {
-		return compiledWithWarnings;
-	}
-
-	public boolean isFailedToCompile() {
-		return failedToCompile;
+	/**
+	 * Returns a {@link ValuesStruct} containing the {@link #function}, {@link #warningsP}, and {@link #failureP}
+	 * values.
+	 *
+	 * @return a {@link ValuesStruct} containing the {@link #function}, {@link #warningsP}, and {@link #failureP} values
+	 */
+	public ValuesStruct toValues() {
+		return ValuesStruct.valueOf(function, warningsP, failureP);
 	}
 }

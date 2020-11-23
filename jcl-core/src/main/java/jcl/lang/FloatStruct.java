@@ -10,9 +10,9 @@ public interface FloatStruct extends RealStruct {
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign..
 	 *
-	 * @return a {@link LispStruct} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
-	LispStruct decodeFloat();
+	DecodeFloatResult decodeFloat();
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
@@ -20,9 +20,9 @@ public interface FloatStruct extends RealStruct {
 	 * IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed for
 	 * the significand to produce an {@link IntegerStruct}.
 	 *
-	 * @return a {@link LispStruct} containing the decoded significand, exponent, and sign for this FloatStruct
+	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
-	LispStruct integerDecodeFloat();
+	DecodeFloatResult integerDecodeFloat();
 
 	/**
 	 * Returns (* float (expt (float b float) scale)), where b is the radix of the floating-point representation.
@@ -128,7 +128,7 @@ public interface FloatStruct extends RealStruct {
 	BigDecimal toJavaBigDecimal();
 
 	/*
-		RealStruct
+	REAL-STRUCT
 	 */
 
 	@Override
@@ -136,11 +136,8 @@ public interface FloatStruct extends RealStruct {
 		return this;
 	}
 
-	@Override
-	FloatStruct floatingPoint(final FloatStruct prototype);
-
 	/*
-		NumberStruct
+	NUMBER-STRUCT
 	 */
 
 	@Override
@@ -164,6 +161,10 @@ public interface FloatStruct extends RealStruct {
 
 	@Override
 	FloatStruct reciprocal();
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	default boolean eql(final LispStruct object) {

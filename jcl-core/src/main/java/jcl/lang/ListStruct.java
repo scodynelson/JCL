@@ -16,10 +16,6 @@ import org.apache.commons.collections4.iterators.ReverseListIterator;
  */
 public interface ListStruct extends SequenceStruct {
 
-	/*
-	LIST
-	 */
-
 	/**
 	 * Returns the 'car' (or head) of the list. If the list is a {@link ConsStruct}, the car {@link LispStruct} is
 	 * returned. If the list is a {@link NILStruct}, {@link NILStruct#INSTANCE} is returned.
@@ -465,7 +461,7 @@ public interface ListStruct extends SequenceStruct {
 
 	// TODO: Fast Rassoc???
 
-	ValuesStruct getProperties(final ListStruct indicators);
+	GetPropertiesResult getProperties(final ListStruct indicators);
 
 	default LispStruct getf(final LispStruct indicator) {
 		return getf(indicator, NILStruct.INSTANCE);
@@ -602,7 +598,7 @@ public interface ListStruct extends SequenceStruct {
 	}
 
 	/*
-	SEQUENCE
+	SEQUENCE-STRUCT
 	 */
 
 	@Override

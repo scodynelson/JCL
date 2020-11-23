@@ -16,6 +16,10 @@ public interface ConsStruct extends ListStruct {
 		return toLispCons(pair, alist);
 	}
 
+	static ConsStruct toLispCons(final LispStruct lispStruct1, final LispStruct lispStruct2) {
+		return new ConsStructImpl(lispStruct1, lispStruct2);
+	}
+
 	/*
 	LISP-STRUCT
 	 */
@@ -46,9 +50,5 @@ public interface ConsStruct extends ListStruct {
 			}
 		}
 		return false;
-	}
-
-	static ConsStruct toLispCons(final LispStruct lispStruct1, final LispStruct lispStruct2) {
-		return new ConsStructImpl(lispStruct1, lispStruct2);
 	}
 }

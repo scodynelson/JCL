@@ -43,7 +43,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the result of the addition operation on this NumberStruct to the provided NumberStruct
 	 */
-	NumberStruct add(NumberStruct number);
+	NumberStruct add(final NumberStruct number);
 
 	/**
 	 * Performs the addition operation on the {@link List} of NumberStruct objects in order. {@link
@@ -66,7 +66,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the result of the subtraction operation on the provided NumberStruct from this NumberStruct
 	 */
-	NumberStruct subtract(NumberStruct number);
+	NumberStruct subtract(final NumberStruct number);
 
 	/**
 	 * Performs the subtraction operation on the {@link List} of NumberStruct objects in order, using the single
@@ -96,7 +96,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the result of the multiplication operation on this NumberStruct to the provided NumberStruct
 	 */
-	NumberStruct multiply(NumberStruct number);
+	NumberStruct multiply(final NumberStruct number);
 
 	/**
 	 * Performs the multiplication operation on the {@link List} of NumberStruct objects in order. {@link
@@ -119,7 +119,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the result of the division operation on the provided NumberStruct from this NumberStruct
 	 */
-	NumberStruct divide(NumberStruct number);
+	NumberStruct divide(final NumberStruct number);
 
 	/**
 	 * Performs the division operation on the {@link List} of NumberStruct objects in order, using the single
@@ -149,7 +149,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the {@literal '=='} comparison of this NumberStruct and the provided NumberStruct
 	 */
-	boolean isEqualTo(NumberStruct number);
+	boolean isEqualTo(final NumberStruct number);
 
 	/**
 	 * Performs a {@literal '=='} comparison of the provided NumberStruct objects in order. If at any point a value does
@@ -276,7 +276,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return this NumberStruct raised to the power of the provided NumberStruct
 	 */
-	NumberStruct expt(NumberStruct power);
+	NumberStruct expt(final NumberStruct power);
 
 	/**
 	 * Returns the logarithm of this NumberStruct with the base value of 'e', the base of the natural logarithms.
@@ -293,7 +293,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @return the logarithm of this NumberStruct with the provided NumberStruct base
 	 */
-	NumberStruct log(NumberStruct base);
+	NumberStruct log(final NumberStruct base);
 
 	/**
 	 * Returns the square-root of this NumberStruct.

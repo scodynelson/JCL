@@ -8,6 +8,11 @@ import jcl.lang.internal.HashTableStructImpl;
  */
 public interface HashTableStruct extends LispStruct {
 
+	/**
+	 * Returns all hash-table entries.
+	 *
+	 * @return all hash-table entries
+	 */
 	ListStruct entries();
 
 	/**
@@ -53,7 +58,7 @@ public interface HashTableStruct extends LispStruct {
 	 *
 	 * @return the matching stored value for the provided key
 	 */
-	default LispStruct getHash(final LispStruct key) {
+	default GetHashResult getHash(final LispStruct key) {
 		return getHash(key, NILStruct.INSTANCE);
 	}
 
@@ -67,7 +72,7 @@ public interface HashTableStruct extends LispStruct {
 	 *
 	 * @return the matching stored value for the provided key
 	 */
-	LispStruct getHash(final LispStruct key, final LispStruct defaultValue);
+	GetHashResult getHash(final LispStruct key, final LispStruct defaultValue);
 
 	/**
 	 * Sets or inserts the value stored in the map matching the provided key.
@@ -116,7 +121,7 @@ public interface HashTableStruct extends LispStruct {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
 
-		return mapHash(functionVal);
+		return mapHashFunction(functionVal);
 	}
 
 	/**
@@ -127,8 +132,16 @@ public interface HashTableStruct extends LispStruct {
 	 *
 	 * @return NIL
 	 */
-	LispStruct mapHash(final FunctionStruct function);
+	LispStruct mapHashFunction(final FunctionStruct function);
 
+	/**
+	 * Returns the hash code from the provided object, which would be used when hashing a key in a hash-table.
+	 *
+	 * @param object
+	 * 		the object to retrieve the hash code
+	 *
+	 * @return the hash code from the provided object
+	 */
 	static IntegerStruct sxHash(final LispStruct object) {
 		return IntegerStruct.toLispInteger(object.hashCode());
 	}

@@ -11,6 +11,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.BooleanStruct;
+import jcl.lang.DecodeFloatResult;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
@@ -22,10 +23,9 @@ import jcl.lang.ShortFloatStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.number.QuotientRemainder;
+import jcl.lang.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import lombok.Getter;
@@ -67,7 +67,7 @@ public class SingleFloatStructImpl extends LispStructImpl implements SingleFloat
 	}
 
 	@Override
-	public LispStruct decodeFloat() {
+	public DecodeFloatResult decodeFloat() {
 		final int bits = Float.floatToRawIntBits(value);
 		final DecodedFloat decodedFloat = getDecodedFloat(bits);
 
@@ -84,11 +84,11 @@ public class SingleFloatStructImpl extends LispStructImpl implements SingleFloat
 		final int sign = decodedFloat.getSign();
 		final FloatStruct signFloat = (sign == 1) ? SingleFloatStruct.ONE : SingleFloatStruct.MINUS_ONE;
 
-		return ValuesStruct.valueOf(significandFloat, exponentInteger, signFloat);
+		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
 	@Override
-	public LispStruct integerDecodeFloat() {
+	public DecodeFloatResult integerDecodeFloat() {
 		final int bits = Float.floatToRawIntBits(value);
 		final DecodedFloat decodedFloat = getDecodedFloat(bits);
 
@@ -103,7 +103,7 @@ public class SingleFloatStructImpl extends LispStructImpl implements SingleFloat
 		final int sign = decodedFloat.getSign();
 		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
 
-		return ValuesStruct.valueOf(significandInteger, exponentInteger, signInteger);
+		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
 	@Override

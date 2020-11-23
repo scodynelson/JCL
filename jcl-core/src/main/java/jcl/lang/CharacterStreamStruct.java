@@ -7,7 +7,6 @@ import java.io.PushbackReader;
 
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.internal.stream.CharacterStreamStructImpl;
-import jcl.lang.stream.ReadCharResult;
 
 /**
  * The {@link CharacterStreamStruct} is the object representation of a character reading and writing Lisp stream.
@@ -15,10 +14,6 @@ import jcl.lang.stream.ReadCharResult;
 public interface CharacterStreamStruct extends IOStreamStruct {
 
 	String OPERATION_UNSUPPORTED = "Operation not supported for Character Streams.";
-
-	/*
-	CHARACTER-STREAM-STRUCT
-	 */
 
 	/**
 	 * Returns the underlying Java {@link PushbackReader} for this Character-Stream.

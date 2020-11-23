@@ -24,7 +24,16 @@ import org.objectweb.asm.Opcodes;
  */
 public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
+	/**
+	 * Global constant singleton instance of 'nil'.
+	 */
 	public static final NILStruct INSTANCE = new NILStruct();
+
+	/**
+	 * Constant result for the {@link #getProperties(ListStruct)} method.
+	 */
+	private static final GetPropertiesResult GET_PROPERTIES_RESULT
+			= new GetPropertiesResult(INSTANCE, INSTANCE, INSTANCE);
 
 	/**
 	 * Private constructor.
@@ -34,7 +43,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	/*
-	LIST
+	LIST-STRUCT
 	 */
 
 	@Override
@@ -93,8 +102,8 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	@Override
-	public ValuesStruct getProperties(final ListStruct indicators) {
-		return ValuesStruct.valueOf(INSTANCE, INSTANCE, INSTANCE);
+	public GetPropertiesResult getProperties(final ListStruct indicators) {
+		return GET_PROPERTIES_RESULT;
 	}
 
 	@Override
@@ -138,7 +147,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	}
 
 	/*
-	SEQUENCE
+	SEQUENCE-STRUCT
 	 */
 
 	@Override

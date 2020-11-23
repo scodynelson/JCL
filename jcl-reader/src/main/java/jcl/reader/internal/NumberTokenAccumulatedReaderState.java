@@ -23,7 +23,7 @@ import jcl.lang.RatioStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.readtable.AttributeType;
+import jcl.lang.AttributeType;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;

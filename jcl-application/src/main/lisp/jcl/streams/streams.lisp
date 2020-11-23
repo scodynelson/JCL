@@ -181,7 +181,7 @@
   "Returns the next line of text that is terminated by a newline or end of file."
   (declare (system::%java-class-name "jcl.streams.functions.ReadLine"))
   (let ((input-stream (streamify-designator input-stream)))
-    ($readLine input-stream eof-error eof-value recursive-p)))
+    ($toValues ($readLine input-stream eof-error eof-value recursive-p))))
 
 (defun write-line (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream followed by a newline."

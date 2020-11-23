@@ -13,6 +13,9 @@ import org.objectweb.asm.Type;
  */
 public final class TStruct extends BooleanStructImpl {
 
+	/**
+	 * Global constant singleton instance of 't'.
+	 */
 	public static final TStruct INSTANCE = new TStruct();
 
 	/**

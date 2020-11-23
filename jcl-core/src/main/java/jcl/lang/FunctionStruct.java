@@ -7,7 +7,7 @@ import jcl.lang.condition.exception.TypeErrorException;
  */
 public interface FunctionStruct extends LispStruct {
 
-	LispStruct apply(LispStruct... lispStructs);
+	LispStruct apply(final LispStruct... lispStructs);
 
 	SymbolStruct getFunctionSymbol();
 

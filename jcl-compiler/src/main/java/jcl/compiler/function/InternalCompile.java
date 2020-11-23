@@ -39,7 +39,6 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -73,7 +72,7 @@ public final class InternalCompile {
 	private static final String INIT_METHOD_NAME = "init";
 	private static final String INIT_METHOD_DESC = "()V";
 
-	public static LispStruct compile(final LispStruct name, final LispStruct uncompiledDefinition) {
+	public static CompileResult compile(final LispStruct name, final LispStruct uncompiledDefinition) {
 
 		if ((uncompiledDefinition != null) && (uncompiledDefinition != NILStruct.INSTANCE)) {
 			CompileResult compiledDefinition = null;
@@ -100,12 +99,12 @@ public final class InternalCompile {
 			}
 
 			if (compiledDefinition == null) {
-				return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
+				return new CompileResult(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 			} else {
-				return ValuesStruct.valueOf(
+				return new CompileResult(
 						function,
-						BooleanStruct.toLispBoolean(compiledDefinition.isCompiledWithWarnings()),
-						BooleanStruct.toLispBoolean(compiledDefinition.isFailedToCompile())
+						compiledDefinition.getWarningsP(),
+						compiledDefinition.getFailureP()
 				);
 			}
 		}
@@ -117,21 +116,21 @@ public final class InternalCompile {
 
 		final MacroFunctionExpanderInter macroFunction = nameSymbol.getMacroFunctionExpander();
 		if (macroFunction != null) {
-			return ValuesStruct.valueOf(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
+			return new CompileResult(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
 		final boolean hasFunction = nameSymbol.hasFunction();
 		if (hasFunction) {
 			final FunctionStruct function = nameSymbol.getFunction();
-			return ValuesStruct.valueOf(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
+			return new CompileResult(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
 		throw new ErrorException("No definition found for " + nameSymbol);
 	}
 
-	public static LispStruct compileFile(final LispStruct inputFile, final LispStruct outputFile,
-	                                     final BooleanStruct verboseVal, final BooleanStruct printVal,
-	                                     final LispStruct externalFormat) {
+	public static CompileFileResult compileFile(final LispStruct inputFile, final LispStruct outputFile,
+	                                            final BooleanStruct verboseVal, final BooleanStruct printVal,
+	                                            final LispStruct externalFormat) {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 		final boolean verbose = verboseVal.toJavaPBoolean();
 		final boolean print = printVal.toJavaPBoolean();
@@ -345,13 +344,13 @@ public final class InternalCompile {
 			writeToJar(javaClassBuilderDeque, outputFilePath, inputFileLispName, inputFileName, inputClassName, print);
 			compiledSuccessfully = true;
 
-			return ValuesStruct.valueOf(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
+			return new CompileFileResult(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
 		} catch (final IOException e) {
 			compiledSuccessfully = false;
 
 			log.error("Error in COMPILE-FILE for file: '{}'", inputFilePath, e);
 
-			return ValuesStruct.valueOf(NILStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
+			return new CompileFileResult(NILStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
 		} finally {
 			if (compiledSuccessfully && verbose) {
 				log.info("\n; '{}' written", outputFilePath);

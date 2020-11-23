@@ -18,7 +18,7 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 
 /**
  * The {@link SynonymStreamStructImpl} is the object representation of a Lisp 'synonym-stream' type.

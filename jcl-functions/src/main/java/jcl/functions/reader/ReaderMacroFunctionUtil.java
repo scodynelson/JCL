@@ -6,8 +6,8 @@ package jcl.functions.reader;
 
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.SyntaxType;
+import jcl.lang.AttributeType;
+import jcl.lang.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
 
 /**

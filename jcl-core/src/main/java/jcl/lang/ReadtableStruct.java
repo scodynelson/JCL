@@ -1,9 +1,6 @@
 package jcl.lang;
 
 import jcl.lang.internal.readtable.ReadtableStructImpl;
-import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.readtable.SyntaxType;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**

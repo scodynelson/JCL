@@ -20,7 +20,7 @@ import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.readtable.SyntaxType;
+import jcl.lang.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;

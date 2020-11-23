@@ -10,6 +10,7 @@ import java.util.function.IntConsumer;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.ArrayDisplacement;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
@@ -20,12 +21,11 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.readtable.SyntaxType;
+import jcl.lang.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PrinterVariables;
@@ -348,10 +348,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
-	public ValuesStruct arrayDisplacement() {
-		return (displacedTo == null)
-		       ? ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO)
-		       : ValuesStruct.valueOf(displacedTo, displacedIndexOffset);
+	public ArrayDisplacement arrayDisplacement() {
+		return new ArrayDisplacement(displacedTo, displacedIndexOffset);
 	}
 
 	@Override

@@ -8,8 +8,8 @@ import java.util.LinkedList;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.readtable.AttributeType;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.AttributeType;
+import jcl.lang.ReadCharResult;
 import jcl.reader.Reader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

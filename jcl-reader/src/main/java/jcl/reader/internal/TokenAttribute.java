@@ -4,7 +4,7 @@
 
 package jcl.reader.internal;
 
-import jcl.lang.readtable.AttributeType;
+import jcl.lang.AttributeType;
 import jcl.reader.Reader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

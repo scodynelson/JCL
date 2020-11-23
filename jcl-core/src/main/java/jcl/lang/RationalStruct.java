@@ -92,7 +92,7 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	/*
-		RealStruct
+	REAL-STRUCT
 	 */
 
 	@Override
@@ -101,7 +101,7 @@ public interface RationalStruct extends RealStruct {
 	}
 
 	/*
-		NumberStruct
+	NUMBER-STRUCT
 	 */
 
 	@Override
@@ -130,6 +130,10 @@ public interface RationalStruct extends RealStruct {
 
 	@Override
 	RationalStruct reciprocal();
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	default boolean eql(final LispStruct object) {

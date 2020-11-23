@@ -19,7 +19,7 @@ import jcl.lang.TStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 
 /**
  * The {@link BinaryStreamStructImpl} is the object representation of a binary reading and writing Lisp stream.

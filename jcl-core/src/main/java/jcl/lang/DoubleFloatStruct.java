@@ -2,6 +2,9 @@ package jcl.lang;
 
 import jcl.lang.internal.DoubleFloatStructImpl;
 
+/**
+ * The {@link DoubleFloatStruct} is the object representation of a Lisp 'double-float' type.
+ */
 public interface DoubleFloatStruct extends FloatStruct {
 
 	/**
@@ -24,14 +27,38 @@ public interface DoubleFloatStruct extends FloatStruct {
 	 */
 	DoubleFloatStruct MINUS_ONE = new DoubleFloatStructImpl(-1.0D);
 
+	/**
+	 * Returns a new DoubleFloatStruct representation of the provided {@literal float}.
+	 *
+	 * @param value
+	 * 		the {@literal float} to represent as a DoubleFloatStruct
+	 *
+	 * @return a new DoubleFloatStruct representation of the provided {@literal float}
+	 */
 	static DoubleFloatStruct toLispFloat(final float value) {
 		return toLispFloat((double) value);
 	}
 
+	/**
+	 * Returns a new DoubleFloatStruct representation of the provided {@link Float}.
+	 *
+	 * @param value
+	 * 		the {@link Float} to represent as a DoubleFloatStruct
+	 *
+	 * @return a new DoubleFloatStruct representation of the provided {@link Float}
+	 */
 	static DoubleFloatStruct toLispFloat(final Float value) {
 		return toLispFloat(value.doubleValue());
 	}
 
+	/**
+	 * Returns a new DoubleFloatStruct representation of the provided {@literal double}.
+	 *
+	 * @param value
+	 * 		the {@literal double} to represent as a DoubleFloatStruct
+	 *
+	 * @return a new DoubleFloatStruct representation of the provided {@literal double}
+	 */
 	static DoubleFloatStruct toLispFloat(final double value) {
 		if (Double.compare(value, 0.0D) == 0) {
 			return ZERO;
@@ -46,9 +73,21 @@ public interface DoubleFloatStruct extends FloatStruct {
 		}
 	}
 
+	/**
+	 * Returns a new DoubleFloatStruct representation of the provided {@link Double}.
+	 *
+	 * @param value
+	 * 		the {@link Double} to represent as a DoubleFloatStruct
+	 *
+	 * @return a new DoubleFloatStruct representation of the provided {@link Double}
+	 */
 	static DoubleFloatStruct toLispFloat(final Double value) {
 		return toLispFloat(value.doubleValue());
 	}
+
+	/*
+	NUMBER-STRUCT
+	 */
 
 	@Override
 	default FloatStruct imagPart() {

@@ -2,6 +2,7 @@ package jcl.system;
 
 import java.util.List;
 
+import jcl.compiler.function.CompileFileResult;
 import jcl.compiler.function.InternalCompile;
 import jcl.compiler.function.InternalLoad;
 import jcl.compiler.sa.BootstrapExpanders;
@@ -16,7 +17,6 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.TwoWayStreamStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CommonLispSymbols;
@@ -88,8 +88,8 @@ public class JCL implements Runnable {
 			final PathnameStruct destDirectory = PathnameStruct.toPathname(destDir);
 			final PathnameStruct newSourceFile = mergePathnames(destDirectory, pathnameName, pathnameType);
 
-			final LispStruct result = InternalCompile.compileFile(sourceFile, newSourceFile, TStruct.INSTANCE, TStruct.INSTANCE, null);
-			final BooleanStruct failureP = (BooleanStruct) ((ValuesStruct) result).getValuesList().get(2);
+			final CompileFileResult result = InternalCompile.compileFile(sourceFile, newSourceFile, TStruct.INSTANCE, TStruct.INSTANCE, null);
+			final BooleanStruct failureP = result.getFailureP();
 			if (failureP.toJavaPBoolean()) {
 				throw new ProgramErrorException("Failed to compile source file: " + sourceFile);
 			}

@@ -17,7 +17,7 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 
 /**
  * The {@link EchoStreamStructImpl} is the object representation of a Lisp 'echo-stream' type.

@@ -1,5 +1,6 @@
 package jcl.functions;
 
+import jcl.compiler.function.CompileFileResult;
 import jcl.compiler.function.InternalCompile;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
@@ -48,6 +49,7 @@ public final class CompileFileFunction extends BuiltInFunctionStructImpl {
 			print = CompilerVariables.COMPILE_PRINT.getVariableValue();
 		}
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
-		return InternalCompile.compileFile(inputFile, outputFile, verbose, print, externalFormat);
+		final CompileFileResult compileFileResult = InternalCompile.compileFile(inputFile, outputFile, verbose, print, externalFormat);
+		return compileFileResult.toValues();
 	}
 }

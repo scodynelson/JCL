@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import jcl.util.CodePointConstants;
 
 /**

@@ -4,7 +4,6 @@
 
 package jcl.compiler.function;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import jcl.compiler.icg.IntermediateCodeGenerator;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.sa.SemanticAnalyzer;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -52,7 +52,7 @@ public final class CompileForm {
 			// TODO: Maybe set this up as a super debugging variable that we can control or something???
 			if (OUTPUT_FILE) {
 				final String fileName = javaClassBuilder.getFileName();
-				try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
+				try (final FileOutputStream outputStream = new FileOutputStream("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class")) {
 					outputStream.write(byteArray);
 				} catch (final IOException ioe) {
 					log.info("Error writing class file.", ioe);
@@ -85,7 +85,11 @@ public final class CompileForm {
 			}
 		}
 
-		return new CompileResult(function, compiledWithWarnings, failedToCompile);
+		return new CompileResult(
+				function,
+				BooleanStruct.toLispBoolean(compiledWithWarnings),
+				BooleanStruct.toLispBoolean(failedToCompile)
+		);
 	}
 
 	private static ListStruct wrapFormInLambda(final LispStruct form) {

@@ -6,11 +6,11 @@ package jcl.functions.reader;
 
 import jcl.lang.InputStreamStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.readtable.AttributeType;
-import jcl.lang.readtable.ReadtableCase;
-import jcl.lang.readtable.SyntaxType;
+import jcl.lang.AttributeType;
+import jcl.lang.ReadtableCase;
+import jcl.lang.SyntaxType;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import lombok.experimental.UtilityClass;
 
 /**

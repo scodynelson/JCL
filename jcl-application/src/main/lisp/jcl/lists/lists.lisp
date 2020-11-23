@@ -282,7 +282,7 @@
 (defun get-properties (plist indicator-list)
   "Used to look up any of several property list entries all at once."
   (declare (system::%java-class-name "jcl.lists.functions.GetProperties"))
-  ($getProperties plist indicator-list))
+  ($toValues ($getProperties plist indicator-list)))
 
 (defun list-length (list)
   "Returns the length of list if list is a proper list. Returns nil if list is a circular list."

@@ -12,7 +12,7 @@ import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.PackageVariables;
 import jcl.lang.statics.REPLVariables;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import jcl.printer.Printer;
 import jcl.reader.InternalRead;
 import lombok.extern.log4j.Log4j2;

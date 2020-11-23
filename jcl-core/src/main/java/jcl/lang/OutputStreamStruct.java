@@ -9,10 +9,6 @@ package jcl.lang;
  */
 public interface OutputStreamStruct extends StreamStruct {
 
-	/*
-	OUTPUT-STREAM-STRUCT
-	 */
-
 	/**
 	 * Writes the provided {@code codePoint} out to the stream.
 	 *

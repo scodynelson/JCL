@@ -87,8 +87,8 @@ public interface ArrayStruct extends LispStruct {
 	 *
 	 * @return the values of the :displaced-to and :displaced-index-offset options, or nil and 0
 	 */
-	default ValuesStruct arrayDisplacement() {
-		return ValuesStruct.valueOf(NILStruct.INSTANCE, IntegerStruct.ZERO);
+	default ArrayDisplacement arrayDisplacement() {
+		return ArrayDisplacement.DEFAULT;
 	}
 
 	/**

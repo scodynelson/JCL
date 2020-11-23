@@ -1,50 +1,64 @@
 package jcl.lang;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.security.SecureRandom;
 
 import jcl.lang.condition.exception.TypeErrorException;
+import jcl.lang.internal.number.RandomStateStructImpl;
+import jcl.lang.statics.NumberVariables;
 
 /**
- * Created by codynelson on 8/1/16.
+ * The {@link RandomStateStruct} is the object representation of a Lisp 'random-state' type.
  */
 public interface RandomStateStruct extends LispStruct {
 
 	/**
-	 * Retrieves a random {@link BigInteger} from the internal random seed.
-	 * TODO: fix??
+	 * Returns the underlying {@link SecureRandom} used to seed the random generated values.
 	 *
-	 * @param limit
-	 * 		the upper limit of the random {@link BigInteger}
-	 *
-	 * @return the random {@link BigInteger}
+	 * @return the underlying {@link SecureRandom} used to seed the random generated values
 	 */
-	BigInteger randomInteger(final long limit);
+	SecureRandom randomGenerator();
 
 	/**
-	 * Retrieves a random {@link BigDecimal} from the internal random seed.
-	 * TODO: fix??
+	 * Returns a pseudo-random number that is a non-negative number less than limit and of the same type as limit.
 	 *
 	 * @param limit
-	 * 		the upper limit of the random {@link BigDecimal}
+	 * 		a positive integer, or a positive float, to be used as the limit value for the result
 	 *
-	 * @return the random {@link BigDecimal}
+	 * @return a pseudo-random number
 	 */
-	BigDecimal randomFloat(final double limit);
+	RealStruct random(final RealStruct limit);
 
-	default LispStruct random(final RealStruct real) {
-		if (real instanceof IntegerStruct) {
-			// TODO: fix??
-			final IntegerStruct number = (IntegerStruct) real;
-			final BigInteger randomInteger = randomInteger(number.toJavaPLong());
-			return IntegerStruct.toLispInteger(randomInteger);
-		} else if (real instanceof FloatStruct) {
-			// TODO: fix??
-			final FloatStruct number = (FloatStruct) real;
-			final BigDecimal randomFloat = randomFloat(number.toJavaDouble());
-			return DoubleFloatStruct.toLispFloat(randomFloat.doubleValue());
-		} else {
-			throw new TypeErrorException("Real argument not of type Integer or Float: " + real);
+	/**
+	 * Returns a new RandomStateStruct.
+	 *
+	 * @return a new RandomStateStruct
+	 */
+	static RandomStateStruct toLispRandomState() {
+		return new RandomStateStructImpl();
+	}
+
+	/**
+	 * Returns a new RandomStateStruct based on the provided state value, which can either be another RandomStateStruct,
+	 * T, or NIL.
+	 *
+	 * @param state
+	 * 		the state used to create a new RandomStateStruct
+	 *
+	 * @return a new RandomStateStruct
+	 *
+	 * @throws TypeErrorException
+	 * 		if the provided {@code state} is not a a RANDOM-STATE, T or NIL
+	 */
+	static RandomStateStruct makeRandomState(final LispStruct state) {
+		if (state instanceof RandomStateStruct) {
+			return new RandomStateStructImpl((RandomStateStruct) state);
 		}
+		if (NILStruct.INSTANCE.eq(state)) {
+			return new RandomStateStructImpl(NumberVariables.RANDOM_STATE.getVariableValue());
+		}
+		if (TStruct.INSTANCE.eq(state)) {
+			return new RandomStateStructImpl();
+		}
+		throw new TypeErrorException("Argument is not a RANDOM-STATE, T or NIL: " + state);
 	}
 }

@@ -5,12 +5,12 @@ import java.util.List;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
+import jcl.lang.ArrayDisplacement;
 import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.statics.PrinterVariables;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -118,8 +118,8 @@ public class ComplexArrayStructImpl extends AbstractMultiDimensionArrayStructImp
 	}
 
 	@Override
-	public ValuesStruct arrayDisplacement() {
-		return ValuesStruct.valueOf(displacedTo, displacedIndexOffset);
+	public ArrayDisplacement arrayDisplacement() {
+		return new ArrayDisplacement(displacedTo, displacedIndexOffset);
 	}
 
 	@Override

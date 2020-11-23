@@ -8,7 +8,7 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 

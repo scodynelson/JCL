@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaObjectStruct;
-import jcl.lang.readtable.ReadtableCase;
+import jcl.lang.ReadtableCase;
 import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 

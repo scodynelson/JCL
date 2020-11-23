@@ -1,18 +1,16 @@
 /*
- * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ * Copyright (c) 2011-2020 Cody Nelson - All rights reserved.
  */
 
-package jcl.lang.stream;
+package jcl.lang;
 
-import jcl.lang.InputStreamStruct;
-import jcl.lang.LispStruct;
 import lombok.Getter;
 
 /**
  * Result object from a 'read' operation performed via 'read-char' or 'read-byte' from an {@link InputStreamStruct}.
  */
 @Getter
-public class ReadCharResult {
+public final class ReadCharResult {
 
 	/**
 	 * The {@link Integer} result of the read operation.

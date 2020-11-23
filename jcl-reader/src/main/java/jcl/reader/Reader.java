@@ -9,7 +9,7 @@ import java.util.Map;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import jcl.reader.internal.ReaderProcessor;
 import lombok.experimental.UtilityClass;
 

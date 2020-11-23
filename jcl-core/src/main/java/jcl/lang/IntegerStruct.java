@@ -105,6 +105,36 @@ public interface IntegerStruct extends RationalStruct {
 	FixnumStruct MINUS_ONE = toLispInteger(-1);
 
 	/**
+	 * Representation of an unsigned-byte type-specifier with 8 bits: (unsigned 8).
+	 */
+	LispStruct UNSIGNED_BYTE_8 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, toLispInteger(8));
+
+	/**
+	 * {@link IntegerStruct} constant representing the maximum value of an unsigned-byte with 8 bits.
+	 */
+	IntegerStruct UNSIGNED_BYTE_8_MAX_VALUE = toLispInteger(BigInteger.TWO.pow(8));
+
+	/**
+	 * Representation of an unsigned-byte type-specifier with 16 bits: (unsigned 16).
+	 */
+	LispStruct UNSIGNED_BYTE_16 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, toLispInteger(16));
+
+	/**
+	 * {@link IntegerStruct} constant representing the maximum value of an unsigned-byte with 16 bits.
+	 */
+	IntegerStruct UNSIGNED_BYTE_16_MAX_VALUE = toLispInteger(BigInteger.TWO.pow(16));
+
+	/**
+	 * Representation of an unsigned-byte type-specifier with 32 bits: (unsigned 32).
+	 */
+	LispStruct UNSIGNED_BYTE_32 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, toLispInteger(32));
+
+	/**
+	 * {@link IntegerStruct} constant representing the maximum value of an unsigned-byte with 32 bits.
+	 */
+	IntegerStruct UNSIGNED_BYTE_32_MAX_VALUE = toLispInteger(BigInteger.TWO.pow(32));
+
+	/**
 	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
 	 * 0, {@link #ZERO} is returned.
 	 *
@@ -421,14 +451,38 @@ public interface IntegerStruct extends RationalStruct {
 	 */
 	BigInteger toJavaBigInteger();
 
+	/**
+	 * Returns a new IntegerStruct representation of the provided {@literal int}.
+	 *
+	 * @param value
+	 * 		the {@literal int} to represent as a IntegerStruct
+	 *
+	 * @return a new IntegerStruct representation of the provided {@literal int}
+	 */
 	static FixnumStruct toLispInteger(final int value) {
 		return new FixnumStructImpl(value);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representation of the provided {@link Integer}.
+	 *
+	 * @param value
+	 * 		the {@link Integer} to represent as a IntegerStruct
+	 *
+	 * @return a new IntegerStruct representation of the provided {@link Integer}
+	 */
 	static FixnumStruct toLispInteger(final Integer value) {
 		return new FixnumStructImpl(value);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representation of the provided {@literal long}.
+	 *
+	 * @param value
+	 * 		the {@literal long} to represent as a IntegerStruct
+	 *
+	 * @return a new IntegerStruct representation of the provided {@literal long}
+	 */
 	@SuppressWarnings("NumericCastThatLosesPrecision")
 	static IntegerStruct toLispInteger(final long value) {
 		if ((int) value == value) {
@@ -437,6 +491,14 @@ public interface IntegerStruct extends RationalStruct {
 		return new LongnumStructImpl(value);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representation of the provided {@link Long}.
+	 *
+	 * @param value
+	 * 		the {@link Long} to represent as a IntegerStruct
+	 *
+	 * @return a new IntegerStruct representation of the provided {@link Long}
+	 */
 	static IntegerStruct toLispInteger(final Long value) {
 		if (value.intValue() == value) {
 			return new FixnumStructImpl(value.intValue());
@@ -444,6 +506,14 @@ public interface IntegerStruct extends RationalStruct {
 		return new LongnumStructImpl(value);
 	}
 
+	/**
+	 * Returns a new IntegerStruct representation of the provided {@link BigInteger}.
+	 *
+	 * @param value
+	 * 		the {@link BigInteger} to represent as a IntegerStruct
+	 *
+	 * @return a new IntegerStruct representation of the provided {@link BigInteger}
+	 */
 	static IntegerStruct toLispInteger(final BigInteger value) {
 		if (value.bitLength() <= (Integer.SIZE - 1)) {
 			return new FixnumStructImpl(value.intValue());
@@ -510,9 +580,4 @@ public interface IntegerStruct extends RationalStruct {
 				((object instanceof IntegerStruct)
 						&& ((IntegerStruct) object).ap().equals(ap()));
 	}
-
-	LispStruct UNSIGNED_BYTE_8 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, new FixnumStructImpl(8));
-	LispStruct UNSIGNED_BYTE_16 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, new FixnumStructImpl(16));
-	LispStruct UNSIGNED_BYTE_32 = ListStruct.toLispList(CommonLispSymbols.UNSIGNED_BYTE, new FixnumStructImpl(32));
-	LispStruct UNSIGNED_BYTE_32_MAX_VALUE = new BignumStructImpl(BigInteger.valueOf(4294967296L));
 }

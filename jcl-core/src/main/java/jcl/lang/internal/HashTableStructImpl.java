@@ -14,6 +14,7 @@ import jcl.lang.ConsStruct;
 import jcl.lang.FixnumStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.FunctionStruct;
+import jcl.lang.GetHashResult;
 import jcl.lang.HashTableStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
@@ -21,7 +22,6 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.statics.CommonLispSymbols;
@@ -103,12 +103,12 @@ public final class HashTableStructImpl extends LispStructImpl implements HashTab
 	}
 
 	@Override
-	public LispStruct getHash(final LispStruct key, final LispStruct defaultValue) {
+	public GetHashResult getHash(final LispStruct key, final LispStruct defaultValue) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		if (map.containsKey(keyWrapper)) {
-			return ValuesStruct.valueOf(map.get(keyWrapper), TStruct.INSTANCE);
+			return new GetHashResult(map.get(keyWrapper), TStruct.INSTANCE);
 		} else {
-			return ValuesStruct.valueOf(defaultValue, NILStruct.INSTANCE);
+			return new GetHashResult(defaultValue, NILStruct.INSTANCE);
 		}
 	}
 
@@ -137,7 +137,7 @@ public final class HashTableStructImpl extends LispStructImpl implements HashTab
 	}
 
 	@Override
-	public LispStruct mapHash(final FunctionStruct function) {
+	public LispStruct mapHashFunction(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = new KeyWrapper(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());

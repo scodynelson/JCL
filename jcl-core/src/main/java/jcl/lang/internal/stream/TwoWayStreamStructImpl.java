@@ -13,7 +13,7 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 
 /**
  * The {@link TwoWayStreamStructImpl} is the object representation of a Lisp 'two-way-stream' type.

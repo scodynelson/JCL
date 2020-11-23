@@ -130,12 +130,12 @@
 (defun decode-float (float)
   "Computes three values that characterize float."
   (declare (system::%java-class-name "jcl.numbers.functions.DecodeFloat"))
-  ($decodeFloat float))
+  ($toValues ($decodeFloat float)))
 
 (defun integer-decode-float (float)
   "Computes three values that characterize float."
   (declare (system::%java-class-name "jcl.numbers.functions.IntegerDecodeFloat"))
-  ($integerDecodeFloat float))
+  ($toValues ($integerDecodeFloat float)))
 
 (defun float (real &optional (prototype nil prototype-p))
   "Returns a number z such that z and float-1 have the same sign and also such that z and float-2 have the same absolute value."
@@ -494,74 +494,42 @@
 (defun floor (number &optional (divisor 1))
   "Produces a quotient that has been truncated toward negative infinity; that is, the quotient represents the largest mathematical integer that is not larger than the mathematical quotient."
   (declare (system::%java-class-name "jcl.numbers.functions.Floor"))
-  (ext:jinvoke-static
-    (ext:jmethod "floor" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($floor number divisor)))
 
 (defun ffloor (number &optional (divisor 1))
   "Produces a quotient that has been truncated toward negative infinity; that is, the quotient represents the largest mathematical integer that is not larger than the mathematical quotient."
   (declare (system::%java-class-name "jcl.numbers.functions.FFloor"))
-  (ext:jinvoke-static
-    (ext:jmethod "ffloor" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($ffloor number divisor)))
 
 (defun ceiling (number &optional (divisor 1))
   "Produce a quotient that has been truncated toward positive infinity; that is, the quotient represents the smallest mathematical integer that is not smaller than the mathematical result."
   (declare (system::%java-class-name "jcl.numbers.functions.Ceiling"))
-  (ext:jinvoke-static
-    (ext:jmethod "ceiling" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($ceiling number divisor)))
 
 (defun fceiling (number &optional (divisor 1))
   "Produce a quotient that has been truncated toward positive infinity; that is, the quotient represents the smallest mathematical integer that is not smaller than the mathematical result."
   (declare (system::%java-class-name "jcl.numbers.functions.FCeiling"))
-  (ext:jinvoke-static
-    (ext:jmethod "fceiling" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($fceiling number divisor)))
 
 (defun truncate (number &optional (divisor 1))
   "Produces a quotient that has been truncated towards zero; that is, the quotient represents the mathematical integer of the same sign as the mathematical quotient, and that has the greatest integral magnitude not greater than that of the mathematical quotient."
   (declare (system::%java-class-name "jcl.numbers.functions.Truncate"))
-  (ext:jinvoke-static
-    (ext:jmethod "truncate" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($truncate number divisor)))
 
 (defun ftruncate (number &optional (divisor 1))
   "Produces a quotient that has been truncated towards zero; that is, the quotient represents the mathematical integer of the same sign as the mathematical quotient, and that has the greatest integral magnitude not greater than that of the mathematical quotient."
   (declare (system::%java-class-name "jcl.numbers.functions.FTruncate"))
-  (ext:jinvoke-static
-    (ext:jmethod "ftruncate" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($ftruncate number divisor)))
 
 (defun round (number &optional (divisor 1))
   "Produces a quotient that has been rounded to the nearest mathematical integer; if the mathematical quotient is exactly halfway between two integers, (that is, it has the form integer+1/2), then the quotient has been rounded to the even (divisible by two) integer."
   (declare (system::%java-class-name "jcl.numbers.functions.Round"))
-  (ext:jinvoke-static
-    (ext:jmethod "round" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($round number divisor)))
 
 (defun fround (number &optional (divisor 1))
   "Produces a quotient that has been rounded to the nearest mathematical integer; if the mathematical quotient is exactly halfway between two integers, (that is, it has the form integer+1/2), then the quotient has been rounded to the even (divisible by two) integer."
   (declare (system::%java-class-name "jcl.numbers.functions.FRound"))
-  (ext:jinvoke-static
-    (ext:jmethod "fround" (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct")
-                 (ext:jclass "jcl.lang.RealStruct"))
-    number divisor))
+  ($toValues ($fround number divisor)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -749,7 +717,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: def-var *random-state*
-;; TODO: make-random-state
+
+(defun make-random-state (&optional state)
+  "Creates a fresh object of type random-state suitable for use as the value of *random-state*."
+  (declare (system::%java-class-name "jcl.numbers.functions.MakeRandomState"))
+  (ext:jinvoke-static
+    (ext:jmethod "makeRandomState" (ext:jclass "jcl.lang.RandomStateStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    state))
 
 (defun random (limit &optional (random-state *random-state*))
   "Returns a pseudo-random number that is a non-negative number less than limit and of the same type as limit."

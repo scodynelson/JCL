@@ -1,4 +1,6 @@
 package jcl.lang.function.expander;
 
-public interface MacroFunctionExpanderInter extends MacroExpanderInter {
+import jcl.lang.FunctionStruct;
+
+public interface MacroFunctionExpanderInter extends MacroExpanderInter, FunctionStruct {
 }

@@ -4,17 +4,10 @@
 
 package jcl.lang;
 
-import jcl.lang.stream.ReadCharResult;
-import jcl.lang.stream.ReadLineResult;
-
 /**
  * The {@link InputStreamStruct} is the representation for all Lisp input 'stream' types.
  */
 public interface InputStreamStruct extends StreamStruct {
-
-	/*
-	INPUT-STREAM-STRUCT
-	 */
 
 	/**
 	 * Reads a character from the stream.
@@ -147,10 +140,14 @@ public interface InputStreamStruct extends StreamStruct {
 		}
 
 		if (readCharResult.isEof()) {
-			return new ReadLineResult(eofValue);
+			if (stringBuilder.isEmpty()) {
+				return new ReadLineResult(eofValue, TStruct.INSTANCE);
+			}
+			final String resultString = stringBuilder.toString();
+			return new ReadLineResult(StringStruct.toLispString(resultString), TStruct.INSTANCE);
 		} else {
 			final String resultString = stringBuilder.toString();
-			return new ReadLineResult(resultString);
+			return new ReadLineResult(StringStruct.toLispString(resultString), NILStruct.INSTANCE);
 		}
 	}
 
@@ -164,12 +161,8 @@ public interface InputStreamStruct extends StreamStruct {
 	 *
 	 * @return the line read from the stream
 	 */
-	default LispStruct readLine(final BooleanStruct eofErrorP, final LispStruct eofValue) {
-		final ReadLineResult readLineResult = readLine(eofErrorP.toJavaPBoolean(), eofValue);
-
-		final String result = readLineResult.getResult();
-		final boolean eof = readLineResult.isEof();
-		return ValuesStruct.valueOf(StringStruct.toLispString(result), BooleanStruct.toLispBoolean(eof));
+	default ReadLineResult readLine(final BooleanStruct eofErrorP, final LispStruct eofValue) {
+		return readLine(eofErrorP.toJavaPBoolean(), eofValue);
 	}
 
 	/**

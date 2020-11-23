@@ -3,12 +3,15 @@ package jcl.compiler.function;
 import java.util.Optional;
 
 import jcl.compiler.environment.Environment;
+import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.statics.CompilerVariables;
@@ -25,9 +28,9 @@ public final class InternalMacroExpand {
 			final MacroExpandResult expansion = macroExpand1(tempElement, environment);
 			tempElement = expansion.getExpandedForm();
 
-			final boolean innerWasNotExpanded = !expansion.wasExpanded();
+			final boolean innerWasNotExpanded = !expansion.getWasExpanded().toJavaPBoolean();
 			if (innerWasNotExpanded) {
-				return new MacroExpandResult(tempElement, wasExpanded);
+				return new MacroExpandResult(tempElement, BooleanStruct.toLispBoolean(wasExpanded));
 			}
 			wasExpanded = true;
 		}
@@ -39,7 +42,7 @@ public final class InternalMacroExpand {
 		} else if (element instanceof SymbolStruct) {
 			return macroExpand1((SymbolStruct) element, environment);
 		} else {
-			return new MacroExpandResult(element, false);
+			return new MacroExpandResult(element, NILStruct.INSTANCE);
 		}
 	}
 
@@ -58,13 +61,13 @@ public final class InternalMacroExpand {
 					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
-					return new MacroExpandResult(expansion, true);
+					return new MacroExpandResult(expansion, TStruct.INSTANCE);
 				}
 				// TODO: support compiler-macro-functions
 			}
 		}
 
-		return new MacroExpandResult(form, false);
+		return new MacroExpandResult(form, NILStruct.INSTANCE);
 	}
 
 	private static MacroExpandResult macroExpand1(final SymbolStruct form, final Environment environment) {
@@ -79,11 +82,11 @@ public final class InternalMacroExpand {
 				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
-				return new MacroExpandResult(expansion, true);
+				return new MacroExpandResult(expansion, TStruct.INSTANCE);
 			}
 		}
 
-		return new MacroExpandResult(form, false);
+		return new MacroExpandResult(form, NILStruct.INSTANCE);
 	}
 
 	private static Optional<SymbolStruct> getSymbolStruct(final SymbolStruct symbolElement) {

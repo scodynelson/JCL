@@ -18,7 +18,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 

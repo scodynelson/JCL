@@ -51,7 +51,7 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 	 * <li>Retrieving the {@link GlobalPackageStruct#KEYWORD} singleton instance</li>
 	 * <li>Retrieving the {@link PackageSymbolStruct} via the {@link PackageStruct#findSymbol(String)} method with the
 	 * {@link KeywordStruct#getName()} value of the provided {@link KeywordStruct}</li>
-	 * <li>Retrieving the {@link SymbolStruct} value via the {@link PackageSymbolStruct#getSymbol()} method</li>
+	 * <li>Retrieving the {@link SymbolStruct} value via the {@literal PackageSymbolStruct#getSymbol()} method</li>
 	 * <li>Casting the {@link SymbolStruct} to the appropriate {@link KeywordStruct} type</li>
 	 * </ol>
 	 *

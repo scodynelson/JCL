@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 
 /**
  * The {@link EmptyStreamStructImpl} is the object representation of an empty reading and writing Lisp stream.

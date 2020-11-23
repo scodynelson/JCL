@@ -7,12 +7,8 @@ package jcl.functions;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.function.InternalMacroExpand;
 import jcl.compiler.function.MacroExpandResult;
-import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
@@ -46,9 +42,6 @@ public final class MacroExpand1Function extends BuiltInFunctionStructImpl {
 		}
 
 		final MacroExpandResult macroExpandResult = InternalMacroExpand.macroExpand1(form, environment);
-		final LispStruct expandedForm = macroExpandResult.getExpandedForm();
-		final boolean wasExpanded = macroExpandResult.wasExpanded();
-		final BooleanStruct wasExpandedBoolean = wasExpanded ? TStruct.INSTANCE : NILStruct.INSTANCE;
-		return ValuesStruct.valueOf(expandedForm, wasExpandedBoolean);
+		return macroExpandResult.toValues();
 	}
 }

@@ -55,7 +55,7 @@
   "Retrieve the value in the hash-table whose key is the same as the key under the hash-table's equivalence test.
   If there is no such entry, the result is the default."
   (declare (system::%java-class-name "jcl.hashtables.functions.GetHash"))
-  ($getHash hash-table key default))
+  ($toValues ($getHash hash-table key default)))
 
 (defun (setf gethash) (new-value key hash-table &optional default)
   "Set the value (either by addition or modification) in the hash-table whose key is the same as the key under the

@@ -5,7 +5,6 @@ import java.io.OutputStream;
 
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.internal.stream.BinaryStreamStructImpl;
-import jcl.lang.stream.ReadCharResult;
 
 /**
  * The {@link BinaryStreamStruct} is the object representation of a binary reading and writing Lisp stream.
@@ -13,10 +12,6 @@ import jcl.lang.stream.ReadCharResult;
 public interface BinaryStreamStruct extends IOStreamStruct {
 
 	String OPERATION_UNSUPPORTED = "Operation not supported for Binary Streams.";
-
-	/*
-	BINARY_STREAM_STRUCT
-	 */
 
 	/**
 	 * Returns the underlying Java {@link InputStream} for this Binary-Stream.

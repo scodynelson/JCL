@@ -11,21 +11,21 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.lang.BooleanStruct;
+import jcl.lang.DecodeFloatResult;
 import jcl.lang.DoubleFloatStruct;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.LongFloatStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.QuotientRemainder;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
-import jcl.lang.ValuesStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.number.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.ReaderVariables;
 import lombok.Getter;
@@ -62,7 +62,7 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	}
 
 	@Override
-	public LispStruct decodeFloat() {
+	public DecodeFloatResult decodeFloat() {
 		final long bits = Double.doubleToRawLongBits(value);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
@@ -79,11 +79,11 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		final int sign = decodedDouble.getSign();
 		final FloatStruct signFloat = (sign == 1) ? DoubleFloatStruct.ONE : DoubleFloatStruct.MINUS_ONE;
 
-		return ValuesStruct.valueOf(significandFloat, exponentInteger, signFloat);
+		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
 	@Override
-	public LispStruct integerDecodeFloat() {
+	public DecodeFloatResult integerDecodeFloat() {
 		final long bits = Double.doubleToRawLongBits(value);
 		final DecodedDouble decodedDouble = getDecodedDouble(bits);
 
@@ -98,7 +98,7 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		final int sign = decodedDouble.getSign();
 		final IntegerStruct signInteger = (sign == 1) ? IntegerStruct.ONE : IntegerStruct.MINUS_ONE;
 
-		return ValuesStruct.valueOf(significandInteger, exponentInteger, signInteger);
+		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
 	@Override

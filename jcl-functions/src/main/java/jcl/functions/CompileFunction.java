@@ -1,5 +1,6 @@
 package jcl.functions;
 
+import jcl.compiler.function.CompileResult;
 import jcl.compiler.function.InternalCompile;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
@@ -36,6 +37,7 @@ public final class CompileFunction extends BuiltInFunctionStructImpl {
 			uncompiledDefinition = arguments.getOptionalArgument(DEFINITION_ARGUMENT);
 		}
 
-		return InternalCompile.compile(name, uncompiledDefinition);
+		final CompileResult compileResult = InternalCompile.compile(name, uncompiledDefinition);
+		return compileResult.toValues();
 	}
 }

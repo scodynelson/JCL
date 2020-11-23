@@ -13,7 +13,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.ReaderVariables;
-import jcl.lang.stream.ReadCharResult;
+import jcl.lang.ReadCharResult;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;

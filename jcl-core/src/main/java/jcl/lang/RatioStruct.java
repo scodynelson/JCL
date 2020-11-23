@@ -6,7 +6,7 @@ package jcl.lang;
 public interface RatioStruct extends RationalStruct {
 
 	/*
-		RealStruct
+	REAL-STRUCT
 	 */
 
 	@Override
@@ -15,7 +15,7 @@ public interface RatioStruct extends RationalStruct {
 	}
 
 	/*
-		NumberStruct
+	NUMBER-STRUCT
 	 */
 
 	@Override
@@ -33,6 +33,10 @@ public interface RatioStruct extends RationalStruct {
 
 	@Override
 	RatioStruct negation();
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	default boolean eql(final LispStruct object) {

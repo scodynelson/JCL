@@ -96,7 +96,7 @@ public final class InternalMacroExpand {
 			final String symbolName = symbolElement.getName();
 			final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
 
-			if (thePackageSymbol != null) {
+			if (thePackageSymbol.found()) {
 				final SymbolStruct theSymbol = thePackageSymbol.getSymbol();
 				return Optional.ofNullable(theSymbol);
 			}

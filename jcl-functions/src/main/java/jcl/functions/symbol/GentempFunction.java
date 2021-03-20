@@ -37,11 +37,11 @@ public final class GentempFunction extends BuiltInFunctionStructImpl {
 
 	@Override
 	public LispStruct apply(final Arguments arguments) {
-		String prefix = arguments.getOptionalArgument(PREFIX_ARGUMENT, StringStruct.class).toJavaString();
-		PackageStruct aPackage = PackageStruct.toLispPackage(arguments.getOptionalArgument(PACKAGE_ARGUMENT));
+		final String prefix = arguments.getOptionalArgument(PREFIX_ARGUMENT, StringStruct.class).toJavaString();
+		final PackageStruct aPackage = PackageStruct.fromDesignator(arguments.getOptionalArgument(PACKAGE_ARGUMENT));
 
 		String symbolName = prefix + gentempCounter++;
-		while (aPackage.findSymbol(symbolName) != null) {
+		while (aPackage.findSymbol(symbolName).found()) {
 			symbolName = prefix + gentempCounter++;
 		}
 		return aPackage.intern(symbolName).getSymbol();

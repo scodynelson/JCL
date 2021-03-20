@@ -27,7 +27,8 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 
 	@Override
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
-		throw new ProgramErrorException("Can't set package for constant " + name + '.');
+		// TODO: temp hacks
+//		throw new ProgramErrorException("Can't set package for constant " + name + '.');
 	}
 
 	public TYPE getConstantValue() {

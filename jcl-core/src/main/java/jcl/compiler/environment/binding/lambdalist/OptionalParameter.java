@@ -12,6 +12,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.GlobalPackageStruct;
 
 public class OptionalParameter extends Parameter {
 
@@ -108,9 +109,7 @@ public class OptionalParameter extends Parameter {
 			builder.append(initForm);
 
 			final SymbolStruct suppliedPBindingVar = suppliedPBinding.getVar();
-
-			// TODO: Fix this hardcoded name
-			if (!"SYSTEM".equals(suppliedPBindingVar.getSymbolPackage().getName())) {
+			if (!suppliedPBindingVar.getSymbolPackage().eq(GlobalPackageStruct.SYSTEM)) {
 				builder.append(suppliedPBindingVar);
 			}
 		}

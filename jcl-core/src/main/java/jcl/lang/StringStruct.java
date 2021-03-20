@@ -500,19 +500,20 @@ public interface StringStruct extends VectorStruct {
 	 * @throws TypeErrorException
 	 * 		if the provided @link LispStruct} cannot be converted to a string
 	 */
-	static StringStruct toLispString(final LispStruct lispStruct) {
+	static StringStruct fromDesignator(final LispStruct lispStruct) {
 		if (lispStruct instanceof StringStruct) {
 			return (StringStruct) lispStruct;
-		} else if (lispStruct instanceof SymbolStruct) {
+		}
+		if (lispStruct instanceof SymbolStruct) {
 			final SymbolStruct symbolStruct = (SymbolStruct) lispStruct;
 			final String name = symbolStruct.getName();
 			return toLispString(name);
-		} else if (lispStruct instanceof CharacterStruct) {
+		}
+		if (lispStruct instanceof CharacterStruct) {
 			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
 			return toLispString(characterStruct.toJavaCharacter().toString());
-		} else {
-			throw new TypeErrorException("Type cannot be converted to String.");
 		}
+		throw new TypeErrorException("Type cannot be converted to String.");
 	}
 
 	/**

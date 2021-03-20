@@ -162,14 +162,8 @@ public interface HashTableStruct extends LispStruct {
 	 */
 	static HashTableStruct toLispHashTable(final LispStruct test, final FixnumStruct size,
 	                                       final FloatStruct rehashThreshold) {
-		final FunctionStruct realTest;
-		if (test instanceof FunctionStruct) {
-			realTest = (FunctionStruct) test;
-		} else if (test instanceof SymbolStruct) {
-			realTest = ((SymbolStruct) test).getFunction();
-		} else {
-			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
-		}
+		final FunctionStruct realTest = FunctionStruct.toLispFunction(test);
+		// TODO: check that test is one of: eq, eql, equal, equalp
 		return new HashTableStructImpl(realTest, size, rehashThreshold);
 	}
 }

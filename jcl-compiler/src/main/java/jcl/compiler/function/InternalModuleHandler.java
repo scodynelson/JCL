@@ -42,7 +42,7 @@ public final class InternalModuleHandler {
 			InternalLoad.loadJavaModule(moduleName);
 		} else {
 			for (final LispStruct pathname : pathnameList) {
-				final PathnameStruct currentPathname = PathnameStruct.toPathname(pathname);
+				final PathnameStruct currentPathname = PathnameStruct.fromDesignator(pathname);
 				InternalLoad.load(
 						currentPathname,
 						NILStruct.INSTANCE, NILStruct.INSTANCE, TStruct.INSTANCE,

@@ -18,7 +18,7 @@ public interface LogicalPathnameStruct extends PathnameStruct {
 		return new LogicalPathnameStructImpl(host, directory, name, type, version);
 	}
 
-	static LogicalPathnameStruct toLogicalPathname(final LispStruct struct) {
+	static LogicalPathnameStruct fromDesignator(final LispStruct struct) {
 		if (struct instanceof LogicalPathnameStruct) {
 			return (LogicalPathnameStruct) struct;
 		}
@@ -27,8 +27,9 @@ public interface LogicalPathnameStruct extends PathnameStruct {
 			final String namestring = namestringStruct.toJavaString();
 			return toLogicalPathname(namestring);
 		}
-		if (struct instanceof StreamStruct) {
-			final PathnameStruct pathnameStruct = PathnameStruct.toPathname(struct);
+		if (struct instanceof FileStreamStruct) {
+			final FileStreamStruct fileStream = (FileStreamStruct) struct;
+			final PathnameStruct pathnameStruct = fileStream.toPathname();
 			if (pathnameStruct instanceof LogicalPathnameStruct) {
 				return (LogicalPathnameStruct) pathnameStruct;
 			}

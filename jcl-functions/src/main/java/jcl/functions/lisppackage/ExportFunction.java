@@ -4,9 +4,6 @@
 
 package jcl.functions.lisppackage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -47,28 +44,15 @@ public final class ExportFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(SYMBOLS_ARGUMENT);
-		final PackageStruct aPackage = PackageStruct.toLispPackage(arguments.getOptionalArgument(PACKAGE_ARGUMENT));
+		final PackageStruct aPackage = PackageStruct.fromDesignator(arguments.getOptionalArgument(PACKAGE_ARGUMENT));
 
-		final SymbolStruct[] realSymbolArray;
 		if (lispStruct instanceof ListStruct) {
-			final ListStruct symbols = (ListStruct) lispStruct;
-			final List<SymbolStruct> realSymbols = new ArrayList<>();
-			for (final LispStruct theSymbol : symbols) {
-				if (theSymbol instanceof SymbolStruct) {
-					realSymbols.add((SymbolStruct) theSymbol);
-				} else {
-					throw new TypeErrorException("Cannot convert value '" + theSymbol + "' to type 'SYMBOL'");
-				}
-			}
-			realSymbolArray = realSymbols.toArray(new SymbolStruct[realSymbols.size()]);
+			aPackage.export((ListStruct) lispStruct);
 		} else if (lispStruct instanceof SymbolStruct) {
-			realSymbolArray = new SymbolStruct[1];
-			realSymbolArray[0] = (SymbolStruct) lispStruct;
+			aPackage.export(ListStruct.toLispList(lispStruct));
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}
-
-		aPackage.export(realSymbolArray);
 
 		return TStruct.INSTANCE;
 	}

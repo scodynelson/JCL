@@ -135,7 +135,7 @@ public final class InternalCompile {
 		final boolean verbose = verboseVal.toJavaPBoolean();
 		final boolean print = printVal.toJavaPBoolean();
 
-		final PathnameStruct inputFilePathname = PathnameStruct.toPathname(inputFile);
+		final PathnameStruct inputFilePathname = PathnameStruct.fromDesignator(inputFile);
 		final File inputFilePathnameFile = new File(inputFilePathname.namestring());
 		final Path inputFilePath = inputFilePathnameFile.toPath();
 
@@ -184,7 +184,7 @@ public final class InternalCompile {
 					CommonLispSymbols.NIL, CommonLispSymbols.NIL, CommonLispSymbols.DEFAULT_KEYWORD
 			);
 
-			final String inputFileLispName = StringStruct.toLispString(inputFilePathname.pathnameName()).toJavaString();
+			final String inputFileLispName = StringStruct.fromDesignator(inputFilePathname.pathnameName()).toJavaString();
 
 			final String inputFileName = inputFilePath.getFileName().toString();
 			String inputClassName = FilenameUtils.getBaseName(inputFileName);
@@ -418,7 +418,7 @@ public final class InternalCompile {
 	public static PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
 //		final PathnameStruct defaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 
-		final PathnameStruct inputFilePathname = PathnameStruct.toPathname(inputFile);
+		final PathnameStruct inputFilePathname = PathnameStruct.fromDesignator(inputFile);
 
 		final PathnameStruct outputFilePathname;
 		if (NILStruct.INSTANCE.eq(outputFile)) {
@@ -434,7 +434,7 @@ public final class InternalCompile {
 					outputDefaults.pathnameVersion()
 			);
 		} else {
-			outputFilePathname = PathnameStruct.toPathname(outputFile);
+			outputFilePathname = PathnameStruct.fromDesignator(outputFile);
 		}
 
 //		final PathnameStruct outputFilePathnameDefaults = PathnameStructs.mergePathnames(inputFilePathname, defaults);

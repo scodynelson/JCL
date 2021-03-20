@@ -18,7 +18,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
-	implementation("info.picocli:picocli:4.5.2")
+	implementation("info.picocli:picocli")
 
 	implementation("org.apache.logging.log4j:log4j-api")
 

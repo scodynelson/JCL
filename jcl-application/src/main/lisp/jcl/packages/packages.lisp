@@ -135,13 +135,13 @@
   (declare (system::%java-class-name "jcl.packages.functions.FindSymbol"))
   (let ((package (find-package package))
         (symbol-name (string symbol-name)))
-    ($findSymbol package symbol-name)))
+    ($toValues ($findSymbol package symbol-name))))
 
 (defun find-all-symbols (symbol-name)
   "Searches every registered package for symbols that have a name that is the same as string."
   (declare (system::%java-class-name "jcl.packages.functions.FindAllSymbols"))
   (let ((symbol-name (string symbol-name)))
-    ($findAllSymbols1 symbol-name)))
+    ($findAllSymbols symbol-name)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -149,13 +149,13 @@
   "Enters a symbol named string into package."
   (declare (system::%java-class-name "jcl.packages.functions.Intern"))
   (let ((package (find-package package)))
-    ($intern package symbol)))
+    ($toValues ($intern package symbol))))
 
 (defun unintern (symbol &optional (package *package*))
   "Removes symbol from package."
   (declare (system::%java-class-name "jcl.packages.functions.Unintern"))
   (let ((package (find-package package)))
-    ($unintern1 package symbol)))
+    ($unintern package symbol)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -241,7 +241,7 @@
   "Deletes package from all package system data structures. If the operation is successful, returns true, otherwise nil."
   (declare (system::%java-class-name "jcl.packages.functions.DeletePackage"))
   (let ((package (find-package package)))
-    ($deletePackage1 package)))
+    ($deletePackage package)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

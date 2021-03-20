@@ -147,9 +147,13 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	 */
 	private void init() {
 		if (symbolPackage != null) {
-			symbolPackage.importSymbols(this);
+			// TODO: some hacks
+			final PackageStruct tempPkg = symbolPackage;
+			symbolPackage = null;
+			tempPkg.importSymbol(this);
 			// TODO: we REALLY shouldn't be exporting here, BUT so we can test things right now, we will.
-			symbolPackage.export(this);
+			tempPkg.export(this);
+			symbolPackage = tempPkg;
 		}
 	}
 
@@ -247,7 +251,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 				variableName = "#:" + name;
 			} else {
 				final String packageName = symbolPackage.getName();
-				if (currentPackage.getExternalSymbols().containsKey(name)) {
+				if (currentPackage.findExternalSymbol(name).isPresent()) {
 					variableName = packageName + ':' + name;
 				} else {
 					variableName = packageName + "::" + name;
@@ -340,7 +344,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 				variableName = "#:" + name;
 			} else {
 				final String packageName = symbolPackage.getName();
-				if (currentPackage.getExternalSymbols().containsKey(name)) {
+				if (currentPackage.findExternalSymbol(name).isPresent()) {
 					variableName = packageName + ':' + name;
 				} else {
 					variableName = packageName + "::" + name;
@@ -682,14 +686,11 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
 
-		PackageSymbolStruct symbol = currentPackage.findSymbol(name);
-		if (symbol == null) {
-			symbol = symbolPackage.findSymbol(name);
-
+		final PackageSymbolStruct symbol = currentPackage.findSymbol(name);
+		if (symbol.notFound()) {
 			final String packageName = symbolPackage.getName();
 
-			final boolean externalSymbol = PackageStructImpl.EXTERNAL_KEYWORD.eq(symbol.getPackageSymbolType());
-			if (externalSymbol) {
+			if (currentPackage.findExternalSymbol(name).isPresent()) {
 				// TODO: verify it is a single colon for external symbols when printing...
 				return packageName + ':' + name;
 			} else {

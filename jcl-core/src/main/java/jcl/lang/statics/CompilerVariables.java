@@ -6,7 +6,6 @@ package jcl.lang.statics;
 
 import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
-import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -18,8 +17,6 @@ public interface CompilerVariables {
 
 	VariableStructImpl<?> DEBUGGER_HOOK = VariableStructImpl.valueOf("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStructImpl<?> BREAK_ON_SIGNALS = VariableStructImpl.valueOf("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);
-
-	VariableStructImpl<IntegerStruct> GENSYM_COUNTER = VariableStructImpl.valueOf("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ONE);
 
 	VariableStructImpl<ListStruct> FEATURES = new ProperListVariable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
 	VariableStructImpl<LispStruct> COMPILE_FILE_PATHNAME = VariableStructImpl.valueOf("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);

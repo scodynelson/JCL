@@ -28,7 +28,7 @@ public final class ProvideFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct moduleName = arguments.getRequiredArgument(MODULE_NAME_ARGUMENT, LispStruct.class);
-		final StringStruct moduleNameString = StringStruct.toLispString(moduleName);
+		final StringStruct moduleNameString = StringStruct.fromDesignator(moduleName);
 
 		return InternalModuleHandler.provide(moduleNameString);
 	}

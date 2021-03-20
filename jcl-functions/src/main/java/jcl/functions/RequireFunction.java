@@ -32,7 +32,7 @@ public final class RequireFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct moduleName = arguments.getRequiredArgument(MODULE_NAME_ARGUMENT, LispStruct.class);
-		final StringStruct moduleNameString = StringStruct.toLispString(moduleName);
+		final StringStruct moduleNameString = StringStruct.fromDesignator(moduleName);
 
 		final ListStruct pathnameList = arguments.getOptionalArgument(PATHNAME_LIST_ARGUMENT, ListStruct.class);
 

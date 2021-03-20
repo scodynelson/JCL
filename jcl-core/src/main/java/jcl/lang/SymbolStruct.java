@@ -1,6 +1,7 @@
 package jcl.lang;
 
 import jcl.lang.classes.StructureClassStruct;
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
@@ -227,6 +228,20 @@ public interface SymbolStruct extends LispStruct {
 
 	static SymbolStruct toLispSymbol(final String name) {
 		return new SymbolStructImpl(name);
+	}
+
+	static SymbolStruct toLispSymbol(final String name, final PackageStruct pkg) {
+		final SymbolStructImpl struct = new SymbolStructImpl(name);
+		struct.setSymbolPackage(pkg);
+		return struct;
+	}
+
+	static SymbolStruct fromDesignator(final LispStruct struct) {
+		if (struct instanceof SymbolStruct) {
+			return (SymbolStruct) struct;
+		} else {
+			throw new TypeErrorException("Type cannot be converted to Symbol: " + struct);
+		}
 	}
 
 	default SymbolStruct makunbound() {

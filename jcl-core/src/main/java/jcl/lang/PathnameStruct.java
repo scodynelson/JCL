@@ -85,7 +85,7 @@ public interface PathnameStruct extends LispStruct {
 		return new PathnameStructImpl(host, device, directory, name, type, version);
 	}
 
-	static PathnameStruct toPathname(final LispStruct struct) {
+	static PathnameStruct fromDesignator(final LispStruct struct) {
 		if (struct instanceof PathnameStruct) {
 			return (PathnameStruct) struct;
 		}

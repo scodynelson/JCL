@@ -159,7 +159,7 @@ public final class InternalLoad {
 //			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
 //			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
 //			filespecPathname = PathnameStructs.mergePathnames(filespecAsPathname, defaultPathspec);
-			filespecPathname = PathnameStruct.toPathname(filespec);
+			filespecPathname = PathnameStruct.fromDesignator(filespec);
 		}
 
 		final File pathnameFile = new File(filespecPathname.namestring());

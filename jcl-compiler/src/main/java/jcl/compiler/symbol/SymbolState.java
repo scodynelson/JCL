@@ -157,7 +157,7 @@ public final class SymbolState {
 				variableName = "#:" + name;
 			} else {
 				final String packageName = symbolPackage.getName();
-				if (currentPackage.getExternalSymbols().containsKey(name)) {
+				if (currentPackage.findExternalSymbol(name).isPresent()) {
 					variableName = packageName + ':' + name;
 				} else {
 					variableName = packageName + "::" + name;
@@ -256,7 +256,7 @@ public final class SymbolState {
 				variableName = "#:" + name;
 			} else {
 				final String packageName = symbolPackage.getName();
-				if (currentPackage.getExternalSymbols().containsKey(name)) {
+				if (currentPackage.findExternalSymbol(name).isPresent()) {
 					variableName = packageName + ':' + name;
 				} else {
 					variableName = packageName + "::" + name;

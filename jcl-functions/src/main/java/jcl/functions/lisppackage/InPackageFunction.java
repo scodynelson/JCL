@@ -51,13 +51,9 @@ public final class InPackageFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final LispStruct lispStruct = arguments.getRequiredArgument(NAME_ARGUMENT);
-		final String name = StringStruct.toLispString(lispStruct).toJavaString();
+		final String name = StringStruct.fromDesignator(lispStruct).toJavaString();
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
-		if (newCurrentPackage == null) {
-			throw new ErrorException("There is no package named " + name);
-		}
-
 		PackageVariables.PACKAGE.setValue(newCurrentPackage);
 
 		return newCurrentPackage;

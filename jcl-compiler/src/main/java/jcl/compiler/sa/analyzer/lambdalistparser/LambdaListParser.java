@@ -803,7 +803,7 @@ public final class LambdaListParser {
 	private static KeywordStruct getKeywordStruct(final String symbolName) {
 
 		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
-		if (symbol == null) {
+		if (symbol.notFound()) {
 			return KeywordStruct.toLispKeyword(symbolName);
 		}
 		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only

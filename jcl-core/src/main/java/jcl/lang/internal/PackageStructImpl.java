@@ -5,19 +5,20 @@
 package jcl.lang.internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import jcl.lang.BooleanStruct;
-import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
@@ -30,10 +31,6 @@ import jcl.lang.statics.GlobalPackageStruct;
  * The {@link PackageStructImpl} is the object representation of a Lisp 'package' type.
  */
 public class PackageStructImpl extends LispStructImpl implements PackageStruct {
-
-	public static final KeywordStruct INTERNAL_KEYWORD = KeywordStruct.toLispKeyword("INTERNAL");
-	public static final KeywordStruct EXTERNAL_KEYWORD = KeywordStruct.toLispKeyword("EXTERNAL");
-	public static final KeywordStruct INHERITED_KEYWORD = KeywordStruct.toLispKeyword("INHERITED");
 
 	/**
 	 * The {@link List} of {@link PackageStruct}s that the package uses.
@@ -72,7 +69,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	/**
 	 * The {@link List} of nicknames of the package.
 	 */
-	private List<String> nicknames;
+	private final List<String> nicknames;
 
 	/**
 	 * Public constructor.
@@ -93,52 +90,8 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	 * 		the package nicknames
 	 */
 	public PackageStructImpl(final String name, final List<String> nicknames) {
-		this(name, nicknames, new ArrayList<>());
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the package name
-	 * @param nicknames
-	 * 		the package nicknames
-	 * @param useList
-	 * 		the packages this package will use/inherit from
-	 */
-	public PackageStructImpl(final String name, final List<String> nicknames, final PackageStruct... useList) {
-		this(name, nicknames, new ArrayList<>(Arrays.asList(useList)));
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the package name
-	 * @param nicknames
-	 * 		the package nicknames
-	 * @param useList
-	 * 		the packages this package will use/inherit from
-	 */
-	public PackageStructImpl(final String name, final List<String> nicknames, final List<PackageStruct> useList) {
 		this.name = name;
 		this.nicknames = nicknames;
-
-		this.useList.addAll(useList);
-		final PackageStruct[] useListArray = new PackageStruct[useList.size()];
-		internalUsePackage(useList.toArray(useListArray));
-
-		init();
-	}
-
-	/**
-	 * Post construction method.
-	 */
-	private void init() {
-		GlobalPackageStruct.ALL_PACKAGES.put(name, this);
-		for (final String nickname : nicknames) {
-			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
-		}
 	}
 
 	@Override
@@ -147,365 +100,520 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	}
 
 	@Override
-	public List<String> getNicknames() {
-		return nicknames;
-	}
-
-	@Override
-	public Map<String, SymbolStruct> getExternalSymbols() {
-		return externalSymbols;
-	}
-
-	@Override
-	public Map<String, SymbolStruct> getShadowingSymbols() {
-		return shadowingSymbols;
-	}
-
-	@Override
-	public List<PackageStruct> getUseList() {
-		return new ArrayList<>(useList);
-	}
-
-	@Override
 	public List<PackageStruct> getUsedByList() {
-		return new ArrayList<>(usedByList);
+		return usedByList;
 	}
 
 	@Override
-	public void renamePackage(final String newName) {
-		renamePackage(newName, Collections.emptyList());
+	public Optional<SymbolStruct> findExternalSymbol(final String symbolName) {
+		return Optional.ofNullable(externalSymbols.get(symbolName));
 	}
 
 	@Override
-	public void renamePackage(final String newName, final List<String> newNicknames) {
+	public Collection<SymbolStruct> getExternalSymbols() {
+		return externalSymbols.values();
+	}
+
+	@Override
+	public Optional<SymbolStruct> findShadowedSymbol(final String symbolName) {
+		return Optional.ofNullable(shadowingSymbols.get(symbolName));
+	}
+
+	// Returns null if symbol is not accessible in this package.
+	@Override
+	public Optional<SymbolStruct> findAccessibleSymbol(final String symbolName) {
+		// Look in external and internal symbols of this package.
+		SymbolStruct symbol = externalSymbols.get(symbolName);
+		if (symbol != null) {
+			return Optional.of(symbol);
+		}
+		symbol = internalSymbols.get(symbolName);
+		if (symbol != null) {
+			return Optional.of(symbol);
+		}
+		// Look in external symbols of used packages.
+		for (final PackageStruct usedPackage : useList) {
+			final Optional<SymbolStruct> externalSymbol = usedPackage.findExternalSymbol(symbolName);
+			if (externalSymbol.isPresent()) {
+				return externalSymbol;
+			}
+		}
+		// Not found.
+		return Optional.empty();
+	}
+
+	/*
+	PACKAGE-STRUCT
+	 */
+
+	@Override
+	public LispStruct packageName() {
+		return (name == null) ? NILStruct.INSTANCE : StringStruct.toLispString(name);
+	}
+
+	@Override
+	public ListStruct packageNicknames() {
+		final List<LispStruct> nicknamesStructs =
+				nicknames.stream()
+				         .map(StringStruct::toLispString)
+				         .collect(Collectors.toList());
+		return ListStruct.toLispList(nicknamesStructs);
+	}
+
+	@Override
+	public ListStruct packageShadowingSymbols() {
+		return ListStruct.toLispList(new ArrayList<>(shadowingSymbols.values()));
+	}
+
+	@Override
+	public ListStruct packageUseList() {
+		return ListStruct.toLispList(useList);
+	}
+
+	@Override
+	public ListStruct packageUsedByList() {
+		return ListStruct.toLispList(usedByList);
+	}
+
+	@Override
+	public PackageStruct renamePackage(final StringStruct newName, final ListStruct newNicknames) {
 		GlobalPackageStruct.ALL_PACKAGES.remove(name);
-		name = newName;
-		GlobalPackageStruct.ALL_PACKAGES.put(newName, this);
-
 		nicknames.forEach(GlobalPackageStruct.ALL_PACKAGES::remove);
-		nicknames = newNicknames;
-		for (final String nickname : newNicknames) {
+
+		if (GlobalPackageStruct.ALL_PACKAGES.containsKey(name)) {
+			throw new PackageErrorException("A package named " + name + " already exists.", this);
+		}
+		// TODO: check name and nicknames before modifying things??
+		name = newName.toJavaString();
+		GlobalPackageStruct.ALL_PACKAGES.put(name, this);
+
+		nicknames.clear();
+		for (final LispStruct current : newNicknames) {
+			final StringStruct newNickname = StringStruct.fromDesignator(current);
+			final String nickname = newNickname.toJavaString();
+			if (GlobalPackageStruct.ALL_PACKAGES.containsKey(nickname)) {
+				throw new PackageErrorException("A package named " + nickname + " already exists.", this);
+			}
+			nicknames.add(nickname);
 			GlobalPackageStruct.ALL_PACKAGES.put(nickname, this);
 		}
+
+		return this;
 	}
 
 	@Override
-	public void deletePackage() {
-		GlobalPackageStruct.ALL_PACKAGES.remove(name);
-		nicknames.forEach(GlobalPackageStruct.ALL_PACKAGES::remove);
+	public BooleanStruct deletePackage() {
+		if (name == null) {
+			return NILStruct.INSTANCE;
+		}
+
+		for (final PackageStruct usedPackage : useList) {
+			unUsePackage(usedPackage);
+		}
 		for (final PackageStruct usedByPackage : usedByList) {
 			usedByPackage.unUsePackage(this);
 		}
-		usedByList.clear();
-		useList.clear();
-		name = null;
-	}
 
-	@Override
-	public void usePackage(final PackageStruct... packagesToUse) {
-		useList.addAll(Arrays.asList(packagesToUse));
-		internalUsePackage(packagesToUse);
+		GlobalPackageStruct.ALL_PACKAGES.remove(name);
+		nicknames.forEach(GlobalPackageStruct.ALL_PACKAGES::remove);
+
+		makeSymbolsUninterned(internalSymbols);
+		makeSymbolsUninterned(externalSymbols);
+
+		nicknames.clear();
+
+		return TStruct.INSTANCE;
 	}
 
 	/**
-	 * Internal implementation of 'use-package' for updating the package to use the provided {@code packagesToUse}.
+	 * Make the symbols in the provided {@code symbolMap} uninterned from the current package and clears out the symbol
+	 * map.
 	 *
-	 * @param packagesToUse
-	 * 		the packages that will be used
+	 * @param symbolMap
+	 * 		the map of symbols to unintern and clear
 	 */
-	private void internalUsePackage(final PackageStruct... packagesToUse) {
-		for (final PackageStruct packageToUse : packagesToUse) {
-			if (packageToUse.eq(GlobalPackageStruct.KEYWORD)) {
-				throw new PackageErrorException(this + " can't use package " + GlobalPackageStruct.KEYWORD, this);
+	private void makeSymbolsUninterned(final Map<String, SymbolStruct> symbolMap) {
+		for (final SymbolStruct symbol : symbolMap.values()) {
+			if (symbol.getSymbolPackage() == this) {
+				symbol.setSymbolPackage(null);
 			}
+		}
+		symbolMap.clear();
+	}
 
-			// Shadow current nonInherited symbols
-			for (final String symbolName : packageToUse.getExternalSymbols().keySet()) {
-				final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
-				if (nonInheritedPackageSymbol != null) {
-					final SymbolStruct nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
-					shadowingSymbols.put(symbolName, nonInheritedSymbol);
+	@Override
+	public void usePackage(final PackageStruct packageToUse) {
+		if (!useList.contains(packageToUse)) {
+			// "USE-PACKAGE checks for name conflicts between the newly
+			// imported symbols and those already accessible in package."
+			for (final SymbolStruct symbol : packageToUse.getExternalSymbols()) {
+				final String symName = symbol.getName();
+
+				final Optional<SymbolStruct> existing = findAccessibleSymbol(symName);
+				if (existing.isPresent() && (existing.get() != symbol)) {
+					if (shadowingSymbols.get(symName) == null) {
+						throw getAccessibilityException(symName, false);
+					}
 				}
 			}
-
+			useList.add(packageToUse);
+			// Add this package to the used-by list of pkg.
 			packageToUse.getUsedByList().add(this);
 		}
 	}
 
 	@Override
-	public void unUsePackage(final PackageStruct... packagesToUnUse) {
-		useList.removeAll(Arrays.asList(packagesToUnUse));
-		for (final PackageStruct packageToUnUse : packagesToUnUse) {
-			// NOTE: We will leave the shadows in the shadowing list. This is due to the fact that we would have to search
-			// through ALL used packages to make sure that there aren't any other inherited symbols that the symbol names
-			// are shadowing. That's just overkill, when keeping them in the shadowing list won't affect anything.
-			packageToUnUse.getUsedByList().remove(this);
+	public BooleanStruct usePackage(final ListStruct packagesToUse) {
+		for (final LispStruct current : packagesToUse) {
+			final PackageStruct pkg = PackageStruct.fromDesignator(current);
+			usePackage(pkg);
 		}
+		return TStruct.INSTANCE;
+	}
+
+	@Override
+	public void unUsePackage(final PackageStruct packageToUnUse) {
+		// NOTE: We will leave the shadows in the shadowing list. This is due to the fact that we would have to search
+		// through ALL used packages to make sure that there aren't any other inherited symbols that the symbol names
+		// are shadowing. That's just overkill, when keeping them in the shadowing list won't affect anything.
+		useList.remove(packageToUnUse);
+		packageToUnUse.getUsedByList().remove(this);
+	}
+
+	@Override
+	public BooleanStruct unUsePackage(final ListStruct packagesToUnUse) {
+		for (final LispStruct current : packagesToUnUse) {
+			final PackageStruct pkg = PackageStruct.fromDesignator(current);
+			unUsePackage(pkg);
+		}
+		return TStruct.INSTANCE;
 	}
 
 	@Override
 	public PackageSymbolStruct findSymbol(final String symbolName) {
-		// NOTE: Order matters here!!
-
-		final PackageSymbolStruct foundPackageSymbol = findNonInheritedSymbol(symbolName);
-		if (foundPackageSymbol != null) {
-			return foundPackageSymbol;
-		}
-
-		final SymbolStruct foundSymbol = findInheritedSymbol(symbolName);
-		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, INHERITED_KEYWORD);
-		}
-
-		return null;
-	}
-
-	@Override
-	public void importSymbols(final SymbolStruct... symbols) {
-		for (final SymbolStruct symbol : symbols) {
-			final String symbolName = symbol.getName();
-
-			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
-			if (nonInheritedPackageSymbol != null) {
-				continue;
-			}
-
-			internalSymbols.put(symbolName, symbol);
-
-			final SymbolStruct foundSymbol = findInheritedSymbol(symbolName);
-			if (foundSymbol != null) {
-				shadowingSymbols.put(symbolName, symbol);
-			}
-
-			if (symbol.getSymbolPackage() == null) {
-				symbol.setSymbolPackage(this);
-			}
-		}
-	}
-
-	@Override
-	public void shadowingImport(final SymbolStruct... symbols) {
-		for (final SymbolStruct symbol : symbols) {
-			final String symbolName = symbol.getName();
-
-			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
-			if (nonInheritedPackageSymbol != null) {
-				final SymbolStruct nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
-				unintern(nonInheritedSymbol);
-			}
-
-			internalSymbols.put(symbolName, symbol);
-			shadowingSymbols.put(symbolName, symbol);
-
-			if (symbol.getSymbolPackage() == null) {
-				symbol.setSymbolPackage(this);
-			}
-		}
-	}
-
-	@Override
-	public void export(final SymbolStruct... symbols) {
-		final List<String> notFoundSymbolNames = new ArrayList<>();
-
-		for (final SymbolStruct symbol : symbols) {
-			final String symbolName = symbol.getName();
-
-			if (externalSymbols.containsKey(symbolName)) {
-				continue; // go to next symbol. already external
-			}
-
-			final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
-			if (foundPackageSymbol == null) {
-				notFoundSymbolNames.add(symbolName);
-				continue;
-			}
-
-			importSymbols(symbol); // This will put the symbol in the "InternalSymbols" and possibly "ShadowingSymbols"
-			externalSymbols.put(symbolName, symbol);
-
-			// NOTE: We CAN do this it seems, but we're not required to. Should we though???
-//			for (final PackageStruct usedByPackage : usedByList) {
-//				usedByPackage.inheritedSymbols.put(symbolName, symbol);
-//			}
-		}
-
-		handleExportSymbolsNotInPackageError(notFoundSymbolNames);
-	}
-
-	@Override
-	public void unexport(final SymbolStruct... symbols) {
-		final List<String> notFoundSymbolNames = new ArrayList<>();
-
-		for (final SymbolStruct symbol : symbols) {
-			final String symbolName = symbol.getName();
-
-			final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
-			if (foundPackageSymbol == null) {
-				notFoundSymbolNames.add(symbolName);
-				continue;
-			}
-
-			externalSymbols.remove(symbolName);
-		}
-
-		handleExportSymbolsNotInPackageError(notFoundSymbolNames);
+		final Optional<PackageSymbolStruct> symbol = findSymbolInternal(symbolName);
+		return symbol.orElseGet(() -> new PackageSymbolStruct(NILStruct.INSTANCE, NILStruct.INSTANCE));
 	}
 
 	/**
-	 * Handles the building of the {@link PackageErrorException} when symbols are not accessible in the package and
-	 * cannot be exported or unexported.
+	 * Locates a {@link PackageSymbolStruct} with the provided {@code symbolName} accessible within the package from
+	 * either 'external', 'internal', or 'inherited' symbols.
 	 *
-	 * @param notFoundSymbolNames
-	 * 		the symbols not accessible in the package
+	 * @param symbolName
+	 * 		the name of the symbol to locate
+	 *
+	 * @return a possible {@link PackageSymbolStruct} for the located symbol
 	 */
-	private void handleExportSymbolsNotInPackageError(final List<String> notFoundSymbolNames) {
-		if (!notFoundSymbolNames.isEmpty()) {
-			final StringBuilder exceptionStringBuilder
-					= new StringBuilder("The following symbols are not accessible in package " + this + ": (");
-			final String notFoundNamesString = String.join(" ", notFoundSymbolNames);
-			exceptionStringBuilder.append(notFoundNamesString);
-			exceptionStringBuilder.append(')');
-			throw new PackageErrorException(exceptionStringBuilder.toString(), this);
+	private Optional<PackageSymbolStruct> findSymbolInternal(final String symbolName) {
+		SymbolStruct symbol = externalSymbols.get(symbolName);
+		if (symbol != null) {
+			return Optional.of(new PackageSymbolStruct(symbol, CommonLispSymbols.EXTERNAL_KEYWORD));
+		}
+
+		symbol = internalSymbols.get(symbolName);
+		if (symbol != null) {
+			return Optional.of(new PackageSymbolStruct(symbol, CommonLispSymbols.INTERNAL_KEYWORD));
+		}
+
+		for (final PackageStruct usedPackage : useList) {
+			final Optional<SymbolStruct> externalSymbol = usedPackage.findExternalSymbol(symbolName);
+			if (externalSymbol.isPresent()) {
+				return Optional.of(new PackageSymbolStruct(
+						externalSymbol.get(), CommonLispSymbols.INHERITED_KEYWORD
+				));
+			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public void importSymbol(final SymbolStruct symbol) {
+		final PackageStruct symbolPackage = symbol.getSymbolPackage();
+		if (symbolPackage == this) {
+			return;
+		}
+		final String symbolName = symbol.getName();
+
+		verifySymbolAccessibility(symbol, symbolName, false);
+
+		internalSymbols.put(symbolName, symbol);
+		if (symbolPackage == null) {
+			symbol.setSymbolPackage(this);
 		}
 	}
 
 	@Override
-	public void shadow(final String... symbolNames) {
-		for (final String symbolName : symbolNames) {
-			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
-
-			final SymbolStruct nonInheritedSymbol;
-			if (nonInheritedPackageSymbol == null) {
-				nonInheritedSymbol = SymbolStruct.toLispSymbol(symbolName);
-				internalSymbols.put(symbolName, nonInheritedSymbol);
-				nonInheritedSymbol.setSymbolPackage(this);
-			} else {
-				nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
-			}
-			shadowingSymbols.put(symbolName, nonInheritedSymbol);
+	public BooleanStruct importSymbols(final ListStruct symbols) {
+		for (final LispStruct current : symbols) {
+			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			importSymbol(symbol);
 		}
+		return TStruct.INSTANCE;
+	}
+
+	@Override
+	public void shadowingImport(final SymbolStruct symbol) {
+		final String symbolName = symbol.getName();
+
+		SymbolStruct sym = externalSymbols.get(symbolName);
+		if (sym == null) {
+			sym = internalSymbols.get(symbolName);
+		}
+
+		// if a different symbol with the same name is accessible,
+		// [..] which implies that it must be uninterned if it was present
+		if ((sym != null) && (sym != symbol)) {
+			shadowingSymbols.remove(symbolName);
+			unintern(sym);
+		}
+
+		if ((sym == null) || (sym != symbol)) {
+			// there was no symbol, or we just uninterned it another one, so intern the new one
+			internalSymbols.put(symbolName, symbol);
+		}
+
+		shadowingSymbols.put(symbolName, symbol);
+	}
+
+	@Override
+	public BooleanStruct shadowingImport(final ListStruct symbols) {
+		for (final LispStruct current : symbols) {
+			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			shadowingImport(symbol);
+		}
+		return TStruct.INSTANCE;
+	}
+
+	@Override
+	public void export(final SymbolStruct symbol) {
+		final String symbolName = symbol.getName();
+		boolean added = false;
+		if (symbol.getSymbolPackage() != this) {
+			verifySymbolAccessibility(symbol, symbolName, true);
+			internalSymbols.put(symbolName, symbol);
+			added = true;
+		}
+
+		if (added || (internalSymbols.get(symbolName) == symbol)) {
+			for (final PackageStruct usedByPackage : usedByList) {
+				final Optional<SymbolStruct> accessibleSymbol = usedByPackage.findAccessibleSymbol(symbolName);
+				if (accessibleSymbol.isPresent() && (accessibleSymbol.get() != symbol)) {
+					final Optional<SymbolStruct> shadowedSymbol = usedByPackage.findShadowedSymbol(symbolName);
+					if (shadowedSymbol.isPresent() && (shadowedSymbol.get() != accessibleSymbol.get())) {
+						final String symName = accessibleSymbol.get().getName();
+						final String message = "The symbol " + symName + " is already accessible in package " + usedByPackage + '.';
+						throw new PackageErrorException(message, this);
+					}
+				}
+			}
+
+			// No conflicts.
+			internalSymbols.remove(symbolName);
+			externalSymbols.put(symbolName, symbol);
+			return;
+		}
+
+		// Symbol is already exported; there's nothing to do.
+		if (externalSymbols.get(symbolName) == symbol) {
+			return;
+		}
+
+		throw getAccessibilityException(symbolName, true);
+	}
+
+	@Override
+	public BooleanStruct export(final ListStruct symbols) {
+		for (final LispStruct current : symbols) {
+			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			export(symbol);
+		}
+		return TStruct.INSTANCE;
+	}
+
+	@Override
+	public void unexport(final SymbolStruct symbol) {
+		final String symbolName = symbol.getName();
+
+		if (externalSymbols.get(symbolName) == symbol) {
+			externalSymbols.remove(symbolName);
+			internalSymbols.put(symbolName, symbol);
+			return;
+		}
+		verifySymbolAccessibility(symbol, symbolName, true);
+	}
+
+	@Override
+	public BooleanStruct unexport(final ListStruct symbols) {
+		for (final LispStruct current : symbols) {
+			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			unexport(symbol);
+		}
+		return TStruct.INSTANCE;
+	}
+
+	@Override
+	public void shadow(final StringStruct symbolName) {
+		final String symbolNameString = symbolName.toJavaString();
+		SymbolStruct symbol = externalSymbols.get(symbolNameString);
+		if (symbol != null) {
+			shadowingSymbols.put(symbolNameString, symbol);
+			return;
+		}
+
+		symbol = internalSymbols.get(symbolNameString);
+		if (symbol != null) {
+			shadowingSymbols.put(symbolNameString, symbol);
+			return;
+		}
+
+		if (shadowingSymbols.get(symbolNameString) != null) {
+			return;
+		}
+
+		symbol = internNewSymbol(symbolNameString);
+		shadowingSymbols.put(symbolNameString, symbol);
+	}
+
+	@Override
+	public BooleanStruct shadow(final ListStruct symbolNames) {
+		for (final LispStruct current : symbolNames) {
+			final StringStruct symbolName = StringStruct.fromDesignator(current);
+			shadow(symbolName);
+		}
+		return TStruct.INSTANCE;
 	}
 
 	@Override
 	public PackageSymbolStruct intern(final String symbolName) {
-		final PackageSymbolStruct foundPackageSymbol = findSymbol(symbolName);
-		if (foundPackageSymbol != null) {
-			return foundPackageSymbol;
+		final Optional<PackageSymbolStruct> symbol = findSymbolInternal(symbolName);
+		if (symbol.isPresent()) {
+			return symbol.get();
 		}
 
-		final SymbolStruct symbolStruct = SymbolStruct.toLispSymbol(symbolName);
-		internalSymbols.put(symbolName, symbolStruct);
-		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, INTERNAL_KEYWORD);
+		final SymbolStruct newSymbol = internNewSymbol(symbolName);
+		return new PackageSymbolStruct(newSymbol, NILStruct.INSTANCE);
+	}
+
+	/**
+	 * Interns a newly created {@link SymbolStruct} with this {@link PackageStruct} as its package.
+	 * <p>
+	 * This method can be overridden by subtypes.
+	 *
+	 * @param symbolName
+	 * 		the name of the {@link SymbolStruct} to create and intern
+	 *
+	 * @return the newly created {@link SymbolStruct}
+	 */
+	protected SymbolStruct internNewSymbol(final String symbolName) {
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol(symbolName, this);
+		internalSymbols.put(symbolName, symbol);
+		return symbol;
 	}
 
 	@Override
-	public boolean unintern(final SymbolStruct symbol) {
+	public BooleanStruct unintern(final SymbolStruct symbol) {
 		final String symbolName = symbol.getName();
 
-		// Test for conflicts BEFORE we remove anything
-		final Set<SymbolStruct> shadowingConflicts = getShadowingConflicts(symbolName);
-		if (shadowingConflicts.size() > 1) {
-			final StringBuilder exceptionStringBuilder
-					= new StringBuilder("Uninterning " + symbolName + " from " + this + " would cause conflicts among : (");
-			for (final SymbolStruct conflictingSymbol : shadowingConflicts) {
-				exceptionStringBuilder.append(conflictingSymbol);
-				exceptionStringBuilder.append(' ');
-			}
-			exceptionStringBuilder.append(')');
-			throw new PackageErrorException(exceptionStringBuilder.toString(), this);
+		final boolean isSymbolShadowed = shadowingSymbols.get(symbolName) == symbol;
+		if (isSymbolShadowed) {
+			// Check for conflicts that might be exposed in used package list
+			// if we remove the shadowing symbol.
+			validateShadowedSymbol(symbol);
 		}
 
-		final SymbolStruct externalSymbol = externalSymbols.remove(symbolName);
-		final SymbolStruct shadowingSymbol = shadowingSymbols.remove(symbolName);
-		final SymbolStruct internalSymbol = internalSymbols.remove(symbolName);
+		// Reaching here, it's OK to remove the symbol.
+		boolean isSymbolUninterned = true;
+		if (externalSymbols.get(symbolName) == symbol) {
+			externalSymbols.remove(symbolName);
+			isSymbolUninterned = false;
+		}
+		if (internalSymbols.get(symbolName) == symbol) {
+			internalSymbols.remove(symbolName);
+			isSymbolUninterned = false;
+		}
 
-		symbol.setSymbolPackage(null);
+		if (isSymbolUninterned) {
+			return NILStruct.INSTANCE;
+		}
 
-		return (externalSymbol != null) || (shadowingSymbol != null) || (internalSymbol != null);
+		if (isSymbolShadowed) {
+			shadowingSymbols.remove(symbolName);
+		}
+
+		if (symbol.getSymbolPackage() == this) {
+			symbol.setSymbolPackage(null);
+		}
+		return TStruct.INSTANCE;
 	}
 
 	/**
-	 * Determines if a name conflict exists with the symbolName and that it is currently resolved due to a shadowing
-	 * symbol existence.
+	 * Verifies the provided {@link SymbolStruct} is valid to be uninterned from the package, meaning exist multiple
+	 * external symbols in the {@link
+	 * #useList} packages with the same name as the provided {@link SymbolStruct}, a {@link PackageErrorException} will
+	 * be thrown noting the symbol conflicts.
 	 *
-	 * @param symbolName
-	 * 		the name of the symbol to check for shadowing conflicts
-	 *
-	 * @return the conflicting symbols if any exist, or null if no conflicts exist
+	 * @param symbol
+	 * 		the symbol the verify can be uninterned from the packag e
 	 */
-	private Set<SymbolStruct> getShadowingConflicts(final String symbolName) {
-		if (!shadowingSymbols.containsKey(symbolName)) {
-			return Collections.emptySet();
-		}
+	private void validateShadowedSymbol(final SymbolStruct symbol) {
+		final String symbolName = symbol.getName();
 
-		final Set<SymbolStruct> conflictingInheritedSymbols = new HashSet<>();
+		SymbolStruct sym = null;
 		for (final PackageStruct usedPackage : useList) {
-			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
-			if (inheritedPackageSymbol != null) {
-				final SymbolStruct inheritedSymbol = inheritedPackageSymbol.getSymbol();
-				conflictingInheritedSymbols.add(inheritedSymbol);
+			final Optional<SymbolStruct> externalSymbol = usedPackage.findExternalSymbol(symbolName);
+			if (externalSymbol.isPresent()) {
+				final SymbolStruct extSymbol = externalSymbol.get();
+				if (sym == null) {
+					sym = extSymbol;
+				} else if (sym != extSymbol) {
+					final String message = "Uninterning the symbol " + symbol +
+							" causes a name conflict between " + sym + " and " + extSymbol;
+					throw new PackageErrorException(message, this);
+				}
 			}
 		}
-		return conflictingInheritedSymbols;
 	}
 
 	/**
-	 * Locates the non-inherited symbol matching the provided {@code symbolName}.
+	 * Verifies a {@link SymbolStruct} is present in this package with the provided {@code symbolName} and is the same
+	 * instance as the provided {@link SymbolStruct} in the package. If this is the case, a {@link
+	 * PackageErrorException} will be thrown.
 	 *
+	 * @param symbol
+	 * 		the {@link SymbolStruct} to verify matches an existing accessible symbol
 	 * @param symbolName
-	 * 		the name of the symbol to find
-	 *
-	 * @return the symbol if found and it's package location type, or null if not found
+	 * 		name of the accessible {@link SymbolStruct} to find
+	 * @param shouldBeAccessible
+	 * 		whether or not the {@link SymbolStruct} should be accessible or not
 	 */
-	private PackageSymbolStruct findNonInheritedSymbol(final String symbolName) {
-		// NOTE: Order matters here!!
-
-		SymbolStruct foundSymbol = externalSymbols.get(symbolName);
-		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, EXTERNAL_KEYWORD);
+	private void verifySymbolAccessibility(final SymbolStruct symbol, final String symbolName,
+	                                       final boolean shouldBeAccessible) {
+		final Optional<SymbolStruct> accessibleSymbol = findAccessibleSymbol(symbolName);
+		if (accessibleSymbol.isPresent() && (accessibleSymbol.get() != symbol)) {
+			throw getAccessibilityException(symbolName, shouldBeAccessible);
 		}
-
-		foundSymbol = shadowingSymbols.get(symbolName);
-		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, INTERNAL_KEYWORD);
-		}
-
-		foundSymbol = internalSymbols.get(symbolName);
-		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, INTERNAL_KEYWORD);
-		}
-
-		return null;
 	}
 
 	/**
-	 * Locates the inherited symbol matching the provided {@code symbolName}.
+	 * Returns a new {@link PackageErrorException} with a properly crafted message related to the accessibility of a
+	 * symbol in the package with the provided {@code symbolName}.
 	 *
 	 * @param symbolName
-	 * 		the name of the symbol to find
+	 * 		the name of the symbol that has accessibility issues
+	 * @param shouldBeAccessible
+	 * 		whether or not the symbol should have been accessible or not
 	 *
-	 * @return the symbol if found, or null if not found
+	 * @return new {@link PackageErrorException} with a properly crafted message
 	 */
-	private SymbolStruct findInheritedSymbol(final String symbolName) {
-		// NOTE: Order matters here!!
-
-		SymbolStruct foundSymbol = null;
-		for (final PackageStruct usedPackage : useList) {
-			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
-			if (inheritedPackageSymbol == null) {
-				continue;
-			}
-
-			final KeywordStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
-			if (EXTERNAL_KEYWORD.eq(packageSymbolType)) {
-				foundSymbol = inheritedPackageSymbol.getSymbol();
-				break;
-			}
-		}
-
-		return foundSymbol;
+	private PackageErrorException getAccessibilityException(final String symbolName, final boolean shouldBeAccessible) {
+		final String accessibleString = shouldBeAccessible ? "not" : "already";
+		final String message = "The symbol " + symbolName + " is " + accessibleString + " accessible in package " + name + '.';
+		return new PackageErrorException(message, this);
 	}
+
+	/*
+	LISP-STRUCT
+	 */
 
 	@Override
 	public LispStruct typeOf() {
@@ -530,7 +638,6 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	@Override
 	public String toString() {
-//		final String typeClassName = getType().getClass().getSimpleName().toUpperCase();
 		return "#<PACKAGE \"" + name + "\">";
 	}
 }

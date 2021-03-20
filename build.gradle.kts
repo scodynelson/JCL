@@ -1,5 +1,5 @@
 plugins {
-	id("com.github.ben-manes.versions") version "0.36.0"
+	id("com.github.ben-manes.versions") version "0.38.0"
 }
 
 allprojects {
@@ -11,6 +11,9 @@ allprojects {
 			// fail eagerly on version conflict (includes transitive dependencies)
 			// e.g. multiple different versions of the same dependency (group and name are equal)
 			failOnVersionConflict()
+
+			force("org.checkerframework:checker-qual:3.9.1")
+			force("org.apache.commons:commons-lang3:3.12.0")
 		}
 	}
 }
@@ -63,27 +66,28 @@ subprojects {
 	val testRuntimeOnly by configurations
 
 	dependencies {
-		implementation("com.google.guava:guava:30.0-jre")
-		implementation("com.ibm.icu:icu4j:68.1")
+		implementation("com.google.guava:guava:30.1.1-jre")
+		implementation("com.ibm.icu:icu4j:68.2")
 		implementation("commons-io:commons-io:2.8.0")
 		implementation("org.apache.commons:commons-collections4:4.4")
-		implementation("org.apache.commons:commons-lang3:3.11")
+		implementation("org.apache.commons:commons-lang3:3.12.0")
 		implementation("org.apache.commons:commons-math3:3.6.1")
 		implementation("org.apache.commons:commons-text:1.9")
 		implementation("org.apfloat:apfloat:1.9.1")
-		implementation("org.benf:cfr:0.150")
+		implementation("org.benf:cfr:0.151")
 		implementation("org.glassfish.external:javahelp:2.0.06")
-		implementation("org.ow2.asm:asm:9.0")
-		implementation("org.ow2.asm:asm-util:9.0")
+		implementation("org.ow2.asm:asm:9.1")
+		implementation("org.ow2.asm:asm-util:9.1")
+		implementation("info.picocli:picocli:4.6.1")
 
-		compileOnly("org.projectlombok:lombok:1.18.16")
-		annotationProcessor("org.projectlombok:lombok:1.18.16")
+		compileOnly("org.projectlombok:lombok:1.18.18")
+		annotationProcessor("org.projectlombok:lombok:1.18.18")
 
 		testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
 
-		implementation("org.apache.logging.log4j:log4j-api:2.14.0")
-		runtimeOnly("org.apache.logging.log4j:log4j-core:2.14.0")
-		testRuntimeOnly("org.apache.logging.log4j:log4j-core:2.14.0")
+		implementation("org.apache.logging.log4j:log4j-api:2.14.1")
+		runtimeOnly("org.apache.logging.log4j:log4j-core:2.14.1")
+		testRuntimeOnly("org.apache.logging.log4j:log4j-core:2.14.1")
 	}
 
 	tasks.named<Jar>("jar") {
@@ -116,6 +120,6 @@ subprojects {
 }
 
 tasks.named<Wrapper>("wrapper") {
-	gradleVersion = "6.7.1"
+	gradleVersion = "6.8.3"
 	distributionType = Wrapper.DistributionType.ALL
 }

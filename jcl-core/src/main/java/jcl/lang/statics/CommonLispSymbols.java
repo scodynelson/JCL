@@ -103,7 +103,7 @@ public interface CommonLispSymbols {
 	SymbolStruct DEBUGGER_HOOK_VAR = CompilerVariables.DEBUGGER_HOOK;
 	SymbolStruct DEFAULT_PATHNAME_DEFAULTS_VAR = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS;
 	SymbolStruct FEATURES_VAR = CompilerVariables.FEATURES;
-	SymbolStruct GENSYM_COUNTER_VAR = CompilerVariables.GENSYM_COUNTER;
+	SymbolStruct GENSYM_COUNTER_VAR = SymbolVariables.GENSYM_COUNTER;
 	SymbolStruct LOAD_PATHNAME_VAR = CompilerVariables.LOAD_PATHNAME;
 	SymbolStruct LOAD_PRINT_VAR = CompilerVariables.LOAD_PRINT;
 	SymbolStruct LOAD_TRUENAME_VAR = CompilerVariables.LOAD_TRUENAME;

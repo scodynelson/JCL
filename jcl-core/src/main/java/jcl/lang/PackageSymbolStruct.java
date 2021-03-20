@@ -22,5 +22,22 @@ public final class PackageSymbolStruct {
 	/**
 	 * The {@link #symbol}s package location type.
 	 */
-	private final KeywordStruct packageSymbolType;
+	private final SymbolStruct status;
+
+	public boolean found() {
+		return !NILStruct.INSTANCE.eq(status);
+	}
+
+	public boolean notFound() {
+		return NILStruct.INSTANCE.eq(status);
+	}
+
+	/**
+	 * Returns a {@link ValuesStruct} containing the {@link #symbol} and {@link #status} values.
+	 *
+	 * @return a {@link ValuesStruct} containing the {@link #symbol} and {@link #status} values
+	 */
+	public ValuesStruct toValues() {
+		return ValuesStruct.valueOf(symbol, status);
+	}
 }

@@ -163,11 +163,15 @@ class BootstrapFunctions {
 	}
 
 	private static void bootstrapPackageFunctions() {
-		final List<FunctionStruct> functions = Arrays.asList(
-				new ExportFunction(),
-				new InPackageFunction() // TODO: in-package is a Macro
+		List<FunctionStruct> functions = Collections.singletonList(
+				new ExportFunction()
 		);
 		bootstrapCommonLispPackageFunctions(functions);
+
+		functions = Collections.singletonList(
+				new InPackageFunction() // TODO: in-package is a Macro
+		);
+		bootstrapSystemPackageFunctions(functions);
 	}
 
 	private static void bootstrapListFunctions() {
@@ -249,9 +253,7 @@ class BootstrapFunctions {
 		for (final FunctionStruct function : functions) {
 			final SymbolStruct functionSymbol = function.getFunctionSymbol();
 			functionSymbol.setFunction(function);
-
-			final SymbolStruct symbol = aPackage.intern(functionSymbol.getName()).getSymbol();
-			aPackage.export(symbol);
+			aPackage.export(functionSymbol);
 		}
 	}
 }

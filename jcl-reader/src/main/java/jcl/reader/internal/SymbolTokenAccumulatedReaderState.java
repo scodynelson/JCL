@@ -7,14 +7,14 @@ package jcl.reader.internal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
+import jcl.lang.AttributeType;
 import jcl.lang.KeywordStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.AttributeType;
 import jcl.lang.statics.GlobalPackageStruct;
 import jcl.lang.statics.PackageVariables;
 import lombok.experimental.UtilityClass;
@@ -137,19 +137,13 @@ final class SymbolTokenAccumulatedReaderState {
 		if (!packageName.isEmpty()) {
 			final PackageStruct symbolPackage = PackageStruct.findPackage(packageName);
 
-			if (symbolPackage == null) {
-				throw new ReaderErrorException("There is no package named " + packageName);
-			}
-
 			if (packageMarkerCount == 1) {
-				final Map<String, SymbolStruct> symbolPackageExternalSymbols = symbolPackage.getExternalSymbols();
-
-				final SymbolStruct externalSymbol = symbolPackageExternalSymbols.get(symbolName);
-				if (externalSymbol == null) {
+				final Optional<SymbolStruct> externalSymbol = symbolPackage.findExternalSymbol(symbolName);
+				if (externalSymbol.isEmpty()) {
 					final String message = "No external symbol named \"" + symbolName + "\" in package " + packageName;
 					throw new ReaderErrorException(message);
 				}
-				return externalSymbol;
+				return externalSymbol.get();
 			} else {
 				return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 			}
@@ -174,7 +168,7 @@ final class SymbolTokenAccumulatedReaderState {
 	private static SymbolStruct findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
 
 		final PackageSymbolStruct foundSymbol = symbolPackage.findSymbol(symbolName);
-		if (foundSymbol == null) {
+		if (foundSymbol.notFound()) {
 			final boolean isKeyword = GlobalPackageStruct.KEYWORD.eq(symbolPackage);
 			if (isKeyword) {
 				return KeywordStruct.toLispKeyword(symbolName);

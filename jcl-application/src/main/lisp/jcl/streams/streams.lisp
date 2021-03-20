@@ -83,9 +83,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun streamify-designator (designator)
+(defun streamify-designator (designator input-p)
   (if (eql designator nil)
-      *standard-input*
+      (if input-p
+          *standard-input*
+        *standard-output*)
     (if (eql designator t)
         *terminal-io*
       (if (streamp designator)
@@ -136,7 +138,7 @@
 (defun peek-char (&optional (peek-type nil) (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Obtains the next character in input-stream without actually reading it."
   (declare (system::%java-class-name "jcl.streams.functions.PeekChar"))
-  (let ((input-stream (streamify-designator input-stream)))
+  (let ((input-stream (streamify-designator input-stream t)))
     (cond ((eq peek-type nil)
            (let ((c (read-char input-stream eof-error eof-value recursive-p)))
              (unread-char c)
@@ -154,25 +156,25 @@
 (defun read-char (&optional (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Returns the next character from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ReadChar"))
-  (let ((input-stream (streamify-designator input-stream)))
+  (let ((input-stream (streamify-designator input-stream t)))
     ($readChar input-stream eof-error eof-value recursive-p)))
 
 (defun read-char-no-hang (&optional (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Returns the next character from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ReadCharNoHang"))
-  (let ((input-stream (streamify-designator input-stream)))
+  (let ((input-stream (streamify-designator input-stream t)))
     ($readCharNoHang input-stream eof-error eof-value recursive-p)))
 
 (defun unread-char (character &optional (input-stream *standard-input*))
   "Places character back onto the front of input-stream so that it will again be the next character in input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.UnreadChar"))
-  (let ((input-stream (streamify-designator input-stream)))
+  (let ((input-stream (streamify-designator input-stream t)))
     ($unreadChar input-stream character)))
 
 (defun write-char (character &optional (output-stream *standard-output*))
   "Outputs character to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.WriteChar"))
-  (let ((output-stream (streamify-designator output-stream)))
+  (let ((output-stream (streamify-designator output-stream nil)))
     ($writeChar output-stream character)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -180,20 +182,20 @@
 (defun read-line (&optional (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Returns the next line of text that is terminated by a newline or end of file."
   (declare (system::%java-class-name "jcl.streams.functions.ReadLine"))
-  (let ((input-stream (streamify-designator input-stream)))
+  (let ((input-stream (streamify-designator input-stream t)))
     ($toValues ($readLine input-stream eof-error eof-value recursive-p))))
 
 (defun write-line (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream followed by a newline."
   (declare (system::%java-class-name "jcl.streams.functions.WriteLine"))
-  (let ((output-stream (streamify-designator output-stream))
+  (let ((output-stream (streamify-designator output-stream nil))
         (end (or end (length string))))
     ($writeLine output-stream string start end)))
 
 (defun write-string (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.WriteString"))
-  (let ((output-stream (streamify-designator output-stream))
+  (let ((output-stream (streamify-designator output-stream nil))
         (end (or end (length string))))
     ($writeString output-stream string start end)))
 
@@ -258,19 +260,22 @@
 (defun listen (&optional (input-stream *standard-input*))
   "Returns true if there is a character immediately available from input-stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.Listen"))
-  ($listen input-stream))
+  (let ((output-stream (streamify-designator input-stream t)))
+    ($listen input-stream)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun terpri (&optional (output-stream *standard-output*))
   "Outputs a newline to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.Terpri"))
-  ($terpri output-stream))
+  (let ((output-stream (streamify-designator output-stream nil)))
+    ($terpri output-stream)))
 
 (defun freshline (&optional (output-stream *standard-output*))
   "Outputs a newline only if the output-stream is not already at the start of a line."
   (declare (system::%java-class-name "jcl.streams.functions.FreshLine"))
-  ($freshLine output-stream))
+  (let ((output-stream (streamify-designator output-stream nil)))
+    ($freshLine output-stream)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -284,23 +289,27 @@
 (defun clear-input (&optional (input-stream *standard-input*))
   "Clears any available input from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ClearInput"))
-  ($clearInput input-stream))
+  (let ((output-stream (streamify-designator input-stream t)))
+    ($clearInput input-stream)))
 
 (defun clear-output (&optional (output-stream *standard-output*))
   "Attempts to abort any outstanding output operation in progress in order to allow as little output as possible to
   continue to the destination."
   (declare (system::%java-class-name "jcl.streams.functions.ClearOutput"))
-  ($clearOutput output-stream))
+  (let ((output-stream (streamify-designator output-stream nil)))
+    ($clearOutput output-stream)))
 
 (defun finish-output (&optional (output-stream *standard-output*))
   "Attempts to ensure that any buffered output sent to output-stream has reached its destination, and then returns."
   (declare (system::%java-class-name "jcl.streams.functions.FinishOutput"))
-  ($finishOutput output-stream))
+  (let ((output-stream (streamify-designator output-stream nil)))
+    ($finishOutput output-stream)))
 
 (defun force-output (&optional (output-stream *standard-output*))
   "Initiates the emptying of any internal buffers but does not wait for completion or acknowledgment to return."
   (declare (system::%java-class-name "jcl.streams.functions.ForceOutput"))
-  ($forceOutput output-stream))
+  (let ((output-stream (streamify-designator output-stream nil)))
+    ($forceOutput output-stream)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

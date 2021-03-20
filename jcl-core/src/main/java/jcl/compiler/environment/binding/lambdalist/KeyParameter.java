@@ -79,7 +79,7 @@ public class KeyParameter extends Parameter {
 			var = aPackage.intern(symbolName).getSymbol();
 
 			final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
-			if (symbol == null) {
+			if (symbol.notFound()) {
 				keyName = KeywordStruct.toLispKeyword(symbolName);
 			} else {
 				keyName = symbol.getSymbol();
@@ -146,9 +146,7 @@ public class KeyParameter extends Parameter {
 			builder.append(initForm);
 
 			final SymbolStruct suppliedPBindingVar = suppliedPBinding.getVar();
-
-			// TODO: Fix this hardcoded name
-			if (!"SYSTEM".equals(suppliedPBindingVar.getSymbolPackage().getName())) {
+			if (!suppliedPBindingVar.getSymbolPackage().eq(GlobalPackageStruct.SYSTEM)) {
 				builder.append(suppliedPBindingVar);
 			}
 		}

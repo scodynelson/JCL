@@ -13,14 +13,13 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.iterators.ObjectArrayIterator;
 
 import static java.util.stream.Collectors.toMap;
 
 public final class Parameters {
-
-	public static final KeywordStruct ALLOW_OTHER_KEYS = KeywordStruct.toLispKeyword("ALLOW-OTHER-KEYS");
 
 	private final String functionName;
 
@@ -151,7 +150,7 @@ public final class Parameters {
 					if (restIterator.hasNext()) {
 						final LispStruct parameterValue = restIterator.next();
 
-						if (ALLOW_OTHER_KEYS.eq(argument)) {
+						if (CommonLispSymbols.ALLOW_OTHER_KEYS.eq(argument)) {
 							if (!NILStruct.INSTANCE.eq(parameterValue)) {
 								doNotAllowOtherKeys = false;
 							}
@@ -165,7 +164,7 @@ public final class Parameters {
 						                                     keywordArgument);
 						throw new ProgramErrorException(message);
 					}
-				} else if (ALLOW_OTHER_KEYS.eq(argument)) {
+				} else if (CommonLispSymbols.ALLOW_OTHER_KEYS.eq(argument)) {
 					final LispStruct allowOtherKeysValue = restIterator.next();
 					if (!NILStruct.INSTANCE.eq(allowOtherKeysValue)) {
 						doNotAllowOtherKeys = false;

@@ -17,7 +17,7 @@
   "Returns a string described by the provided object."
   (declare (system::%java-class-name "jcl.strings.functions.String"))
   (ext:jinvoke-static
-    (ext:jmethod "toLispString" (ext:jclass "jcl.lang.StringStruct")
+    (ext:jmethod "fromDesignator" (ext:jclass "jcl.lang.StringStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     string))
 

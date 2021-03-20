@@ -950,7 +950,7 @@ public interface CharacterStruct extends LispStruct {
 	 * 		if the provided {@code name} is not a valid character-designator (aka, a CharacterStruct, SymbolStruct, or
 	 * 		StringStruct)
 	 */
-	static CharacterStruct toLispCharacter(final LispStruct struct) {
+	static CharacterStruct fromDesignator(final LispStruct struct) {
 		if (struct instanceof CharacterStruct) {
 			return (CharacterStruct) struct;
 		}

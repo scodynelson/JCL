@@ -26,6 +26,7 @@ dependencies {
 	runtimeOnly(fileTree(mapOf("dir" to "compiled-lisp", "include" to "*.jar")))
 
 	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.assertj:assertj-core")
 }
 
 tasks.jar {

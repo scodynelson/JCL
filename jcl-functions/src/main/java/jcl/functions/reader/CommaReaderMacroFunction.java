@@ -29,7 +29,7 @@ public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	@Override
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final IntegerStruct numberArgument) {
-		assert codePoint == CodePointConstants.GRAVE_ACCENT;
+		assert codePoint == CodePointConstants.COMMA;
 
 		final ReaderContext context = ReaderContextHolder.getContext();
 		final int currentBackquoteLevel = context.getBackquoteLevel();

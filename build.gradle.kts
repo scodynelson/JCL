@@ -84,6 +84,7 @@ subprojects {
 		annotationProcessor("org.projectlombok:lombok:1.18.18")
 
 		testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+		testImplementation("org.assertj:assertj-core:3.19.0")
 
 		implementation("org.apache.logging.log4j:log4j-api:2.14.1")
 		runtimeOnly("org.apache.logging.log4j:log4j-core:2.14.1")

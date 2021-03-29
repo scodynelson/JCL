@@ -64,6 +64,11 @@ public interface SymbolStruct extends LispStruct {
 //	 */
 	void setValue(final LispStruct value);
 
+	default LispStruct setValue1(final LispStruct value) {
+		setValue(value);
+		return value;
+	}
+
 	void setLexicalValue(final LispStruct value);
 
 	void setDynamicValue(final LispStruct value);

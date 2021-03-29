@@ -26,6 +26,7 @@
     <orderEntry type="module" module-name="jcl.jcl-core.main" />
     <orderEntry type="module" module-name="jcl.jcl-reader.main" />
     <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter:5.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.19.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />

@@ -237,10 +237,16 @@ public final class InternalLoad {
 			if (classLoaded == null) {
 				return NILStruct.INSTANCE;
 			} else {
-				final FunctionStruct function = (FunctionStruct) classLoaded.getConstructor().newInstance();
-				final SymbolStruct functionSymbol = function.getFunctionSymbol();
-				functionSymbol.setFunction(function);
-				return function.apply();
+				final Method mainMethod = classLoaded.getMethod("main", String[].class);
+				final String[] params = null;
+				mainMethod.invoke(null, (Object) params);
+				return TStruct.INSTANCE;
+
+// TODO: Should use main method or just have the main class be a Function??
+//				final FunctionStruct function = (FunctionStruct) classLoaded.getConstructor().newInstance();
+//				final SymbolStruct functionSymbol = function.getFunctionSymbol();
+//				functionSymbol.setFunction(function);
+//				return function.apply();
 			}
 		} catch (final FileErrorException fee) {
 			log.error(fee.getMessage(), fee.getCause());

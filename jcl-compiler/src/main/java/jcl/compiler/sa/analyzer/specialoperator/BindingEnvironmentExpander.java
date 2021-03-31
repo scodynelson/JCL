@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
@@ -27,7 +26,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 
-abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<BindingEnvironmentStruct<V>> {
+abstract class BindingEnvironmentExpander extends MacroFunctionExpander<BindingEnvironmentStruct> {
 
 	private final String expanderName;
 
@@ -36,7 +35,7 @@ abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<Bindi
 	}
 
 	@Override
-	public BindingEnvironmentStruct<V> expand(final ListStruct form, final Environment environment) {
+	public BindingEnvironmentStruct expand(final ListStruct form, final Environment environment) {
 		final Iterator<LispStruct> iterator = form.iterator();
 		iterator.next(); // Binding Environment Expander SYMBOL
 
@@ -60,7 +59,7 @@ abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<Bindi
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, bindingEnvironment);
 
-		final List<V> vars
+		final List<BindingEnvironmentStruct.BindingVar> vars
 				= parameters.stream()
 				            .map(e -> getVar(e, declare, bindingEnvironment))
 				            .collect(Collectors.toList());
@@ -74,7 +73,8 @@ abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<Bindi
 		return getBindingEnvironmentStruct(vars, new PrognStruct(analyzedBodyForms), bindingEnvironment);
 	}
 
-	private V getVar(final LispStruct parameter, final DeclareStruct declare, final Environment environment) {
+	private BindingEnvironmentStruct.BindingVar getVar(final LispStruct parameter, final DeclareStruct declare,
+	                                                   final Environment environment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			throw new TypeErrorException(expanderName + ": PARAMETER must be a Symbol or a List. Got: " + parameter);
@@ -117,22 +117,12 @@ abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<Bindi
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(var::eq);
 
-		final Binding binding = new Binding(var);
-		if (isSpecial) {
-			environment.addDynamicBinding(binding);
-		} else {
-			environment.addLexicalBinding(binding);
-		}
-
-		return getBindingEnvironmentVar(var, initForm, isSpecial);
+		return new BindingEnvironmentStruct.BindingVar(var, initForm, isSpecial);
 	}
 
-	protected abstract V getBindingEnvironmentVar(SymbolStruct var, LispStruct initForm,
-	                                              boolean isSpecial);
-
-	protected abstract BindingEnvironmentStruct<V> getBindingEnvironmentStruct(List<V> vars,
-	                                                                           PrognStruct prognBody,
-	                                                                           Environment environment);
+	protected abstract BindingEnvironmentStruct getBindingEnvironmentStruct(
+			List<BindingEnvironmentStruct.BindingVar> vars, PrognStruct prognBody, Environment environment
+	);
 
 
 	protected abstract LispStruct getListParameterInitForm(LispStruct parameterValue, Environment environment);

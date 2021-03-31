@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.SymbolMacroBinding;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
@@ -22,7 +21,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -107,10 +105,10 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 		final SymbolStruct var = (SymbolStruct) first;
 
 		// TODO: should do this in the ICG instead??
-		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(var);
-		if (hasGlobalBinding) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list symbol must not be a dynamic binding in the global environment. Got: " + var);
-		}
+//		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(var);
+//		if (hasGlobalBinding) {
+//			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list symbol must not be a dynamic binding in the global environment. Got: " + var);
+//		}
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: 1");
@@ -124,9 +122,6 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
 		final LispStruct expansion = FormAnalyzer.analyze(parameterValue, parentEnvironment);
-
-		final SymbolMacroBinding binding = new SymbolMacroBinding(var, expansion);
-		symbolMacroletEnvironment.addSymbolMacroBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);
 	}

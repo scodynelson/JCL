@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
@@ -27,7 +26,6 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.CompilerConstants;
 import jcl.lang.statics.GlobalPackageStruct;
 import lombok.experimental.UtilityClass;
@@ -50,13 +48,6 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(currentParam::eq);
 
-		final Binding binding = new Binding(currentParam);
-		if (isSpecial) {
-			environment.addDynamicBinding(binding);
-		} else {
-			environment.addLexicalBinding(binding);
-		}
-
 		final WholeParameter wholeBinding = new WholeParameter(currentParam, isSpecial);
 		return new WholeParseResult(wholeBinding);
 	}
@@ -77,9 +68,6 @@ public final class LambdaListParser {
 				throw new ProgramErrorException("LambdaList &environment parameter must only have 1 parameter: " + currentElement);
 			}
 		}
-
-		final Binding binding = new Binding(currentParam);
-		environment.addDynamicBinding(binding);
 
 		final EnvironmentParameter environmentBinding = new EnvironmentParameter(currentParam);
 		return new EnvironmentParseResult(currentElement, environmentBinding);
@@ -127,13 +115,6 @@ public final class LambdaListParser {
 			                                        .map(SpecialDeclarationStruct::getVar)
 			                                        .anyMatch(currentParam::eq);
 
-			final Binding binding = new Binding(currentParam);
-			if (isSpecial) {
-				environment.addDynamicBinding(binding);
-			} else {
-				environment.addLexicalBinding(binding);
-			}
-
 			final RequiredParameter requiredBinding = new RequiredParameter(currentParam, destructuringForm, isSpecial);
 			requiredBindings.add(requiredBinding);
 		} while (iterator.hasNext());
@@ -171,13 +152,6 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(currentParam::eq);
 
-				Binding binding = new Binding(currentParam);
-				if (isSpecial) {
-					environment.addDynamicBinding(binding);
-				} else {
-					environment.addLexicalBinding(binding);
-				}
-
 				final String paramName = currentParam.getName();
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
@@ -188,13 +162,6 @@ public final class LambdaListParser {
 				                                                 .stream()
 				                                                 .map(SpecialDeclarationStruct::getVar)
 				                                                 .anyMatch(customSuppliedPCurrent::eq);
-
-				binding = new Binding(customSuppliedPCurrent);
-				if (isSuppliedPSpecial) {
-					environment.addDynamicBinding(binding);
-				} else {
-					environment.addLexicalBinding(binding);
-				}
 
 				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 
@@ -267,13 +234,6 @@ public final class LambdaListParser {
 					                                        .map(SpecialDeclarationStruct::getVar)
 					                                        .anyMatch(varNameCurrent::eq);
 
-					Binding binding = new Binding(varNameCurrent);
-					if (isSpecial) {
-						environment.addDynamicBinding(binding);
-					} else {
-						environment.addLexicalBinding(binding);
-					}
-
 					final SuppliedPParameter suppliedPBinding;
 					if (thirdInCurrent.eq(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
@@ -287,13 +247,6 @@ public final class LambdaListParser {
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(customSuppliedPCurrent::eq);
 
-						binding = new Binding(customSuppliedPCurrent);
-						if (isSuppliedPSpecial) {
-							environment.addDynamicBinding(binding);
-						} else {
-							environment.addLexicalBinding(binding);
-						}
-
 						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
 						if (!(thirdInCurrent instanceof SymbolStruct)) {
@@ -306,13 +259,6 @@ public final class LambdaListParser {
 						                                                 .stream()
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(suppliedPCurrent::eq);
-
-						binding = new Binding(suppliedPCurrent);
-						if (isSuppliedPSpecial) {
-							environment.addDynamicBinding(binding);
-						} else {
-							environment.addLexicalBinding(binding);
-						}
 
 						suppliedPBinding = new SuppliedPParameter(suppliedPCurrent, isSuppliedPSpecial);
 					}
@@ -370,13 +316,6 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(currentParam::eq);
 
-		final Binding binding = new Binding(currentParam);
-		if (isSpecial) {
-			environment.addDynamicBinding(binding);
-		} else {
-			environment.addLexicalBinding(binding);
-		}
-
 		final RestParameter restBinding = new RestParameter(currentParam, destructuringForm, isSpecial);
 		return new RestParseResult(currentElement, restBinding);
 	}
@@ -409,13 +348,6 @@ public final class LambdaListParser {
 		                                        .stream()
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(currentParam::eq);
-
-		final Binding binding = new Binding(currentParam);
-		if (isSpecial) {
-			environment.addDynamicBinding(binding);
-		} else {
-			environment.addLexicalBinding(binding);
-		}
 
 		final RestParameter restBinding = new RestParameter(currentParam, destructuringForm, isSpecial);
 		return new RestParseResult(dottedRest, restBinding);
@@ -463,13 +395,6 @@ public final class LambdaListParser {
 		                                        .map(SpecialDeclarationStruct::getVar)
 		                                        .anyMatch(currentParam::eq);
 
-		final Binding binding = new Binding(currentParam);
-		if (isSpecial) {
-			environment.addDynamicBinding(binding);
-		} else {
-			environment.addLexicalBinding(binding);
-		}
-
 		final BodyParameter bodyBinding = new BodyParameter(currentParam, destructuringForm, isSpecial);
 		return new BodyParseResult(currentElement, bodyBinding);
 	}
@@ -501,13 +426,6 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(currentParam::eq);
 
-				Binding binding = new Binding(currentParam);
-				if (isSpecial) {
-					environment.addDynamicBinding(binding);
-				} else {
-					environment.addLexicalBinding(binding);
-				}
-
 				final String paramName = currentParam.getName();
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
 				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
@@ -518,13 +436,6 @@ public final class LambdaListParser {
 				                                                 .stream()
 				                                                 .map(SpecialDeclarationStruct::getVar)
 				                                                 .anyMatch(customSuppliedPCurrent::eq);
-
-				binding = new Binding(customSuppliedPCurrent);
-				if (isSuppliedPSpecial) {
-					environment.addDynamicBinding(binding);
-				} else {
-					environment.addLexicalBinding(binding);
-				}
 
 				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 
@@ -616,13 +527,6 @@ public final class LambdaListParser {
 					                                        .map(SpecialDeclarationStruct::getVar)
 					                                        .anyMatch(varNameCurrent::eq);
 
-					Binding binding = new Binding(varNameCurrent);
-					if (isSpecial) {
-						environment.addDynamicBinding(binding);
-					} else {
-						environment.addLexicalBinding(binding);
-					}
-
 					final SuppliedPParameter suppliedPBinding;
 					if (thirdInCurrent.eq(NILStruct.INSTANCE)) {
 						final String paramName = varNameCurrent.getName();
@@ -636,13 +540,6 @@ public final class LambdaListParser {
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(customSuppliedPCurrent::eq);
 
-						binding = new Binding(customSuppliedPCurrent);
-						if (isSuppliedPSpecial) {
-							environment.addDynamicBinding(binding);
-						} else {
-							environment.addLexicalBinding(binding);
-						}
-
 						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
 					} else {
 						if (!(thirdInCurrent instanceof SymbolStruct)) {
@@ -655,13 +552,6 @@ public final class LambdaListParser {
 						                                                 .stream()
 						                                                 .map(SpecialDeclarationStruct::getVar)
 						                                                 .anyMatch(suppliedPCurrent::eq);
-
-						binding = new Binding(suppliedPCurrent);
-						if (isSuppliedPSpecial) {
-							environment.addDynamicBinding(binding);
-						} else {
-							environment.addLexicalBinding(binding);
-						}
 
 						suppliedPBinding = new SuppliedPParameter(suppliedPCurrent, isSuppliedPSpecial);
 					}
@@ -703,13 +593,6 @@ public final class LambdaListParser {
 				                                        .stream()
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(currentParam::eq);
-
-				final Binding binding = new Binding(currentParam);
-				if (isSpecial) {
-					environment.addDynamicBinding(binding);
-				} else {
-					environment.addLexicalBinding(binding);
-				}
 
 				final AuxParameter auxBinding = new AuxParameter(currentParam, null, NILStruct.INSTANCE, isSpecial);
 				auxBindings.add(auxBinding);
@@ -769,13 +652,6 @@ public final class LambdaListParser {
 					                                        .stream()
 					                                        .map(SpecialDeclarationStruct::getVar)
 					                                        .anyMatch(varNameCurrent::eq);
-
-					final Binding binding = new Binding(varNameCurrent);
-					if (isSpecial) {
-						environment.addDynamicBinding(binding);
-					} else {
-						environment.addLexicalBinding(binding);
-					}
 
 					final AuxParameter auxBinding = new AuxParameter(varNameCurrent, destructuringForm, parameterValueInitForm, isSpecial);
 					auxBindings.add(auxBinding);

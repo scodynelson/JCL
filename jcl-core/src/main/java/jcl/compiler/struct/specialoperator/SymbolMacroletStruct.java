@@ -44,6 +44,8 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
+		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
+
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
@@ -75,15 +77,13 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, expansionStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, GenerationConstants.SYMBOL_STRUCT_NAME, "bindSymbolMacroExpander", "(Ljcl/lang/function/expander/SymbolMacroExpanderInter;)V", true);
+
+			generatorState.getLexicalSymbols().add(symbolVar);
 		}
 
 		mv.visitLabel(tryBlockStart);
 
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
-		environmentDeque.addFirst(symbolMacroletEnvironment);
 		forms.generate(generatorState);
-		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
@@ -103,6 +103,13 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
+
+		for (final SymbolMacroletStruct.SymbolMacroletVar var : vars) {
+			final SymbolStruct symbol = var.getVar();
+			if (!existingLexicalSymbols.contains(symbol)) {
+				generatorState.getLexicalSymbols().remove(symbol);
+			}
+		}
 	}
 
 	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

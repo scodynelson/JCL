@@ -4,8 +4,9 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
@@ -13,6 +14,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.SymbolStruct;
 import lombok.Getter;
 
 @Getter
@@ -50,11 +52,21 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 	 */
 	@Override
 	public void generate(final GeneratorState generatorState) {
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
-		environmentDeque.addFirst(locallyEnvironment);
+		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
+
+		for (final SpecialDeclarationStruct special : specials) {
+			generatorState.getDynamicSymbols().add(special.getVar());
+		}
+
 		forms.generate(generatorState);
-		environmentDeque.removeFirst();
+
+		for (final SpecialDeclarationStruct special : specials) {
+			final SymbolStruct var = special.getVar();
+			if (!existingDynamicSymbols.contains(var)) {
+				generatorState.getDynamicSymbols().remove(var);
+			}
+		}
 	}
 
 	@Override

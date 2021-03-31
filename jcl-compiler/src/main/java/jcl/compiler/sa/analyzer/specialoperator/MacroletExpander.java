@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import jcl.compiler.StackUtils;
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
@@ -28,7 +27,6 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.DeclarationStructImpl;
 import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -133,13 +131,6 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(functionName::eq);
-
-		final Binding binding = new Binding(functionName);
-		if (isSpecial) {
-			macroletEnvironment.addDynamicBinding(binding);
-		} else {
-			macroletEnvironment.addLexicalBinding(binding);
-		}
 
 		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}

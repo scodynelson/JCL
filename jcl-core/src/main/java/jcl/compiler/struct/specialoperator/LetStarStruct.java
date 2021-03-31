@@ -15,8 +15,6 @@ import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -26,9 +24,9 @@ import org.objectweb.asm.Opcodes;
  * values instead of after all of the symbols and forms are generated. This allows sequentially defined variables to
  * depend on the binding of previous defined variables within the same variable scope definitions of the 'let*'.
  */
-public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetStarVar> {
+public class LetStarStruct extends BindingEnvironmentStruct {
 
-	public LetStarStruct(final List<LetStarVar> vars, final PrognStruct forms, final Environment letStarEnvironment) {
+	public LetStarStruct(final List<BindingVar> vars, final PrognStruct forms, final Environment letStarEnvironment) {
 		super("letStar", vars, forms, letStarEnvironment);
 	}
 
@@ -36,15 +34,15 @@ public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetSta
 	 * {@inheritDoc}
 	 * Generation method for {@link LetStarStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Generating each of the {@link LetStarStruct.LetStarVar#var} and {@link LetStarStruct.LetStarVar#initForm}
+	 * <li>Generating each of the {@link BindingVar#var} and {@link BindingVar#initForm}
 	 * values</li>
 	 * <li>Collect all generated symbol and form stack locations for lazily binding the values to the {@link
 	 * SymbolStruct}s</li>
-	 * <li>Symbol bindings where {@link LetStarStruct.LetStarVar#isSpecial} is true are binded via {@link
+	 * <li>Symbol bindings where {@link BindingVar#isSpecial} is true are binded via {@link
 	 * SymbolStruct#bindDynamicValue(LispStruct)}</li>
-	 * <li>Symbol bindings where {@link LetStarStruct.LetStarVar#isSpecial} is false are binded via {@link
+	 * <li>Symbol bindings where {@link BindingVar#isSpecial} is false are binded via {@link
 	 * SymbolStruct#bindLexicalValue(LispStruct)}</li>
-	 * <li>Symbol bindings where {@link LetStarStruct.LetStarVar#isSpecial} is false are also added to the {@link
+	 * <li>Symbol bindings where {@link BindingVar#isSpecial} is false are also added to the {@link
 	 * Environment#lexicalSymbolBindings} map for the new {@link Environment} created with the 'let'</li>
 	 * </ol>
 	 * As an example, it will transform {@code (let* ((x 1)) x)} into the following Java code:
@@ -80,8 +78,6 @@ public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetSta
 	 * }
 	 * </pre>
 	 *
-	 * @param vars
-	 * 		the {@link LetStarStruct.LetStarVar}s used to generate the {@link SymbolStruct} binding code
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
@@ -96,7 +92,7 @@ public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetSta
 	 * 		the {@link Set} of dynamic {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 */
 	@Override
-	protected void generateBindings(final List<LetStarStruct.LetStarVar> vars, final GeneratorState generatorState,
+	protected void generateBindings(final GeneratorState generatorState,
 	                                final JavaMethodBuilder methodBuilder, final int environmentArgStore,
 	                                final int environmentSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                final Set<Integer> dynamicSymbolStoresToUnbind) {
@@ -105,7 +101,7 @@ public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetSta
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 
-		for (final LetStarStruct.LetStarVar var : vars) {
+		for (final BindingVar var : vars) {
 			final SymbolStruct symbolVar = var.getVar();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, generatorState, packageStore, symbolStore);
@@ -156,13 +152,5 @@ public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetSta
 				mv.visitInsn(Opcodes.POP);
 			}
 		}
-	}
-
-	@Getter
-	@AllArgsConstructor
-	public static class LetStarVar {
-		private final SymbolStruct var;
-		private final LispStruct initForm;
-		private final boolean isSpecial;
 	}
 }

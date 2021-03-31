@@ -2,7 +2,6 @@ package jcl.lang.internal;
 
 import java.util.Stack;
 
-import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -602,18 +601,13 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
-		final Environment currentEnvironment = generatorState.getCurrentEnvironment();
-
-		final boolean hasLexicalBinding = currentEnvironment.hasLexicalBinding(this);
-		final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(this);
-
-		if (hasLexicalBinding) {
+		if (generatorState.getLexicalSymbols().contains(this)) {
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC,
 			                   true);
-		} else if (hasDynamicBinding) {
+		} else if (generatorState.getDynamicSymbols().contains(this)) {
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 			                   GenerationConstants.SYMBOL_STRUCT_NAME,
 			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME,

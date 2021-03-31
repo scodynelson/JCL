@@ -5,7 +5,9 @@
 package jcl.compiler.struct.specialoperator.lambda;
 
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
@@ -275,6 +277,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		generateNoArgConstructor(generatorState, className, cw);
 		generateEnvironmentArgConstructor(generatorState, className, cw);
 
+		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
+		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
+
 		generateRequiredBindings(generatorState, lambdaListBindings, cw);
 		generateOptionalBindings(generatorState, lambdaListBindings, cw);
 		generateRestBinding(generatorState, lambdaListBindings, cw);
@@ -285,6 +290,8 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		generateInternalApplyMethod(generatorState, cw);
 		generateGetInitFormMethod(generatorState, cw);
 //		generateClassInitMethod(generatorState, cw);
+
+		removeGeneratorSymbolEntries(generatorState, existingLexicalSymbols, existingDynamicSymbols);
 
 		cw.visitEnd();
 
@@ -302,6 +309,94 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			                           GenerationConstants.INIT_METHOD_NAME,
 			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
 			                           false);
+		}
+	}
+
+	private void removeGeneratorSymbolEntries(final GeneratorState generatorState,
+	                                          final Set<SymbolStruct> existingLexicalSymbols,
+	                                          final Set<SymbolStruct> existingDynamicSymbols) {
+		for (final RequiredParameter requiredBinding : lambdaListBindings.getRequiredBindings()) {
+			final SymbolStruct var = requiredBinding.getVar();
+			if (requiredBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(var)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else{
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
+		}
+		for (final OptionalParameter optionalBinding : lambdaListBindings.getOptionalBindings()) {
+			final SymbolStruct var = optionalBinding.getVar();
+			if (optionalBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(var)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else{
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
+			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			final SymbolStruct suppliedPVar = suppliedPBinding.getVar();
+			if (suppliedPBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(suppliedPVar)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else{
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
+		}
+		final RestParameter restBinding = lambdaListBindings.getRestBinding();
+		if (restBinding != null) {
+			final SymbolStruct var = restBinding.getVar();
+			if (restBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(var)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else {
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
+		}
+		for (final KeyParameter keyBinding : lambdaListBindings.getKeyBindings()) {
+			final SymbolStruct var = keyBinding.getVar();
+			if (keyBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(var)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else{
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
+			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
+			final SymbolStruct suppliedPVar = suppliedPBinding.getVar();
+			if (suppliedPBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(suppliedPVar)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else{
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
+		}
+		for (final AuxParameter auxBinding : lambdaListBindings.getAuxBindings()) {
+			final SymbolStruct var = auxBinding.getVar();
+			if (auxBinding.isSpecial()) {
+				if (!existingDynamicSymbols.contains(var)) {
+					generatorState.getDynamicSymbols().remove(var);
+				}
+			} else{
+				if (!existingLexicalSymbols.contains(var)) {
+					generatorState.getLexicalSymbols().remove(var);
+				}
+			}
 		}
 	}
 
@@ -483,11 +578,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int environmentArgStore = methodBuilder.getNextAvailableStore();
 
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
-		environmentDeque.addFirst(lambdaEnvironment);
 		forms.generate(generatorState);
-		environmentDeque.removeFirst();
 
 		mv.visitInsn(Opcodes.ARETURN);
 
@@ -745,8 +836,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, requiredSymbolStore);
 			if (requiredBinding.isSpecial()) {
+				generatorState.getDynamicSymbols().add(requiredSymbol);
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
+				generatorState.getLexicalSymbols().add(requiredSymbol);
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
@@ -871,8 +964,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, optionalSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalInitFormStore);
 			if (optionalBinding.isSpecial()) {
+				generatorState.getDynamicSymbols().add(optionalSymbol);
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
+				generatorState.getLexicalSymbols().add(optionalSymbol);
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPStore);
@@ -961,8 +1056,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, restSymbolStore);
 		if (restBinding.isSpecial()) {
+			generatorState.getDynamicSymbols().add(restSymbol);
 			mv.visitInsn(Opcodes.ICONST_1);
 		} else {
+			generatorState.getLexicalSymbols().add(restSymbol);
 			mv.visitInsn(Opcodes.ICONST_0);
 		}
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
@@ -1079,8 +1176,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, keySymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keyInitFormStore);
 			if (keyBinding.isSpecial()) {
+				generatorState.getDynamicSymbols().add(keySymbol);
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
+				generatorState.getLexicalSymbols().add(keySymbol);
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitVarInsn(Opcodes.ALOAD, keyNameStore);
@@ -1146,8 +1245,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, suppliedPSymbolStore);
 			if (suppliedPBinding.isSpecial()) {
+				generatorState.getDynamicSymbols().add(keySuppliedPSymbol);
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
+				generatorState.getLexicalSymbols().add(keySuppliedPSymbol);
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
@@ -1299,8 +1400,10 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, auxSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, auxInitFormStore);
 			if (auxBinding.isSpecial()) {
+				generatorState.getDynamicSymbols().add(auxSymbol);
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
+				generatorState.getLexicalSymbols().add(auxSymbol);
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,

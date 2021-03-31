@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 
-public final class LetExpander extends BindingEnvironmentExpander<LetStruct.LetVar> {
+public final class LetExpander extends BindingEnvironmentExpander {
 
 	public static final LetExpander INSTANCE = new LetExpander();
 
@@ -25,15 +25,9 @@ public final class LetExpander extends BindingEnvironmentExpander<LetStruct.LetV
 	}
 
 	@Override
-	protected LetStruct.LetVar getBindingEnvironmentVar(final SymbolStruct var, final LispStruct initForm,
-	                                                    final boolean isSpecial) {
-		return new LetStruct.LetVar(var, initForm, isSpecial);
-	}
-
-	@Override
-	protected BindingEnvironmentStruct<LetStruct.LetVar> getBindingEnvironmentStruct(final List<LetStruct.LetVar> vars,
-	                                                                                 final PrognStruct prognBody,
-	                                                                                 final Environment environment) {
+	protected BindingEnvironmentStruct getBindingEnvironmentStruct(final List<BindingEnvironmentStruct.BindingVar> vars,
+	                                                               final PrognStruct prognBody,
+	                                                               final Environment environment) {
 		return new LetStruct(vars, prognBody, environment);
 	}
 

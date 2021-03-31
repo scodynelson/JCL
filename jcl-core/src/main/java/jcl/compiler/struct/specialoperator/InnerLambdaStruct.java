@@ -4,8 +4,8 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,6 +113,9 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, environmentFunctionBindingsStore);
 
+		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
+		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
+
 		final int packageStore = methodBuilder.getNextAvailableStore();
 
 		final Map<Integer, Integer> functionStoresToBind = new HashMap<>();
@@ -129,6 +132,12 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			functionStoresToBind.put(functionSymbolStore, initFormStore);
+
+			if (var.isSpecial()) {
+				generatorState.getDynamicSymbols().add(functionSymbolVar);
+			} else {
+				generatorState.getLexicalSymbols().add(functionSymbolVar);
+			}
 		}
 
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : functionStoresToBind.entrySet()) {
@@ -162,11 +171,7 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		mv.visitLabel(tryBlockStart);
 
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
-		environmentDeque.addFirst(lexicalEnvironment);
 		forms.generate(generatorState);
-		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
@@ -188,6 +193,19 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
+
+		for (final InnerLambdaStruct.InnerLambdaVar var : vars) {
+			final SymbolStruct symbol = var.getVar();
+			if (var.isSpecial()) {
+				if (!existingDynamicSymbols.contains(symbol)) {
+					generatorState.getDynamicSymbols().remove(symbol);
+				}
+			} else {
+				if (!existingLexicalSymbols.contains(symbol)) {
+					generatorState.getLexicalSymbols().remove(symbol);
+				}
+			}
+		}
 
 		mv.visitInsn(Opcodes.ARETURN);
 	}

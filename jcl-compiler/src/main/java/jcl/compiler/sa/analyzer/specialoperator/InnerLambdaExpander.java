@@ -11,7 +11,6 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
@@ -146,13 +145,6 @@ abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStru
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
 		                                 .anyMatch(functionName::eq);
-
-		final Binding binding = new Binding(functionName);
-		if (isSpecial) {
-			environment.addDynamicBinding(binding);
-		} else {
-			environment.addLexicalBinding(binding);
-		}
 
 		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}

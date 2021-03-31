@@ -118,8 +118,6 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
-		final Environment currentEnvironment = generatorState.getCurrentEnvironment();
-
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
 		final int initFormStore = methodBuilder.getNextAvailableStore();
@@ -143,16 +141,13 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
-			final boolean hasLexicalBinding = currentEnvironment.hasLexicalBinding(var);
-			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
-
-			if (hasLexicalBinding) {
+			if (generatorState.getLexicalSymbols().contains(var)) {
 				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 				                   GenerationConstants.SYMBOL_STRUCT_NAME,
 				                   GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME,
 				                   GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC,
 				                   true);
-			} else if (hasDynamicBinding) {
+			} else if (generatorState.getDynamicSymbols().contains(var)) {
 				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 				                   GenerationConstants.SYMBOL_STRUCT_NAME,
 				                   GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME,

@@ -4,7 +4,6 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -169,11 +168,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 
 		mv.visitLabel(tryBlockStart);
 
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
-		environmentDeque.addFirst(progvEnvironment);
 		forms.generate(generatorState);
-		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);

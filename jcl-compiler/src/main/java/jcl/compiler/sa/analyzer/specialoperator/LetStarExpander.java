@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 
-public final class LetStarExpander extends BindingEnvironmentExpander<LetStarStruct.LetStarVar> {
+public final class LetStarExpander extends BindingEnvironmentExpander {
 
 	public static final LetStarExpander INSTANCE = new LetStarExpander();
 
@@ -25,15 +25,9 @@ public final class LetStarExpander extends BindingEnvironmentExpander<LetStarStr
 	}
 
 	@Override
-	protected LetStarStruct.LetStarVar getBindingEnvironmentVar(final SymbolStruct var, final LispStruct initForm,
-	                                                            final boolean isSpecial) {
-		return new LetStarStruct.LetStarVar(var, initForm, isSpecial);
-	}
-
-	@Override
-	protected BindingEnvironmentStruct<LetStarStruct.LetStarVar> getBindingEnvironmentStruct(final List<LetStarStruct.LetStarVar> vars,
-	                                                                                         final PrognStruct prognBody,
-	                                                                                         final Environment environment) {
+	protected BindingEnvironmentStruct getBindingEnvironmentStruct(final List<BindingEnvironmentStruct.BindingVar> vars,
+	                                                               final PrognStruct prognBody,
+	                                                               final Environment environment) {
 		return new LetStarStruct(vars, prognBody, environment);
 	}
 

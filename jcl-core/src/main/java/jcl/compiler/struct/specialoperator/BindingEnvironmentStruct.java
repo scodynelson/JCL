@@ -4,7 +4,6 @@
 
 package jcl.compiler.struct.specialoperator;
 
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,21 +13,23 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 @Getter
-public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperatorStruct {
+public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorStruct {
 
-	private final List<V> vars;
+	protected final List<BindingVar> vars;
 	private final PrognStruct forms;
 	private final Environment environment;
 
 	protected BindingEnvironmentStruct(final String methodNamePrefix,
-	                                   final List<V> vars, final PrognStruct forms, final Environment environment) {
+	                                   final List<BindingVar> vars, final PrognStruct forms, final Environment environment) {
 		super(methodNamePrefix);
 		this.vars = vars;
 		this.forms = forms;
@@ -85,9 +86,23 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 		final int environmentSymbolBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, environmentSymbolBindingsStore);
 
+		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
+		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
+
+		for (final BindingVar var : vars) {
+			final SymbolStruct symbol = var.getVar();
+			if (var.isSpecial()) {
+				generatorState.getDynamicSymbols().add(symbol);
+			} else {
+				generatorState.getLexicalSymbols().add(symbol);
+			}
+		}
+
 		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
 		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
-		generateBindings(vars, generatorState, methodBuilder, environmentArgStore, environmentSymbolBindingsStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		generateBindings(generatorState, methodBuilder, environmentArgStore, environmentSymbolBindingsStore,
+		                 lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind
+		);
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -97,11 +112,7 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 
 		mv.visitLabel(tryBlockStart);
 
-		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
-		environmentDeque.addFirst(environment);
 		forms.generate(generatorState);
-		environmentDeque.removeFirst();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
@@ -122,6 +133,19 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 
+		for (final BindingVar var : vars) {
+			final SymbolStruct symbol = var.getVar();
+			if (var.isSpecial()) {
+				if (!existingDynamicSymbols.contains(symbol)) {
+					generatorState.getDynamicSymbols().remove(symbol);
+				}
+			} else {
+				if (!existingLexicalSymbols.contains(symbol)) {
+					generatorState.getLexicalSymbols().remove(symbol);
+				}
+			}
+		}
+
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 
@@ -129,8 +153,6 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 	 * Abstract method to perform {@link SymbolStruct} symbol binding generation logic for the provided {@link List}
 	 * variables.
 	 *
-	 * @param vars
-	 * 		the {@link List} variables to generate appropriate binding initialization code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
@@ -146,7 +168,7 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
 	 * 		values to unbind exists
 	 */
-	protected abstract void generateBindings(List<V> vars, GeneratorState generatorState,
+	protected abstract void generateBindings(GeneratorState generatorState,
 	                                         JavaMethodBuilder methodBuilder, int environmentArgStore,
 	                                         int environmentSymbolBindingsStore, Set<Integer> lexicalSymbolStoresToUnbind,
 	                                         Set<Integer> dynamicSymbolStoresToUnbind);
@@ -183,5 +205,13 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
 			                   true);
 		}
+	}
+
+	@Getter
+	@AllArgsConstructor
+	public static class BindingVar {
+		private final SymbolStruct var;
+		private final LispStruct initForm;
+		private final boolean isSpecial;
 	}
 }

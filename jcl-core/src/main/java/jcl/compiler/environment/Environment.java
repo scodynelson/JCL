@@ -5,7 +5,6 @@
 package jcl.compiler.environment;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
@@ -16,8 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.compiler.environment.binding.Binding;
-import jcl.compiler.environment.binding.SymbolMacroBinding;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
@@ -33,12 +30,6 @@ public class Environment extends StandardObjectStruct {
 	private final Map<SymbolStruct, LispStruct> lexicalSymbolBindings = new LinkedHashMap<>();
 
 	private final Map<SymbolStruct, FunctionStruct> lexicalFunctionBindings = new LinkedHashMap<>();
-
-	private final List<Binding> lexicalBindings = new ArrayList<>();
-
-	private final List<Binding> dynamicBindings = new ArrayList<>();
-
-	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
 	private Stack<SymbolStruct> functionNameStack = new Stack<>();
 
@@ -87,7 +78,7 @@ public class Environment extends StandardObjectStruct {
 		// NULL Environment should be first, 'this' Environment should be last
 
 		Environment current = this;
-		while(NULL != current) {
+		while (NULL != current) {
 			environments.addFirst(current);
 			current = current.parent;
 		}
@@ -157,7 +148,7 @@ public class Environment extends StandardObjectStruct {
 		// NULL Environment should be first, 'this' Environment should be last
 
 		Environment current = this;
-		while(NULL != current) {
+		while (NULL != current) {
 			environments.addFirst(current);
 			current = current.parent;
 		}
@@ -191,14 +182,6 @@ public class Environment extends StandardObjectStruct {
 		return parent.getLexicalFunctionBinding(var);
 	}
 
-	public FunctionStruct getFunction(final SymbolStruct var) {
-		FunctionStruct function = getLexicalFunctionBinding(var);
-		if (function == null) {
-			function = var.getFunction();
-		}
-		return function;
-	}
-
 	public void bindFunction(final SymbolStruct var, final FunctionStruct val) {
 		lexicalFunctionBindings.put(var, val);
 	}
@@ -207,37 +190,19 @@ public class Environment extends StandardObjectStruct {
 		lexicalFunctionBindings.remove(var);
 	}
 
-	public boolean hasLexicalBinding(final SymbolStruct var) {
-		return lexicalBindings.stream()
-		                      .anyMatch(e -> e.getVar().eq(var));
+	public FunctionStruct getFunction(final SymbolStruct var) {
+		FunctionStruct function = getLexicalFunctionBinding(var);
+		if (function == null) {
+			function = var.getFunction();
+		}
+		return function;
 	}
 
-	public void addLexicalBinding(final Binding environmentBinding) {
-		lexicalBindings.add(environmentBinding);
-	}
-
-	public boolean hasDynamicBinding(final SymbolStruct var) {
-		return dynamicBindings.stream()
-		                      .anyMatch(e -> e.getVar().eq(var));
-	}
-
-	public void addDynamicBinding(final Binding environmentBinding) {
-		dynamicBindings.add(environmentBinding);
-	}
-
-	public boolean hasSymbolMacroBinding(final SymbolStruct var) {
-		return symbolMacroBindings.stream()
-		                          .anyMatch(e -> e.getVar().eq(var));
-	}
-
-	public SymbolMacroBinding getSymbolMacroBinding(final SymbolStruct var) {
-		return symbolMacroBindings.stream()
-		                          .filter(e -> e.getVar().eq(var))
-		                          .findAny()
-		                          .orElse(null);
-	}
-
-	public void addSymbolMacroBinding(final SymbolMacroBinding symbolMacroBinding) {
-		symbolMacroBindings.add(symbolMacroBinding);
+	public void setFunction(final SymbolStruct var, final FunctionStruct val) {
+		if (hasLexicalFunctionBinding(var)) {
+			bindFunction(var, val);
+		} else {
+			var.setFunction(val);
+		}
 	}
 }

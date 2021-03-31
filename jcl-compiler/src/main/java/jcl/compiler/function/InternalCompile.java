@@ -278,11 +278,8 @@ public final class InternalCompile {
 			                  GenerationConstants.ENVIRONMENT_DESC);
 			mv.visitVarInsn(Opcodes.ASTORE, environmentStore);
 
-			final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
-
 			final Environment globalEnvironment = new Environment(Environment.NULL);
 
-			environmentDeque.addFirst(globalEnvironment);
 			//
 			// CODE GENERATION FIRST - END
 			//
@@ -316,7 +313,6 @@ public final class InternalCompile {
 			//
 			// CODE GENERATION LAST - START
 			//
-			environmentDeque.removeFirst();
 
 			mv.visitInsn(Opcodes.RETURN);
 

@@ -17,8 +17,6 @@ import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -27,9 +25,9 @@ import org.objectweb.asm.Opcodes;
  * {@link SymbolStruct}s to their scoped {@link LispStruct} values occurs after all the forms have had their code
  * generated. This ensures that no variables are affected nor dependent on the definition of others.
  */
-public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
+public class LetStruct extends BindingEnvironmentStruct {
 
-	public LetStruct(final List<LetVar> vars, final PrognStruct forms, final Environment letEnvironment) {
+	public LetStruct(final List<BindingVar> vars, final PrognStruct forms, final Environment letEnvironment) {
 		super("let", vars, forms, letEnvironment);
 	}
 
@@ -37,14 +35,14 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 	 * {@inheritDoc}
 	 * Generation method for {@link LetStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Generating each of the {@link LetStruct.LetVar#var} and {@link LetStruct.LetVar#initForm} values</li>
+	 * <li>Generating each of the {@link BindingVar#var} and {@link BindingVar#initForm} values</li>
 	 * <li>Collect all generated symbol and form stack locations for lazily binding the values to the {@link
 	 * SymbolStruct}s</li>
-	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is true are binded via {@link
+	 * <li>Symbol bindings where {@link BindingVar#isSpecial} is true are binded via {@link
 	 * SymbolStruct#bindDynamicValue(LispStruct)}</li>
-	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is false are binded via {@link
+	 * <li>Symbol bindings where {@link BindingVar#isSpecial} is false are binded via {@link
 	 * SymbolStruct#bindLexicalValue(LispStruct)}</li>
-	 * <li>Symbol bindings where {@link LetStruct.LetVar#isSpecial} is false are also added to the {@link
+	 * <li>Symbol bindings where {@link BindingVar#isSpecial} is false are also added to the {@link
 	 * Environment#lexicalSymbolBindings} map for the new {@link Environment} created with the 'let'</li>
 	 * </ol>
 	 * As an example, it will transform {@code (let ((x 1)) x)} into the following Java code:
@@ -80,8 +78,6 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 	 * }
 	 * </pre>
 	 *
-	 * @param vars
-	 * 		the {@link LetStruct.LetVar}s used to generate the {@link SymbolStruct} binding code
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
@@ -96,7 +92,7 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 	 * 		the {@link Set} of dynamic {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 */
 	@Override
-	protected void generateBindings(final List<LetStruct.LetVar> vars, final GeneratorState generatorState,
+	protected void generateBindings(final GeneratorState generatorState,
 	                                final JavaMethodBuilder methodBuilder, final int environmentArgStore,
 	                                final int environmentSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                final Set<Integer> dynamicSymbolStoresToUnbind) {
@@ -108,7 +104,7 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 		final Map<Integer, Integer> lexicalSymbolStoresToBind = new LinkedHashMap<>();
 		final Map<Integer, Integer> dynamicSymbolStoresToBind = new LinkedHashMap<>();
 
-		for (final LetStruct.LetVar var : vars) {
+		for (final BindingVar var : vars) {
 			final SymbolStruct symbolVar = var.getVar();
 			final int symbolStore = methodBuilder.getNextAvailableStore();
 			CodeGenerators.generateSymbol(symbolVar, generatorState, packageStore, symbolStore);
@@ -175,11 +171,12 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 			mv.visitInsn(Opcodes.POP);
 		}
 	}
+
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder("(LET (");
 
-		final List<LetStruct.LetVar> vars = getVars();
+		final List<BindingVar> vars = getVars();
 		final String varsPrinted =
 				vars.stream()
 				    .map(var -> '(' + var.getVar().toString() + ' ' + var.getInitForm().toString() + ')')
@@ -197,13 +194,5 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 		builder.append(')');
 
 		return builder.toString();
-	}
-
-	@Getter
-	@AllArgsConstructor
-	public static class LetVar {
-		private final SymbolStruct var;
-		private final LispStruct initForm;
-		private final boolean isSpecial;
 	}
 }

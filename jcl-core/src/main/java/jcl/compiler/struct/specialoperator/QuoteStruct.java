@@ -19,9 +19,11 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class QuoteStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct object;
@@ -29,10 +31,6 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 	public QuoteStruct(final LispStruct object) {
 		super("quote");
 		this.object = object;
-	}
-
-	public LispStruct getObject() {
-		return object;
 	}
 
 	@Override

@@ -16,16 +16,15 @@ import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
+import lombok.experimental.UtilityClass;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+@UtilityClass
 public final class CodeGenerators {
-
-	private CodeGenerators() {
-	}
 
 	public static <TYPE> String getConstructorDescription(final Class<TYPE> clazz, final Class<?>... parameterTypes) {
 		final Constructor<TYPE> constructor = getConstructor(clazz, parameterTypes);

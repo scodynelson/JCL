@@ -4,15 +4,12 @@
 
 package jcl.compiler.struct.specialoperator.declare;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class JavaClassNameDeclarationStruct implements DeclarationStruct {
 
 	private final String className;
-
-	public JavaClassNameDeclarationStruct(final String className) {
-		this.className = className;
-	}
-
-	public String getClassName() {
-		return className;
-	}
 }

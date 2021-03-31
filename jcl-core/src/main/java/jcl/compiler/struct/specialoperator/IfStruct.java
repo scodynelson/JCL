@@ -11,16 +11,16 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class IfStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct testForm;
-
 	private final LispStruct thenForm;
-
 	private final LispStruct elseForm;
 
 	public IfStruct(final LispStruct testForm, final LispStruct thenForm, final LispStruct elseForm) {
@@ -28,18 +28,6 @@ public class IfStruct extends CompilerSpecialOperatorStruct {
 		this.testForm = testForm;
 		this.thenForm = thenForm;
 		this.elseForm = elseForm;
-	}
-
-	public LispStruct getTestForm() {
-		return testForm;
-	}
-
-	public LispStruct getThenForm() {
-		return thenForm;
-	}
-
-	public LispStruct getElseForm() {
-		return elseForm;
 	}
 
 	/**

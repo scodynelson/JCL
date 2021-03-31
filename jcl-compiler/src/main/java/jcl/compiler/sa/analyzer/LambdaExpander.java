@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
@@ -21,7 +20,6 @@ import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.struct.specialoperator.declare.LispNameDeclarationStruct;
-import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -69,12 +67,6 @@ public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, lambdaEnvironment);
-
-		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.stream()
-		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(Binding::new)
-		                   .forEach(lambdaEnvironment::addDynamicBinding);
 
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 		final LispNameDeclarationStruct lispNameDeclarationStruct = declare.getLispNameDeclarationStruct();
@@ -137,6 +129,7 @@ public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 				= bodyForms.stream()
 				           .map(e -> FormAnalyzer.analyze(e, lambdaEnvironment))
 				           .collect(Collectors.toList());
-		return new LambdaStruct(className, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new LambdaStruct(className, parsedLambdaList, bodyProcessingResult.getDocString(),
+		                        new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 }

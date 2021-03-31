@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.environment.binding.Binding;
 import jcl.compiler.environment.binding.lambdalist.MacroLambdaList;
 import jcl.compiler.function.expanders.MacroFunctionExpander;
 import jcl.compiler.sa.FormAnalyzer;
@@ -24,7 +23,6 @@ import jcl.compiler.sa.analyzer.lambdalistparser.MacroLambdaListParser;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
-import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -83,12 +81,6 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
 		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, macroLambdaEnvironment);
 
-		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.stream()
-		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(Binding::new)
-		                   .forEach(macroLambdaEnvironment::addDynamicBinding);
-
 		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
 
 		// TODO: should go on this stack? or have another stack for macros?
@@ -140,6 +132,7 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 				= bodyForms.stream()
 				           .map(e -> FormAnalyzer.analyze(e, macroLambdaEnvironment))
 				           .collect(Collectors.toList());
-		return new MacroLambdaStruct(className, macroName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), macroLambdaEnvironment);
+		return new MacroLambdaStruct(className, macroName, parsedLambdaList, bodyProcessingResult.getDocString(),
+		                             new PrognStruct(analyzedBodyForms), macroLambdaEnvironment);
 	}
 }

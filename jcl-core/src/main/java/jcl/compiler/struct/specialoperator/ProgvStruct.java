@@ -19,18 +19,17 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class ProgvStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct vars;
-
 	private final LispStruct vals;
-
 	private final PrognStruct forms;
-
 	private final ProgvEnvironment progvEnvironment;
 
 	public ProgvStruct(final LispStruct vars, final LispStruct vals, final List<LispStruct> forms, final ProgvEnvironment progvEnvironment) {
@@ -39,22 +38,6 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 		this.vals = vals;
 		this.forms = new PrognStruct(forms);
 		this.progvEnvironment = progvEnvironment;
-	}
-
-	public LispStruct getVars() {
-		return vars;
-	}
-
-	public LispStruct getVals() {
-		return vals;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
-	}
-
-	public ProgvEnvironment getProgvEnvironment() {
-		return progvEnvironment;
 	}
 
 	/**

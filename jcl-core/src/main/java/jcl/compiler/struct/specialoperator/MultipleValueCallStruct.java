@@ -13,28 +13,21 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class MultipleValueCallStruct extends CompilerSpecialOperatorStruct {
 
 	private final CompilerFunctionStruct functionForm;
-
 	private final List<LispStruct> forms;
 
 	public MultipleValueCallStruct(final CompilerFunctionStruct functionForm, final List<LispStruct> forms) {
 		super("multipleValueCall");
 		this.functionForm = functionForm;
 		this.forms = forms;
-	}
-
-	public CompilerFunctionStruct getFunctionForm() {
-		return functionForm;
-	}
-
-	public List<LispStruct> getForms() {
-		return forms;
 	}
 
 	/**

@@ -10,7 +10,11 @@ import java.util.List;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
 	private final List<SpecialDeclarationStruct> specialDeclarations = new ArrayList<>();
@@ -21,26 +25,6 @@ public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
 	public DeclareStruct() {
 		super("declare");
-	}
-
-	public List<SpecialDeclarationStruct> getSpecialDeclarations() {
-		return specialDeclarations;
-	}
-
-	public JavaClassNameDeclarationStruct getJavaClassNameDeclaration() {
-		return javaClassNameDeclaration;
-	}
-
-	public void setJavaClassNameDeclaration(final JavaClassNameDeclarationStruct javaClassNameDeclaration) {
-		this.javaClassNameDeclaration = javaClassNameDeclaration;
-	}
-
-	public LispNameDeclarationStruct getLispNameDeclarationStruct() {
-		return lispNameDeclarationStruct;
-	}
-
-	public void setLispNameDeclarationStruct(final LispNameDeclarationStruct lispNameDeclarationStruct) {
-		this.lispNameDeclarationStruct = lispNameDeclarationStruct;
 	}
 
 	@Override

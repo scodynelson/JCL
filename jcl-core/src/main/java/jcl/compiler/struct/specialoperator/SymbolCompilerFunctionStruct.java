@@ -10,20 +10,16 @@ import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.FunctionStruct;
 import jcl.lang.SymbolStruct;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
+@AllArgsConstructor
 public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 
 	private final SymbolStruct functionSymbol;
-
-	public SymbolCompilerFunctionStruct(final SymbolStruct functionSymbol) {
-		this.functionSymbol = functionSymbol;
-	}
-
-	public SymbolStruct getFunctionSymbol() {
-		return functionSymbol;
-	}
 
 	/**
 	 * {@inheritDoc}

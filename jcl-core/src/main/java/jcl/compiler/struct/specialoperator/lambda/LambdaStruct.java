@@ -28,6 +28,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
+import lombok.Getter;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -38,16 +39,13 @@ import org.objectweb.asm.Opcodes;
  * LambdaStruct#className} value, the supported parameter methods for the {@link LambdaStruct#lambdaListBindings}
  * values, and the execution body containing the {@link LambdaStruct#forms} values.
  */
+@Getter
 public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final String className;
-
 	private final OrdinaryLambdaList lambdaListBindings;
-
 	private final StringStruct docString;
-
 	private final PrognStruct forms;
-
 	private final Environment lambdaEnvironment;
 
 	public LambdaStruct(final String className, final OrdinaryLambdaList lambdaListBindings, final StringStruct docString,
@@ -58,26 +56,6 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		this.docString = docString;
 		this.forms = forms;
 		this.lambdaEnvironment = lambdaEnvironment;
-	}
-
-	public String getClassName() {
-		return className;
-	}
-
-	public OrdinaryLambdaList getLambdaListBindings() {
-		return lambdaListBindings;
-	}
-
-	public StringStruct getDocString() {
-		return docString;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
-	}
-
-	public Environment getLambdaEnvironment() {
-		return lambdaEnvironment;
 	}
 
 	@Override

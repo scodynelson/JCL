@@ -12,27 +12,20 @@ import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 
 	private final SymbolStruct name;
-
 	private final LispStruct result;
 
 	public ReturnFromStruct(final SymbolStruct name, final LispStruct result) {
 		super("returnFrom");
 		this.name = name;
 		this.result = result;
-	}
-
-	public SymbolStruct getName() {
-		return name;
-	}
-
-	public LispStruct getResult() {
-		return result;
 	}
 
 	@Override

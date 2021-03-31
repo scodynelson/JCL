@@ -8,33 +8,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class OrdinaryLambdaList {
 
 	private final List<RequiredParameter> requiredBindings;
-
 	private final List<OptionalParameter> optionalBindings;
-
 	private final RestParameter restBinding;
-
 	private final List<KeyParameter> keyBindings;
-
 	private final List<AuxParameter> auxBindings;
-
 	private final boolean allowOtherKeys;
-
-	public OrdinaryLambdaList(final List<RequiredParameter> requiredBindings,
-	                          final List<OptionalParameter> optionalBindings,
-	                          final RestParameter restBinding,
-	                          final List<KeyParameter> keyBindings,
-	                          final List<AuxParameter> auxBindings,
-	                          final boolean allowOtherKeys) {
-		this.requiredBindings = requiredBindings;
-		this.optionalBindings = optionalBindings;
-		this.restBinding = restBinding;
-		this.keyBindings = keyBindings;
-		this.auxBindings = auxBindings;
-		this.allowOtherKeys = allowOtherKeys;
-	}
 
 	private OrdinaryLambdaList(final Builder builder) {
 		requiredBindings = builder.requiredBindings;
@@ -43,30 +29,6 @@ public class OrdinaryLambdaList {
 		keyBindings = builder.keyBindings;
 		auxBindings = builder.auxBindings;
 		allowOtherKeys = builder.allowOtherKeys;
-	}
-
-	public List<RequiredParameter> getRequiredBindings() {
-		return requiredBindings;
-	}
-
-	public List<OptionalParameter> getOptionalBindings() {
-		return optionalBindings;
-	}
-
-	public RestParameter getRestBinding() {
-		return restBinding;
-	}
-
-	public List<KeyParameter> getKeyBindings() {
-		return keyBindings;
-	}
-
-	public List<AuxParameter> getAuxBindings() {
-		return auxBindings;
-	}
-
-	public boolean isAllowOtherKeys() {
-		return allowOtherKeys;
 	}
 
 	public static Builder builder() {

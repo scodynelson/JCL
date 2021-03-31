@@ -13,19 +13,14 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
+import lombok.Getter;
 
+@Getter
 public class KeyParameter extends Parameter {
 
 	private final SymbolStruct keyName;
-
 	private final SuppliedPParameter suppliedPBinding;
-
-	public KeyParameter(final SymbolStruct var, final LispStruct initForm, final SymbolStruct keyName,
-	                    final SuppliedPParameter suppliedPBinding) {
-		this(var, initForm, false, keyName, suppliedPBinding);
-	}
 
 	public KeyParameter(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial,
 	                    final SymbolStruct keyName, final SuppliedPParameter suppliedPBinding) {
@@ -40,17 +35,9 @@ public class KeyParameter extends Parameter {
 	public KeyParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                    final LispStruct initForm, final boolean isSpecial, final SymbolStruct keyName,
 	                    final SuppliedPParameter suppliedPBinding) {
-		super(var, destructuringForm, CommonLispSymbols.T, initForm, isSpecial);
+		super(var, destructuringForm, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
-	}
-
-	public SymbolStruct getKeyName() {
-		return keyName;
-	}
-
-	public SuppliedPParameter getSuppliedPBinding() {
-		return suppliedPBinding;
 	}
 
 	public static Builder builder(final PackageStruct aPackage, final String symbolName) {

@@ -11,26 +11,23 @@ import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 
+@Getter
 public class LocallyStruct extends CompilerSpecialOperatorStruct {
 
+	private final List<SpecialDeclarationStruct> specials;
 	private final PrognStruct forms;
-
 	private final Environment locallyEnvironment;
 
-	public LocallyStruct(final List<LispStruct> forms, final Environment locallyEnvironment) {
+	public LocallyStruct(final List<SpecialDeclarationStruct> specials, final List<LispStruct> forms,
+	                     final Environment locallyEnvironment) {
 		super("locally");
+		this.specials = specials;
 		this.forms = new PrognStruct(forms);
 		this.locallyEnvironment = locallyEnvironment;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
-	}
-
-	public Environment getLocallyEnvironment() {
-		return locallyEnvironment;
 	}
 
 	/**

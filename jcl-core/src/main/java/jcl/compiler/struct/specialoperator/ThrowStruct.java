@@ -10,27 +10,20 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class ThrowStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct catchTag;
-
 	private final LispStruct resultForm;
 
 	public ThrowStruct(final LispStruct catchTag, final LispStruct resultForm) {
 		super("throw");
 		this.catchTag = catchTag;
 		this.resultForm = resultForm;
-	}
-
-	public LispStruct getCatchTag() {
-		return catchTag;
-	}
-
-	public LispStruct getResultForm() {
-		return resultForm;
 	}
 
 	/**

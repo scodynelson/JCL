@@ -40,7 +40,7 @@ public final class LabelsExpander extends InnerLambdaExpander {
 
 			final List<InnerLambdaStruct.InnerLambdaVar> vars
 					= getVars(innerLambdas, innerLambdaEnvironment, declare, functionNames);
-			return getInnerLambda(vars, innerLambdaEnvironment, bodyProcessingResult, declare);
+			return getInnerLambda(vars, innerLambdaEnvironment, bodyProcessingResult);
 		} finally {
 			StackUtils.popX(functionNameStack, functionNames.size());
 		}

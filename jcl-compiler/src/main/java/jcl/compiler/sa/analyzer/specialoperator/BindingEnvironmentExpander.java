@@ -7,7 +7,6 @@ package jcl.compiler.sa.analyzer.specialoperator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
@@ -66,12 +65,6 @@ abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<Bindi
 				            .map(e -> getVar(e, declare, bindingEnvironment))
 				            .collect(Collectors.toList());
 
-//		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-//		specialDeclarations.stream()
-//		                   .map(SpecialDeclarationStruct::getVar)
-//		                   .map(Binding::new)
-//		                   .forEach(bindingEnvironment::addDynamicBinding);
-
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
@@ -122,7 +115,7 @@ abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<Bindi
 		final boolean isSpecial = declare.getSpecialDeclarations()
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
-		                                 .anyMatch(Predicate.isEqual(var));
+		                                 .anyMatch(var::eq);
 
 		final Binding binding = new Binding(var);
 		if (isSpecial) {

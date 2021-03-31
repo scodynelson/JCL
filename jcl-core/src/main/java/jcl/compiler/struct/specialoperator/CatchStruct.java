@@ -12,28 +12,21 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class CatchStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct catchTag;
-
 	private final PrognStruct forms;
 
 	public CatchStruct(final LispStruct catchTag, final List<LispStruct> forms) {
 		super("catch");
 		this.catchTag = catchTag;
 		this.forms = new PrognStruct(forms);
-	}
-
-	public LispStruct getCatchTag() {
-		return catchTag;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
 	}
 
 	/**

@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class NumberUtils {
+public final class NumberUtils {
 
 	public static BigDecimal bigDecimalValue(final double d) {
 		// NOTE: Using 'String.valueOf' since the BigDecimal#valueOf(double) does some floating point rounding crap that

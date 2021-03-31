@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
 
-public final class StackUtils {
+import lombok.experimental.UtilityClass;
 
-	private StackUtils() {
-	}
+@UtilityClass
+public final class StackUtils {
 
 	public static <T> Iterable<T> pushAll(final Stack<T> stack, final Iterable<T> items) {
 		for (final T item : items) {

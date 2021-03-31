@@ -11,16 +11,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
+import lombok.Getter;
 
+@Getter
 public class OptionalParameter extends Parameter {
 
 	private final SuppliedPParameter suppliedPBinding;
-
-	public OptionalParameter(final SymbolStruct var, final LispStruct initForm, final SuppliedPParameter suppliedPBinding) {
-		this(var, initForm, false, suppliedPBinding);
-	}
 
 	public OptionalParameter(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial,
 	                         final SuppliedPParameter suppliedPBinding) {
@@ -34,12 +31,8 @@ public class OptionalParameter extends Parameter {
 
 	public OptionalParameter(final SymbolStruct var, final DestructuringLambdaList destructuringForm,
 	                         final LispStruct initForm, final boolean isSpecial, final SuppliedPParameter suppliedPBinding) {
-		super(var, destructuringForm, CommonLispSymbols.T, initForm, isSpecial);
+		super(var, destructuringForm, initForm, isSpecial);
 		this.suppliedPBinding = suppliedPBinding;
-	}
-
-	public SuppliedPParameter getSuppliedPBinding() {
-		return suppliedPBinding;
 	}
 
 	public static Builder builder(final PackageStruct aPackage, final String symbolName) {

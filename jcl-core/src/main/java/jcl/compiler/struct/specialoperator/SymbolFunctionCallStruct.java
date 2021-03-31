@@ -13,18 +13,18 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * Class to perform the generation of the code for anonymous lambda function calls, such as '(+ 1)'.
  */
+@Getter
 public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 	private final SymbolCompilerFunctionStruct symbolCompilerFunction;
-
 	private final List<LispStruct> arguments;
-
 	private final boolean isRecursiveCall;
 
 	public SymbolFunctionCallStruct(final SymbolCompilerFunctionStruct symbolCompilerFunction, final List<LispStruct> arguments,
@@ -33,18 +33,6 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 		this.symbolCompilerFunction = symbolCompilerFunction;
 		this.arguments = arguments;
 		this.isRecursiveCall = isRecursiveCall;
-	}
-
-	public SymbolCompilerFunctionStruct getSymbolCompilerFunction() {
-		return symbolCompilerFunction;
-	}
-
-	public List<LispStruct> getArguments() {
-		return arguments;
-	}
-
-	public boolean isRecursiveCall() {
-		return isRecursiveCall;
 	}
 
 	@Override

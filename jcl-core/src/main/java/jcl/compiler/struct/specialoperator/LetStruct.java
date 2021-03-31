@@ -17,6 +17,8 @@ import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -197,30 +199,11 @@ public class LetStruct extends BindingEnvironmentStruct<LetStruct.LetVar> {
 		return builder.toString();
 	}
 
+	@Getter
+	@AllArgsConstructor
 	public static class LetVar {
-
 		private final SymbolStruct var;
-
 		private final LispStruct initForm;
-
 		private final boolean isSpecial;
-
-		public LetVar(final SymbolStruct var, final LispStruct initForm, final boolean isSpecial) {
-			this.var = var;
-			this.initForm = initForm;
-			this.isSpecial = isSpecial;
-		}
-
-		public SymbolStruct getVar() {
-			return var;
-		}
-
-		public LispStruct getInitForm() {
-			return initForm;
-		}
-
-		public boolean isSpecial() {
-			return isSpecial;
-		}
 	}
 }

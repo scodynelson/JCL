@@ -10,10 +10,13 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.classes.StandardObjectStruct;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct {
 
 	/**
@@ -27,16 +30,6 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 	 * ClassWriter#visitMethod(int, String, String, String, String[])}.
 	 */
 	private final String methodNamePrefix;
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param methodNamePrefix
-	 * 		the {@link String} to be used as the method name prefix when creating the new method
-	 */
-	protected CompilerSpecialOperatorStruct(final String methodNamePrefix) {
-		this.methodNamePrefix = methodNamePrefix;
-	}
 
 	/**
 	 * Generation method for {@link CompilerSpecialOperatorStruct}s that create a new method to consolidate their

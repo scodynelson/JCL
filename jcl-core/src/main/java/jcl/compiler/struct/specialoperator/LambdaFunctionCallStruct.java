@@ -12,30 +12,23 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
  * Class to perform the generation of the code for anonymous lambda function calls, such as '((lambda ()))'.
  */
+@Getter
 public class LambdaFunctionCallStruct extends CompilerSpecialOperatorStruct {
 
 	private final LambdaCompilerFunctionStruct lambdaCompilerFunction;
-
 	private final List<LispStruct> arguments;
 
 	public LambdaFunctionCallStruct(final LambdaCompilerFunctionStruct lambdaCompilerFunction, final List<LispStruct> arguments) {
 		super("lambdaFunctionCall");
 		this.lambdaCompilerFunction = lambdaCompilerFunction;
 		this.arguments = arguments;
-	}
-
-	public LambdaCompilerFunctionStruct getLambdaCompilerFunction() {
-		return lambdaCompilerFunction;
-	}
-
-	public List<LispStruct> getArguments() {
-		return arguments;
 	}
 
 	/**

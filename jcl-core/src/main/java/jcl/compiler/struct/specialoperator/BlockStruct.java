@@ -14,28 +14,21 @@ import jcl.compiler.icg.generator.ReturnFromException;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class BlockStruct extends CompilerSpecialOperatorStruct {
 
 	private final SymbolStruct name;
-
 	private final PrognStruct forms;
 
 	public BlockStruct(final SymbolStruct name, final List<LispStruct> forms) {
 		super("block");
 		this.name = name;
 		this.forms = new PrognStruct(forms);
-	}
-
-	public SymbolStruct getName() {
-		return name;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
 	}
 
 	/**

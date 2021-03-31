@@ -13,9 +13,11 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class PrognStruct extends CompilerSpecialOperatorStruct {
 
 	private final List<LispStruct> forms;
@@ -23,10 +25,6 @@ public class PrognStruct extends CompilerSpecialOperatorStruct {
 	public PrognStruct(final List<LispStruct> forms) {
 		super("progn");
 		this.forms = forms;
-	}
-
-	public List<LispStruct> getForms() {
-		return forms;
 	}
 
 	@Override

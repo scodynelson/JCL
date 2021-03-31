@@ -10,28 +10,21 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct protectedForm;
-
 	private final PrognStruct cleanupForms;
 
 	public UnwindProtectStruct(final LispStruct protectedForm, final List<LispStruct> cleanupForms) {
 		super("unwindProtect");
 		this.protectedForm = protectedForm;
 		this.cleanupForms = new PrognStruct(cleanupForms);
-	}
-
-	public LispStruct getProtectedForm() {
-		return protectedForm;
-	}
-
-	public PrognStruct getCleanupForms() {
-		return cleanupForms;
 	}
 
 	/**

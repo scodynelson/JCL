@@ -14,9 +14,11 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.icg.generator.GoException;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruct {
 
 	private final T tag;
@@ -24,10 +26,6 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	protected GoStruct(final T tag) {
 		super("go");
 		this.tag = tag;
-	}
-
-	public T getTag() {
-		return tag;
 	}
 
 	@Override
@@ -54,7 +52,7 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	 * Generation method for {@link GoStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the appropriate tag index by searching the {@link GeneratorState#tagbodyLabelDeque} for the
-	 * {@link GeneratorState.TagbodyLabel#getTag()} matching the provided {@link GoStruct}</li>
+	 * {@link GeneratorState.TagbodyLabel#tag} matching the provided {@link GoStruct}</li>
 	 * <li>Creating and throwing a new {@link GoException} with the {@code int} tag index value</li>
 	 * </ol>
 	 * As an example, it will transform {@code (go 1)} into the following Java code:

@@ -4,18 +4,23 @@
 
 package jcl.compiler.icg.generator;
 
+import java.io.Serial;
+
 import jcl.lang.LispStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import lombok.Getter;
 
 /**
  * Exception used to facilitate the catch/throw dynamic control-flow transfer-of-control (ToC) statements.
  */
+@Getter
 public class ThrowException extends ProgramErrorException {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	private static final long serialVersionUID = -6556966147073549239L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The {@link LispStruct} tag of the 'catch' generated that matches this exception.
@@ -39,23 +44,5 @@ public class ThrowException extends ProgramErrorException {
 		super("Tag: " + catchTag + " : Result: " + resultForm);
 		this.catchTag = catchTag;
 		this.resultForm = resultForm;
-	}
-
-	/**
-	 * Getter for the values of the {@link #catchTag} property.
-	 *
-	 * @return the value of the {@link #catchTag} property
-	 */
-	public LispStruct getCatchTag() {
-		return catchTag;
-	}
-
-	/**
-	 * Getter for the values of the {@link #resultForm} property.
-	 *
-	 * @return the value of the {@link #resultForm} property
-	 */
-	public LispStruct getResultForm() {
-		return resultForm;
 	}
 }

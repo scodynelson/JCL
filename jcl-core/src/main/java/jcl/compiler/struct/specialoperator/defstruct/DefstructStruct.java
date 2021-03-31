@@ -18,21 +18,19 @@ import jcl.lang.NILStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
+import lombok.Getter;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+@Getter
 public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 	private final SymbolStruct structureSymbol;
-
 	private final StructureClassStruct includeStructureClass;
-
 	private final SymbolStruct defaultConstructorSymbol;
-
 	private final SymbolStruct printerSymbol;
-
 	private final List<SymbolStruct> slots;
 
 	public DefstructStruct(final SymbolStruct structureSymbol, final StructureClassStruct includeStructureClass,
@@ -44,26 +42,6 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
 		this.printerSymbol = printerSymbol;
 		this.slots = slots;
-	}
-
-	public SymbolStruct getStructureSymbol() {
-		return structureSymbol;
-	}
-
-	public StructureClassStruct getIncludeStructureClass() {
-		return includeStructureClass;
-	}
-
-	public SymbolStruct getDefaultConstructorSymbol() {
-		return defaultConstructorSymbol;
-	}
-
-	public SymbolStruct getPrinterSymbol() {
-		return printerSymbol;
-	}
-
-	public List<SymbolStruct> getSlots() {
-		return slots;
 	}
 
 	@Override

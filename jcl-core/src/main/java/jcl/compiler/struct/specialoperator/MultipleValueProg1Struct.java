@@ -10,27 +10,20 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class MultipleValueProg1Struct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct firstForm;
-
 	private final PrognStruct forms;
 
 	public MultipleValueProg1Struct(final LispStruct firstForm, final List<LispStruct> forms) {
 		super("multipleValueProg1");
 		this.firstForm = firstForm;
 		this.forms = new PrognStruct(forms);
-	}
-
-	public LispStruct getFirstForm() {
-		return firstForm;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
 	}
 
 	/**

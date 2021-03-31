@@ -26,7 +26,7 @@ subprojects {
 		sourceCompatibility = JavaVersion.VERSION_15
 		targetCompatibility = JavaVersion.VERSION_15
 		withSourcesJar()
-		withJavadocJar()
+//		withJavadocJar()
 	}
 
 	tasks.named<JavaCompile>("compileJava") {

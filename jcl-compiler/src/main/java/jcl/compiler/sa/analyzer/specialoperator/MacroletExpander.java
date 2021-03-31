@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import jcl.compiler.StackUtils;
@@ -83,12 +82,6 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 					                   .map(e -> getMacroletVar(e, declare, macroletEnvironment))
 					                   .collect(Collectors.toList());
 
-			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-			specialDeclarations.stream()
-			                   .map(SpecialDeclarationStruct::getVar)
-			                   .map(Binding::new)
-			                   .forEach(macroletEnvironment::addDynamicBinding);
-
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
 					= bodyForms.stream()
@@ -139,9 +132,9 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 		final boolean isSpecial = declare.getSpecialDeclarations()
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
-		                                 .anyMatch(Predicate.isEqual(functionName));
+		                                 .anyMatch(functionName::eq);
 
-		final Binding binding = new Binding(functionName, CommonLispSymbols.T);
+		final Binding binding = new Binding(functionName);
 		if (isSpecial) {
 			macroletEnvironment.addDynamicBinding(binding);
 		} else {

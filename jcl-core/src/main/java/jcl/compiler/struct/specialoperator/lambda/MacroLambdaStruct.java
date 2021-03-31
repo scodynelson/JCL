@@ -46,15 +46,10 @@ import org.objectweb.asm.Opcodes;
 public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private final String className;
-
 	private final SymbolStruct macroName;
-
 	private final MacroLambdaList lambdaListBindings;
-
 	private final StringStruct docString;
-
 	private final PrognStruct forms;
-
 	private final Environment lambdaEnvironment;
 
 	public MacroLambdaStruct(final String className, final SymbolStruct macroName, final MacroLambdaList lambdaListBindings,
@@ -66,30 +61,6 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		this.docString = docString;
 		this.forms = forms;
 		this.lambdaEnvironment = lambdaEnvironment;
-	}
-
-	public String getClassName() {
-		return className;
-	}
-
-	public SymbolStruct getMacroName() {
-		return macroName;
-	}
-
-	public MacroLambdaList getLambdaListBindings() {
-		return lambdaListBindings;
-	}
-
-	public StringStruct getDocString() {
-		return docString;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
-	}
-
-	public Environment getLambdaEnvironment() {
-		return lambdaEnvironment;
 	}
 
 	/**

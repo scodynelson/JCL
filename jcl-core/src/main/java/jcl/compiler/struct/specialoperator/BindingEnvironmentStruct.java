@@ -15,16 +15,16 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.SymbolStruct;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperatorStruct {
 
 	private final List<V> vars;
-
 	private final PrognStruct forms;
-
 	private final Environment environment;
 
 	protected BindingEnvironmentStruct(final String methodNamePrefix,
@@ -33,18 +33,6 @@ public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperato
 		this.vars = vars;
 		this.forms = forms;
 		this.environment = environment;
-	}
-
-	public List<V> getVars() {
-		return vars;
-	}
-
-	public PrognStruct getForms() {
-		return forms;
-	}
-
-	public Environment getEnvironment() {
-		return environment;
 	}
 
 	/**

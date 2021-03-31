@@ -11,7 +11,7 @@ import lombok.experimental.UtilityClass;
  */
 @SuppressWarnings("all")
 @UtilityClass
-public class CodePointConstants {
+public final class CodePointConstants {
 
 	// Integer/Character Standard-Char Constants
 

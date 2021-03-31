@@ -20,10 +20,12 @@ import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
+import lombok.Getter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 
 	private final Map<GoStruct<?>, PrognStruct> tagbodyForms;
@@ -31,10 +33,6 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 	public TagbodyStruct(final Map<GoStruct<?>, PrognStruct> tagbodyForms) {
 		super("tagbody");
 		this.tagbodyForms = tagbodyForms;
-	}
-
-	public Map<GoStruct<?>, PrognStruct> getTagbodyForms() {
-		return tagbodyForms;
 	}
 
 	@Override

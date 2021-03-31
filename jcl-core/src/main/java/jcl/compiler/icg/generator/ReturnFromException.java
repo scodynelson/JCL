@@ -4,19 +4,24 @@
 
 package jcl.compiler.icg.generator;
 
+import java.io.Serial;
+
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
+import lombok.Getter;
 
 /**
  * Exception used to facilitate the block/return-from lexical control-flow transfer-of-control (ToC) statements.
  */
+@Getter
 public class ReturnFromException extends ProgramErrorException {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	private static final long serialVersionUID = -3468129416293653718L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The {@link SymbolStruct} name of the 'block' generated that matches this exception.
@@ -40,23 +45,5 @@ public class ReturnFromException extends ProgramErrorException {
 		super("Name: " + name + " : Result: " + result);
 		this.name = name;
 		this.result = result;
-	}
-
-	/**
-	 * Getter for the values of the {@link #name} property.
-	 *
-	 * @return the value of the {@link #name} property
-	 */
-	public SymbolStruct getName() {
-		return name;
-	}
-
-	/**
-	 * Getter for the values of the {@link #result} property.
-	 *
-	 * @return the value of the {@link #result} property
-	 */
-	public LispStruct getResult() {
-		return result;
 	}
 }

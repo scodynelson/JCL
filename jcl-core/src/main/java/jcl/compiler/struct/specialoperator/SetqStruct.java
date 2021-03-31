@@ -16,10 +16,12 @@ import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
-import org.objectweb.asm.Label;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@Getter
 public class SetqStruct extends CompilerSpecialOperatorStruct {
 
 	private final List<SetqPair> setqPairs;
@@ -27,10 +29,6 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	public SetqStruct(final List<SetqPair> setqPairs) {
 		super("setq");
 		this.setqPairs = setqPairs;
-	}
-
-	public List<SetqPair> getSetqPairs() {
-		return setqPairs;
 	}
 
 	@Override
@@ -183,23 +181,10 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 
+	@Getter
+	@AllArgsConstructor
 	public static class SetqPair {
-
 		private final SymbolStruct var;
-
 		private final LispStruct form;
-
-		public SetqPair(final SymbolStruct var, final LispStruct form) {
-			this.var = var;
-			this.form = form;
-		}
-
-		public SymbolStruct getVar() {
-			return var;
-		}
-
-		public LispStruct getForm() {
-			return form;
-		}
 	}
 }

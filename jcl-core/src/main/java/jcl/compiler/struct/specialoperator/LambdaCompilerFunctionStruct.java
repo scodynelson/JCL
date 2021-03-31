@@ -6,21 +6,17 @@ package jcl.compiler.struct.specialoperator;
 
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Class to perform the generation of the code for anonymous lambda function objects, such as '#'(lambda ())'.
  */
+@Getter
+@AllArgsConstructor
 public class LambdaCompilerFunctionStruct implements CompilerFunctionStruct {
 
 	private final LambdaStruct lambdaStruct;
-
-	public LambdaCompilerFunctionStruct(final LambdaStruct lambdaStruct) {
-		this.lambdaStruct = lambdaStruct;
-	}
-
-	public LambdaStruct getLambdaStruct() {
-		return lambdaStruct;
-	}
 
 	/**
 	 * {@inheritDoc}

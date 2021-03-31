@@ -44,7 +44,7 @@ public final class FletExpander extends InnerLambdaExpander {
 		try {
 			// Add function names AFTER analyzing the functions.
 			StackUtils.pushAll(functionNameStack, functionNames);
-			return getInnerLambda(vars, innerLambdaEnvironment, bodyProcessingResult, declare);
+			return getInnerLambda(vars, innerLambdaEnvironment, bodyProcessingResult);
 		} finally {
 			StackUtils.popX(functionNameStack, functionNames.size());
 		}

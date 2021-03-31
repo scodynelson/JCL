@@ -60,6 +60,6 @@ public final class LocallyExpander extends MacroFunctionExpander<LocallyStruct> 
 				           .map(e -> FormAnalyzer.analyze(e, locallyEnvironment))
 				           .collect(Collectors.toList());
 
-		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
+		return new LocallyStruct(specialDeclarations, analyzedBodyForms, locallyEnvironment);
 	}
 }

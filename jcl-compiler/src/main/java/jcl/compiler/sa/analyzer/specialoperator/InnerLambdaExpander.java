@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
@@ -99,14 +98,7 @@ abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStru
 
 	protected InnerLambdaStruct getInnerLambda(final List<InnerLambdaStruct.InnerLambdaVar> vars,
 	                                           final Environment innerLambdaEnvironment,
-	                                           final BodyProcessingResult bodyProcessingResult,
-	                                           final DeclareStruct declare) {
-
-		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.stream()
-		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(Binding::new)
-		                   .forEach(innerLambdaEnvironment::addDynamicBinding);
+	                                           final BodyProcessingResult bodyProcessingResult) {
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
@@ -153,7 +145,15 @@ abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStru
 		final boolean isSpecial = declare.getSpecialDeclarations()
 		                                 .stream()
 		                                 .map(SpecialDeclarationStruct::getVar)
-		                                 .anyMatch(Predicate.isEqual(functionName));
+		                                 .anyMatch(functionName::eq);
+
+		final Binding binding = new Binding(functionName);
+		if (isSpecial) {
+			environment.addDynamicBinding(binding);
+		} else {
+			environment.addLexicalBinding(binding);
+		}
+
 		return new InnerLambdaStruct.InnerLambdaVar(functionName, functionInitForm, isSpecial);
 	}
 

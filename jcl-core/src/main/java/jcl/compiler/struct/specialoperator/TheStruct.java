@@ -8,25 +8,18 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import lombok.Getter;
 
+@Getter
 public class TheStruct extends CompilerSpecialOperatorStruct {
 
 	private final LispStruct valueType;
-
 	private final LispStruct form;
 
 	public TheStruct(final LispStruct valueType, final LispStruct form) {
 		super("the");
 		this.valueType = valueType;
 		this.form = form;
-	}
-
-	public LispStruct getValueType() {
-		return valueType;
-	}
-
-	public LispStruct getForm() {
-		return form;
 	}
 
 	/**

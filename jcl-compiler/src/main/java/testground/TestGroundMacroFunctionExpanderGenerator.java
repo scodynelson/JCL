@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
@@ -18,7 +19,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.compiler.function.Closure;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
@@ -33,8 +33,8 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 		this(null);
 	}
 
-	protected TestGroundMacroFunctionExpanderGenerator(final Closure closure) {
-		super("DocumentationString", closure);
+	protected TestGroundMacroFunctionExpanderGenerator(final Environment environment) {
+		super("DocumentationString", environment);
 		initLambdaListBindings();
 	}
 
@@ -156,12 +156,12 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	}
 
 	@Override
-	protected LispStruct internalApply(final Closure currentClosure) {
+	protected LispStruct internalApply(final Environment currentEnvironment) {
 		return CharacterStruct.toLispCharacter(97);
 	}
 
 	@Override
-	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct symbolBinding) {
+	protected LispStruct getInitForm(final Environment currentEnvironment, final SymbolStruct symbolBinding) {
 
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();

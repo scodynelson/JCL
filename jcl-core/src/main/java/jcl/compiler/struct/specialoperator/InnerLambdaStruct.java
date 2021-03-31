@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -59,14 +58,14 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * {@inheritDoc}
 	 * Generation method for {@link InnerLambdaStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Retrieving the {@link List} of function bindings from the {@link Closure} parameter if the parameter is not
+	 * <li>Retrieving the {@link List} of function bindings from the {@link Environment} parameter if the parameter is not
 	 * null</li>
 	 * <li>Generating each of the {@link InnerLambdaStruct.InnerLambdaVar#var} and {@link
 	 * InnerLambdaStruct.InnerLambdaVar#initForm} values</li>
 	 * <li>Collect all generated function and form stack locations for lazily binding the functions to the {@link
 	 * SymbolStruct}s</li>
-	 * <li>Binding functions via {@link SymbolStruct#bindFunction(FunctionStruct)} and adding functions to the {@link
-	 * Closure#functionBindings} map for the current {@link Closure}, if one exists</li>
+	 * <li>Binding functions via {@link Environment#bindFunction(SymbolStruct, FunctionStruct)} and adding functions to the {@link
+	 * Environment#lexicalFunctionBindings} map for the current {@link Environment}, if one exists</li>
 	 * <li>Temporarily pushing the {@link InnerLambdaStruct#lexicalEnvironment} onto the {@link
 	 * GeneratorState#environmentDeque} while generating the code for the {@link InnerLambdaStruct#forms} values</li>
 	 * <li>Generating the code to unbind the functions from {@link SymbolStruct}s as part of the error free
@@ -77,19 +76,14 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (flet ((foo () 1)) (foo))} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct innerLambda_1(Closure var1) {
-	 *      Map var2 = null;
-	 *      if(var1 != null) {
-	 *          var2 = var1.getFunctionBindings();
-	 *      }
+	 * private LispStruct innerLambda_1(Environment var1) {
+	 *      Map var2 = var1.getLexicalFunctionBindings();
 	 *
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var3.findSymbol("FOO").getSymbol();
 	 *      FLET_FOO_Lambda_123456789 var5 = new FLET_FOO_Lambda_123456789(var1);
 	 *      var4.bindFunction(var5);
-	 *      if(var2 != null) {
-	 *          var2.put(var4, var5);
-	 *      }
+	 *      var2.put(var4, var5);
 	 *
 	 *      LispStruct var11;
 	 *      try {
@@ -111,33 +105,24 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitInsn(Opcodes.ACONST_NULL);
-		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+		final int environmentFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 
-		final Label closureNullCheckIfEnd = new Label();
-
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
-
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.CLOSURE_NAME,
-		                   GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME,
-		                   GenerationConstants.CLOSURE_GET_FUNCTION_BINDINGS_METHOD_DESC,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_DESC,
 		                   false);
-		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
-
-		mv.visitLabel(closureNullCheckIfEnd);
+		mv.visitVarInsn(Opcodes.ASTORE, environmentFunctionBindingsStore);
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 
@@ -169,12 +154,7 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
 			                   true);
 
-			final Label closureFunctionBindingsNullCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
-			mv.visitJumpInsn(Opcodes.IFNULL, closureFunctionBindingsNullCheckIfEnd);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, environmentFunctionBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
@@ -183,8 +163,6 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
 			                   true);
 			mv.visitInsn(Opcodes.POP);
-
-			mv.visitLabel(closureFunctionBindingsNullCheckIfEnd);
 		}
 
 		final Label tryBlockStart = new Label();

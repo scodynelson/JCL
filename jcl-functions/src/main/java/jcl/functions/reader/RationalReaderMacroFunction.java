@@ -40,14 +40,17 @@ final class RationalReaderMacroFunction {
 
 		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
 
-		// alter the read-base
-		ReaderVariables.READ_BASE.setValue(IntegerStruct.toLispInteger(radix));
-
 		// read rational
-		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		final LispStruct token;
+		try {
+			// alter the read-base
+			ReaderVariables.READ_BASE.setValue(IntegerStruct.toLispInteger(radix));
 
-		// reset the read-base
-		ReaderVariables.READ_BASE.setValue(previousReadBase);
+			token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+		} finally {
+			// reset the read-base
+			ReaderVariables.READ_BASE.setValue(previousReadBase);
+		}
 
 		if (token instanceof RationalStruct) {
 			return token;

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -61,7 +60,7 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	 * {@inheritDoc}
 	 * Generation method for {@link SetqStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Retrieving the {@link List} of symbol bindings from the {@link Closure} parameter if the parameter is not
+	 * <li>Retrieving the {@link List} of symbol bindings from the {@link Environment} parameter if the parameter is not
 	 * null</li>
 	 * <li>Generating each of the {@link SetqStruct#setqPairs}, by performing the following operations:
 	 * <ol>
@@ -72,8 +71,7 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	 * <li>Generating the code to set the {@link SymbolStruct} value (lexical, dynamic, or regular) based on the
 	 * current {@link Environment} at the top of the {@link GeneratorState#environmentDeque}</li>
 	 * <li>Inserting the generated {@link SetqStruct.SetqPair#var} as the key and the {@link SetqStruct.SetqPair#form}
-	 * as the value as an entry in the {@link Closure#symbolBindings} {@link Map} if the {@link Closure} parameter is
-	 * not null</li>
+	 * as the value as an entry in the {@link Environment#lexicalSymbolBindings} {@link Map}</li>
 	 * </ol>
 	 * </li>
 	 * <li>Generating the code to load the last generated {@link SetqStruct.SetqPair#form} value to return</li>
@@ -81,25 +79,20 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (setq x 1)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct setq_1(Closure var1) {
-	 *      Map var2 = null;
-	 *      if(var1 != null) {
-	 *          var2 = var1.getSymbolBindings();
-	 *      }
+	 * private LispStruct setq_1(Environment var1) {
+	 *      Map var2 = var1.getLexicalSymbolBindings();
 	 *
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
 	 *      BigInteger var6 = new BigInteger("1");
-	 *      LispStruct var5 = new IntIntegerStruct(var6);
+	 *      LispStruct var5 = new IntegerStruct(var6);
 	 *      if(var5 instanceof ValuesStruct) {
 	 *          ValuesStruct var7 = (ValuesStruct)var5;
 	 *          var5 = var7.getPrimaryValue();
 	 *      }
 	 *
 	 *      var4.setValue(var5);
-	 *      if(var2 != null) {
-	 *          var2.put(var4, var5);
-	 *      }
+	 *      var2.put(var4, var5);
 	 *      return var5;
 	 * }
 	 * }
@@ -108,34 +101,24 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 *        {@link JavaMethodBuilder} used for building a Java method body
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitInsn(Opcodes.ACONST_NULL);
 		final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
-
-		final Label closureNullCheckIfEnd = new Label();
-
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
-		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
-
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.CLOSURE_NAME,
-		                   GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
-		                   GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC,
 		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
-
-		mv.visitLabel(closureNullCheckIfEnd);
 
 		final Environment currentEnvironment = generatorState.getCurrentEnvironment();
 
@@ -185,11 +168,6 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 				                   true);
 			}
 
-			final Label closureBindingsNullCheckIfEnd = new Label();
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
-			mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
-
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
@@ -199,8 +177,6 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
 			                   true);
 			mv.visitInsn(Opcodes.POP);
-
-			mv.visitLabel(closureBindingsNullCheckIfEnd);
 		}
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 

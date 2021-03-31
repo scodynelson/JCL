@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -88,7 +87,7 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 	 * As an rough example, it will transform {@code (tagbody)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct tagbody_1(Closure var1) {
+	 * private LispStruct tagbody_1(Environment var1) {
 	 *      while(true) {
 	 *          try {
 	 *              NILStruct var10000 = NILStruct.INSTANCE;
@@ -113,12 +112,12 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

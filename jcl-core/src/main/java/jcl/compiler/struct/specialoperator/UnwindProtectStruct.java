@@ -6,7 +6,6 @@ package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
@@ -49,13 +48,13 @@ public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (unwind-protect 1 2)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct unwindProtect_1(Closure var1) {*
+	 * private LispStruct unwindProtect_1(Environment var1) {*
 	 *      try {
 	 *          BigInteger var2 = new BigInteger("1");
-	 *          return new IntIntegerStruct(var2);
+	 *          return new IntegerStruct(var2);
 	 *      } finally {
 	 *          BigInteger var3 = new BigInteger("2");
-	 *          new IntIntegerStruct(var3);
+	 *          new IntegerStruct(var3);
 	 *      }
 	 * }
 	 * }
@@ -65,12 +64,12 @@ public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

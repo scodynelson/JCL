@@ -17,7 +17,7 @@ import jcl.compiler.sa.FormAnalyzer;
 import jcl.compiler.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.sa.analyzer.declare.DeclareExpander;
-import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
+import jcl.compiler.struct.specialoperator.BindingEnvironmentStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -28,18 +28,18 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 
-abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureCreationStruct<V>> {
+abstract class BindingEnvironmentExpander<V> extends MacroFunctionExpander<BindingEnvironmentStruct<V>> {
 
 	private final String expanderName;
 
-	protected ClosureCreationExpander(final String expanderName) {
+	protected BindingEnvironmentExpander(final String expanderName) {
 		this.expanderName = expanderName;
 	}
 
 	@Override
-	public ClosureCreationStruct<V> expand(final ListStruct form, final Environment environment) {
+	public BindingEnvironmentStruct<V> expand(final ListStruct form, final Environment environment) {
 		final Iterator<LispStruct> iterator = form.iterator();
-		iterator.next(); // Closure Expander SYMBOL
+		iterator.next(); // Binding Environment Expander SYMBOL
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException(expanderName + ": Incorrect number of arguments: 0. Expected at least 1 argument.");
@@ -51,7 +51,7 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 		}
 		final ListStruct parameters = (ListStruct) first;
 
-		final Environment closureEnvironment = new Environment(environment);
+		final Environment bindingEnvironment = new Environment(environment);
 
 		final List<LispStruct> forms = new ArrayList<>();
 		iterator.forEachRemaining(forms::add);
@@ -59,26 +59,26 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.analyze(forms);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(bodyProcessingResult.getDeclares());
-		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, closureEnvironment);
+		final DeclareStruct declare = DeclareExpander.INSTANCE.expand(fullDeclaration, bindingEnvironment);
 
 		final List<V> vars
 				= parameters.stream()
-				            .map(e -> getVar(e, declare, closureEnvironment))
+				            .map(e -> getVar(e, declare, bindingEnvironment))
 				            .collect(Collectors.toList());
 
-		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
-		specialDeclarations.stream()
-		                   .map(SpecialDeclarationStruct::getVar)
-		                   .map(Binding::new)
-		                   .forEach(closureEnvironment::addDynamicBinding);
+//		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+//		specialDeclarations.stream()
+//		                   .map(SpecialDeclarationStruct::getVar)
+//		                   .map(Binding::new)
+//		                   .forEach(bindingEnvironment::addDynamicBinding);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
 				= bodyForms.stream()
-				           .map(e -> FormAnalyzer.analyze(e, closureEnvironment))
+				           .map(e -> FormAnalyzer.analyze(e, bindingEnvironment))
 				           .collect(Collectors.toList());
 
-		return getClosureCreationStruct(vars, new PrognStruct(analyzedBodyForms), closureEnvironment);
+		return getBindingEnvironmentStruct(vars, new PrognStruct(analyzedBodyForms), bindingEnvironment);
 	}
 
 	private V getVar(final LispStruct parameter, final DeclareStruct declare, final Environment environment) {
@@ -131,15 +131,15 @@ abstract class ClosureCreationExpander<V> extends MacroFunctionExpander<ClosureC
 			environment.addLexicalBinding(binding);
 		}
 
-		return getClosureCreationVar(var, initForm, isSpecial);
+		return getBindingEnvironmentVar(var, initForm, isSpecial);
 	}
 
-	protected abstract V getClosureCreationVar(SymbolStruct var, LispStruct initForm,
-	                                           boolean isSpecial);
+	protected abstract V getBindingEnvironmentVar(SymbolStruct var, LispStruct initForm,
+	                                              boolean isSpecial);
 
-	protected abstract ClosureCreationStruct<V> getClosureCreationStruct(List<V> vars,
-	                                                                     PrognStruct prognBody,
-	                                                                     Environment environment);
+	protected abstract BindingEnvironmentStruct<V> getBindingEnvironmentStruct(List<V> vars,
+	                                                                           PrognStruct prognBody,
+	                                                                           Environment environment);
 
 
 	protected abstract LispStruct getListParameterInitForm(LispStruct parameterValue, Environment environment);

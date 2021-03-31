@@ -271,9 +271,12 @@ public final class InternalCompile {
 			@SuppressWarnings({"unused", "SuppressionAnnotation"})
 			final int thisStore = methodBuilder.getNextAvailableStore();
 			@SuppressWarnings({"unused", "SuppressionAnnotation"})
-			final int closureArgStore = methodBuilder.getNextAvailableStore();
-			mv.visitInsn(Opcodes.ACONST_NULL);
-			mv.visitVarInsn(Opcodes.ASTORE, closureArgStore);
+			final int environmentStore = methodBuilder.getNextAvailableStore();
+			mv.visitFieldInsn(Opcodes.GETSTATIC,
+			                  GenerationConstants.ENVIRONMENT_NAME,
+			                  GenerationConstants.ENVIRONMENT_NULL_NAME,
+			                  GenerationConstants.ENVIRONMENT_DESC);
+			mv.visitVarInsn(Opcodes.ASTORE, environmentStore);
 
 			final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
@@ -393,6 +396,8 @@ public final class InternalCompile {
 				final ClassWriter cw = javaClassBuilder.getClassWriter();
 
 				final byte[] byteArray = cw.toByteArray();
+				CompileForm.outputCompiledClassFile(javaClassBuilder, byteArray);
+
 				final ClassReader cr = new ClassReader(byteArray);
 
 				final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);

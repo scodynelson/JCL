@@ -189,7 +189,7 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 		// Do Nothing.
 	}
 

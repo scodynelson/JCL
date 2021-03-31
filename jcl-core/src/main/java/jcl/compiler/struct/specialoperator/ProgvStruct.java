@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.ProgvEnvironment;
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -96,7 +95,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (progv '(x) '(1) x)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct progv_1(Closure var1) {
+	 * private LispStruct progv_1(Environment var1) {
 	 *      LispStruct var2 = this.symbolFunctionCall_1(var1);
 	 *      if(!(var2 instanceof ListStruct)) {
 	 *          throw new ProgramErrorException("PROGV: Symbols list must be a list. Got: " + var2);
@@ -160,12 +159,12 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		// Generate and Check Vars List
 		final int varsJavaListStore = generateListAndCheck(vars, generatorState, methodBuilder, SYMBOLS_LIST_MUST_BE_A_LIST);

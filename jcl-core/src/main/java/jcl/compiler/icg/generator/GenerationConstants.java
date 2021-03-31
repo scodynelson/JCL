@@ -5,7 +5,6 @@
 package jcl.compiler.icg.generator;
 
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.BodyParameter;
 import jcl.compiler.environment.binding.lambdalist.DestructuringLambdaList;
@@ -24,7 +24,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.lang.ArrayStruct;
@@ -144,12 +143,6 @@ public interface GenerationConstants {
 	String JAVA_INTEGER_VALUE_OF_METHOD_NAME = "valueOf";
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_DESC = CodeGenerators.getMethodDescription(Integer.class, JAVA_INTEGER_VALUE_OF_METHOD_NAME, int.class);
-
-	String JAVA_URI_NAME = Type.getInternalName(URI.class);
-
-	String JAVA_URI_CREATE_METHOD_NAME = "create";
-
-	String JAVA_URI_CREATE_METHOD_DESC = CodeGenerators.getMethodDescription(URI.class, JAVA_URI_CREATE_METHOD_NAME, String.class);
 
 	String JAVA_STRING_BUILDER_NAME = Type.getInternalName(StringBuilder.class);
 
@@ -309,6 +302,50 @@ public interface GenerationConstants {
 
 	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpanderInter.class);
 
+	String ENVIRONMENT_NAME = Type.getInternalName(Environment.class);
+
+	String ENVIRONMENT_NULL_NAME = "NULL";
+
+	String ENVIRONMENT_DESC = Type.getDescriptor(Environment.class);
+
+	String ENVIRONMENT_INIT_ENVIRONMENT_DESC = CodeGenerators.getConstructorDescription(Environment.class, Environment.class);
+
+	String ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME = "getLexicalSymbolBindings";
+
+	String ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME);
+
+	String ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_NAME = "getLexicalFunctionBindings";
+
+	String ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_NAME);
+
+	String ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_NAME = "getSymbolValue";
+
+	String ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_SET_SYMBOL_VALUE_METHOD_NAME = "setSymbolValue";
+
+	String ENVIRONMENT_SET_SYMBOL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_SET_SYMBOL_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
+
+	String ENVIRONMENT_GET_FUNCTION_METHOD_NAME = "getFunction";
+
+	String ENVIRONMENT_GET_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_FUNCTION_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME = "bindLexicalValue";
+
+	String ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
+
+	String ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME = "unbindLexicalValue";
+
+	String ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
+
+	String ENVIRONMENT_BIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_FUNCTION_METHOD_NAME, SymbolStruct.class, FunctionStruct.class);
+
+	String ENVIRONMENT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
+
+	String ENVIRONMENT_UNBIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_FUNCTION_METHOD_NAME, SymbolStruct.class);
+
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
 	String PACKAGE_STRUCT_DESC = Type.getDescriptor(PackageStruct.class);
@@ -335,9 +372,9 @@ public interface GenerationConstants {
 
 	String COMPILED_FUNCTION_STRUCT_NAME = Type.getInternalName(CompiledFunctionStruct.class);
 
-	String COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, Closure.class);
+	String COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, Environment.class);
 
-	String COMPILED_FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, String.class, Closure.class);
+	String COMPILED_FUNCTION_STRUCT_INIT_STRING_ENVIRONMENT_DESC = CodeGenerators.getConstructorDescription(CompiledFunctionStruct.class, String.class, Environment.class);
 
 	String FUNCTION_STRUCT_APPLY_METHOD_NAME = "apply";
 
@@ -378,18 +415,6 @@ public interface GenerationConstants {
 	String VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_NAME = "extractPrimaryValue";
 
 	String VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(ValuesStruct.class, VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_NAME, LispStruct.class);
-
-	String CLOSURE_NAME = Type.getInternalName(Closure.class);
-
-	String CLOSURE_INIT_CLOSURE_DESC = CodeGenerators.getConstructorDescription(Closure.class, Closure.class);
-
-	String CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME = "getFunctionBindings";
-
-	String CLOSURE_GET_FUNCTION_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Closure.class, CLOSURE_GET_FUNCTION_BINDINGS_METHOD_NAME);
-
-	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME = "getSymbolBindings";
-
-	String CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Closure.class, CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME);
 
 	String PROGRAM_ERROR_EXCEPTION_NAME = Type.getInternalName(ProgramErrorException.class);
 

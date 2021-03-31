@@ -1,5 +1,6 @@
 package jcl.system;
 
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +26,7 @@ import jcl.lang.statics.GlobalPackageStruct;
 import jcl.reader.InternalRead;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +36,7 @@ class SymbolBindingsTest {
 	private static Path tmpDir;
 
 	@BeforeAll
-	static void setup() throws Exception {
+	static void setup() throws IOException {
 		BootstrapSymbols.bootstrap();
 		BootstrapFunctions.bootstrap();
 		BootstrapExpanders.bootstrap();
@@ -78,7 +80,7 @@ class SymbolBindingsTest {
 	}
 
 	@AfterAll
-	static void cleanup() throws Exception {
+	static void cleanup() throws IOException {
 		if (tmpDir != null) {
 			try (final DirectoryStream<Path> ds = Files.newDirectoryStream(tmpDir)) {
 				for (final Path file : ds) {
@@ -87,6 +89,64 @@ class SymbolBindingsTest {
 				Files.delete(tmpDir);
 			}
 		}
+	}
+
+	@Test
+	void testLambda() {
+		final String setVariable = "(setq x 5)";
+		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
+				StringStruct.toLispString(setVariable),
+				IntegerStruct.ZERO,
+				IntegerStruct.toLispInteger(setVariable.length())
+		);
+		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
+		InternalEval.eval(whatRead);
+
+		final String definition = "((lambda (y) ($add x y)) 3)";
+
+		stream = StringInputStreamStruct.toStringInputStream(
+				StringStruct.toLispString(definition),
+				IntegerStruct.ZERO,
+				IntegerStruct.toLispInteger(definition.length())
+		);
+		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
+		final LispStruct value = InternalEval.eval(whatRead);
+
+		assertThat(value).satisfies(IntegerStruct.EIGHT::eql);
+	}
+
+	@Test
+	@Disabled
+	void testFunctionClosure() {
+		final String definition = "(defun adder (x) (function (lambda (y) ($add x y))))";
+
+		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
+				StringStruct.toLispString(definition),
+				IntegerStruct.ZERO,
+				IntegerStruct.toLispInteger(definition.length())
+		);
+		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
+		InternalEval.eval(whatRead);
+
+		final String setVariable = "(setq add3 (adder 3))";
+		stream = StringInputStreamStruct.toStringInputStream(
+				StringStruct.toLispString(setVariable),
+				IntegerStruct.ZERO,
+				IntegerStruct.toLispInteger(setVariable.length())
+		);
+		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
+		InternalEval.eval(whatRead);
+
+		final String functionCall = "(funcall add3 5)";
+		stream = StringInputStreamStruct.toStringInputStream(
+				StringStruct.toLispString(functionCall),
+				IntegerStruct.ZERO,
+				IntegerStruct.toLispInteger(functionCall.length())
+		);
+		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
+		final LispStruct value = InternalEval.eval(whatRead);
+
+		assertThat(value).satisfies(IntegerStruct.EIGHT::eql);
 	}
 
 	@Test

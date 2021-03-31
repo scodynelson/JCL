@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -25,7 +24,7 @@ import org.objectweb.asm.Opcodes;
  * values instead of after all of the symbols and forms are generated. This allows sequentially defined variables to
  * depend on the binding of previous defined variables within the same variable scope definitions of the 'let*'.
  */
-public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVar> {
+public class LetStarStruct extends BindingEnvironmentStruct<LetStarStruct.LetStarVar> {
 
 	public LetStarStruct(final List<LetStarVar> vars, final PrognStruct forms, final Environment letStarEnvironment) {
 		super("letStar", vars, forms, letStarEnvironment);
@@ -44,20 +43,20 @@ public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVa
 	 * <li>Symbol bindings where {@link LetStarStruct.LetStarVar#isSpecial} is false are binded via {@link
 	 * SymbolStruct#bindLexicalValue(LispStruct)}</li>
 	 * <li>Symbol bindings where {@link LetStarStruct.LetStarVar#isSpecial} is false are also added to the {@link
-	 * Closure#symbolBindings} map for the new {@link Closure} created with the 'let'</li>
+	 * Environment#lexicalSymbolBindings} map for the new {@link Environment} created with the 'let'</li>
 	 * </ol>
 	 * As an example, it will transform {@code (let* ((x 1)) x)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct letStar_1(Closure var1) {
-	 *      var1 = new Closure(var1);
-	 *      Map var2 = var1.getSymbolBindings();
+	 * private LispStruct letStar_1(Environment var1) {
+	 *      var1 = new Environment(var1);
+	 *      Map var2 = var1.getLexicalSymbolBindings();
 	 *
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
 	 *
 	 *      BigInteger var5 = new BigInteger("1");
-	 *      LispStruct var6 = new IntIntegerStruct(var5);
+	 *      LispStruct var6 = new IntegerStruct(var5);
 	 *
 	 *      if(var6 instanceof ValuesStruct) {
 	 *          ValuesStruct var7 = (ValuesStruct)var6;
@@ -85,10 +84,10 @@ public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVa
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
-	 * @param closureSymbolBindingsStore
-	 * 		the storage location index on the stack where the {@link Closure#symbolBindings} {@link Map} exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link Environment} argument exists
+	 * @param environmentSymbolBindingsStore
+	 * 		the storage location index on the stack where the {@link Environment#lexicalSymbolBindings} {@link Map} exists
 	 * @param lexicalSymbolStoresToUnbind
 	 * 		the {@link Set} of lexical {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 * @param dynamicSymbolStoresToUnbind
@@ -96,8 +95,8 @@ public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVa
 	 */
 	@Override
 	protected void generateBindings(final List<LetStarStruct.LetStarVar> vars, final GeneratorState generatorState,
-	                                final JavaMethodBuilder methodBuilder, final int closureArgStore,
-	                                final int closureSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
+	                                final JavaMethodBuilder methodBuilder, final int environmentArgStore,
+	                                final int environmentSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                final Set<Integer> dynamicSymbolStoresToUnbind) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -144,7 +143,7 @@ public class LetStarStruct extends ClosureCreationStruct<LetStarStruct.LetStarVa
 
 				lexicalSymbolStoresToUnbind.add(symbolStore);
 
-				mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
+				mv.visitVarInsn(Opcodes.ALOAD, environmentSymbolBindingsStore);
 				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,

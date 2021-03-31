@@ -51,7 +51,7 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 	@Override
 	public MacroLambdaStruct expand(final ListStruct form, final Environment environment) {
 		final Iterator<LispStruct> iterator = form.iterator();
-		iterator.next(); // Closure Expander SYMBOL
+		iterator.next(); // MACRO-LAMBDA SYMBOL
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("MACRO-LAMBDA: Incorrect number of arguments: 0. Expected at least 2 arguments.");

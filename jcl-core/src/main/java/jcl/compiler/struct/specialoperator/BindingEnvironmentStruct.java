@@ -7,11 +7,9 @@ package jcl.compiler.struct.specialoperator;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -21,7 +19,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorStruct {
+public abstract class BindingEnvironmentStruct<V> extends CompilerSpecialOperatorStruct {
 
 	private final List<V> vars;
 
@@ -29,8 +27,8 @@ public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorSt
 
 	private final Environment environment;
 
-	protected ClosureCreationStruct(final String methodNamePrefix,
-	                                final List<V> vars, final PrognStruct forms, final Environment environment) {
+	protected BindingEnvironmentStruct(final String methodNamePrefix,
+	                                   final List<V> vars, final PrognStruct forms, final Environment environment) {
 		super(methodNamePrefix);
 		this.vars = vars;
 		this.forms = forms;
@@ -51,16 +49,14 @@ public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorSt
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link ClosureCreationStruct} objects, by performing the following operations:
+	 * Generation method for {@link BindingEnvironmentStruct} objects, by performing the following operations:
 	 * <ol>
-	 * <li>Generating the code to create a new {@link Closure}</li>
-	 * <li>Generating the code to get the {@link Map} of symbol bindings from the newly created {@link Closure} via
-	 * {@link Closure#getSymbolBindings()}</li>
+	 * <li>Generating the code to create a new {@link Environment}</li>
 	 * <li>Calling the implementation of {@link #generateBindings(List, GeneratorState, JavaMethodBuilder, int, int,
 	 * Set, Set)} to generate the initial binding of the variables</li>
 	 * <li>Initializing a try-catch block</li>
-	 * <li>Temporarily pushing the {@link ClosureCreationStruct#environment} onto the {@link
-	 * GeneratorState#environmentDeque} while generating the code for the {@link ClosureCreationStruct#forms} values
+	 * <li>Temporarily pushing the {@link BindingEnvironmentStruct#environment} onto the {@link
+	 * GeneratorState#environmentDeque} while generating the code for the {@link BindingEnvironmentStruct#forms} values
 	 * inside the try block, ensuring to store the final result into a variable</li>
 	 * <li>Generating the code to unbind the variables from {@link SymbolStruct}s as part of the error free
 	 * 'finally'</li>
@@ -72,38 +68,38 @@ public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorSt
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.CLOSURE_NAME);
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ENVIRONMENT_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.CLOSURE_NAME,
+		                   GenerationConstants.ENVIRONMENT_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.CLOSURE_INIT_CLOSURE_DESC,
+		                   GenerationConstants.ENVIRONMENT_INIT_ENVIRONMENT_DESC,
 		                   false);
-		mv.visitVarInsn(Opcodes.ASTORE, closureArgStore);
+		mv.visitVarInsn(Opcodes.ASTORE, environmentArgStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.CLOSURE_NAME,
-		                   GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_NAME,
-		                   GenerationConstants.CLOSURE_GET_SYMBOL_BINDINGS_METHOD_DESC,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC,
 		                   false);
-		final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
+		final int environmentSymbolBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, environmentSymbolBindingsStore);
 
 		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
 		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
-		generateBindings(vars, generatorState, methodBuilder, closureArgStore, closureSymbolBindingsStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		generateBindings(vars, generatorState, methodBuilder, environmentArgStore, environmentSymbolBindingsStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -151,10 +147,10 @@ public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorSt
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
-	 * @param closureSymbolBindingsStore
-	 * 		the storage location index on the stack where the {@link Closure#symbolBindings} variable exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link Environment} argument exists
+	 * @param environmentSymbolBindingsStore
+	 * 		the storage location index on the stack where the {@link Environment#lexicalSymbolBindings} variable exists
 	 * @param lexicalSymbolStoresToUnbind
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical
 	 * 		values to unbind exists
@@ -163,8 +159,8 @@ public abstract class ClosureCreationStruct<V> extends CompilerSpecialOperatorSt
 	 * 		values to unbind exists
 	 */
 	protected abstract void generateBindings(List<V> vars, GeneratorState generatorState,
-	                                         JavaMethodBuilder methodBuilder, int closureArgStore,
-	                                         int closureSymbolBindingsStore, Set<Integer> lexicalSymbolStoresToUnbind,
+	                                         JavaMethodBuilder methodBuilder, int environmentArgStore,
+	                                         int environmentSymbolBindingsStore, Set<Integer> lexicalSymbolStoresToUnbind,
 	                                         Set<Integer> dynamicSymbolStoresToUnbind);
 
 	/**

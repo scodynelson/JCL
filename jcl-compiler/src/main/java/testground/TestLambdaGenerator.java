@@ -7,13 +7,13 @@ package testground;
 import java.util.ArrayList;
 import java.util.List;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.lang.CharacterStruct;
 import jcl.lang.LispStruct;
@@ -28,8 +28,8 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 		this(null);
 	}
 
-	protected TestLambdaGenerator(final Closure closure) {
-		super("DocumentationString", closure);
+	protected TestLambdaGenerator(final Environment environment) {
+		super("DocumentationString", environment);
 		initLambdaListBindings();
 	}
 
@@ -111,13 +111,13 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	}
 
 	@Override
-	protected LispStruct internalApply(final Closure currentClosure) {
+	protected LispStruct internalApply(final Environment currentEnvironment) {
 //		result = CharacterStruct.valueOf(97);
-		return new TestGroundLambdaFunction(currentClosure);
+		return new TestGroundLambdaFunction(currentEnvironment);
 	}
 
 	@Override
-	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct symbolBinding) {
+	protected LispStruct getInitForm(final Environment currentEnvironment, final SymbolStruct symbolBinding) {
 
 		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();

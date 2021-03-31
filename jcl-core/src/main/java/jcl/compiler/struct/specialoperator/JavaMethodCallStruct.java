@@ -51,6 +51,7 @@ public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 		builder.append(methodName);
 		builder.append(' ');
 		builder.append(javaObject);
+		builder.append(' ');
 
 		final String argumentsString
 				= arguments.stream()
@@ -64,7 +65,7 @@ public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

@@ -4,14 +4,14 @@ import java.util.List;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
+import jcl.compiler.struct.specialoperator.BindingEnvironmentStruct;
 import jcl.compiler.struct.specialoperator.LetStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 
-public final class LetExpander extends ClosureCreationExpander<LetStruct.LetVar> {
+public final class LetExpander extends BindingEnvironmentExpander<LetStruct.LetVar> {
 
 	public static final LetExpander INSTANCE = new LetExpander();
 
@@ -25,15 +25,15 @@ public final class LetExpander extends ClosureCreationExpander<LetStruct.LetVar>
 	}
 
 	@Override
-	protected LetStruct.LetVar getClosureCreationVar(final SymbolStruct var, final LispStruct initForm,
-	                                                 final boolean isSpecial) {
+	protected LetStruct.LetVar getBindingEnvironmentVar(final SymbolStruct var, final LispStruct initForm,
+	                                                    final boolean isSpecial) {
 		return new LetStruct.LetVar(var, initForm, isSpecial);
 	}
 
 	@Override
-	protected ClosureCreationStruct<LetStruct.LetVar> getClosureCreationStruct(final List<LetStruct.LetVar> vars,
-	                                                                           final PrognStruct prognBody,
-	                                                                           final Environment environment) {
+	protected BindingEnvironmentStruct<LetStruct.LetVar> getBindingEnvironmentStruct(final List<LetStruct.LetVar> vars,
+	                                                                                 final PrognStruct prognBody,
+	                                                                                 final Environment environment) {
 		return new LetStruct(vars, prognBody, environment);
 	}
 

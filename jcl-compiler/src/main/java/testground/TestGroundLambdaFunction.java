@@ -4,15 +4,15 @@
 
 package testground;
 
-import jcl.compiler.function.Closure;
+import jcl.compiler.environment.Environment;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.lang.LispStruct;
 
 @SuppressWarnings("all")
 public class TestGroundLambdaFunction extends CompiledFunctionStruct {
 
-	public TestGroundLambdaFunction(final Closure parentClosure) {
-		super(parentClosure);
+	public TestGroundLambdaFunction(final Environment environment) {
+		super(environment);
 	}
 
 	@Override

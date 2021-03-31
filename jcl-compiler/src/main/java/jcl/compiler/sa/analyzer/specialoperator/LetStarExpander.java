@@ -4,14 +4,14 @@ import java.util.List;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.struct.specialoperator.ClosureCreationStruct;
+import jcl.compiler.struct.specialoperator.BindingEnvironmentStruct;
 import jcl.compiler.struct.specialoperator.LetStarStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.internal.SpecialOperatorStructImpl;
 
-public final class LetStarExpander extends ClosureCreationExpander<LetStarStruct.LetStarVar> {
+public final class LetStarExpander extends BindingEnvironmentExpander<LetStarStruct.LetStarVar> {
 
 	public static final LetStarExpander INSTANCE = new LetStarExpander();
 
@@ -25,15 +25,15 @@ public final class LetStarExpander extends ClosureCreationExpander<LetStarStruct
 	}
 
 	@Override
-	protected LetStarStruct.LetStarVar getClosureCreationVar(final SymbolStruct var, final LispStruct initForm,
-	                                                         final boolean isSpecial) {
+	protected LetStarStruct.LetStarVar getBindingEnvironmentVar(final SymbolStruct var, final LispStruct initForm,
+	                                                            final boolean isSpecial) {
 		return new LetStarStruct.LetStarVar(var, initForm, isSpecial);
 	}
 
 	@Override
-	protected ClosureCreationStruct<LetStarStruct.LetStarVar> getClosureCreationStruct(final List<LetStarStruct.LetStarVar> vars,
-	                                                                                   final PrognStruct prognBody,
-	                                                                                   final Environment environment) {
+	protected BindingEnvironmentStruct<LetStarStruct.LetStarVar> getBindingEnvironmentStruct(final List<LetStarStruct.LetStarVar> vars,
+	                                                                                         final PrognStruct prognBody,
+	                                                                                         final Environment environment) {
 		return new LetStarStruct(vars, prognBody, environment);
 	}
 

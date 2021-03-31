@@ -66,11 +66,11 @@ public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (return-from foo 1)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct returnFrom_1(Closure var1) {
+	 * private LispStruct returnFrom_1(Environment var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
 	 *      BigInteger var4 = new BigInteger("1");
-	 *      IntegerStruct var5 = new IntIntegerStruct(var4);
+	 *      IntegerStruct var5 = new IntegerStruct(var4);
 	 *      throw new ReturnFromException(var3, var5);
 	 * }
 	 * }
@@ -81,7 +81,7 @@ public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

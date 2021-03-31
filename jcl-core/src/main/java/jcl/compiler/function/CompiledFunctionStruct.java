@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
 import jcl.compiler.environment.binding.lambdalist.OptionalParameter;
@@ -31,22 +32,25 @@ import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.FunctionStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 
+/*
+NOTE: This could also be called a "Closure"
+ */
 public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 
 	protected OrdinaryLambdaList lambdaListBindings;
 
-	protected Closure closure;
+	protected Environment environment;
 
 	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
 	};
 
-	protected CompiledFunctionStruct(final Closure closure) {
-		this.closure = closure;
+	protected CompiledFunctionStruct(final Environment environment) {
+		this.environment = environment;
 	}
 
-	protected CompiledFunctionStruct(final String documentation, final Closure closure) {
+	protected CompiledFunctionStruct(final String documentation, final Environment environment) {
 		super(documentation);
-		this.closure = closure;
+		this.environment = environment;
 	}
 
 	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.toLispSymbol("dummySymbol");
@@ -60,10 +64,10 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
-		for (final Map.Entry<SymbolStruct, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
-			final SymbolStruct symbol = closureSymbolToBind.getKey();
-			LispStruct value = closureSymbolToBind.getValue();
+		final Map<SymbolStruct, LispStruct> environmentSymbolsToBind = environment.getLexicalSymbolBindings();
+		for (final Map.Entry<SymbolStruct, LispStruct> environmentSymbolToBind : environmentSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = environmentSymbolToBind.getKey();
+			LispStruct value = environmentSymbolToBind.getValue();
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
@@ -71,10 +75,10 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 			symbol.bindLexicalValue(value);
 		}
 
-		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
-			final SymbolStruct symbol = closureFunctionToBind.getKey();
-			final FunctionStruct function = closureFunctionToBind.getValue();
+		final Map<SymbolStruct, FunctionStruct> environmentFunctionsToBind = environment.getLexicalFunctionBindings();
+		for (final Map.Entry<SymbolStruct, FunctionStruct> environmentFunctionToBind : environmentFunctionsToBind.entrySet()) {
+			final SymbolStruct symbol = environmentFunctionToBind.getKey();
+			final FunctionStruct function = environmentFunctionToBind.getValue();
 			symbol.bindFunction(function);
 		}
 
@@ -86,7 +90,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
 			} else if (INIT_FORM_PLACEHOLDER.eq(value)) {
-				value = getInitForm(closure, symbol);
+				value = getInitForm(environment, symbol);
 			}
 			final boolean isSpecial = parameterSymbolToBind.isSpecial();
 			if (isSpecial) {
@@ -98,7 +102,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 
 		final LispStruct result;
 		try {
-			result = internalApply(closure);
+			result = internalApply(environment);
 		} catch (final ErrorException ex) {
 			throw ex;
 		} catch (final Throwable t) {
@@ -113,31 +117,17 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 					parameterSymbol.unbindLexicalValue();
 				}
 			}
-			for (final SymbolStruct closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
-				closureFunctionToUnbind.unbindFunction();
+			for (final SymbolStruct environmentFunctionToUnbind : environmentFunctionsToBind.keySet()) {
+				environmentFunctionToUnbind.unbindFunction();
 			}
-			for (final SymbolStruct closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
-				closureSymbolToUnbind.unbindLexicalValue();
+			for (final SymbolStruct environmentSymbolToUnbind : environmentSymbolsToBind.keySet()) {
+				environmentSymbolToUnbind.unbindLexicalValue();
 			}
 		}
 		return result;
 	}
 
-	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getSymbolBindings();
-	}
-
-	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getFunctionBindings();
-	}
-
-	protected LispStruct internalApply(final Closure currentClosure) {
+	protected LispStruct internalApply(final Environment currentEnvironment) {
 		return NILStruct.INSTANCE;
 	}
 
@@ -343,7 +333,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		return Collections.emptyList();
 	}
 
-	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
+	protected LispStruct getInitForm(final Environment currentEnvironment, final SymbolStruct parameter) {
 		return NILStruct.INSTANCE;
 	}
 

@@ -7,7 +7,6 @@ package jcl.compiler.struct.specialoperator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -83,13 +82,13 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 	 * Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct symbolFunctionCall_1(Closure var1) {
+	 * private LispStruct symbolFunctionCall_1(Environment var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
 	 *      FunctionStructImpl var4 = var3.getFunction();
 	 *      LispStruct[] var5 = new LispStruct[1];
 	 *      BigInteger var7 = new BigInteger("1");
-	 *      IntegerStruct var6 = new IntIntegerStruct(var7);
+	 *      IntegerStruct var6 = new IntegerStruct(var7);
 	 *      var5[0] = var6;
 	 *      return var4.apply(var5);
 	 * }
@@ -103,12 +102,12 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

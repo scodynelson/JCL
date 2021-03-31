@@ -48,7 +48,7 @@ public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	@Override
 	public LambdaStruct expand(final ListStruct form, final Environment environment) {
 		final Iterator<LispStruct> iterator = form.iterator();
-		iterator.next(); // Closure Expander SYMBOL
+		iterator.next(); // LAMBDA SYMBOL
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: 0. Expected at least 1 argument.");

@@ -8,7 +8,6 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Set;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -61,7 +60,7 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	 * As an example, it will transform {@code (go 1)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct go_1(Closure var1) {
+	 * private LispStruct go_1(Environment var1) {
 	 *      int var2 = 1;
 	 *      throw new GoException(var2);
 	 * }
@@ -72,12 +71,12 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

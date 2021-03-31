@@ -6,7 +6,6 @@ package jcl.compiler.struct;
 
 import java.util.Deque;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -19,9 +18,9 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 
 	/**
 	 * Constant {@link String} containing the method description to be used for the creation and invocation of the new
-	 * method. Its signature is equivalent to {@code LispStruct methodName(Closure var1)}.
+	 * method. Its signature is equivalent to {@code LispStruct methodName(Environment var1)}.
 	 */
-	private static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/compiler/function/Closure;)Ljcl/lang/LispStruct;";
+	private static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * {@link String} to be used as the method name prefix when creating the new method via {@link
@@ -74,9 +73,9 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
+		final int environmentArgStore = methodBuilder.getNextAvailableStore();
 
-		generateSpecialOperator(generatorState, methodBuilder, closureArgStore);
+		generateSpecialOperator(generatorState, methodBuilder, environmentArgStore);
 
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
@@ -87,7 +86,7 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 		                           className,
 		                           methodName,
@@ -102,9 +101,9 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	protected abstract void generateSpecialOperator(GeneratorState generatorState, JavaMethodBuilder methodBuilder,
-	                                                int closureArgStore);
+	                                                int environmentArgStore);
 }

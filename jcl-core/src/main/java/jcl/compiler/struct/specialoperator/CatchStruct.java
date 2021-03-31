@@ -6,7 +6,6 @@ package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -55,7 +54,7 @@ public class CatchStruct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (catch 'foo)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct catch_1(Closure var1) {
+	 * private LispStruct catch_1(Environment var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
 	 *      LispStruct var5;
@@ -77,12 +76,12 @@ public class CatchStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

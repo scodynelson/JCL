@@ -15,7 +15,6 @@ import jcl.compiler.environment.binding.lambdalist.OrdinaryLambdaList;
 import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
-import jcl.compiler.function.Closure;
 import jcl.compiler.function.CompiledFunctionStruct;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
@@ -88,7 +87,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 		// Do Nothing.
 	}
 
@@ -193,35 +192,35 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/AuxParameter;>;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#internalApply(Closure)}
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#internalApply(Environment)}
 	 * method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#internalApply(Closure)}
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#internalApply(Environment)}
 	 * method.
 	 */
-	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/compiler/function/Closure;)Ljcl/lang/LispStruct;";
+	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getInitForm(Closure,
+	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getInitForm(Environment,
 	 * SymbolStruct)}
 	 * method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getInitForm(Closure,
+	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getInitForm(Environment,
 	 * SymbolStruct)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/environment/Environment;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getInitForm(Closure,
+	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getInitForm(Environment,
 	 * SymbolStruct)} method.
 	 */
-	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/function/Closure;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
+	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
 	 * {@inheritDoc}
@@ -232,15 +231,15 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * {@link JavaClassBuilder#classWriter}</li>
 	 * <li>Generating the code for the load-time-value fields</li>
 	 * <li>Generating the code for the no-argument constructor</li>
-	 * <li>Generating the code for the {@link Closure} argument constructor</li>
+	 * <li>Generating the code for the {@link Environment} argument constructor</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getRequiredBindings()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getOptionalBindings()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getRestBinding()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getKeyBindings()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getAllowOtherKeys()} method</li>
 	 * <li>Generating the code for the {@link CompiledFunctionStruct#getAuxBindings()} method</li>
-	 * <li>Generating the code for the {@link CompiledFunctionStruct#internalApply(Closure)} method</li>
-	 * <li>Generating the code for the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#internalApply(Environment)} method</li>
+	 * <li>Generating the code for the {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method</li>
 	 * <li>Generating the code to end the new class visitation</li>
 	 * <li>If the {@link GeneratorState#classBuilderDeque} is not empty after the visitation for this new class,
 	 * performing the following operations:
@@ -254,16 +253,16 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * {@code
 	 * package jcl;
 	 *
-	 * import Closure;
-	 * import CompiledFunctionStruct;
+	 * import jcl.compiler.environment.Environment;
+	 * import jcl.compiler.function.CompiledFunctionStruct;
 	 *
 	 * public class Lambda_1 extends CompiledFunctionStruct {
 	 *
 	 *      public Lambda_1() {
-	 *          this((Closure)null);
+	 *          this(Environment.NULL);
 	 *      }
 	 *
-	 *      public Lambda_1(Closure var1) {
+	 *      public Lambda_1(Environment var1) {
 	 *          super("", var1);
 	 *          this.initLambdaListBindings();
 	 *      }
@@ -296,7 +295,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
 		generateNoArgConstructor(generatorState, className, cw);
-		generateClosureArgConstructor(generatorState, className, cw);
+		generateEnvironmentArgConstructor(generatorState, className, cw);
 
 		generateRequiredBindings(generatorState, lambdaListBindings, cw);
 		generateOptionalBindings(generatorState, lambdaListBindings, cw);
@@ -319,11 +318,11 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			previousMv.visitTypeInsn(Opcodes.NEW, className);
 			previousMv.visitInsn(Opcodes.DUP);
 
-			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Closure Argument. NOTE: This should ALWAYS be 1 on the Store Stack
+			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Environment Argument. NOTE: This should ALWAYS be 1 on the Store Stack
 			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 			                           className,
 			                           GenerationConstants.INIT_METHOD_NAME,
-			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
 			                           false);
 		}
 	}
@@ -332,14 +331,14 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Private method for generating the no-argument constructor for the generated lambda class object being written to
 	 * via the provided {@link ClassWriter}. The generation will perform the following operations:
 	 * <ol>
-	 * <li>Generating the call to the {@link Closure} argument constructor, passing 'null' as the {@link Closure}
-	 * value</li>
+	 * <li>Generating the call to the {@link Environment} argument constructor, passing {@link Environment#NULL} as the
+	 * {@link Environment} value</li>
 	 * </ol>
 	 * The following is the example Java code generated:
 	 * <pre>
 	 * {@code
 	 * public Lambda_1() {
-	 *      this((Closure) null);
+	 *      this(Environment.NULL);
 	 * }
 	 * }
 	 * </pre>
@@ -367,11 +366,14 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		mv.visitInsn(Opcodes.ACONST_NULL);
+		mv.visitFieldInsn(Opcodes.GETSTATIC,
+		                  GenerationConstants.ENVIRONMENT_NAME,
+		                  GenerationConstants.ENVIRONMENT_NULL_NAME,
+		                  GenerationConstants.ENVIRONMENT_DESC);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   className,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
 		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
@@ -383,18 +385,18 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link Closure} argument constructor for the generated lambda class object
+	 * Private method for generating the {@link Environment} argument constructor for the generated lambda class object
 	 * being written to via the provided {@link ClassWriter}. The generation will perform the following operations:
 	 * <ol>
-	 * <li>Generating the call to the {@link CompiledFunctionStruct#CompiledFunctionStruct(String, Closure)} argument
+	 * <li>Generating the call to the {@link CompiledFunctionStruct#CompiledFunctionStruct(String, Environment)} argument
 	 * constructor via 'super', passing generated {@link LambdaStruct#docString} as a {@link String} constant and the
-	 * provided {@link Closure} parameter value</li>
+	 * provided {@link Environment} parameter value</li>
 	 * <li>Generating the call to {@link CompiledFunctionStruct#initLambdaListBindings()}</li>
 	 * </ol>
 	 * The following is the example Java code generated:
 	 * <pre>
 	 * {@code
-	 * public Lambda_1(Closure var1) {
+	 * public Lambda_1(Environment var1) {
 	 *      super("Example Documentation String", var1);
 	 *      this.initLambdaListBindings();
 	 * }
@@ -408,11 +410,11 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 */
-	private void generateClosureArgConstructor(final GeneratorState generatorState,
-	                                                  final String className, final ClassWriter cw) {
+	private void generateEnvironmentArgConstructor(final GeneratorState generatorState,
+	                                               final String className, final ClassWriter cw) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
-		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_CLOSURE_DESC,
+		                                        GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
 		                                        null,
 		                                        null);
 
@@ -422,7 +424,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int closureStore = methodBuilder.getNextAvailableStore();
+		final int environmentStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
@@ -431,11 +433,11 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 			documentation = docString.toJavaString();
 		}
 		mv.visitLdcInsn(documentation);
-		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_STRING_CLOSURE_DESC,
+		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_STRING_ENVIRONMENT_DESC,
 		                   false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -454,7 +456,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#internalApply(Closure)} method for the generated
+	 * Private method for generating the {@link CompiledFunctionStruct#internalApply(Environment)} method for the generated
 	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
 	 * following operations:
 	 * <ol>
@@ -468,9 +470,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * The following is the example Java code generated when {@code (lambda () 1)} is encountered:
 	 * <pre>
 	 * {@code
-	 * protected LispStruct internalApply(Closure var1) {
+	 * protected LispStruct internalApply(Environment var1) {
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      return new IntIntegerStruct(var2);
+	 *      return new IntegerStruct(var2);
 	 * }
 	 * }
 	 * </pre>
@@ -501,7 +503,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int closureArgStore = methodBuilder.getNextAvailableStore();
+		final int environmentArgStore = methodBuilder.getNextAvailableStore();
 
 		final Deque<Environment> environmentDeque = generatorState.getEnvironmentDeque();
 
@@ -518,7 +520,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method for
+	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method for
 	 * the generated lambda class object being written to via the provided {@link ClassWriter}. The generation will
 	 * perform the following operations:
 	 * <ol>
@@ -533,12 +535,12 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * The following is the example Java code generated when {@code (lambda (&optional (y 2)) y)} is encountered:
 	 * <pre>
 	 * {@code
-	 * protected LispStruct getInitForm(Closure var1, SymbolStruct var2) {
+	 * protected LispStruct getInitForm(Environment var1, SymbolStruct var2) {
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var3.intern("Y").getSymbol();
 	 *      if(var2.eq(var4)) {
 	 *          BigInteger var5 = new BigInteger("2");
-	 *          return new IntIntegerStruct(var5);
+	 *          return new IntegerStruct(var5);
 	 *      } else {
 	 *          return NILStruct.INSTANCE;
 	 *      }
@@ -575,7 +577,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		@SuppressWarnings({"unused", "SuppressionAnnotation"})
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int closureStore = methodBuilder.getNextAvailableStore();
+		final int environmentStore = methodBuilder.getNextAvailableStore();
 		final int symbolArgStore = methodBuilder.getNextAvailableStore();
 
 		final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
@@ -615,7 +617,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method used for assisting the generation of the {@link CompiledFunctionStruct#getInitForm(Closure,
+	 * Private method used for assisting the generation of the {@link CompiledFunctionStruct#getInitForm(Environment,
 	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
 	 * value of the init-form.
 	 *
@@ -623,7 +625,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		CompiledFunctionStruct#getInitForm(Closure, SymbolStruct)} method
+	 * 		CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method
 	 * @param symbolArgStore
 	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore

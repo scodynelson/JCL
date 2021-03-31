@@ -6,7 +6,6 @@ package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
 
-import jcl.compiler.function.Closure;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
@@ -45,11 +44,11 @@ public class MultipleValueProg1Struct extends CompilerSpecialOperatorStruct {
 	 * As an example, it will transform {@code (multiple-value-prog1 1 2)} into the following Java code:
 	 * <pre>
 	 * {@code
-	 * private LispStruct multipleValueProg1_1(Closure var1) {
+	 * private LispStruct multipleValueProg1_1(Environment var1) {
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      IntegerStruct var3 = new IntIntegerStruct(var2);
+	 *      IntegerStruct var3 = new IntegerStruct(var2);
 	 *      BigInteger var4 = new BigInteger("2");
-	 *      new IntIntegerStruct(var4);
+	 *      new IntegerStruct(var4);
 	 *      return var3;
 	 * }
 	 * }
@@ -59,12 +58,12 @@ public class MultipleValueProg1Struct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param closureArgStore
-	 * 		the storage location index on the stack where the {@link Closure} argument exists
+	 * @param environmentArgStore
+	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

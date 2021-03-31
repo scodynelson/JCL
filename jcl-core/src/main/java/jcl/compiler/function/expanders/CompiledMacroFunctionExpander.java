@@ -2,7 +2,6 @@ package jcl.compiler.function.expanders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,7 +21,6 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
-import jcl.compiler.function.Closure;
 import jcl.compiler.function.FunctionParameterBinding;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
@@ -37,18 +35,18 @@ import jcl.lang.statics.CommonLispSymbols;
 
 public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extends MacroFunctionExpander<O> {
 
-	protected Closure closure;
+	protected Environment environment;
 
 	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
 	};
 
-	protected CompiledMacroFunctionExpander(final Closure closure) {
-		this.closure = closure;
+	protected CompiledMacroFunctionExpander(final Environment environment) {
+		this.environment = environment;
 	}
 
-	protected CompiledMacroFunctionExpander(final String documentation, final Closure closure) {
+	protected CompiledMacroFunctionExpander(final String documentation, final Environment environment) {
 		super(documentation);
-		this.closure = closure;
+		this.environment = environment;
 	}
 
 	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.toLispSymbol("dummySymbol");
@@ -485,15 +483,15 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		return functionParametersToBind;
 	}
 
-	protected LispStruct getInitForm(final Closure currentClosure, final SymbolStruct parameter) {
+	protected LispStruct getInitForm(final Environment currentEnvironment, final SymbolStruct parameter) {
 		return NILStruct.INSTANCE;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
-	public O expand(final ListStruct form, final Environment environment) {
+	public O expand(final ListStruct form, final Environment currentEnvironment) {
 		macroLambdaListBindings.getWholeBinding().setInitForm(form);
-		macroLambdaListBindings.getEnvironmentBinding().setInitForm(environment);
+		macroLambdaListBindings.getEnvironmentBinding().setInitForm(currentEnvironment);
 
 		final Iterator<LispStruct> iterator = form.iterator();
 		iterator.next(); // MACRO-NAME SYMBOL
@@ -504,10 +502,10 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		final LispStruct[] argsArray = new LispStruct[arguments.size()];
 		arguments.toArray(argsArray);
 
-		final Map<SymbolStruct, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
-		for (final Map.Entry<SymbolStruct, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
-			final SymbolStruct symbol = closureSymbolToBind.getKey();
-			LispStruct value = closureSymbolToBind.getValue();
+		final Map<SymbolStruct, LispStruct> environmentSymbolsToBind = environment.getLexicalSymbolBindings();
+		for (final Map.Entry<SymbolStruct, LispStruct> environmentSymbolToBind : environmentSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = environmentSymbolToBind.getKey();
+			LispStruct value = environmentSymbolToBind.getValue();
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
@@ -515,10 +513,10 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			symbol.bindLexicalValue(value);
 		}
 
-		final Map<SymbolStruct, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
-			final SymbolStruct symbol = closureFunctionToBind.getKey();
-			final FunctionStruct function = closureFunctionToBind.getValue();
+		final Map<SymbolStruct, FunctionStruct> environmentFunctionsToBind = environment.getLexicalFunctionBindings();
+		for (final Map.Entry<SymbolStruct, FunctionStruct> environmentFunctionToBind : environmentFunctionsToBind.entrySet()) {
+			final SymbolStruct symbol = environmentFunctionToBind.getKey();
+			final FunctionStruct function = environmentFunctionToBind.getValue();
 			symbol.bindFunction(function);
 		}
 
@@ -530,7 +528,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
 			} else if (INIT_FORM_PLACEHOLDER.eq(value)) {
-				value = getInitForm(closure, symbol);
+				value = getInitForm(environment, symbol);
 			}
 			final boolean isSpecial = parameterSymbolToBind.isSpecial();
 			if (isSpecial) {
@@ -542,7 +540,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 		final O result;
 		try {
-			result = internalApply(closure);
+			result = internalApply(environment);
 		} catch (final ErrorException ex) {
 			throw ex;
 		} catch (final Throwable t) {
@@ -557,31 +555,17 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 					parameterSymbol.unbindLexicalValue();
 				}
 			}
-			for (final SymbolStruct closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
-				closureFunctionToUnbind.unbindFunction();
+			for (final SymbolStruct environmentFunctionToUnbind : environmentFunctionsToBind.keySet()) {
+				environmentFunctionToUnbind.unbindFunction();
 			}
-			for (final SymbolStruct closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
-				closureSymbolToUnbind.unbindLexicalValue();
+			for (final SymbolStruct environmentSymbolToUnbind : environmentSymbolsToBind.keySet()) {
+				environmentSymbolToUnbind.unbindLexicalValue();
 			}
 		}
 		return result;
 	}
 
-	public Map<SymbolStruct, LispStruct> getClosureSymbolBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getSymbolBindings();
-	}
-
-	public Map<SymbolStruct, FunctionStruct> getClosureFunctionBindings() {
-		if (closure == null) {
-			return Collections.emptyMap();
-		}
-		return closure.getFunctionBindings();
-	}
-
-	protected O internalApply(final Closure currentClosure) {
+	protected O internalApply(final Environment currentEnvironment) {
 		return null;
 	}
 }

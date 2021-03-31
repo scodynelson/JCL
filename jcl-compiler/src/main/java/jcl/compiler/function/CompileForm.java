@@ -48,16 +48,7 @@ public final class CompileForm {
 			final ClassWriter cw = javaClassBuilder.getClassWriter();
 
 			final byte[] byteArray = cw.toByteArray();
-
-			// TODO: Maybe set this up as a super debugging variable that we can control or something???
-			if (OUTPUT_FILE) {
-				final String fileName = javaClassBuilder.getFileName();
-				try (final FileOutputStream outputStream = new FileOutputStream("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class")) {
-					outputStream.write(byteArray);
-				} catch (final IOException ioe) {
-					log.info("Error writing class file.", ioe);
-				}
-			}
+			outputCompiledClassFile(javaClassBuilder, byteArray);
 
 			final ClassReader cr = new ClassReader(byteArray);
 
@@ -90,6 +81,19 @@ public final class CompileForm {
 				BooleanStruct.toLispBoolean(compiledWithWarnings),
 				BooleanStruct.toLispBoolean(failedToCompile)
 		);
+	}
+
+	public static void outputCompiledClassFile(final JavaClassBuilder javaClassBuilder, final byte[] byteArray) {
+		// TODO: Maybe set this up as a super debugging variable that we can control or something???
+		if (true) {
+			final String fileName = javaClassBuilder.getFileName();
+			final String tmpDir = "/Users/codynelson/workspace/JCL/jcl-application/compiled-lisp/";
+			try (final FileOutputStream outputStream = new FileOutputStream(tmpDir + fileName + ".class")) {
+				outputStream.write(byteArray);
+			} catch (final IOException ioe) {
+				log.info("Error writing class file.", ioe);
+			}
+		}
 	}
 
 	private static ListStruct wrapFormInLambda(final LispStruct form) {

@@ -44,7 +44,7 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 	 * <pre>
 	 * {@code
 	 *      BigInteger var2 = new BigInteger("1");
-	 *      new IntIntegerStruct(var2);
+	 *      new IntegerStruct(var2);
 	 * }
 	 * </pre>
 	 *
@@ -62,7 +62,7 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int closureArgStore) {
+	                                       final int environmentArgStore) {
 		// Do Nothing.
 	}
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jcl.compiler.function.Closure;
+import jcl.compiler.environment.Environment;
 import jcl.compiler.function.expanders.SymbolMacroExpander;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.generator.GoException;
@@ -49,7 +49,7 @@ public class TestGround {
 
 	private SymbolStruct UNINTERNED_SYMBOL = SymbolStruct.toLispSymbol("FOO");
 
-	private Object javaMethodCall(final Closure currentClosure) throws Exception {
+	private Object javaMethodCall(final Environment currentEnvironment) throws Exception {
 		final String methodName = "ADD";
 		final int numOfArguments = 1;
 
@@ -74,7 +74,7 @@ public class TestGround {
 		return methodResult;
 	}
 
-	private Object blockGen(final Closure currentClosure) {
+	private Object blockGen(final Environment currentEnvironment) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
@@ -93,7 +93,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object returnFromGen(final Closure currentClosure) {
+	private Object returnFromGen(final Environment currentEnvironment) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct name = pkg.findSymbol("FOO").getSymbol();
@@ -103,7 +103,7 @@ public class TestGround {
 		throw new ReturnFromException(name, result);
 	}
 
-	private Object ifGen(final Closure currentClosure) {
+	private Object ifGen(final Environment currentEnvironment) {
 
 		LispStruct testObj = CharacterStruct.toLispCharacter(97);
 		testObj = ValuesStruct.extractPrimaryValue(testObj);
@@ -117,7 +117,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object catchGen(final Closure currentClosure) {
+	private Object catchGen(final Environment currentEnvironment) {
 
 		final LispStruct catchTag = CharacterStruct.toLispCharacter(97);
 
@@ -135,7 +135,7 @@ public class TestGround {
 		return resultForm;
 	}
 
-	private Object throwGen(final Closure currentClosure) {
+	private Object throwGen(final Environment currentEnvironment) {
 
 		final LispStruct catchTag = CharacterStruct.toLispCharacter(97);
 		final LispStruct resultForm = CharacterStruct.toLispCharacter(197);
@@ -379,7 +379,7 @@ public class TestGround {
 		return ArrayStruct.toLispArray(dimensions, elementType, displacedTo, displacedIndexOffset, adjustable);
 	}
 
-	private Object unwindProtectGen(final Closure currentClosure) {
+	private Object unwindProtectGen(final Environment currentEnvironment) {
 		final LispStruct result;
 		try {
 			result = CharacterStruct.toLispCharacter(97);
@@ -389,7 +389,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object goGen(final Closure currentClosure) {
+	private Object goGen(final Environment currentEnvironment) {
 
 		final int tagIndex = 1234413124;
 		throw new GoException(tagIndex);
@@ -408,13 +408,9 @@ public class TestGround {
 		return symbol;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object setqGen(final Closure currentClosure) {
+	private Object setqGen(final Environment currentEnvironment) {
 
-		Map<SymbolStruct, LispStruct> closureBindings = null;
-		if (currentClosure != null) {
-			closureBindings = currentClosure.getSymbolBindings();
-		}
+		Map<SymbolStruct, LispStruct> lexicalBindings = currentEnvironment.getLexicalSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -422,14 +418,12 @@ public class TestGround {
 		LispStruct value = CharacterStruct.toLispCharacter(97);
 		value = ValuesStruct.extractPrimaryValue(value);
 		symbol.setValue(value);
-		if (closureBindings != null) {
-			closureBindings.put(symbol, value);
-		}
+		lexicalBindings.put(symbol, value);
 
 		return value;
 	}
 
-	private int tagbodyGen(final Closure currentClosure) {
+	private int tagbodyGen(final Environment currentEnvironment) {
 
 		final GeneratorState.TagbodyLabel tagbodyLabel = new GeneratorState.TagbodyLabel(null, 20, new Label());
 		final int index = tagbodyLabel.getIndex();
@@ -443,11 +437,10 @@ public class TestGround {
 		return ConsStruct.toLispCons(element1, element2);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object letGen(Closure currentClosure) {
+	private Object letGen(Environment currentEnvironment) {
 
-		currentClosure = new Closure(currentClosure);
-		final Map<SymbolStruct, LispStruct> closureBindings = currentClosure.getSymbolBindings();
+		currentEnvironment = new Environment(currentEnvironment);
+		final Map<SymbolStruct, LispStruct> lexicalBindings = currentEnvironment.getLexicalSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -455,7 +448,7 @@ public class TestGround {
 		LispStruct initForm = CharacterStruct.toLispCharacter(97);
 		initForm = ValuesStruct.extractPrimaryValue(initForm);
 		symbol.bindLexicalValue(initForm);
-		closureBindings.put(symbol, initForm);
+		lexicalBindings.put(symbol, initForm);
 
 		final LispStruct result;
 		try {
@@ -466,7 +459,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object symbolMacroletGen(final Closure currentClosure) {
+	private Object symbolMacroletGen(final Environment currentEnvironment) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -491,13 +484,13 @@ public class TestGround {
 		return symbol.getFunction();
 	}
 
-	private Object lambdaFunctionGen(final Closure currentClosure) {
+	private Object lambdaFunctionGen(final Environment currentEnvironment) {
 
-		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
+		final FunctionStruct function = new TestGroundLambdaFunction(currentEnvironment);
 		return function;
 	}
 
-	private Object functionCallGen(final Closure currentClosure) {
+	private Object functionCallGen(final Environment currentEnvironment) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -511,9 +504,9 @@ public class TestGround {
 		return function.apply(args);
 	}
 
-	private Object lambdaFunctionCallGen(final Closure currentClosure) {
+	private Object lambdaFunctionCallGen(final Environment currentEnvironment) {
 
-		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
+		final FunctionStruct function = new TestGroundLambdaFunction(currentEnvironment);
 
 		final LispStruct[] args = new LispStruct[12345678];
 		final CharacterStruct arg1 = CharacterStruct.toLispCharacter(97);
@@ -522,21 +515,16 @@ public class TestGround {
 		return function.apply(args);
 	}
 
-	private Object innerLambdaGen(final Closure currentClosure) {
+	private Object innerLambdaGen(final Environment currentEnvironment) {
 
-		Map<SymbolStruct, FunctionStruct> closureBindings = null;
-		if (currentClosure != null) {
-			closureBindings = currentClosure.getFunctionBindings();
-		}
+		Map<SymbolStruct, FunctionStruct> functionBindings = currentEnvironment.getLexicalFunctionBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final FunctionStruct initForm = new TestGroundLambdaFunction(currentClosure);
+		final FunctionStruct initForm = new TestGroundLambdaFunction(currentEnvironment);
 		symbol.bindFunction(initForm);
-		if (closureBindings != null) {
-			closureBindings.put(symbol, initForm);
-		}
+		functionBindings.put(symbol, initForm);
 
 		final LispStruct result;
 		try {
@@ -547,14 +535,14 @@ public class TestGround {
 		return result;
 	}
 
-	private Object multipleValueProg1Gen(final Closure currentClosure) {
+	private Object multipleValueProg1Gen(final Environment currentEnvironment) {
 
 		final LispStruct firstForm = CharacterStruct.toLispCharacter(97);
 		final LispStruct forms = CharacterStruct.toLispCharacter(197);
 		return firstForm;
 	}
 
-	private Object multipleValueCallGen(final Closure currentClosure) {
+	private Object multipleValueCallGen(final Environment currentEnvironment) {
 
 		final LispStruct firstForm = CharacterStruct.toLispCharacter(97);
 		if (!(firstForm instanceof FunctionStruct)) {
@@ -572,8 +560,7 @@ public class TestGround {
 		return functionForm.apply(args);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object progvGen(Closure currentClosure) {
+	private Object progvGen(Environment currentEnvironment) {
 
 		final LispStruct vars = null;
 		if (!(vars instanceof ListStruct)) {

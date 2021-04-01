@@ -9,6 +9,7 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -59,8 +60,7 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 		// Do Nothing.
 	}
 

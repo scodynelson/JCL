@@ -8,6 +8,7 @@ import java.util.Deque;
 
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.lang.classes.StandardObjectStruct;
 import lombok.AccessLevel;
@@ -38,7 +39,7 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 	 * <li>Visiting a new method via {@link ClassWriter#visitMethod(int, String, String, String, String[])} of the
 	 * current {@link JavaClassBuilder#classWriter} from the {@link GeneratorState#classBuilderDeque}</li>
 	 * <li>Generating the special operation method content via {@link #generateSpecialOperator(
-	 * GeneratorState, JavaMethodBuilder, int)}</li>
+	 * GeneratorState, JavaEnvironmentMethodBuilder)}</li>
 	 * <li>Generating the code to end the new method visitation</li>
 	 * <li>Generating the code to invoke the newly created method in place in the previous method execution stack</li>
 	 * </ol>
@@ -60,15 +61,15 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int environmentArgStore = methodBuilder.getNextAvailableStore();
+		final int thisStore = methodBuilder.getThisStore();
+		final int environmentStore = methodBuilder.getEnvironmentStore();
 
-		generateSpecialOperator(generatorState, methodBuilder, environmentArgStore);
+		generateSpecialOperator(generatorState, methodBuilder);
 
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
@@ -79,7 +80,7 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		previousMv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 		                           className,
 		                           methodName,
@@ -93,10 +94,7 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentArgStore
-	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
+	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
-	protected abstract void generateSpecialOperator(GeneratorState generatorState, JavaMethodBuilder methodBuilder,
-	                                                int environmentArgStore);
+	protected abstract void generateSpecialOperator(GeneratorState generatorState, JavaEnvironmentMethodBuilder methodBuilder);
 }

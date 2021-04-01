@@ -10,6 +10,7 @@ import java.util.Set;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
@@ -56,28 +57,26 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentArgStore
-	 * 		the storage location index on the stack where the {@link Environment} argument exists
+	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+		final int environmentStore = methodBuilder.getEnvironmentStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ENVIRONMENT_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
-		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   GenerationConstants.ENVIRONMENT_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
 		                   GenerationConstants.ENVIRONMENT_INIT_ENVIRONMENT_DESC,
 		                   false);
-		mv.visitVarInsn(Opcodes.ASTORE, environmentArgStore);
+		mv.visitVarInsn(Opcodes.ASTORE, environmentStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 		                   GenerationConstants.ENVIRONMENT_NAME,
 		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME,
@@ -100,7 +99,7 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 
 		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
 		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
-		generateBindings(generatorState, methodBuilder, environmentArgStore, environmentSymbolBindingsStore,
+		generateBindings(generatorState, methodBuilder, environmentSymbolBindingsStore,
 		                 lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind
 		);
 
@@ -157,8 +156,6 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentArgStore
-	 * 		the storage location index on the stack where the {@link Environment} argument exists
 	 * @param environmentSymbolBindingsStore
 	 * 		the storage location index on the stack where the {@link Environment#lexicalSymbolBindings} variable exists
 	 * @param lexicalSymbolStoresToUnbind
@@ -168,8 +165,7 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
 	 * 		values to unbind exists
 	 */
-	protected abstract void generateBindings(GeneratorState generatorState,
-	                                         JavaMethodBuilder methodBuilder, int environmentArgStore,
+	protected abstract void generateBindings(GeneratorState generatorState, JavaEnvironmentMethodBuilder methodBuilder,
 	                                         int environmentSymbolBindingsStore, Set<Integer> lexicalSymbolStoresToUnbind,
 	                                         Set<Integer> dynamicSymbolStoresToUnbind);
 

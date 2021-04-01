@@ -10,7 +10,7 @@ import java.util.Set;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
@@ -70,8 +70,7 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 		// Do Nothing.
 	}
 }

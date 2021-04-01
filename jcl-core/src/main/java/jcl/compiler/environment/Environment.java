@@ -20,6 +20,7 @@ import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StandardObjectStruct;
+import jcl.lang.function.expander.SymbolMacroExpanderInter;
 
 public class Environment extends StandardObjectStruct {
 
@@ -29,7 +30,11 @@ public class Environment extends StandardObjectStruct {
 
 	private final Map<SymbolStruct, LispStruct> lexicalSymbolBindings = new LinkedHashMap<>();
 
+	private final Map<SymbolStruct, LispStruct> dynamicSymbolBindings = new LinkedHashMap<>();
+
 	private final Map<SymbolStruct, FunctionStruct> lexicalFunctionBindings = new LinkedHashMap<>();
+
+	private final Map<SymbolStruct, SymbolMacroExpanderInter> symbolMacroBindings = new LinkedHashMap<>();
 
 	private Stack<SymbolStruct> functionNameStack = new Stack<>();
 
@@ -73,6 +78,10 @@ public class Environment extends StandardObjectStruct {
 		return tagbodyStack;
 	}
 
+	/*
+	Lexical Symbol
+	 */
+
 	public Map<SymbolStruct, LispStruct> getLexicalSymbolBindings() {
 		final Deque<Environment> environments = new ArrayDeque<>();
 		// NULL Environment should be first, 'this' Environment should be last
@@ -107,7 +116,7 @@ public class Environment extends StandardObjectStruct {
 			return value;
 		}
 		if (parent == null) {
-			return null;
+			return var.getValue();
 		}
 		return parent.getLexicalSymbolBinding(var);
 	}
@@ -120,28 +129,99 @@ public class Environment extends StandardObjectStruct {
 		lexicalSymbolBindings.remove(var);
 	}
 
-	public LispStruct getSymbolValue(final SymbolStruct var) {
-		LispStruct value = var.getDynamicValue();
-		if (value == null) {
-			value = getLexicalSymbolBinding(var);
-			if (value == null) {
-				// TODO: Symbol Macros
-//				value = environment.getSymbolMacroBinding(symbol);
-//				if (value == null) {
-				value = var.getValue();
-//				}
-			}
+	/*
+	Dynamic Symbol
+	 */
+
+	public Map<SymbolStruct, LispStruct> getDynamicSymbolBindings() {
+		final Deque<Environment> environments = new ArrayDeque<>();
+		// NULL Environment should be first, 'this' Environment should be last
+
+		Environment current = this;
+		while (NULL != current) {
+			environments.addFirst(current);
+			current = current.parent;
 		}
-		return value;
+
+		final Map<SymbolStruct, LispStruct> allBindings = new HashMap<>();
+		for (final Environment environment : environments) {
+			allBindings.putAll(environment.dynamicSymbolBindings);
+		}
+		return allBindings;
+	}
+
+	public boolean hasDynamicSymbolBinding(final SymbolStruct var) {
+		final boolean contains = dynamicSymbolBindings.containsKey(var);
+		if (contains) {
+			return true;
+		}
+		if (parent == null) {
+			return false;
+		}
+		return parent.hasDynamicSymbolBinding(var);
+	}
+
+	public LispStruct getDynamicSymbolBinding(final SymbolStruct var) {
+		final LispStruct value = dynamicSymbolBindings.get(var);
+		if (value != null) {
+			return value;
+		}
+		if (parent == null) {
+			return var.getValue();
+		}
+		return parent.getDynamicSymbolBinding(var);
+	}
+
+	public void bindDynamicValue(final SymbolStruct var, final LispStruct val) {
+		dynamicSymbolBindings.put(var, val);
+	}
+
+	public void unbindDynamicValue(final SymbolStruct var) {
+		dynamicSymbolBindings.remove(var);
+	}
+
+	/*
+	Symbol
+	 */
+
+	public LispStruct getSymbolValue(final SymbolStruct var) {
+		LispStruct val;
+		if (!hasLexicalSymbolBinding(var)) {
+			val = getDynamicSymbolBinding(var);
+		} else {
+			val = getLexicalSymbolBinding(var);
+		}
+		if (val == null) {
+			val = var.getValue();
+		}
+
+//		LispStruct value = getDynamicSymbolBinding(var);
+//		if (value == null) {
+//			value = getLexicalSymbolBinding(var);
+//			if (value == null) {
+//				// TODO: Symbol Macros
+////				value = environment.getSymbolMacroBinding(symbol);
+////				if (value == null) {
+//				value = var.getValue();
+////				}
+//			}
+//		}
+		return val;
 	}
 
 	public void setSymbolValue(final SymbolStruct var, final LispStruct value) {
 		if (hasLexicalSymbolBinding(var)) {
 			bindLexicalValue(var, value);
+		} else if (hasDynamicSymbolBinding(var)) {
+			bindDynamicValue(var, value);
 		} else {
 			var.setValue(value);
 		}
 	}
+
+	/*
+	Lexical Function
+	 */
 
 	public Map<SymbolStruct, FunctionStruct> getLexicalFunctionBindings() {
 		final Deque<Environment> environments = new ArrayDeque<>();
@@ -177,7 +257,7 @@ public class Environment extends StandardObjectStruct {
 			return value;
 		}
 		if (parent == null) {
-			return null;
+			return var.getFunction();
 		}
 		return parent.getLexicalFunctionBinding(var);
 	}
@@ -204,5 +284,56 @@ public class Environment extends StandardObjectStruct {
 		} else {
 			var.setFunction(val);
 		}
+	}
+
+	/*
+	Symbol Macro
+	 */
+
+	public Map<SymbolStruct, SymbolMacroExpanderInter> getSymbolMacroBindings() {
+		final Deque<Environment> environments = new ArrayDeque<>();
+		// NULL Environment should be first, 'this' Environment should be last
+
+		Environment current = this;
+		while (NULL != current) {
+			environments.addFirst(current);
+			current = current.parent;
+		}
+
+		final Map<SymbolStruct, SymbolMacroExpanderInter> allBindings = new HashMap<>();
+		for (final Environment environment : environments) {
+			allBindings.putAll(environment.symbolMacroBindings);
+		}
+		return allBindings;
+	}
+
+	public boolean hasSymbolMacroBinding(final SymbolStruct var) {
+		final boolean contains = symbolMacroBindings.containsKey(var);
+		if (contains) {
+			return true;
+		}
+		if (parent == null) {
+			return false;
+		}
+		return parent.hasSymbolMacroBinding(var);
+	}
+
+	public SymbolMacroExpanderInter getSymbolMacroBinding(final SymbolStruct var) {
+		final SymbolMacroExpanderInter value = symbolMacroBindings.get(var);
+		if (value != null) {
+			return value;
+		}
+		if (parent == null) {
+			return var.getSymbolMacroExpander();
+		}
+		return parent.getSymbolMacroBinding(var);
+	}
+
+	public void bindSymbolMacro(final SymbolStruct var, final SymbolMacroExpanderInter val) {
+		symbolMacroBindings.put(var, val);
+	}
+
+	public void unbindSymbolMacro(final SymbolStruct var) {
+		symbolMacroBindings.remove(var);
 	}
 }

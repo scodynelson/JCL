@@ -5,7 +5,7 @@
 package jcl.compiler.struct.specialoperator;
 
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.icg.generator.ReturnFromException;
@@ -73,8 +73,7 @@ public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

@@ -30,11 +30,11 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 
 	protected TestLambdaGenerator(final Environment environment) {
 		super("DocumentationString", environment);
-		initLambdaListBindings();
+		initLambdaListBindings(environment);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
+	protected List<RequiredParameter> getRequiredBindings(final Environment currentEnvironment) {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -46,7 +46,7 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	}
 
 	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
+	protected List<OptionalParameter> getOptionalBindings(final Environment currentEnvironment) {
 		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -64,14 +64,14 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	}
 
 	@Override
-	protected RestParameter getRestBinding() {
+	protected RestParameter getRestBinding(final Environment currentEnvironment) {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
 		return new RestParameter(restSymbol, true);
 	}
 
 	@Override
-	protected List<KeyParameter> getKeyBindings() {
+	protected List<KeyParameter> getKeyBindings(final Environment currentEnvironment) {
 		final List<KeyParameter> keyBindings = new ArrayList<>();
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -92,12 +92,12 @@ public class TestLambdaGenerator extends CompiledFunctionStruct {
 	}
 
 	@Override
-	protected boolean getAllowOtherKeys() {
+	protected boolean getAllowOtherKeys(final Environment currentEnvironment) {
 		return true;
 	}
 
 	@Override
-	protected List<AuxParameter> getAuxBindings() {
+	protected List<AuxParameter> getAuxBindings(final Environment currentEnvironment) {
 		final List<AuxParameter> auxBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");

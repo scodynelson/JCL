@@ -33,52 +33,52 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 		super(documentation);
 	}
 
-	protected List<RequiredParameter> getRequiredBindings() {
+	protected List<RequiredParameter> getRequiredBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected List<OptionalParameter> getOptionalBindings() {
+	protected List<OptionalParameter> getOptionalBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected RestParameter getRestBinding() {
+	protected RestParameter getRestBinding(final Environment currentEnvironment) {
 		return null;
 	}
 
-	protected List<KeyParameter> getKeyBindings() {
+	protected List<KeyParameter> getKeyBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected boolean getAllowOtherKeys() {
+	protected boolean getAllowOtherKeys(final Environment currentEnvironment) {
 		return false;
 	}
 
-	protected List<AuxParameter> getAuxBindings() {
+	protected List<AuxParameter> getAuxBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected WholeParameter getWholeBinding() {
+	protected WholeParameter getWholeBinding(final Environment currentEnvironment) {
 		return new WholeParameter(SymbolStruct.toLispSymbol("temp_whole_" + System.nanoTime()));
 	}
 
-	protected EnvironmentParameter getEnvironmentBinding() {
+	protected EnvironmentParameter getEnvironmentBinding(final Environment currentEnvironment) {
 		return new EnvironmentParameter(SymbolStruct.toLispSymbol("temp_environment_" + System.nanoTime()));
 	}
 
-	protected BodyParameter getBodyBinding() {
+	protected BodyParameter getBodyBinding(final Environment currentEnvironment) {
 		return null;
 	}
 
-	protected void initLambdaListBindings() {
-		final WholeParameter wholeBinding = getWholeBinding();
-		final List<RequiredParameter> requiredBindings = getRequiredBindings();
-		final List<OptionalParameter> optionalBindings = getOptionalBindings();
-		final RestParameter restBinding = getRestBinding();
-		final BodyParameter bodyBinding = getBodyBinding();
-		final List<KeyParameter> keyBindings = getKeyBindings();
-		final boolean allowOtherKeys = getAllowOtherKeys();
-		final List<AuxParameter> auxBindings = getAuxBindings();
-		final EnvironmentParameter environmentBinding = getEnvironmentBinding();
+	protected void initLambdaListBindings(final Environment currentEnvironment) {
+		final WholeParameter wholeBinding = getWholeBinding(currentEnvironment);
+		final List<RequiredParameter> requiredBindings = getRequiredBindings(currentEnvironment);
+		final List<OptionalParameter> optionalBindings = getOptionalBindings(currentEnvironment);
+		final RestParameter restBinding = getRestBinding(currentEnvironment);
+		final BodyParameter bodyBinding = getBodyBinding(currentEnvironment);
+		final List<KeyParameter> keyBindings = getKeyBindings(currentEnvironment);
+		final boolean allowOtherKeys = getAllowOtherKeys(currentEnvironment);
+		final List<AuxParameter> auxBindings = getAuxBindings(currentEnvironment);
+		final EnvironmentParameter environmentBinding = getEnvironmentBinding(currentEnvironment);
 		macroLambdaListBindings = MacroLambdaList.builder()
 		                                         .wholeBinding(wholeBinding)
 		                                         .environmentBinding(environmentBinding)

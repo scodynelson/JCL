@@ -292,13 +292,13 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		return functionParametersToBind;
 	}
 
-	protected void initLambdaListBindings() {
-		final List<RequiredParameter> requiredBindings = getRequiredBindings();
-		final List<OptionalParameter> optionalBindings = getOptionalBindings();
-		final RestParameter restBinding = getRestBinding();
-		final List<KeyParameter> keyBindings = getKeyBindings();
-		final boolean allowOtherKeys = getAllowOtherKeys();
-		final List<AuxParameter> auxBindings = getAuxBindings();
+	protected void initLambdaListBindings(final Environment currentEnvironment) {
+		final List<RequiredParameter> requiredBindings = getRequiredBindings(currentEnvironment);
+		final List<OptionalParameter> optionalBindings = getOptionalBindings(currentEnvironment);
+		final RestParameter restBinding = getRestBinding(currentEnvironment);
+		final List<KeyParameter> keyBindings = getKeyBindings(currentEnvironment);
+		final boolean allowOtherKeys = getAllowOtherKeys(currentEnvironment);
+		final List<AuxParameter> auxBindings = getAuxBindings(currentEnvironment);
 		lambdaListBindings = OrdinaryLambdaList.builder()
 		                                       .requiredBindings(requiredBindings)
 		                                       .optionalBindings(optionalBindings)
@@ -309,27 +309,27 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		                                       .build();
 	}
 
-	protected List<RequiredParameter> getRequiredBindings() {
+	protected List<RequiredParameter> getRequiredBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected List<OptionalParameter> getOptionalBindings() {
+	protected List<OptionalParameter> getOptionalBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected RestParameter getRestBinding() {
+	protected RestParameter getRestBinding(final Environment currentEnvironment) {
 		return null;
 	}
 
-	protected List<KeyParameter> getKeyBindings() {
+	protected List<KeyParameter> getKeyBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 
-	protected boolean getAllowOtherKeys() {
+	protected boolean getAllowOtherKeys(final Environment currentEnvironment) {
 		return false;
 	}
 
-	protected List<AuxParameter> getAuxBindings() {
+	protected List<AuxParameter> getAuxBindings(final Environment currentEnvironment) {
 		return Collections.emptyList();
 	}
 

@@ -16,7 +16,7 @@ public class JavaMethodBuilder {
 
 	private int nextAvailableStore;
 
-	public int getNextAvailableStore() {
+	public final int getNextAvailableStore() {
 		return nextAvailableStore++;
 	}
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,8 +28,7 @@ public class DeclareStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 		// Do Nothing.
 	}
 }

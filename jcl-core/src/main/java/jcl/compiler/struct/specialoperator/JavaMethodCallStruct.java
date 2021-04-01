@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
@@ -52,8 +52,7 @@ public class JavaMethodCallStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 

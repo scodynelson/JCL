@@ -85,7 +85,7 @@ public final class CompileForm {
 
 	public static void outputCompiledClassFile(final JavaClassBuilder javaClassBuilder, final byte[] byteArray) {
 		// TODO: Maybe set this up as a super debugging variable that we can control or something???
-		if (true) {
+		if (OUTPUT_FILE) {
 			final String fileName = javaClassBuilder.getFileName();
 			final String tmpDir = "/Users/codynelson/workspace/JCL/jcl-application/compiled-lisp/";
 			try (final FileOutputStream outputStream = new FileOutputStream(tmpDir + fileName + ".class")) {

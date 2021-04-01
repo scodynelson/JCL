@@ -24,6 +24,7 @@ import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.expanders.CompiledMacroFunctionExpander;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
@@ -75,7 +76,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#initLambdaListBindings()}
 	 * method.
 	 */
-	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "()V";
+	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)V";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
@@ -87,13 +88,13 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
 	 * method.
 	 */
-	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljava/util/List;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
 	 * method.
 	 */
-	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/RequiredParameter;>;";
+	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;)Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/RequiredParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
@@ -105,13 +106,13 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
 	 * method.
 	 */
-	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljava/util/List;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
 	 * method.
 	 */
-	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/OptionalParameter;>;";
+	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;)Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/OptionalParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getRestBinding()}
@@ -123,7 +124,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getRestBinding()}
 	 * method.
 	 */
-	private static final String GET_REST_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/RestParameter;";
+	private static final String GET_REST_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/RestParameter;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getKeyBindings()}
@@ -135,13 +136,13 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getKeyBindings()}
 	 * method.
 	 */
-	private static final String GET_KEY_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+	private static final String GET_KEY_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljava/util/List;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getKeyBindings()}
 	 * method.
 	 */
-	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/KeyParameter;>;";
+	private static final String GET_KEY_BINDINGS_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;)Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/KeyParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()}
@@ -153,7 +154,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()}
 	 * method.
 	 */
-	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "()Z";
+	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Z";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getAuxBindings()}
@@ -165,13 +166,13 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getAuxBindings()}
 	 * method.
 	 */
-	private static final String GET_AUX_BINDINGS_METHOD_DESC = "()Ljava/util/List;";
+	private static final String GET_AUX_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljava/util/List;";
 
 	/**
 	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getAuxBindings()}
 	 * method.
 	 */
-	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "()Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/AuxParameter;>;";
+	private static final String GET_AUX_BINDINGS_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;)Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/AuxParameter;>;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getWholeBinding()}
@@ -183,7 +184,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getWholeBinding()}
 	 * method.
 	 */
-	private static final String GET_WHOLE_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/WholeParameter;";
+	private static final String GET_WHOLE_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/WholeParameter;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()}
@@ -195,7 +196,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()}
 	 * method.
 	 */
-	private static final String GET_ENVIRONMENT_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/EnvironmentParameter;";
+	private static final String GET_ENVIRONMENT_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/EnvironmentParameter;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getBodyBinding()}
@@ -207,7 +208,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getBodyBinding()}
 	 * method.
 	 */
-	private static final String GET_BODY_BINDING_METHOD_DESC = "()Ljcl/compiler/environment/binding/lambdalist/BodyParameter;";
+	private static final String GET_BODY_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/BodyParameter;";
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#internalApply(Environment)}
@@ -493,8 +494,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 		// Do Nothing.
 	}
 
@@ -590,13 +590,13 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		final int environmentStore = methodBuilder.getNextAvailableStore();
+		final int thisStore = methodBuilder.getThisStore();
+		final int environmentStore = methodBuilder.getEnvironmentStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
@@ -613,6 +613,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                   false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
 		                   className,
 		                   INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME,
@@ -666,18 +667,12 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int environmentArgStore = methodBuilder.getNextAvailableStore();
-
 		forms.generate(generatorState);
-
 		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitMaxs(-1, -1);
@@ -737,15 +732,12 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        GET_INIT_FORM_METHOD_SIGNATURE,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int environmentStore = methodBuilder.getNextAvailableStore();
+
 		final int symbolArgStore = methodBuilder.getNextAvailableStore();
 
 		final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
@@ -904,13 +896,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        GET_REQUIRED_BINDINGS_METHOD_SIGNATURE,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1025,13 +1015,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1142,13 +1130,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final int restPackageStore = methodBuilder.getNextAvailableStore();
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
@@ -1240,13 +1226,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        GET_KEY_BINDINGS_METHOD_SIGNATURE,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1475,13 +1459,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        GET_AUX_BINDINGS_METHOD_SIGNATURE,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -1586,13 +1568,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final int wholePackageStore = methodBuilder.getNextAvailableStore();
 		final int wholeSymbolStore = methodBuilder.getNextAvailableStore();
@@ -1665,13 +1645,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final int environmentPackageStore = methodBuilder.getNextAvailableStore();
 		final int environmentSymbolStore = methodBuilder.getNextAvailableStore();
@@ -1738,13 +1716,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		                                        null,
 		                                        null);
 
-		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final JavaEnvironmentMethodBuilder methodBuilder = new JavaEnvironmentMethodBuilder(mv);
 		final Deque<JavaMethodBuilder> methodBuilderDeque = generatorState.getMethodBuilderDeque();
 		methodBuilderDeque.addFirst(methodBuilder);
 
 		mv.visitCode();
-		@SuppressWarnings({"unused", "SuppressionAnnotation"})
-		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final int bodyPackageStore = methodBuilder.getNextAvailableStore();
 		final int bodySymbolStore = methodBuilder.getNextAvailableStore();

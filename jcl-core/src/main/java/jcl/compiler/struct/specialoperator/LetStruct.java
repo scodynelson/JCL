@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.LispStruct;
@@ -81,9 +81,7 @@ public class LetStruct extends BindingEnvironmentStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentArgStore
-	 * 		the storage location index on the stack where the {@link Environment} argument exists
+	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 * @param environmentSymbolBindingsStore
 	 * 		the storage location index on the stack where the {@link Environment#lexicalSymbolBindings} {@link Map} exists
 	 * @param lexicalSymbolStoresToUnbind
@@ -92,8 +90,7 @@ public class LetStruct extends BindingEnvironmentStruct {
 	 * 		the {@link Set} of dynamic {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 */
 	@Override
-	protected void generateBindings(final GeneratorState generatorState,
-	                                final JavaMethodBuilder methodBuilder, final int environmentArgStore,
+	protected void generateBindings(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder,
 	                                final int environmentSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                final Set<Integer> dynamicSymbolStoresToUnbind) {
 

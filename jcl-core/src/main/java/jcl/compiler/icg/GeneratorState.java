@@ -45,6 +45,15 @@ public class GeneratorState {
 		return methodBuilderDeque.peek();
 	}
 
+	public JavaEnvironmentMethodBuilder getCurrentEnvironmentMethodBuilder() {
+		// TODO: we can probably do this better...
+		final JavaMethodBuilder currentMethodBuilder = getCurrentMethodBuilder();
+		if (currentMethodBuilder instanceof JavaEnvironmentMethodBuilder) {
+			return (JavaEnvironmentMethodBuilder) currentMethodBuilder;
+		}
+		return null;
+	}
+
 	@Getter
 	@AllArgsConstructor
 	public static class TagbodyLabel {

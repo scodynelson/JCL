@@ -35,11 +35,11 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 
 	protected TestGroundMacroFunctionExpanderGenerator(final Environment environment) {
 		super("DocumentationString", environment);
-		initLambdaListBindings();
+		initLambdaListBindings(environment);
 	}
 
 	@Override
-	protected List<RequiredParameter> getRequiredBindings() {
+	protected List<RequiredParameter> getRequiredBindings(final Environment currentEnvironment) {
 		final List<RequiredParameter> requiredBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -70,7 +70,7 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	}
 
 	@Override
-	protected List<OptionalParameter> getOptionalBindings() {
+	protected List<OptionalParameter> getOptionalBindings(final Environment currentEnvironment) {
 		final List<OptionalParameter> optionalBindings = new ArrayList<>();
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -88,14 +88,14 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	}
 
 	@Override
-	protected RestParameter getRestBinding() {
+	protected RestParameter getRestBinding(final Environment currentEnvironment) {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct restSymbol = pkg.intern("REST-SYMBOL").getSymbol();
 		return new RestParameter(restSymbol, true);
 	}
 
 	@Override
-	protected List<KeyParameter> getKeyBindings() {
+	protected List<KeyParameter> getKeyBindings(final Environment currentEnvironment) {
 		final List<KeyParameter> keyBindings = new ArrayList<>();
 
 		PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -116,12 +116,12 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	}
 
 	@Override
-	protected boolean getAllowOtherKeys() {
+	protected boolean getAllowOtherKeys(final Environment currentEnvironment) {
 		return true;
 	}
 
 	@Override
-	protected List<AuxParameter> getAuxBindings() {
+	protected List<AuxParameter> getAuxBindings(final Environment currentEnvironment) {
 		final List<AuxParameter> auxBindings = new ArrayList<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -135,21 +135,21 @@ public class TestGroundMacroFunctionExpanderGenerator extends CompiledMacroFunct
 	}
 
 	@Override
-	protected WholeParameter getWholeBinding() {
+	protected WholeParameter getWholeBinding(final Environment currentEnvironment) {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct wholeSymbol = pkg.intern("WHOLE-SYMBOL").getSymbol();
 		return new WholeParameter(wholeSymbol, true);
 	}
 
 	@Override
-	protected EnvironmentParameter getEnvironmentBinding() {
+	protected EnvironmentParameter getEnvironmentBinding(final Environment currentEnvironment) {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct environmentSymbol = pkg.intern("ENVIRONMENT-SYMBOL").getSymbol();
 		return new EnvironmentParameter(environmentSymbol);
 	}
 
 	@Override
-	protected BodyParameter getBodyBinding() {
+	protected BodyParameter getBodyBinding(final Environment currentEnvironment) {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct bodySymbol = pkg.intern("BODY-SYMBOL").getSymbol();
 		return new BodyParameter(bodySymbol, true);

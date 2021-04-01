@@ -5,7 +5,7 @@
 package jcl.compiler.struct.specialoperator;
 
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.icg.generator.ThrowException;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
@@ -51,13 +51,10 @@ public class ThrowStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentArgStore
-	 * 		the storage location index on the stack where the {@link jcl.compiler.environment.Environment} argument exists
+	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		// Generate the Catch Tag

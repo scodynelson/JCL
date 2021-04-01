@@ -9,7 +9,7 @@ import java.util.Map;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
@@ -99,24 +99,22 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 *        {@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentArgStore
-	 * 		the storage location index on the stack where the {@link Environment} argument exists
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaMethodBuilder methodBuilder,
-	                                       final int environmentArgStore) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+		final int environmentStore = methodBuilder.getEnvironmentStore();
 
-		final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ALOAD, environmentArgStore);
+		final int environmentSymbolBindingsStore = methodBuilder.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 		                   GenerationConstants.ENVIRONMENT_NAME,
 		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME,
 		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC,
 		                   false);
-		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
+		mv.visitVarInsn(Opcodes.ASTORE, environmentSymbolBindingsStore);
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
@@ -161,7 +159,7 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 				                   true);
 			}
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, environmentSymbolBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,

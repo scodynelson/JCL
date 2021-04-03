@@ -76,15 +76,6 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, environmentStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.ENVIRONMENT_NAME,
-		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME,
-		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC,
-		                   false);
-		final int environmentSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, environmentSymbolBindingsStore);
-
 		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
 		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
 
@@ -99,9 +90,7 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 
 		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
 		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
-		generateBindings(generatorState, methodBuilder, environmentSymbolBindingsStore,
-		                 lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind
-		);
+		generateBindings(generatorState, methodBuilder, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -117,14 +106,14 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		generateFinallyCode(mv, environmentStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		generateFinallyCode(mv, environmentStore, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -156,8 +145,6 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaMethodBuilder} used for building a Java method body
-	 * @param environmentSymbolBindingsStore
-	 * 		the storage location index on the stack where the {@link Environment#lexicalSymbolBindings} variable exists
 	 * @param lexicalSymbolStoresToUnbind
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical
 	 * 		values to unbind exists
@@ -166,7 +153,7 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * 		values to unbind exists
 	 */
 	protected abstract void generateBindings(GeneratorState generatorState, JavaEnvironmentMethodBuilder methodBuilder,
-	                                         int environmentSymbolBindingsStore, Set<Integer> lexicalSymbolStoresToUnbind,
+	                                         Set<Integer> lexicalSymbolStoresToUnbind,
 	                                         Set<Integer> dynamicSymbolStoresToUnbind);
 
 	/**
@@ -183,23 +170,26 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
 	 * 		values to unbind exists
 	 */
-	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> lexicalSymbolStoresToUnbind,
+	private static void generateFinallyCode(final MethodVisitor mv, final int environmentStore,
+	                                        final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                        final Set<Integer> dynamicSymbolStoresToUnbind) {
 		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-			                   true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+			                   false);
 		}
 		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
-			                   true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_DESC,
+			                   false);
 		}
 	}
 

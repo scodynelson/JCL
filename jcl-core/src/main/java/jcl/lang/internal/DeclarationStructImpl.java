@@ -1,13 +1,7 @@
 package jcl.lang.internal;
 
-import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
-import jcl.compiler.icg.generator.CodeGenerators;
-import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.PackageStruct;
 import jcl.lang.statics.GlobalPackageStruct;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 
 public final class DeclarationStructImpl extends SymbolStructImpl {
 
@@ -57,42 +51,6 @@ public final class DeclarationStructImpl extends SymbolStructImpl {
 	 * Post construction method.
 	 */
 	private void init() {
-		setValue(this);
-	}
-
-	/*
-	LISP-STRUCT
-	 */
-
-	@Override
-	public void generate(final GeneratorState generatorState) {
-		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
-		final MethodVisitor mv = methodBuilder.getMethodVisitor();
-
-		final int packageStore = methodBuilder.getNextAvailableStore();
-		final int symbolStore = methodBuilder.getNextAvailableStore();
-		CodeGenerators.generateSymbol(this, generatorState, packageStore, symbolStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-
-		if (generatorState.getLexicalSymbols().contains(this)) {
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC,
-			                   true);
-		} else if (generatorState.getDynamicSymbols().contains(this)) {
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC,
-			                   true);
-		} else {
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_DESC,
-			                   true);
-		}
+		value = this;
 	}
 }

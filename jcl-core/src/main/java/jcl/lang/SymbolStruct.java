@@ -52,10 +52,6 @@ public interface SymbolStruct extends LispStruct {
 //	 */
 	LispStruct getValue();
 
-	LispStruct getLexicalValue();
-
-	LispStruct getDynamicValue();
-
 	//	/**
 //	 * Setter for symbol {@link #value} property.
 //	 *
@@ -68,18 +64,6 @@ public interface SymbolStruct extends LispStruct {
 		setValue(value);
 		return value;
 	}
-
-	void setLexicalValue(final LispStruct value);
-
-	void setDynamicValue(final LispStruct value);
-
-	void bindLexicalValue(final LispStruct value);
-
-	void unbindLexicalValue();
-
-	void bindDynamicValue(final LispStruct value);
-
-	void unbindDynamicValue();
 
 	boolean hasFunction();
 
@@ -97,10 +81,6 @@ public interface SymbolStruct extends LispStruct {
 //	 * 		new symbol {@link #function} property value
 //	 */
 	void setFunction(final FunctionStruct function);
-
-	void bindFunction(final FunctionStruct function);
-
-	FunctionStruct unbindFunction();
 
 	void setSetfFunction(final FunctionStruct function);
 

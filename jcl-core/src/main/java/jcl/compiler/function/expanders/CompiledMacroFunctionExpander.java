@@ -22,7 +22,6 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.compiler.function.FunctionParameterBinding;
-import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -502,24 +501,6 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		final LispStruct[] argsArray = new LispStruct[arguments.size()];
 		arguments.toArray(argsArray);
 
-		final Map<SymbolStruct, LispStruct> environmentSymbolsToBind = environment.getLexicalSymbolBindings();
-		for (final Map.Entry<SymbolStruct, LispStruct> environmentSymbolToBind : environmentSymbolsToBind.entrySet()) {
-			final SymbolStruct symbol = environmentSymbolToBind.getKey();
-			LispStruct value = environmentSymbolToBind.getValue();
-			if (value instanceof ValuesStruct) {
-				final ValuesStruct valuesStruct = (ValuesStruct) value;
-				value = valuesStruct.getPrimaryValue();
-			}
-			symbol.bindLexicalValue(value);
-		}
-
-		final Map<SymbolStruct, FunctionStruct> environmentFunctionsToBind = environment.getLexicalFunctionBindings();
-		for (final Map.Entry<SymbolStruct, FunctionStruct> environmentFunctionToBind : environmentFunctionsToBind.entrySet()) {
-			final SymbolStruct symbol = environmentFunctionToBind.getKey();
-			final FunctionStruct function = environmentFunctionToBind.getValue();
-			symbol.bindFunction(function);
-		}
-
 		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(argsArray);
 		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
 			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
@@ -532,9 +513,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			}
 			final boolean isSpecial = parameterSymbolToBind.isSpecial();
 			if (isSpecial) {
-				symbol.bindDynamicValue(value);
+				environment.bindDynamicValue(symbol, value);
 			} else {
-				symbol.bindLexicalValue(value);
+				environment.bindLexicalValue(symbol, value);
 			}
 		}
 
@@ -550,16 +531,10 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 				final SymbolStruct parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
 				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
 				if (isSpecial) {
-					parameterSymbol.unbindDynamicValue();
+					environment.unbindDynamicValue(parameterSymbol);
 				} else {
-					parameterSymbol.unbindLexicalValue();
+					environment.unbindLexicalValue(parameterSymbol);
 				}
-			}
-			for (final SymbolStruct environmentFunctionToUnbind : environmentFunctionsToBind.keySet()) {
-				environmentFunctionToUnbind.unbindFunction();
-			}
-			for (final SymbolStruct environmentSymbolToUnbind : environmentSymbolsToBind.keySet()) {
-				environmentSymbolToUnbind.unbindLexicalValue();
 			}
 		}
 		return result;

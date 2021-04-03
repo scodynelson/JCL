@@ -116,20 +116,20 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 *              var14 = var15.getPrimaryValue();
 	 *          }
 	 *
-	 *          var13.bindDynamicValue(var14);
+	 *          var1.bindDynamicValue(var13, var14);
 	 *      }
 	 *
 	 *      LispStruct var18;
 	 *      try {
 	 *          PackageStruct var16 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *          SymbolStruct var17 = var16.findSymbol("X").getSymbol();
-	 *          var18 = var17.getValue();
+	 *          var18 = var1.getSymbolValue(var17);
 	 *      } finally {
 	 *          Iterator var22 = var4.iterator();
 	 *
 	 *          while(var22.hasNext()) {
 	 *              SymbolStruct var23 = (SymbolStruct)var22.next();
-	 *              var23.unbindDynamicValue();
+	 *              var1.unbindDynamicValue(var23);
 	 *          }
 	 *      }
 	 *      return var18;
@@ -145,6 +145,8 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
 
+		final int environmentStore = methodBuilder.getEnvironmentStore();
+
 		// Generate and Check Vars List
 		final int varsJavaListStore = generateListAndCheck(vars, generatorState, methodBuilder, SYMBOLS_LIST_MUST_BE_A_LIST);
 		generateVarListSymbolsCheck(methodBuilder, varsJavaListStore);
@@ -153,7 +155,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 		final int valsJavaListStore = generateListAndCheck(vals, generatorState, methodBuilder, VALUES_LIST_MUST_BE_A_LIST);
 
 		// Generate Dynamic Var Binding Loop
-		generateVarBindingLoop(methodBuilder, varsJavaListStore, valsJavaListStore);
+		generateVarBindingLoop(methodBuilder, environmentStore, varsJavaListStore, valsJavaListStore);
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
@@ -171,14 +173,14 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(methodBuilder, varsJavaListStore);
+		generateFinallyCode(methodBuilder, environmentStore, varsJavaListStore);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(methodBuilder, varsJavaListStore);
+		generateFinallyCode(methodBuilder, environmentStore, varsJavaListStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -330,8 +332,8 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * @param valsJavaListStore
 	 * 		the storage location index on the stack where the {@link List} of {@link LispStruct} vals exist
 	 */
-	private static void generateVarBindingLoop(final JavaMethodBuilder methodBuilder, final int varsJavaListStore,
-	                                           final int valsJavaListStore) {
+	private static void generateVarBindingLoop(final JavaMethodBuilder methodBuilder, final int environmentStore,
+	                                           final int varsJavaListStore, final int valsJavaListStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
@@ -406,13 +408,14 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 		                   false);
 		mv.visitVarInsn(Opcodes.ASTORE, valStore);
 
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 		mv.visitVarInsn(Opcodes.ALOAD, valStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-		                   GenerationConstants.SYMBOL_STRUCT_NAME,
-		                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
-		                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
-		                   true);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_DESC,
+		                   false);
 
 		mv.visitIincInsn(indexValueStore, 1);
 		mv.visitJumpInsn(Opcodes.GOTO, varBindingLoopStart);
@@ -430,7 +433,8 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct}s to unbind dynamic
 	 * 		values from exists
 	 */
-	private static void generateFinallyCode(final JavaMethodBuilder methodBuilder, final int varsJavaListStore) {
+	private static void generateFinallyCode(final JavaMethodBuilder methodBuilder, final int environmentStore,
+	                                        final int varsJavaListStore) {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitVarInsn(Opcodes.ALOAD, varsJavaListStore);
@@ -464,12 +468,13 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 		final int unbindingVarSymbolStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, unbindingVarSymbolStore);
 
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitVarInsn(Opcodes.ALOAD, unbindingVarSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-		                   GenerationConstants.SYMBOL_STRUCT_NAME,
-		                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
-		                   GenerationConstants.SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
-		                   true);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_DESC,
+		                   false);
 
 		mv.visitJumpInsn(Opcodes.GOTO, unbindingIteratorLoopStart);
 

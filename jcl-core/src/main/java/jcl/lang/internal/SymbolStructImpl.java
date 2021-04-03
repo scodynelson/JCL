@@ -3,7 +3,7 @@ package jcl.lang.internal;
 import java.util.Stack;
 
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
@@ -39,11 +39,9 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	protected PackageStruct symbolPackage;
 
-	protected Stack<LispStruct> lexicalValueStack = new Stack<>();
+	protected LispStruct value;
 
-	protected Stack<LispStruct> dynamicValueStack = new Stack<>();
-
-	protected Stack<FunctionStruct> functionStack = new Stack<>();
+	protected FunctionStruct function;
 
 	protected FunctionStruct setfFunction;
 
@@ -131,12 +129,8 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
-		if (value != null) {
-			lexicalValueStack.push(value);
-		}
-		if (function != null) {
-			functionStack.push(function);
-		}
+		this.value = value;
+		this.function = function;
 
 		init();
 	}
@@ -189,7 +183,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public BooleanStruct hasValue() {
-		return BooleanStruct.toLispBoolean(!lexicalValueStack.isEmpty() || !dynamicValueStack.isEmpty());
+		return BooleanStruct.toLispBoolean(value != null);
 	}
 
 	//	/**
@@ -199,45 +193,9 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 //	 */
 	@Override
 	public LispStruct getValue() {
-		final LispStruct value;
-		if (lexicalValueStack.isEmpty()) {
-			value = getDynamicValue();
-		} else {
-			value = getLexicalValue();
-		}
-
 		if (value == null) {
 			return handleUnboundValue();
 		}
-
-		return value;
-	}
-
-	@Override
-	public LispStruct getLexicalValue() {
-		if (lexicalValueStack.isEmpty()) {
-			return handleUnboundValue();
-		}
-
-		final LispStruct value = lexicalValueStack.peek();
-		if (value == null) {
-			return handleUnboundValue();
-		}
-
-		return value;
-	}
-
-	@Override
-	public LispStruct getDynamicValue() {
-		if (dynamicValueStack.isEmpty()) {
-			handleUnboundValue();
-		}
-
-		final LispStruct value = dynamicValueStack.peek();
-		if (value == null) {
-			return handleUnboundValue();
-		}
-
 		return value;
 	}
 
@@ -261,77 +219,22 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		throw new ErrorException("Unbound variable: " + variableName);
 	}
 
-	//	/**
-//	 * Setter for symbol {@link #value} property.
-//	 *
-//	 * @param value
-//	 * 		new symbol {@link #value} property value
-//	 */
 	@Override
 	public void setValue(final LispStruct value) {
-		if (lexicalValueStack.isEmpty()) {
-			setDynamicValue(value);
-		} else {
-			setLexicalValue(value);
-		}
-	}
-
-	@Override
-	public void setLexicalValue(final LispStruct value) {
-		if (lexicalValueStack.isEmpty()) {
-			lexicalValueStack.push(value);
-		} else {
-			lexicalValueStack.pop();
-			lexicalValueStack.push(value);
-		}
-	}
-
-	@Override
-	public void setDynamicValue(final LispStruct value) {
-		if (dynamicValueStack.isEmpty()) {
-			dynamicValueStack.push(value);
-		} else {
-			dynamicValueStack.pop();
-			dynamicValueStack.push(value);
-		}
-	}
-
-	@Override
-	public void bindLexicalValue(final LispStruct value) {
-		lexicalValueStack.push(value);
-	}
-
-	@Override
-	public void unbindLexicalValue() {
-		lexicalValueStack.pop();
-	}
-
-	@Override
-	public void bindDynamicValue(final LispStruct value) {
-		dynamicValueStack.push(value);
-	}
-
-	@Override
-	public void unbindDynamicValue() {
-		dynamicValueStack.pop();
+		this.value = value;
 	}
 
 	@Override
 	public boolean hasFunction() {
-		return !functionStack.isEmpty();
+		return function != null;
 	}
 
-	//	/**
-//	 * Getter for symbol {@link #function} property.
-//	 *
-//	 * @return symbol {@link #function} property
-//	 */
 	@Override
 	public FunctionStruct getFunction() {
-		if (functionStack.isEmpty()) {
+		if (function == null) {
 			return handleUnboundFunction();
 		}
-		return functionStack.peek();
+		return function;
 	}
 
 	private FunctionStruct handleUnboundFunction() {
@@ -354,30 +257,9 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		throw new ErrorException("Undefined function: " + variableName);
 	}
 
-	//	/**
-//	 * Setter for symbol {@link #function} property.
-//	 *
-//	 * @param function
-//	 * 		new symbol {@link #function} property value
-//	 */
 	@Override
 	public void setFunction(final FunctionStruct function) {
-		if (functionStack.isEmpty()) {
-			functionStack.push(function);
-		} else {
-			functionStack.pop();
-			functionStack.push(function);
-		}
-	}
-
-	@Override
-	public void bindFunction(final FunctionStruct function) {
-		functionStack.push(function);
-	}
-
-	@Override
-	public FunctionStruct unbindFunction() {
-		return functionStack.pop();
+		this.function = function;
 	}
 
 	@Override
@@ -571,9 +453,8 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	public SymbolStruct copySymbol(final BooleanStruct copyProperties) {
 		if (copyProperties.toJavaPBoolean()) {
 			final SymbolStructImpl newSymbol = new SymbolStructImpl(name);
-			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
-			newSymbol.dynamicValueStack.addAll(dynamicValueStack);
-			newSymbol.functionStack.addAll(functionStack);
+			newSymbol.value = value;
+			newSymbol.function = function;
 			if (properties == null) {
 				// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
 				//      the constant NIL symbol with a dependence on its existence.
@@ -592,33 +473,36 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public void generate(final GeneratorState generatorState) {
-		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final JavaEnvironmentMethodBuilder methodBuilder = generatorState.getCurrentEnvironmentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
 		CodeGenerators.generateSymbol(this, generatorState, packageStore, symbolStore);
 
+		final int environmentStore = methodBuilder.getEnvironmentStore();
+
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
 		if (generatorState.getLexicalSymbols().contains(this)) {
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC,
-			                   true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_DESC,
+			                   false);
 		} else if (generatorState.getDynamicSymbols().contains(this)) {
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC,
-			                   true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_DESC,
+			                   false);
 		} else {
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_GET_VALUE_METHOD_DESC,
-			                   true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_DESC,
+			                   false);
 		}
 	}
 

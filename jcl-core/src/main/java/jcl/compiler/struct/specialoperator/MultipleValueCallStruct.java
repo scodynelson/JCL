@@ -58,7 +58,7 @@ public class MultipleValueCallStruct extends CompilerSpecialOperatorStruct {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
 	 *
-	 *      LispStruct var4 = var3.getFunction();
+	 *      LispStruct var4 = var1.getFunction(var3);
 	 *      if(!(var4 instanceof FunctionStructImpl)) {
 	 *          throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid function form: " + var4);
 	 *      } else {

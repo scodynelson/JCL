@@ -41,26 +41,6 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 	}
 
 	@Override
-	public void bindLexicalValue(final LispStruct value) {
-		throw new ProgramErrorException("Can't bind value for constant " + name + '.');
-	}
-
-	@Override
-	public void unbindLexicalValue() {
-		throw new ProgramErrorException("Can't unbind value for constant " + name + '.');
-	}
-
-	@Override
-	public void bindDynamicValue(final LispStruct value) {
-		throw new ProgramErrorException("Can't bind value for constant " + name + '.');
-	}
-
-	@Override
-	public void unbindDynamicValue() {
-		throw new ProgramErrorException("Can't unbind value for constant " + name + '.');
-	}
-
-	@Override
 	public void setSymbolMacroExpander(final SymbolMacroExpanderInter symbolMacroExpander) {
 		throw new ProgramErrorException("Can't set symbol macro expansion for constant " + name + '.');
 	}

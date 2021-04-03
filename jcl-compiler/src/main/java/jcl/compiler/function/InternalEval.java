@@ -43,7 +43,7 @@ public final class InternalEval {
 
 		if (exp instanceof SymbolStruct) {
 			final SymbolStruct symbol = (SymbolStruct) exp;
-			return symbol.getValue();
+			return environment.getSymbolValue(symbol);
 		}
 
 		if (exp instanceof QuoteStruct) {
@@ -62,7 +62,7 @@ public final class InternalEval {
 				final LispStruct form = setqPair.getForm();
 				final LispStruct evaluatedForm = eval(form);
 
-				var.setValue(evaluatedForm);
+				environment.setSymbolValue(var, evaluatedForm);
 
 				finalForm = evaluatedForm;
 			}

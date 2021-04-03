@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import jcl.compiler.environment.Environment;
@@ -395,12 +394,12 @@ public class TestGround {
 		throw new GoException(tagIndex);
 	}
 
-	private Object symbolGen() {
+	private Object symbolGen(final Environment currentEnvironment) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		return symbol.getValue();
+		return currentEnvironment.getSymbolValue(symbol);
 	}
 
 	private Object uninternedSymbolGen() {
@@ -410,15 +409,12 @@ public class TestGround {
 
 	private Object setqGen(final Environment currentEnvironment) {
 
-		Map<SymbolStruct, LispStruct> lexicalBindings = currentEnvironment.getLexicalSymbolBindings();
-
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct value = CharacterStruct.toLispCharacter(97);
 		value = ValuesStruct.extractPrimaryValue(value);
-		symbol.setValue(value);
-		lexicalBindings.put(symbol, value);
+		currentEnvironment.setSymbolValue(symbol, value);
 
 		return value;
 	}
@@ -440,21 +436,19 @@ public class TestGround {
 	private Object letGen(Environment currentEnvironment) {
 
 		currentEnvironment = new Environment(currentEnvironment);
-		final Map<SymbolStruct, LispStruct> lexicalBindings = currentEnvironment.getLexicalSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		LispStruct initForm = CharacterStruct.toLispCharacter(97);
 		initForm = ValuesStruct.extractPrimaryValue(initForm);
-		symbol.bindLexicalValue(initForm);
-		lexicalBindings.put(symbol, initForm);
+		currentEnvironment.bindLexicalValue(symbol, initForm);
 
 		final LispStruct result;
 		try {
 			result = CharacterStruct.toLispCharacter(197);
 		} finally {
-			symbol.unbindLexicalValue();
+			currentEnvironment.unbindLexicalValue(symbol);
 		}
 		return result;
 	}
@@ -476,12 +470,12 @@ public class TestGround {
 		return result;
 	}
 
-	private Object symbolFunctionGen() {
+	private Object symbolFunctionGen(final Environment currentEnvironment) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		return symbol.getFunction();
+		return currentEnvironment.getFunction(symbol);
 	}
 
 	private Object lambdaFunctionGen(final Environment currentEnvironment) {
@@ -495,7 +489,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final FunctionStruct function = symbol.getFunction();
+		final FunctionStruct function = currentEnvironment.getFunction(symbol);
 
 		final LispStruct[] args = new LispStruct[12345678];
 		final CharacterStruct arg1 = CharacterStruct.toLispCharacter(97);
@@ -517,20 +511,17 @@ public class TestGround {
 
 	private Object innerLambdaGen(final Environment currentEnvironment) {
 
-		Map<SymbolStruct, FunctionStruct> functionBindings = currentEnvironment.getLexicalFunctionBindings();
-
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final FunctionStruct initForm = new TestGroundLambdaFunction(currentEnvironment);
-		symbol.bindFunction(initForm);
-		functionBindings.put(symbol, initForm);
+		currentEnvironment.bindFunction(symbol, initForm);
 
 		final LispStruct result;
 		try {
 			result = CharacterStruct.toLispCharacter(197);
 		} finally {
-			symbol.unbindFunction();
+			currentEnvironment.unbindFunction(symbol);
 		}
 		return result;
 	}
@@ -596,7 +587,7 @@ public class TestGround {
 			}
 			val = ValuesStruct.extractPrimaryValue(val);
 
-			var.bindDynamicValue(val);
+			currentEnvironment.bindDynamicValue(var, val);
 		}
 
 		final LispStruct result;
@@ -606,7 +597,7 @@ public class TestGround {
 			for (final LispStruct var : varsAsJavaList) {
 				// NOTE: We can safely cast here since we checked the type earlier
 				final SymbolStruct varSymbol = (SymbolStruct) var;
-				varSymbol.unbindDynamicValue();
+				currentEnvironment.unbindDynamicValue(varSymbol);
 			}
 		}
 		return result;

@@ -5,7 +5,7 @@
 package jcl.compiler.struct.specialoperator;
 
 import jcl.compiler.icg.GeneratorState;
-import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.FunctionStruct;
@@ -34,7 +34,7 @@ public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 	 * {@code
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
-	 *      FunctionStructImpl var4 = var3.getFunction();
+	 *      FunctionStructImpl var4 = var1.getFunction(var3);
 	 * }
 	 * </pre>
 	 *
@@ -43,18 +43,21 @@ public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 	 */
 	@Override
 	public void generate(final GeneratorState generatorState) {
-		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final JavaEnvironmentMethodBuilder methodBuilder = generatorState.getCurrentEnvironmentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final int functionPackageStore = methodBuilder.getNextAvailableStore();
 		final int functionSymbolStore = methodBuilder.getNextAvailableStore();
 		CodeGenerators.generateSymbol(functionSymbol, generatorState, functionPackageStore, functionSymbolStore);
 
+		final int environmentStore = methodBuilder.getEnvironmentStore();
+
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-		                   GenerationConstants.SYMBOL_STRUCT_NAME,
-		                   GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME,
-		                   GenerationConstants.SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC,
-		                   true);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_FUNCTION_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_FUNCTION_METHOD_DESC,
+		                   false);
 	}
 }

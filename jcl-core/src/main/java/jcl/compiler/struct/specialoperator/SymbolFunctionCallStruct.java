@@ -73,7 +73,7 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 	 * private LispStruct symbolFunctionCall_1(Environment var1) {
 	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP");
 	 *      SymbolStruct var3 = var2.findSymbol("+").getSymbol();
-	 *      FunctionStructImpl var4 = var3.getFunction();
+	 *      FunctionStructImpl var4 = var1.getFunction(var3);
 	 *      LispStruct[] var5 = new LispStruct[1];
 	 *      BigInteger var7 = new BigInteger("1");
 	 *      IntegerStruct var6 = new IntegerStruct(var7);

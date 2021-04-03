@@ -19,7 +19,7 @@ public interface FunctionStruct extends LispStruct {
 			final SymbolStruct functionSymbol = (SymbolStruct) functionDesignator;
 
 			FunctionStruct function = null;
-			if (functionSymbol.hasFunction()) {
+			if (functionSymbol.hasFunction()) { // TODO: Can check in Environment??
 				function = functionSymbol.getFunction();
 			}
 			if (function == null) {

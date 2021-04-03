@@ -53,7 +53,7 @@ public final class ConsAnalyzer {
 		final SymbolStruct functionSymbol = (SymbolStruct) iterator.next();
 
 		final Set<SymbolStruct> undefinedFunctions = environment.getUndefinedFunctions();
-		if (functionSymbol.hasFunction()) {
+		if (environment.hasFunction(functionSymbol)) {
 			// Function is defined
 			undefinedFunctions.remove(functionSymbol);
 		} else {

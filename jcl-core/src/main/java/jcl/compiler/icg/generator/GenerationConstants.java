@@ -242,58 +242,6 @@ public interface GenerationConstants {
 
 	String SYMBOL_STRUCT_TO_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_TO_SYMBOL_METHOD_NAME, String.class);
 
-	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME = "getLexicalValue";
-
-	String SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_LEXICAL_VALUE_METHOD_NAME);
-
-	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME = "setLexicalValue";
-
-	String SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
-
-	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME = "bindLexicalValue";
-
-	String SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME, LispStruct.class);
-
-	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME = "unbindLexicalValue";
-
-	String SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_LEXICAL_VALUE_METHOD_NAME);
-
-	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME = "getDynamicValue";
-
-	String SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_DYNAMIC_VALUE_METHOD_NAME);
-
-	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME = "setDynamicValue";
-
-	String SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
-
-	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME = "bindDynamicValue";
-
-	String SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME, LispStruct.class);
-
-	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME = "unbindDynamicValue";
-
-	String SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_DYNAMIC_VALUE_METHOD_NAME);
-
-	String SYMBOL_STRUCT_GET_VALUE_METHOD_NAME = "getValue";
-
-	String SYMBOL_STRUCT_GET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_VALUE_METHOD_NAME);
-
-	String SYMBOL_STRUCT_SET_VALUE_METHOD_NAME = "setValue";
-
-	String SYMBOL_STRUCT_SET_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_VALUE_METHOD_NAME, LispStruct.class);
-
-	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME = "getFunction";
-
-	String SYMBOL_STRUCT_GET_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_GET_FUNCTION_METHOD_NAME);
-
-	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
-
-	String SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME, FunctionStruct.class);
-
-	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
-
-	String SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME);
-
 	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME = "setStructureClass";
 
 	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
@@ -310,13 +258,37 @@ public interface GenerationConstants {
 
 	String ENVIRONMENT_INIT_ENVIRONMENT_DESC = CodeGenerators.getConstructorDescription(Environment.class, Environment.class);
 
-	String ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME = "getLexicalSymbolBindings";
+	String ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_NAME = "getLexicalSymbolValue";
 
-	String ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME);
+	String ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_NAME, SymbolStruct.class);
 
-	String ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_NAME = "getLexicalFunctionBindings";
+	String ENVIRONMENT_SET_LEXICAL_SYMBOL_VALUE_METHOD_NAME = "setLexicalSymbolValue";
 
-	String ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_NAME);
+	String ENVIRONMENT_SET_LEXICAL_SYMBOL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_SET_LEXICAL_SYMBOL_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
+
+	String ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME = "bindLexicalValue";
+
+	String ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
+
+	String ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME = "unbindLexicalValue";
+
+	String ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME = "getDynamicSymbolValue";
+
+	String ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_SET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME = "setDynamicSymbolValue";
+
+	String ENVIRONMENT_SET_DYNAMIC_SYMBOL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_SET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
+
+	String ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_NAME = "bindDynamicValue";
+
+	String ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
+
+	String ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_NAME = "unbindDynamicValue";
+
+	String ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_DYNAMIC_VALUE_METHOD_NAME, SymbolStruct.class);
 
 	String ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_NAME = "getSymbolValue";
 
@@ -329,14 +301,6 @@ public interface GenerationConstants {
 	String ENVIRONMENT_GET_FUNCTION_METHOD_NAME = "getFunction";
 
 	String ENVIRONMENT_GET_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_FUNCTION_METHOD_NAME, SymbolStruct.class);
-
-	String ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME = "bindLexicalValue";
-
-	String ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME, SymbolStruct.class, LispStruct.class);
-
-	String ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME = "unbindLexicalValue";
-
-	String ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_LEXICAL_VALUE_METHOD_NAME, SymbolStruct.class);
 
 	String ENVIRONMENT_BIND_FUNCTION_METHOD_NAME = "bindFunction";
 

@@ -119,7 +119,7 @@ public final class InternalCompile {
 			return new CompileResult(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
-		final boolean hasFunction = nameSymbol.hasFunction();
+		final boolean hasFunction = nameSymbol.hasFunction(); // TODO: use environment??
 		if (hasFunction) {
 			final FunctionStruct function = nameSymbol.getFunction();
 			return new CompileResult(function, NILStruct.INSTANCE, NILStruct.INSTANCE);

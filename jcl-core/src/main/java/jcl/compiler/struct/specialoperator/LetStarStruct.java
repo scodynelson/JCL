@@ -50,30 +50,28 @@ public class LetStarStruct extends BindingEnvironmentStruct {
 	 * {@code
 	 * private LispStruct letStar_1(Environment var1) {
 	 *      var1 = new Environment(var1);
-	 *      Map var2 = var1.getLexicalSymbolBindings();
 	 *
-	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.findSymbol("X").getSymbol();
 	 *
-	 *      BigInteger var5 = new BigInteger("1");
-	 *      LispStruct var6 = new IntegerStruct(var5);
+	 *      BigInteger var4 = new BigInteger("1");
+	 *      LispStruct var5 = new IntegerStruct(var4);
 	 *
-	 *      if(var6 instanceof ValuesStruct) {
-	 *          ValuesStruct var7 = (ValuesStruct)var6;
-	 *          var6 = var7.getPrimaryValue();
+	 *      if(var5 instanceof ValuesStruct) {
+	 *          ValuesStruct var6 = (ValuesStruct)var5;
+	 *          var5 = var6.getPrimaryValue();
 	 *      }
-	 *      var4.bindLexicalValue((LispStruct)var6);
-	 *      var2.put(var4, var6);
+	 *      var1.bindLexicalValue(var3, (LispStruct)var5);
 	 *
-	 *      LispStruct var10;
+	 *      LispStruct var9;
 	 *      try {
-	 *          PackageStruct var8 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 *          SymbolStruct var9 = var8.findSymbol("X").getSymbol();
-	 *          var10 = var9.getLexicalValue();
+	 *          PackageStruct var7 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var8 = var7.findSymbol("X").getSymbol();
+	 *          var9 = var1.getSymbolValue(var8);
 	 *      } finally {
-	 *          var4.unbindLexicalValue();
+	 *          var1.unbindLexicalValue(var3);
 	 *      }
-	 *      return var10;
+	 *      return var9;
 	 * }
 	 * }
 	 * </pre>
@@ -82,8 +80,6 @@ public class LetStarStruct extends BindingEnvironmentStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
 	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
-	 * @param environmentSymbolBindingsStore
-	 * 		the storage location index on the stack where the {@link Environment#lexicalSymbolBindings} {@link Map} exists
 	 * @param lexicalSymbolStoresToUnbind
 	 * 		the {@link Set} of lexical {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 * @param dynamicSymbolStoresToUnbind
@@ -91,11 +87,12 @@ public class LetStarStruct extends BindingEnvironmentStruct {
 	 */
 	@Override
 	protected void generateBindings(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder,
-	                                final int environmentSymbolBindingsStore, final Set<Integer> lexicalSymbolStoresToUnbind,
+	                                final Set<Integer> lexicalSymbolStoresToUnbind,
 	                                final Set<Integer> dynamicSymbolStoresToUnbind) {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
+		final int environmentStore = methodBuilder.getEnvironmentStore();
 		final int packageStore = methodBuilder.getNextAvailableStore();
 
 		for (final BindingVar var : vars) {
@@ -117,36 +114,27 @@ public class LetStarStruct extends BindingEnvironmentStruct {
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
 			final boolean isSpecial = var.isSpecial();
 			if (isSpecial) {
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_BIND_DYNAMIC_VALUE_METHOD_DESC,
-				                   true);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				                   GenerationConstants.ENVIRONMENT_NAME,
+				                   GenerationConstants.ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_NAME,
+				                   GenerationConstants.ENVIRONMENT_BIND_DYNAMIC_VALUE_METHOD_DESC,
+				                   false);
 
 				dynamicSymbolStoresToUnbind.add(symbolStore);
 			} else {
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_BIND_LEXICAL_VALUE_METHOD_DESC,
-				                   true);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				                   GenerationConstants.ENVIRONMENT_NAME,
+				                   GenerationConstants.ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_NAME,
+				                   GenerationConstants.ENVIRONMENT_BIND_LEXICAL_VALUE_METHOD_DESC,
+				                   false);
 
 				lexicalSymbolStoresToUnbind.add(symbolStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, environmentSymbolBindingsStore);
-				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				                   GenerationConstants.JAVA_MAP_NAME,
-				                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-				                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-				                   true);
-				mv.visitInsn(Opcodes.POP);
 			}
 		}
 	}

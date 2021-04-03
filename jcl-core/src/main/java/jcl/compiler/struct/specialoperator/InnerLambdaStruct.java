@@ -66,26 +66,23 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * <pre>
 	 * {@code
 	 * private LispStruct innerLambda_1(Environment var1) {
-	 *      Map var2 = var1.getLexicalFunctionBindings();
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.findSymbol("FOO").getSymbol();
+	 *      FLET_FOO_Lambda_123456789 var4 = new FLET_FOO_Lambda_123456789(var1);
+	 *      var1.bindFunction(var3, var4);
 	 *
-	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 *      SymbolStruct var4 = var3.findSymbol("FOO").getSymbol();
-	 *      FLET_FOO_Lambda_123456789 var5 = new FLET_FOO_Lambda_123456789(var1);
-	 *      var4.bindFunction(var5);
-	 *      var2.put(var4, var5);
-	 *
-	 *      LispStruct var11;
+	 *      LispStruct var9;
 	 *      try {
-	 *          PackageStruct var6 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 *          SymbolStruct var7 = var6.findSymbol("FOO").getSymbol();
-	 *          FunctionStructImpl var8 = var7.getFunction();
-	 *          LispStruct[] var9 = new LispStruct[0];
-	 *          var11 = var8.apply(var9);
+	 *          PackageStruct var5 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *          SymbolStruct var6 = var5.findSymbol("FOO").getSymbol();
+	 *          FunctionStructImpl var7 = var6.getFunction();
+	 *          LispStruct[] var8 = new LispStruct[0];
+	 *          var9 = var7.apply(var8);
 	 *      } finally {
-	 *          var4.unbindFunction();
+	 *          var1.unbindFunction(var3);
 	 *      }
 	 *
-	 *      return var11;
+	 *      return var9;
 	 * }
 	 * }
 	 * </pre>
@@ -101,15 +98,6 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final int environmentStore = methodBuilder.getEnvironmentStore();
-		final int environmentFunctionBindingsStore = methodBuilder.getNextAvailableStore();
-
-		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.ENVIRONMENT_NAME,
-		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_NAME,
-		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_FUNCTION_BINDINGS_METHOD_DESC,
-		                   false);
-		mv.visitVarInsn(Opcodes.ASTORE, environmentFunctionBindingsStore);
 
 		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
 		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
@@ -142,23 +130,14 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 			final Integer functionSymbolStore = functionStoreToBind.getKey();
 			final Integer initFormStore = functionStoreToBind.getValue();
 
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_BIND_FUNCTION_METHOD_DESC,
-			                   true);
-
-			mv.visitVarInsn(Opcodes.ALOAD, environmentFunctionBindingsStore);
-			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.JAVA_MAP_NAME,
-			                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-			                   true);
-			mv.visitInsn(Opcodes.POP);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_BIND_FUNCTION_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_BIND_FUNCTION_METHOD_DESC,
+			                   false);
 		}
 
 		final Label tryBlockStart = new Label();
@@ -177,14 +156,14 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 		final Set<Integer> functionSymbolStores = functionStoresToBind.keySet();
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, functionSymbolStores);
+		generateFinallyCode(mv, environmentStore, functionSymbolStores);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, functionSymbolStores);
+		generateFinallyCode(mv, environmentStore, functionSymbolStores);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -218,15 +197,16 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s to unbind function
 	 * 		values from exist
 	 */
-	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> functionSymbolStores) {
+	private static void generateFinallyCode(final MethodVisitor mv, final int environmentStore,
+	                                        final Set<Integer> functionSymbolStores) {
 		for (final Integer functionSymbolStore : functionSymbolStores) {
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.SYMBOL_STRUCT_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_NAME,
-			                   GenerationConstants.SYMBOL_STRUCT_UNBIND_FUNCTION_METHOD_DESC,
-			                   true);
-			mv.visitInsn(Opcodes.POP);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_FUNCTION_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_FUNCTION_METHOD_DESC,
+			                   false);
 		}
 	}
 

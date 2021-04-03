@@ -78,20 +78,17 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	 * <pre>
 	 * {@code
 	 * private LispStruct setq_1(Environment var1) {
-	 *      Map var2 = var1.getLexicalSymbolBindings();
-	 *
-	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
-	 *      SymbolStruct var4 = var3.findSymbol("X").getSymbol();
-	 *      BigInteger var6 = new BigInteger("1");
-	 *      LispStruct var5 = new IntegerStruct(var6);
-	 *      if(var5 instanceof ValuesStruct) {
-	 *          ValuesStruct var7 = (ValuesStruct)var5;
-	 *          var5 = var7.getPrimaryValue();
+	 *      PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+	 *      SymbolStruct var3 = var2.findSymbol("X").getSymbol();
+	 *      BigInteger var5 = new BigInteger("1");
+	 *      LispStruct var4 = new IntegerStruct(var5);
+	 *      if(var4 instanceof ValuesStruct) {
+	 *          ValuesStruct var6 = (ValuesStruct)var4;
+	 *          var4 = var6.getPrimaryValue();
 	 *      }
 	 *
-	 *      var4.setValue(var5);
-	 *      var2.put(var4, var5);
-	 *      return var5;
+	 *      var1.setSymbolValue(var3, var4);
+	 *      return var4;
 	 * }
 	 * }
 	 * </pre>
@@ -106,15 +103,6 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 		final int environmentStore = methodBuilder.getEnvironmentStore();
-
-		final int environmentSymbolBindingsStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-		                   GenerationConstants.ENVIRONMENT_NAME,
-		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_NAME,
-		                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_BINDINGS_METHOD_DESC,
-		                   false);
-		mv.visitVarInsn(Opcodes.ASTORE, environmentSymbolBindingsStore);
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int symbolStore = methodBuilder.getNextAvailableStore();
@@ -136,41 +124,32 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 			                   false);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
 			if (generatorState.getLexicalSymbols().contains(var)) {
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_SET_LEXICAL_VALUE_METHOD_DESC,
-				                   true);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				                   GenerationConstants.ENVIRONMENT_NAME,
+				                   GenerationConstants.ENVIRONMENT_SET_LEXICAL_SYMBOL_VALUE_METHOD_NAME,
+				                   GenerationConstants.ENVIRONMENT_SET_LEXICAL_SYMBOL_VALUE_METHOD_DESC,
+				                   false);
 			} else if (generatorState.getDynamicSymbols().contains(var)) {
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_SET_DYNAMIC_VALUE_METHOD_DESC,
-				                   true);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				                   GenerationConstants.ENVIRONMENT_NAME,
+				                   GenerationConstants.ENVIRONMENT_SET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME,
+				                   GenerationConstants.ENVIRONMENT_SET_DYNAMIC_SYMBOL_VALUE_METHOD_DESC,
+				                   false);
 			} else {
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-				                   GenerationConstants.SYMBOL_STRUCT_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_NAME,
-				                   GenerationConstants.SYMBOL_STRUCT_SET_VALUE_METHOD_DESC,
-				                   true);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				                   GenerationConstants.ENVIRONMENT_NAME,
+				                   GenerationConstants.ENVIRONMENT_SET_SYMBOL_VALUE_METHOD_NAME,
+				                   GenerationConstants.ENVIRONMENT_SET_SYMBOL_VALUE_METHOD_DESC,
+				                   false);
 			}
-
-			mv.visitVarInsn(Opcodes.ALOAD, environmentSymbolBindingsStore);
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                   GenerationConstants.JAVA_MAP_NAME,
-			                   GenerationConstants.JAVA_MAP_PUT_METHOD_NAME,
-			                   GenerationConstants.JAVA_MAP_PUT_METHOD_DESC,
-			                   true);
-			mv.visitInsn(Opcodes.POP);
 		}
-		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
+		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 

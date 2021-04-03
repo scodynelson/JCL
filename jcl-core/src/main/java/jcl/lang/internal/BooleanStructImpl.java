@@ -18,7 +18,7 @@ public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStruct
 	 * Post construction method.
 	 */
 	private void init() {
-		dynamicValueStack.push(this);
+		value = this;
 	}
 
 	@Override

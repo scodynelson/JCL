@@ -16,7 +16,7 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +27,7 @@ public final class LocallyExpander extends MacroFunctionExpander<LocallyStruct> 
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.LOCALLY;
+		return CommonLispSymbols.LOCALLY;
 	}
 
 	@Override

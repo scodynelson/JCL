@@ -16,7 +16,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
 import jcl.util.CodePointConstants;
@@ -38,7 +37,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFu
 
 		final ListStruct listToken = ListReaderMacroFunction.readList(inputStreamStruct);
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

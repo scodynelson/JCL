@@ -26,7 +26,7 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.statics.CompilerConstants;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import lombok.experimental.UtilityClass;
 
@@ -665,14 +665,14 @@ public final class LambdaListParser {
 	}
 
 	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
-		return lispStruct.eq(CompilerConstants.AUX)
-				|| lispStruct.eq(CompilerConstants.ALLOW_OTHER_KEYS)
-				|| lispStruct.eq(CompilerConstants.KEY)
-				|| lispStruct.eq(CompilerConstants.OPTIONAL)
-				|| lispStruct.eq(CompilerConstants.REST)
-				|| lispStruct.eq(CompilerConstants.WHOLE)
-				|| lispStruct.eq(CompilerConstants.ENVIRONMENT)
-				|| lispStruct.eq(CompilerConstants.BODY);
+		return lispStruct.eq(CommonLispSymbols.AND_AUX)
+				|| lispStruct.eq(CommonLispSymbols.AND_ALLOW_OTHER_KEYS)
+				|| lispStruct.eq(CommonLispSymbols.AND_KEY)
+				|| lispStruct.eq(CommonLispSymbols.AND_OPTIONAL)
+				|| lispStruct.eq(CommonLispSymbols.AND_REST)
+				|| lispStruct.eq(CommonLispSymbols.AND_WHOLE)
+				|| lispStruct.eq(CommonLispSymbols.AND_ENVIRONMENT)
+				|| lispStruct.eq(CommonLispSymbols.AND_BODY);
 	}
 
 	private static KeywordStruct getKeywordStruct(final String symbolName) {

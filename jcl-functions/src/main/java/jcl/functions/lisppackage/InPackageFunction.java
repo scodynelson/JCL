@@ -13,7 +13,6 @@ import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PackageVariables;
 
 /**
  * System function implementation for {@code %in-package}.
@@ -54,7 +53,7 @@ public final class InPackageFunction extends BuiltInFunctionStructImpl {
 		final String name = StringStruct.fromDesignator(lispStruct).toJavaString();
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
-		PackageVariables.PACKAGE.setValue(newCurrentPackage);
+		CommonLispSymbols.PACKAGE_VAR.setValue(newCurrentPackage);
 
 		return newCurrentPackage;
 	}

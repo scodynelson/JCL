@@ -181,7 +181,7 @@
   (declare (system::%java-class-name "jcl.lists.functions.Sixth"))
   (car (cdr (cddddr list))))
 
-(defun seventh(list)
+(defun seventh (list)
   "Returns the 7th object in a list or NIL if there is not 7th object."
   (declare (system::%java-class-name "jcl.lists.functions.Seventh"))
   (car (cddr (cddddr list))))
@@ -1897,7 +1897,7 @@
 
 (export '(caar cadr cdar cddr caaar caadr cadar cdaar caddr cdadr cddar cdddr caaaar caaadr caadar caaddr cadaar cadadr
           caddar cadddr cdaaar cdaadr cdadar cdaddr cddaar cddadr cdddar cddddr
-          first second third fourth fifth sixthseventh eighth ninth tenth rest
+          first second third fourth fifth sixth seventh eighth ninth tenth rest
           acons
           last butlast nbutlast
           copy-list copy-alist copy-tree

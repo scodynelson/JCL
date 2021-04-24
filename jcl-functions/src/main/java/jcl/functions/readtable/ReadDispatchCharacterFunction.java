@@ -7,14 +7,13 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.ReadCharResult;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.ReaderVariables;
-import jcl.lang.ReadCharResult;
 
 public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructImpl {
 
@@ -66,7 +65,7 @@ public final class ReadDispatchCharacterFunction extends BuiltInFunctionStructIm
 		}
 		final int subCodePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final FunctionStruct macroFunction = readtable.getDispatchMacroCharacter(dispatchCodePoint, subCodePoint);
 
 		if (macroFunction == null) {

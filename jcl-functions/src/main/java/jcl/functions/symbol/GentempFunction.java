@@ -12,7 +12,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PackageVariables;
 
 public final class GentempFunction extends BuiltInFunctionStructImpl {
 
@@ -26,7 +25,7 @@ public final class GentempFunction extends BuiltInFunctionStructImpl {
 		      CommonLispSymbols.GENTEMP.getName(),
 		      Parameters.forFunction(CommonLispSymbols.GENTEMP.getName())
 		                .optionalParameter(PREFIX_ARGUMENT).withInitialValue(StringStruct.toLispString("T"))
-		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(PackageVariables.PACKAGE.getVariableValue())
+		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(CommonLispSymbols.PACKAGE_VAR.getVariableValue())
 		);
 	}
 

@@ -14,7 +14,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
-import jcl.lang.statics.CompilerVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -58,7 +58,7 @@ public final class InternalMacroExpand {
 				final MacroFunctionExpanderInter macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
-					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
+					final FunctionStruct macroExpandHook = CommonLispSymbols.MACROEXPAND_HOOK_VAR.getVariableValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
 					return new MacroExpandResult(expansion, TStruct.INSTANCE);
@@ -79,7 +79,7 @@ public final class InternalMacroExpand {
 			final SymbolMacroExpanderInter symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
-				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getVariableValue();
+				final FunctionStruct macroExpandHook = CommonLispSymbols.MACROEXPAND_HOOK_VAR.getVariableValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
 				return new MacroExpandResult(expansion, TStruct.INSTANCE);

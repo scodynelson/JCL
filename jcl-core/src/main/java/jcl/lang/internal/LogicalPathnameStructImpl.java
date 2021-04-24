@@ -20,7 +20,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
@@ -30,7 +29,6 @@ import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ParseErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PrinterVariables;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.MethodVisitor;
@@ -248,7 +246,7 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 
 		if (version instanceof IntegerStruct) {
 			sb.append('.');
-			final int base = PrinterVariables.PRINT_BASE.getVariableValue().toJavaInt();
+			final int base = CommonLispSymbols.PRINT_BASE_VAR.getVariableValue().toJavaInt();
 			if (version instanceof FixnumStruct) {
 				sb.append(Integer.toString(((FixnumStruct) version).toJavaInteger(), base).toUpperCase());
 			} else if (version instanceof BignumStruct) {

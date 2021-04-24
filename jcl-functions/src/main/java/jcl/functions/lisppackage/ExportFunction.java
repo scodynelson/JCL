@@ -14,7 +14,6 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PackageVariables;
 
 /**
  * Function implementation for {@code export}.
@@ -32,7 +31,7 @@ public final class ExportFunction extends BuiltInFunctionStructImpl {
 		      CommonLispSymbols.EXPORT.getName(),
 		      Parameters.forFunction(CommonLispSymbols.EXPORT.getName())
 		                .requiredParameter(SYMBOLS_ARGUMENT)
-		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(PackageVariables.PACKAGE.getVariableValue())
+		                .optionalParameter(PACKAGE_ARGUMENT).withInitialValue(CommonLispSymbols.PACKAGE_VAR.getVariableValue())
 		);
 	}
 

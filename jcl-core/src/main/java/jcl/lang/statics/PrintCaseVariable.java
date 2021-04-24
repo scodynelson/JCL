@@ -10,17 +10,11 @@ import jcl.lang.internal.VariableStructImpl;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
+public final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
 
 	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
-
-	static {
-		CASE_KEYWORDS.add(CommonLispSymbols.UPCASE_KEYWORD);
-		CASE_KEYWORDS.add(CommonLispSymbols.DOWNCASE_KEYWORD);
-		CASE_KEYWORDS.add(CommonLispSymbols.CAPITALIZE_KEYWORD);
-	}
 
 	private PrintCaseVariable() {
 		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, CommonLispSymbols.UPCASE_KEYWORD);
@@ -41,5 +35,11 @@ final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
 			super.setValue(CommonLispSymbols.UPCASE_KEYWORD);
 		}
+	}
+
+	public void initMatches() {
+		CASE_KEYWORDS.add(CommonLispSymbols.UPCASE_KEYWORD);
+		CASE_KEYWORDS.add(CommonLispSymbols.DOWNCASE_KEYWORD);
+		CASE_KEYWORDS.add(CommonLispSymbols.CAPITALIZE_KEYWORD);
 	}
 }

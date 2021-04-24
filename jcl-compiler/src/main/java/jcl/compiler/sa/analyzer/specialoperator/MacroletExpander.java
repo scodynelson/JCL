@@ -25,8 +25,7 @@ import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.DeclarationStructImpl;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -40,7 +39,7 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.MACROLET;
+		return CommonLispSymbols.MACROLET;
 	}
 
 	@Override
@@ -164,7 +163,7 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
 		final ListStruct blockBody = ListStruct.toLispList(bodyForms);
 		final ListStruct innerBlockListStruct = (ListStruct)
-				ListStruct.toLispDottedList(SpecialOperatorStructImpl.BLOCK, functionName, blockBody);
+				ListStruct.toLispDottedList(CommonLispSymbols.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
 		final SymbolStruct functionNameSymbol = (SymbolStruct) functionName;
@@ -177,13 +176,13 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 
 		final String macroletParamName = "jcl.MACROLET_" + properFunctionNameString + "_MacroLambda_" + System.nanoTime();
 		final StringStruct macroletParamJavaClassName = StringStruct.toLispString(macroletParamName);
-		final ListStruct macroletParamJavaClassNameDeclaration = ListStruct.toLispList(DeclarationStructImpl.JAVA_CLASS_NAME, macroletParamJavaClassName);
+		final ListStruct macroletParamJavaClassNameDeclaration = ListStruct.toLispList(CommonLispSymbols.JAVA_CLASS_NAME, macroletParamJavaClassName);
 		declares.add(macroletParamJavaClassNameDeclaration);
 
 		final ListStruct fullDeclaration = ListStruct.toLispList(declares);
 
-		final ListStruct innerLambdaListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.MACRO_LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
-		final ListStruct innerFunctionListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, innerLambdaListStruct);
+		final ListStruct innerLambdaListStruct = ListStruct.toLispList(CommonLispSymbols.MACRO_LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
+		final ListStruct innerFunctionListStruct = ListStruct.toLispList(CommonLispSymbols.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment.
 		return FunctionExpander.INSTANCE.expand(innerFunctionListStruct, macroletEnvironment);

@@ -11,7 +11,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +22,7 @@ public final class IfExpander extends MacroFunctionExpander<IfStruct> {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.IF;
+		return CommonLispSymbols.IF;
 	}
 
 	@Override

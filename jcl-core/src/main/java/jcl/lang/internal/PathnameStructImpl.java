@@ -29,7 +29,6 @@ import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PrinterVariables;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -977,7 +976,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 
 	@Override
 	public String toString() {
-		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
+		final BooleanStruct printEscape = CommonLispSymbols.PRINT_ESCAPE_VAR.getVariableValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

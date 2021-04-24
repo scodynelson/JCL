@@ -17,10 +17,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
@@ -44,18 +41,18 @@ final class FeaturesReaderMacroFunction {
 	 */
 	static void readFeatures(final InputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
 
-		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getVariableValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
+		final BooleanStruct previousReadSuppress = CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue();
+		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 		try {
-			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.READ_SUPPRESS_VAR.setValue(NILStruct.INSTANCE);
 
-			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
+			CommonLispSymbols.PACKAGE_VAR.setValue(GlobalPackageStruct.KEYWORD);
 			final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-			PackageVariables.PACKAGE.setValue(previousPackage);
+			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(token);
 			if (isFeature && shouldHideFeatures) {
-				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
+				CommonLispSymbols.READ_SUPPRESS_VAR.setValue(TStruct.INSTANCE);
 				Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
@@ -63,8 +60,8 @@ final class FeaturesReaderMacroFunction {
 				log.debug("Error occurred when reading feature.", ree);
 			}
 		} finally {
-			PackageVariables.PACKAGE.setValue(previousPackage);
-			ReaderVariables.READ_SUPPRESS.setValue(previousReadSuppress);
+			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
+			CommonLispSymbols.READ_SUPPRESS_VAR.setValue(previousReadSuppress);
 		}
 	}
 
@@ -80,7 +77,7 @@ final class FeaturesReaderMacroFunction {
 		if (token instanceof ListStruct) {
 			return isListFeature((ListStruct) token);
 		} else {
-			return CompilerVariables.FEATURES.getVariableValue().stream().anyMatch(token::equals);
+			return CommonLispSymbols.FEATURES_VAR.getVariableValue().stream().anyMatch(token::equals);
 		}
 	}
 

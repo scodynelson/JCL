@@ -20,7 +20,6 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 import jcl.system.repl.ReadEvalPrint;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,7 +64,7 @@ public class JCL implements Runnable {
 		} else if (hasCompileFileSrcDir || hasCompileFileDestDir) {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
-//			CompilerVariables.LOAD_VERBOSE.setValue(TStruct.INSTANCE);
+//			CommonLispSymbols.LOAD_VERBOSE_VAR.setValue(TStruct.INSTANCE);
 
 			InternalLoad.autoLoadJavaModules();
 			ReadEvalPrint.funcall();
@@ -76,8 +75,8 @@ public class JCL implements Runnable {
 		final List<String> sourceFiles = compileFileSrcDir;
 		final String destDir = compileFileDestDir.get(0);
 
-		CompilerVariables.COMPILE_VERBOSE.setValue(TStruct.INSTANCE);
-		CompilerVariables.LOAD_VERBOSE.setValue(TStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_VERBOSE_VAR.setValue(TStruct.INSTANCE);
+		CommonLispSymbols.LOAD_VERBOSE_VAR.setValue(TStruct.INSTANCE);
 
 		for (final String fileName : sourceFiles) {
 			final PathnameStruct sourceFile = PathnameStruct.toPathname(fileName);

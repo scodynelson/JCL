@@ -71,7 +71,7 @@
 
 (defun (setf get) (symbol indicator value &optional default)
   "Finds a property on the property list of symbol whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided."
-  (declare (system::%java-class-name "jcl.hashtables.functions.SetfGet")
+  (declare (system::%java-class-name "jcl.symbols.functions.SetfGet")
            (ignore default))
   ($setProperty symbol indicator value)
   value)

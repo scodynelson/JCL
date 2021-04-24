@@ -9,17 +9,16 @@ import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.TStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class InternalModuleHandler {
 
 	public static BooleanStruct provide(final StringStruct moduleName) {
-		final ListStruct currentModulesList = CompilerVariables.MODULES.getVariableValue();
+		final ListStruct currentModulesList = CommonLispSymbols.MODULES_VAR.getVariableValue();
 
 		if (currentModulesList == NILStruct.INSTANCE) {
-			CompilerVariables.MODULES.setValue(ListStruct.toLispList(moduleName));
+			CommonLispSymbols.MODULES_VAR.setValue(ListStruct.toLispList(moduleName));
 		} else {
 			final boolean moduleAlreadyExists = moduleAlreadyExists(moduleName);
 			if (moduleAlreadyExists) {
@@ -27,7 +26,7 @@ public final class InternalModuleHandler {
 			}
 
 			final ListStruct newModulesList = ConsStruct.toLispCons(moduleName, currentModulesList);
-			CompilerVariables.MODULES.setValue(newModulesList);
+			CommonLispSymbols.MODULES_VAR.setValue(newModulesList);
 		}
 		return TStruct.INSTANCE;
 	}
@@ -58,7 +57,7 @@ public final class InternalModuleHandler {
 	private static boolean moduleAlreadyExists(final StringStruct moduleName) {
 		// TODO: Thread Safety issue here with global variable *modules*
 
-		final ListStruct currentModulesList = CompilerVariables.MODULES.getVariableValue();
+		final ListStruct currentModulesList = CommonLispSymbols.MODULES_VAR.getVariableValue();
 
 		for (final LispStruct module : currentModulesList) {
 			if (module instanceof StringStruct) {

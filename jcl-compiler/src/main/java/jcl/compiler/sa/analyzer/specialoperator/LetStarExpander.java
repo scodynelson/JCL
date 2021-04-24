@@ -9,7 +9,7 @@ import jcl.compiler.struct.specialoperator.LetStarStruct;
 import jcl.compiler.struct.specialoperator.PrognStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 
 public final class LetStarExpander extends BindingEnvironmentExpander {
 
@@ -21,7 +21,7 @@ public final class LetStarExpander extends BindingEnvironmentExpander {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.LET_STAR;
+		return CommonLispSymbols.LET_STAR;
 	}
 
 	@Override

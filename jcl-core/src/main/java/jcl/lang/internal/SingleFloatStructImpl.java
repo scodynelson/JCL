@@ -17,6 +17,7 @@ import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.QuotientRemainder;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.ShortFloatStruct;
@@ -25,9 +26,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.ReaderVariables;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -909,7 +908,7 @@ public class SingleFloatStructImpl extends LispStructImpl implements SingleFloat
 	public String toString() {
 
 		final LispStruct floatType = typeOf();
-		final SymbolStruct defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+		final SymbolStruct defaultFloatFormat = CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.getVariableValue();
 
 		String floatString = String.valueOf(value);
 		if (!floatType.eq(defaultFloatFormat)) {

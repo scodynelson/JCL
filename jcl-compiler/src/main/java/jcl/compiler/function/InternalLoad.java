@@ -12,20 +12,15 @@ import java.util.jar.Manifest;
 import jcl.compiler.classloaders.LoaderClassLoader;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FileStreamStruct;
-import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
-import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
@@ -62,8 +57,8 @@ public final class InternalLoad {
 
 					LISP_MODULE_TO_MAIN_CLASS_MAP.put(currentLispModuleName, mainClassName);
 
-					final boolean compileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue().toJavaPBoolean();
-					final boolean loadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue().toJavaPBoolean();
+					final boolean compileVerbose = CommonLispSymbols.COMPILE_VERBOSE_VAR.getVariableValue().toJavaPBoolean();
+					final boolean loadVerbose = CommonLispSymbols.LOAD_VERBOSE_VAR.getVariableValue().toJavaPBoolean();
 					if (compileVerbose || loadVerbose) {
 						// TODO: is this verbose check correct???
 						log.info("; Loading Module: {}", currentLispModuleName);
@@ -109,8 +104,8 @@ public final class InternalLoad {
 					LISP_MODULE_TO_MAIN_CLASS_MAP.put(currentLispModuleName, mainClassName);
 
 					if (lispModuleName.equals(currentLispModuleName)) {
-						final boolean compileVerbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue().toJavaPBoolean();
-						final boolean loadVerbose = CompilerVariables.LOAD_VERBOSE.getVariableValue().toJavaPBoolean();
+						final boolean compileVerbose = CommonLispSymbols.COMPILE_VERBOSE_VAR.getVariableValue().toJavaPBoolean();
+						final boolean loadVerbose = CommonLispSymbols.LOAD_VERBOSE_VAR.getVariableValue().toJavaPBoolean();
 						if (compileVerbose || loadVerbose) {
 							// TODO: is this verbose check correct???
 							log.info("; Loading Module: {}", lispModuleName);
@@ -157,7 +152,7 @@ public final class InternalLoad {
 			filespecPathname = filespecFileStream.toPathname();
 		} else {
 //			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
-//			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
+//			final PathnameStruct defaultPathspec = CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.getVariableValue();
 //			filespecPathname = PathnameStructs.mergePathnames(filespecAsPathname, defaultPathspec);
 			filespecPathname = PathnameStruct.fromDesignator(filespec);
 		}
@@ -171,15 +166,15 @@ public final class InternalLoad {
 			return NILStruct.INSTANCE;
 		}
 
-		final LispStruct previousLoadPathname = CompilerVariables.LOAD_PATHNAME.getValue();
-		final LispStruct previousLoadTruename = CompilerVariables.LOAD_TRUENAME.getValue();
+		final LispStruct previousLoadPathname = CommonLispSymbols.LOAD_PATHNAME_VAR.getValue();
+		final LispStruct previousLoadTruename = CommonLispSymbols.LOAD_TRUENAME_VAR.getValue();
 
-		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
+		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setValue(filespecPathname);
 		final PathnameStruct filespecTruename = PathnameStruct.toPathname(pathnameFile.toURI().toString());
-		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
+		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setValue(filespecTruename);
 
-		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
+		final ReadtableStruct previousReadtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
+		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 
 		try {
 			final String filespecNamestring = pathnameFile.toString();
@@ -197,11 +192,11 @@ public final class InternalLoad {
 				throw new FileErrorException("Cannot LOAD file with unsupported extension: " + pathnameFile, filespecFileStream);
 			}
 		} finally {
-			CompilerVariables.LOAD_TRUENAME.setValue(previousLoadTruename);
-			CompilerVariables.LOAD_PATHNAME.setValue(previousLoadPathname);
+			CommonLispSymbols.LOAD_TRUENAME_VAR.setValue(previousLoadTruename);
+			CommonLispSymbols.LOAD_PATHNAME_VAR.setValue(previousLoadPathname);
 
-			PackageVariables.PACKAGE.setValue(previousPackage);
-			ReaderVariables.READTABLE.setValue(previousReadtable);
+			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
+			CommonLispSymbols.READTABLE_VAR.setValue(previousReadtable);
 		}
 	}
 

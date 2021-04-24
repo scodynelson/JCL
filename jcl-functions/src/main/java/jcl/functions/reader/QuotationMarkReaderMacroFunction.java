@@ -8,9 +8,9 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.StringStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.ReadCharResult;
+import jcl.lang.StringStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.util.CodePointConstants;
 
 /**
@@ -45,7 +45,7 @@ public final class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionI
 			nextCodePoint = readResult.getResult();
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

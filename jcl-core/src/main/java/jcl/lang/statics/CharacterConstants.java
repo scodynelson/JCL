@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jcl.lang.CharacterStruct;
-import jcl.lang.IntegerStruct;
-import jcl.lang.internal.ConstantStructImpl;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
 
@@ -450,11 +448,4 @@ public class CharacterConstants {
 
 		CL_GRAPHIC_CHAR_NAME_MAP = Collections.unmodifiableMap(tempGraphicCharNameMap);
 	}
-
-	// Char-Code-Limit Constant
-
-	public static final ConstantStructImpl<IntegerStruct> CHAR_CODE_LIMIT
-			= ConstantStructImpl.valueOf("CHAR-CODE-LIMIT",
-			                             GlobalPackageStruct.COMMON_LISP,
-			                             IntegerStruct.toLispInteger((int) Character.MAX_VALUE));
 }

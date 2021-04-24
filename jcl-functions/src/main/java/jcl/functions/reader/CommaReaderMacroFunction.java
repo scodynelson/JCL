@@ -9,9 +9,9 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.ReadCharResult;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
@@ -34,7 +34,7 @@ public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final ReaderContext context = ReaderContextHolder.getContext();
 		final int currentBackquoteLevel = context.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
-			if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+			if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 				return NILStruct.INSTANCE;
 			}
 

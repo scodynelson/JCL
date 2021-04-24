@@ -29,44 +29,44 @@ import jcl.compiler.sa.analyzer.specialoperator.TagbodyExpander;
 import jcl.compiler.sa.analyzer.specialoperator.TheExpander;
 import jcl.compiler.sa.analyzer.specialoperator.ThrowExpander;
 import jcl.compiler.sa.analyzer.specialoperator.UnwindProtectExpander;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class BootstrapExpanders {
 
 	public static void bootstrap() {
-		SpecialOperatorStructImpl.LAMBDA.setMacroFunctionExpander(LambdaExpander.INSTANCE);
-		SpecialOperatorStructImpl.MACRO_LAMBDA.setMacroFunctionExpander(MacroLambdaExpander.INSTANCE);
+		CommonLispSymbols.LAMBDA.setMacroFunctionExpander(LambdaExpander.INSTANCE);
+		CommonLispSymbols.MACRO_LAMBDA.setMacroFunctionExpander(MacroLambdaExpander.INSTANCE);
 
-		SpecialOperatorStructImpl.DECLARE.setMacroFunctionExpander(DeclareExpander.INSTANCE);
+		CommonLispSymbols.DECLARE.setMacroFunctionExpander(DeclareExpander.INSTANCE);
 
-		SpecialOperatorStructImpl.DEFSTRUCT.setMacroFunctionExpander(DefstructExpander.INSTANCE);
+		CommonLispSymbols.DEFSTRUCT_SO.setMacroFunctionExpander(DefstructExpander.INSTANCE);
 
-		SpecialOperatorStructImpl.BLOCK.setMacroFunctionExpander(BlockExpander.INSTANCE);
-		SpecialOperatorStructImpl.CATCH.setMacroFunctionExpander(CatchExpander.INSTANCE);
-		SpecialOperatorStructImpl.EVAL_WHEN.setMacroFunctionExpander(EvalWhenExpander.INSTANCE);
-		SpecialOperatorStructImpl.FLET.setMacroFunctionExpander(FletExpander.INSTANCE);
-		SpecialOperatorStructImpl.FUNCTION.setMacroFunctionExpander(FunctionExpander.INSTANCE);
-		SpecialOperatorStructImpl.GO.setMacroFunctionExpander(GoExpander.INSTANCE);
-		SpecialOperatorStructImpl.IF.setMacroFunctionExpander(IfExpander.INSTANCE);
-		SpecialOperatorStructImpl.LABELS.setMacroFunctionExpander(LabelsExpander.INSTANCE);
-		SpecialOperatorStructImpl.LET.setMacroFunctionExpander(LetExpander.INSTANCE);
-		SpecialOperatorStructImpl.LET_STAR.setMacroFunctionExpander(LetStarExpander.INSTANCE);
-		SpecialOperatorStructImpl.LOAD_TIME_VALUE.setMacroFunctionExpander(LoadTimeValueExpander.INSTANCE);
-		SpecialOperatorStructImpl.LOCALLY.setMacroFunctionExpander(LocallyExpander.INSTANCE);
-		SpecialOperatorStructImpl.MACROLET.setMacroFunctionExpander(MacroletExpander.INSTANCE);
-		SpecialOperatorStructImpl.MULTIPLE_VALUE_CALL.setMacroFunctionExpander(MultipleValueCallExpander.INSTANCE);
-		SpecialOperatorStructImpl.MULTIPLE_VALUE_PROG1.setMacroFunctionExpander(MultipleValueProg1Expander.INSTANCE);
-		SpecialOperatorStructImpl.PROGN.setMacroFunctionExpander(PrognExpander.INSTANCE);
-		SpecialOperatorStructImpl.PROGV.setMacroFunctionExpander(ProgvExpander.INSTANCE);
-		SpecialOperatorStructImpl.QUOTE.setMacroFunctionExpander(QuoteExpander.INSTANCE);
-		SpecialOperatorStructImpl.RETURN_FROM.setMacroFunctionExpander(ReturnFromExpander.INSTANCE);
-		SpecialOperatorStructImpl.SETQ.setMacroFunctionExpander(SetqExpander.INSTANCE);
-		SpecialOperatorStructImpl.SYMBOL_MACROLET.setMacroFunctionExpander(SymbolMacroletExpander.INSTANCE);
-		SpecialOperatorStructImpl.TAGBODY.setMacroFunctionExpander(TagbodyExpander.INSTANCE);
-		SpecialOperatorStructImpl.THE.setMacroFunctionExpander(TheExpander.INSTANCE);
-		SpecialOperatorStructImpl.THROW.setMacroFunctionExpander(ThrowExpander.INSTANCE);
-		SpecialOperatorStructImpl.UNWIND_PROTECT.setMacroFunctionExpander(UnwindProtectExpander.INSTANCE);
+		CommonLispSymbols.BLOCK.setMacroFunctionExpander(BlockExpander.INSTANCE);
+		CommonLispSymbols.CATCH.setMacroFunctionExpander(CatchExpander.INSTANCE);
+		CommonLispSymbols.EVAL_WHEN.setMacroFunctionExpander(EvalWhenExpander.INSTANCE);
+		CommonLispSymbols.FLET.setMacroFunctionExpander(FletExpander.INSTANCE);
+		CommonLispSymbols.FUNCTION.setMacroFunctionExpander(FunctionExpander.INSTANCE);
+		CommonLispSymbols.GO.setMacroFunctionExpander(GoExpander.INSTANCE);
+		CommonLispSymbols.IF.setMacroFunctionExpander(IfExpander.INSTANCE);
+		CommonLispSymbols.LABELS.setMacroFunctionExpander(LabelsExpander.INSTANCE);
+		CommonLispSymbols.LET.setMacroFunctionExpander(LetExpander.INSTANCE);
+		CommonLispSymbols.LET_STAR.setMacroFunctionExpander(LetStarExpander.INSTANCE);
+		CommonLispSymbols.LOAD_TIME_VALUE.setMacroFunctionExpander(LoadTimeValueExpander.INSTANCE);
+		CommonLispSymbols.LOCALLY.setMacroFunctionExpander(LocallyExpander.INSTANCE);
+		CommonLispSymbols.MACROLET.setMacroFunctionExpander(MacroletExpander.INSTANCE);
+		CommonLispSymbols.MULTIPLE_VALUE_CALL.setMacroFunctionExpander(MultipleValueCallExpander.INSTANCE);
+		CommonLispSymbols.MULTIPLE_VALUE_PROG1.setMacroFunctionExpander(MultipleValueProg1Expander.INSTANCE);
+		CommonLispSymbols.PROGN.setMacroFunctionExpander(PrognExpander.INSTANCE);
+		CommonLispSymbols.PROGV.setMacroFunctionExpander(ProgvExpander.INSTANCE);
+		CommonLispSymbols.QUOTE.setMacroFunctionExpander(QuoteExpander.INSTANCE);
+		CommonLispSymbols.RETURN_FROM.setMacroFunctionExpander(ReturnFromExpander.INSTANCE);
+		CommonLispSymbols.SETQ.setMacroFunctionExpander(SetqExpander.INSTANCE);
+		CommonLispSymbols.SYMBOL_MACROLET.setMacroFunctionExpander(SymbolMacroletExpander.INSTANCE);
+		CommonLispSymbols.TAGBODY.setMacroFunctionExpander(TagbodyExpander.INSTANCE);
+		CommonLispSymbols.THE.setMacroFunctionExpander(TheExpander.INSTANCE);
+		CommonLispSymbols.THROW.setMacroFunctionExpander(ThrowExpander.INSTANCE);
+		CommonLispSymbols.UNWIND_PROTECT.setMacroFunctionExpander(UnwindProtectExpander.INSTANCE);
 	}
 }

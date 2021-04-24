@@ -8,7 +8,7 @@ public abstract class BooleanStructImpl extends ConstantStructImpl<BooleanStruct
 	private final boolean booleanValue;
 
 	protected BooleanStructImpl(final String name, final boolean booleanValue) {
-		super(name, GlobalPackageStruct.COMMON_LISP, null, null);
+		super(name, GlobalPackageStruct.COMMON_LISP);
 		this.booleanValue = booleanValue;
 
 		init();

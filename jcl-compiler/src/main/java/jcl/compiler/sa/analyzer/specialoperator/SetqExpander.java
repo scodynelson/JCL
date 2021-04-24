@@ -13,7 +13,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -24,7 +24,7 @@ public final class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.SETQ;
+		return CommonLispSymbols.SETQ;
 	}
 
 	@Override

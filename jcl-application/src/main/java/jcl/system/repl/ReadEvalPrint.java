@@ -6,13 +6,11 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
+import jcl.lang.ReadCharResult;
 import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.ConditionException;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.REPLVariables;
-import jcl.lang.ReadCharResult;
 import jcl.printer.Printer;
 import jcl.reader.InternalRead;
 import lombok.extern.log4j.Log4j2;
@@ -22,19 +20,19 @@ public class ReadEvalPrint {
 
 	public static void funcall() {
 		try {
-			REPLVariables.DASH.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.DASH.setValue(NILStruct.INSTANCE);
 
-			REPLVariables.PLUS.setValue(NILStruct.INSTANCE);
-			REPLVariables.PLUS_PLUS.setValue(NILStruct.INSTANCE);
-			REPLVariables.PLUS_PLUS_PLUS.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.PLUS.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.PLUS_PLUS.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.PLUS_PLUS_PLUS.setValue(NILStruct.INSTANCE);
 
-			REPLVariables.SLASH.setValue(NILStruct.INSTANCE);
-			REPLVariables.SLASH_SLASH.setValue(NILStruct.INSTANCE);
-			REPLVariables.SLASH_SLASH_SLASH.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.SLASH.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.SLASH_SLASH.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.SLASH_SLASH_SLASH.setValue(NILStruct.INSTANCE);
 
-			REPLVariables.STAR.setValue(NILStruct.INSTANCE);
-			REPLVariables.STAR_STAR.setValue(NILStruct.INSTANCE);
-			REPLVariables.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.STAR.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.STAR_STAR.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
 
 			final InputStreamStruct inputStreamStruct = (InputStreamStruct) CommonLispSymbols.STANDARD_INPUT.getValue();
 
@@ -42,7 +40,7 @@ public class ReadEvalPrint {
 			while (true) {
 				try {
 					// PROMPT --------------
-					final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+					final PackageStruct currentPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 					final String currentPackageName = currentPackage.getName();
 					log.info("{}: {}> ", currentPackageName, counter++);
 
@@ -50,38 +48,38 @@ public class ReadEvalPrint {
 					final LispStruct whatRead = InternalRead.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
-					REPLVariables.DASH.setValue(whatRead);
+					CommonLispSymbols.DASH.setValue(whatRead);
 
 					// EVAL --------------
 					final LispStruct value = InternalEval.eval(whatRead);
 
 					// bind '**' and '***' to their appropriate values
-					REPLVariables.STAR_STAR_STAR.setValue(REPLVariables.STAR_STAR.getValue());
-					REPLVariables.STAR_STAR.setValue(REPLVariables.STAR.getValue());
+					CommonLispSymbols.STAR_STAR_STAR.setValue(CommonLispSymbols.STAR_STAR.getValue());
+					CommonLispSymbols.STAR_STAR.setValue(CommonLispSymbols.STAR.getValue());
 
 					// bind '//' and '///' to their appropriate values
-					REPLVariables.SLASH_SLASH_SLASH.setValue(REPLVariables.SLASH_SLASH.getValue());
-					REPLVariables.SLASH_SLASH.setValue(REPLVariables.SLASH.getValue());
+					CommonLispSymbols.SLASH_SLASH_SLASH.setValue(CommonLispSymbols.SLASH_SLASH.getValue());
+					CommonLispSymbols.SLASH_SLASH.setValue(CommonLispSymbols.SLASH.getValue());
 
 					// bind '*' and '/' values to the form just evaluated
 					if (value instanceof ValuesStruct) {
 						final ValuesStruct values = (ValuesStruct) value;
-						REPLVariables.STAR.setValue(values.getPrimaryValue());
-						REPLVariables.SLASH.setValue(ListStruct.toLispList(values.getValuesList()));
+						CommonLispSymbols.STAR.setValue(values.getPrimaryValue());
+						CommonLispSymbols.SLASH.setValue(ListStruct.toLispList(values.getValuesList()));
 					} else {
-						REPLVariables.STAR.setValue(value);
+						CommonLispSymbols.STAR.setValue(value);
 						// null check
-						REPLVariables.SLASH.setValue(ListStruct.toLispList(value));
+						CommonLispSymbols.SLASH.setValue(ListStruct.toLispList(value));
 					}
 
 					// bind '+' to the form just evaluated and '++' and '+++' to their appropriate values
-					REPLVariables.PLUS_PLUS_PLUS.setValue(REPLVariables.PLUS_PLUS.getValue());
-					REPLVariables.PLUS_PLUS.setValue(REPLVariables.PLUS.getValue());
-					REPLVariables.PLUS.setValue(REPLVariables.DASH.getValue());
+					CommonLispSymbols.PLUS_PLUS_PLUS.setValue(CommonLispSymbols.PLUS_PLUS.getValue());
+					CommonLispSymbols.PLUS_PLUS.setValue(CommonLispSymbols.PLUS.getValue());
+					CommonLispSymbols.PLUS.setValue(CommonLispSymbols.DASH.getValue());
 
 					if (value == null) {
 						log.warn("Setting * to NIL since it had no value.");
-						REPLVariables.STAR.setValue(NILStruct.INSTANCE);
+						CommonLispSymbols.STAR.setValue(NILStruct.INSTANCE);
 					}
 
 					// PRINT -------------
@@ -110,23 +108,23 @@ public class ReadEvalPrint {
 				} catch (final VerifyError err) {
 					log.error("; ERROR: loading class, {}", err.getMessage(), err);
 				} finally {
-//					REPLVariables.DASH.unbindDynamicValue();
+//					CommonLispSymbols.DASH.unbindDynamicValue();
 				}
 			}
 		} finally {
-//			unbindREPLVariable(REPLVariables.STAR);
-//			unbindREPLVariable(REPLVariables.STAR_STAR);
-//			unbindREPLVariable(REPLVariables.STAR_STAR_STAR);
+//			unbindREPLVariable(CommonLispSymbols.STAR);
+//			unbindREPLVariable(CommonLispSymbols.STAR_STAR);
+//			unbindREPLVariable(CommonLispSymbols.STAR_STAR_STAR);
 //
-//			unbindREPLVariable(REPLVariables.SLASH);
-//			unbindREPLVariable(REPLVariables.SLASH_SLASH);
-//			unbindREPLVariable(REPLVariables.SLASH_SLASH_SLASH);
+//			unbindREPLVariable(CommonLispSymbols.SLASH);
+//			unbindREPLVariable(CommonLispSymbols.SLASH_SLASH);
+//			unbindREPLVariable(CommonLispSymbols.SLASH_SLASH_SLASH);
 //
-//			unbindREPLVariable(REPLVariables.PLUS);
-//			unbindREPLVariable(REPLVariables.PLUS_PLUS);
-//			unbindREPLVariable(REPLVariables.PLUS_PLUS_PLUS);
+//			unbindREPLVariable(CommonLispSymbols.PLUS);
+//			unbindREPLVariable(CommonLispSymbols.PLUS_PLUS);
+//			unbindREPLVariable(CommonLispSymbols.PLUS_PLUS_PLUS);
 //
-//			unbindREPLVariable(REPLVariables.DASH);
+//			unbindREPLVariable(CommonLispSymbols.DASH);
 		}
 	}
 

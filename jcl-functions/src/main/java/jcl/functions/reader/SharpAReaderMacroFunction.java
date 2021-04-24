@@ -16,7 +16,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.SequenceStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -35,7 +34,7 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_A) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

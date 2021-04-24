@@ -3,7 +3,7 @@ package jcl.lang.internal;
 import java.math.BigInteger;
 
 import jcl.lang.IntegerStruct;
-import jcl.lang.statics.PrinterVariables;
+import jcl.lang.statics.CommonLispSymbols;
 
 abstract class IntegerStructImpl extends LispStructImpl implements IntegerStruct {
 
@@ -174,8 +174,8 @@ abstract class IntegerStructImpl extends LispStructImpl implements IntegerStruct
 	public String toString() {
 		// TODO
 
-		final boolean printRadix = PrinterVariables.PRINT_RADIX.getVariableValue().toJavaPBoolean();
-		final int printBase = PrinterVariables.PRINT_BASE.getVariableValue().toJavaInt();
+		final boolean printRadix = CommonLispSymbols.PRINT_RADIX_VAR.getVariableValue().toJavaPBoolean();
+		final int printBase = CommonLispSymbols.PRINT_BASE_VAR.getVariableValue().toJavaInt();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

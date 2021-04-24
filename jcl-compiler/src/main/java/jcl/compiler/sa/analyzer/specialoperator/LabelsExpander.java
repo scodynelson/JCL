@@ -11,7 +11,7 @@ import jcl.compiler.struct.specialoperator.InnerLambdaStruct;
 import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 
 public final class LabelsExpander extends InnerLambdaExpander {
 
@@ -23,7 +23,7 @@ public final class LabelsExpander extends InnerLambdaExpander {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.LABELS;
+		return CommonLispSymbols.LABELS;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +26,7 @@ public final class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> 
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.TAGBODY;
+		return CommonLispSymbols.TAGBODY;
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import jcl.compiler.struct.specialoperator.declare.DeclareStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 
@@ -27,7 +26,7 @@ public final class FletExpander extends InnerLambdaExpander {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.FLET;
+		return CommonLispSymbols.FLET;
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public final class FletExpander extends InnerLambdaExpander {
 			             final String tempFunctionBindName = "temp_" + name.getName() + "_bind_" + System.nanoTime();
 			             final SymbolStruct tempFunctionBindVar = GlobalPackageStruct.COMMON_LISP_USER.intern(tempFunctionBindName).getSymbol();
 
-			             final ListStruct quoteName = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, name);
+			             final ListStruct quoteName = ListStruct.toLispList(CommonLispSymbols.QUOTE, name);
 
 			             // Unbinding of the function
 			             final ListStruct unbindFunction = ListStruct.toLispList(CommonLispSymbols.UNBIND_SYMBOL_FUNCTION, quoteName);
@@ -78,8 +77,8 @@ public final class FletExpander extends InnerLambdaExpander {
 
 		// NOTE: Make Dotted list here so the 'rebind functions' are added each as a separate cleanup-form
 		final ListStruct unwindProtect = (ListStruct)
-				ListStruct.toLispDottedList(SpecialOperatorStructImpl.UNWIND_PROTECT, innerBlockListStruct, rebindFunctionList);
-		return ListStruct.toLispList(SpecialOperatorStructImpl.LET, letFunctionBindVarList, unwindProtect);
+				ListStruct.toLispDottedList(CommonLispSymbols.UNWIND_PROTECT, innerBlockListStruct, rebindFunctionList);
+		return ListStruct.toLispList(CommonLispSymbols.LET, letFunctionBindVarList, unwindProtect);
 	}
 
 	@Override

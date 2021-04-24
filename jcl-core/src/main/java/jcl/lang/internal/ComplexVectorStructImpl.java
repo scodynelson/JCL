@@ -20,7 +20,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.statics.PrinterVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -460,8 +460,8 @@ public class ComplexVectorStructImpl extends AbstractVectorStructImpl {
 	public String toString() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().toJavaPBoolean();
+		final boolean printArray = CommonLispSymbols.PRINT_ARRAY_VAR.getVariableValue().toJavaPBoolean();
+		final boolean printReadably = CommonLispSymbols.PRINT_READABLY_VAR.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

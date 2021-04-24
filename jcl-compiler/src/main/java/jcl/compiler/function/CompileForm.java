@@ -21,7 +21,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.objectweb.asm.ClassReader;
@@ -98,7 +98,7 @@ public final class CompileForm {
 
 	private static ListStruct wrapFormInLambda(final LispStruct form) {
 		final List<LispStruct> lambdaFormList = new ArrayList<>();
-		lambdaFormList.add(SpecialOperatorStructImpl.LAMBDA);
+		lambdaFormList.add(CommonLispSymbols.LAMBDA);
 		lambdaFormList.add(NILStruct.INSTANCE);
 		lambdaFormList.add(form);
 

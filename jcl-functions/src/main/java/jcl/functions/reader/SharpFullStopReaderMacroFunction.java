@@ -10,7 +10,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -29,11 +29,11 @@ public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionI
 		assert codePoint == CodePointConstants.FULL_STOP;
 
 		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 
-		if (!ReaderVariables.READ_EVAL.getVariableValue().toJavaPBoolean()) {
+		if (!CommonLispSymbols.READ_EVAL_VAR.getVariableValue().toJavaPBoolean()) {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 

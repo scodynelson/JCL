@@ -9,7 +9,7 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.util.CodePointConstants;
 
 /**
@@ -26,7 +26,7 @@ public final class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 	                            final IntegerStruct numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_U) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U);
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

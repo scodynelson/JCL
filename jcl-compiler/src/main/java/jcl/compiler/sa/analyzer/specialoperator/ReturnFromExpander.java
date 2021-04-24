@@ -12,7 +12,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +23,7 @@ public final class ReturnFromExpander extends MacroFunctionExpander<ReturnFromSt
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.RETURN_FROM;
+		return CommonLispSymbols.RETURN_FROM;
 	}
 
 	@Override

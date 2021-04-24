@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import jcl.lang.AttributeType;
 import jcl.lang.FloatStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.NumberStruct;
@@ -23,9 +24,7 @@ import jcl.lang.RatioStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.SingleFloatStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.AttributeType;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import jcl.util.NumberUtils;
 import lombok.experimental.UtilityClass;
@@ -164,7 +163,7 @@ final class NumberTokenAccumulatedReaderState {
 
 	/**
 	 * Determines if the provided {@code tokenAttributes} are valid parts of a numeric token, using the {@link
-	 * ReaderVariables#READ_BASE} value and ensuring they are in the same Unicode block as the provided first token
+	 * CommonLispSymbols#READ_BASE_VAR} value and ensuring they are in the same Unicode block as the provided first token
 	 * attribute.
 	 *
 	 * @param tokenAttributes
@@ -185,7 +184,7 @@ final class NumberTokenAccumulatedReaderState {
 
 	/**
 	 * Determines if provided {@code currentToken} is a valid part of a numeric token, using the {@link
-	 * ReaderVariables#READ_BASE} value and ensuring it is in the same Unicode block as the provided {@code
+	 * CommonLispSymbols#READ_BASE_VAR} value and ensuring it is in the same Unicode block as the provided {@code
 	 * firstToken}.
 	 *
 	 * @param firstTokenCodePoint
@@ -196,7 +195,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * @return true if the provided {@code currentToken} is a valid part of a numeric token; false otherwise
 	 */
 	private static boolean isValidNumericToken(final int firstTokenCodePoint, final int currentToken) {
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().toJavaInt();
+		final int currentRadix = CommonLispSymbols.READ_BASE_VAR.getVariableValue().toJavaInt();
 
 		final int digit = Character.digit(currentToken, currentRadix);
 		final boolean isDigitWithRadix = digit >= 0;
@@ -244,7 +243,7 @@ final class NumberTokenAccumulatedReaderState {
 		}
 
 		final String tokenString = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().toJavaInt();
+		final int currentRadix = CommonLispSymbols.READ_BASE_VAR.getVariableValue().toJavaInt();
 
 		// TODO: Integer parsing
 		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
@@ -326,7 +325,7 @@ final class NumberTokenAccumulatedReaderState {
 	 * @return the proper float type
 	 */
 	private static SymbolStruct getFloatType(final Integer exponentTokenCodePoint) {
-		SymbolStruct floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+		SymbolStruct floatType = CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.getVariableValue();
 
 		if (exponentTokenCodePoint != null) {
 			final int exponentTokenInt = exponentTokenCodePoint;
@@ -339,7 +338,7 @@ final class NumberTokenAccumulatedReaderState {
 			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_L)) {
 				floatType = CommonLispSymbols.LONG_FLOAT;
 			} else if ((exponentTokenInt == CodePointConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CodePointConstants.LATIN_CAPITAL_LETTER_E)) {
-				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getVariableValue();
+				floatType = CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.getVariableValue();
 			}
 		}
 		return floatType;
@@ -379,7 +378,7 @@ final class NumberTokenAccumulatedReaderState {
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
 
-		final int currentRadix = ReaderVariables.READ_BASE.getVariableValue().toJavaInt();
+		final int currentRadix = CommonLispSymbols.READ_BASE_VAR.getVariableValue().toJavaInt();
 
 		final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 		final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);

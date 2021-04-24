@@ -4,13 +4,13 @@
 
 package jcl.functions.reader;
 
+import jcl.lang.AttributeType;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.AttributeType;
+import jcl.lang.ReadCharResult;
 import jcl.lang.ReadtableCase;
 import jcl.lang.SyntaxType;
-import jcl.lang.statics.ReaderVariables;
-import jcl.lang.ReadCharResult;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -216,7 +216,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 * @return the transformed token with the correct case
 	 */
 	private static int getCodePointWithCase(final int codePoint) {
-		final ReadtableCase readtableCase = ReaderVariables.READTABLE.getVariableValue().getReadtableCase();
+		final ReadtableCase readtableCase = CommonLispSymbols.READTABLE_VAR.getVariableValue().getReadtableCase();
 
 		int properCaseCodePoint = codePoint;
 		switch (readtableCase) {

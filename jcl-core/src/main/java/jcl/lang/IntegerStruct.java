@@ -3,6 +3,7 @@ package jcl.lang;
 import java.math.BigInteger;
 import java.util.List;
 
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.BignumStructImpl;
 import jcl.lang.internal.FixnumStructImpl;
 import jcl.lang.internal.LongnumStructImpl;
@@ -98,6 +99,36 @@ public interface IntegerStruct extends RationalStruct {
 	 * {@link IntegerStruct} constant representing 16.
 	 */
 	FixnumStruct SIXTEEN = toLispInteger(16);
+
+	/**
+	 * {@link IntegerStruct} constant representing 24.
+	 */
+	FixnumStruct TWENTY_FOUR = toLispInteger(24);
+
+	/**
+	 * {@link IntegerStruct} constant representing 32.
+	 */
+	FixnumStruct THIRTY_TWO = toLispInteger(32);
+
+	/**
+	 * {@link IntegerStruct} constant representing 64.
+	 */
+	FixnumStruct SIXTY_FOUR = toLispInteger(64);
+
+	/**
+	 * {@link IntegerStruct} constant representing 128.
+	 */
+	FixnumStruct ONE_TWENTY_EIGHT = toLispInteger(128);
+
+	/**
+	 * {@link IntegerStruct} constant representing 256.
+	 */
+	FixnumStruct TWO_FIFTY_SIX = toLispInteger(256);
+
+	/**
+	 * {@link IntegerStruct} constant representing 512.
+	 */
+	FixnumStruct FIVE_TWELVE = toLispInteger(512);
 
 	/**
 	 * {@link IntegerStruct} constant representing -1.

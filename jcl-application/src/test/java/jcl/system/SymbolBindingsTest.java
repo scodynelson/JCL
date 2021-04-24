@@ -1,95 +1,24 @@
 package jcl.system;
 
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import jcl.compiler.function.CompileFileResult;
-import jcl.compiler.function.InternalCompile;
 import jcl.compiler.function.InternalEval;
-import jcl.compiler.function.InternalLoad;
-import jcl.compiler.sa.BootstrapExpanders;
 import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PathnameStruct;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
-import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.GlobalPackageStruct;
 import jcl.reader.InternalRead;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(LoadLispFilesExtension.class)
 class SymbolBindingsTest {
-
-	private static Path tmpDir;
-
-	@BeforeAll
-	static void setup() throws IOException {
-		BootstrapSymbols.bootstrap();
-		BootstrapFunctions.bootstrap();
-		BootstrapExpanders.bootstrap();
-
-		final PathnameStruct sourceFile = PathnameStruct.toPathname(
-				"src/main/lisp/jcl/compiler/base-macro-lambdas.lisp"
-		);
-
-		final LispStruct pathnameName = sourceFile.pathnameName();
-		final LispStruct pathnameType = StringStruct.toLispString("jar");
-
-		tmpDir = Files.createTempDirectory(Paths.get(System.getProperty("user.dir")), "tests_");
-
-		// TODO: Can we fix Pathnames needing to have a trailing "/" for determining directory or file???
-		final PathnameStruct destDirectory = PathnameStruct.toPathname(tmpDir.toFile().getAbsolutePath() + "/");
-		final PathnameStruct newSourceFile = PathnameStruct.toPathname(
-				destDirectory.pathnameHost(),
-				destDirectory.pathnameDevice(),
-				destDirectory.pathnameDirectory(),
-				pathnameName,
-				pathnameType,
-				destDirectory.pathnameVersion()
-		);
-
-		final CompileFileResult compileFileResult = InternalCompile.compileFile(
-				sourceFile,
-				newSourceFile,
-				TStruct.INSTANCE,
-				TStruct.INSTANCE,
-				CommonLispSymbols.DEFAULT_KEYWORD
-		);
-		InternalLoad.load(
-				compileFileResult.getOutputTruename(),
-				TStruct.INSTANCE,
-				TStruct.INSTANCE,
-				TStruct.INSTANCE,
-				CommonLispSymbols.DEFAULT_KEYWORD
-		);
-
-		GlobalPackageStruct.COMMON_LISP.findSymbol("DEFUN");
-	}
-
-	@AfterAll
-	static void cleanup() throws IOException {
-		if (tmpDir != null) {
-			try (final DirectoryStream<Path> ds = Files.newDirectoryStream(tmpDir)) {
-				for (final Path file : ds) {
-					Files.delete(file);
-				}
-				Files.delete(tmpDir);
-			}
-		}
-	}
 
 	@Test
 	void testLambda() {

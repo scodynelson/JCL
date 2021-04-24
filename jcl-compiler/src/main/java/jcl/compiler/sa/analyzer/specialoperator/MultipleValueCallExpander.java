@@ -14,7 +14,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +25,7 @@ public final class MultipleValueCallExpander extends MacroFunctionExpander<Multi
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.MULTIPLE_VALUE_CALL;
+		return CommonLispSymbols.MULTIPLE_VALUE_CALL;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public final class MultipleValueCallExpander extends MacroFunctionExpander<Multi
 			functionFormAsCompilerFunction = (CompilerFunctionStruct) functionForm;
 		} else if (functionForm instanceof QuoteStruct) {
 			final QuoteStruct quotedFunction = (QuoteStruct) functionForm;
-			final ListStruct functionListStruct = ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, quotedFunction.getObject());
+			final ListStruct functionListStruct = ListStruct.toLispList(CommonLispSymbols.FUNCTION, quotedFunction.getObject());
 			functionFormAsCompilerFunction = FunctionExpander.INSTANCE.expand(functionListStruct, environment);
 		} else {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid argument for function argument: " + functionForm);

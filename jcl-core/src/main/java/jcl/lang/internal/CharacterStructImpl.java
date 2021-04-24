@@ -17,7 +17,6 @@ import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PrinterVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.CharUtils;
 import org.objectweb.asm.MethodVisitor;
@@ -259,7 +258,7 @@ public final class CharacterStructImpl extends LispStructImpl implements Charact
 
 	@Override
 	public String toString() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().toJavaPBoolean();
+		final boolean printEscape = CommonLispSymbols.PRINT_ESCAPE_VAR.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

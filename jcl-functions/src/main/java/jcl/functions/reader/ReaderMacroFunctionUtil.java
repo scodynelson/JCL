@@ -4,11 +4,11 @@
 
 package jcl.functions.reader;
 
+import jcl.lang.AttributeType;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
-import jcl.lang.AttributeType;
 import jcl.lang.SyntaxType;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * Utility class for common operations for {@link FunctionStruct}s.
@@ -54,15 +54,15 @@ final class ReaderMacroFunctionUtil {
 	}
 
 	/**
-	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE} value.
+	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR} value.
 	 *
 	 * @param codePoint
-	 * 		the value to get the {@link SyntaxType} for from the {@link ReaderVariables#READTABLE} value
+	 * 		the value to get the {@link SyntaxType} for from the {@link CommonLispSymbols#READTABLE_VAR} value
 	 *
-	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link ReaderVariables#READTABLE} value
+	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link CommonLispSymbols#READTABLE_VAR} value
 	 */
 	private static SyntaxType getSyntaxType(final int codePoint) {
-		return ReaderVariables.READTABLE.getVariableValue().getSyntaxType(codePoint);
+		return CommonLispSymbols.READTABLE_VAR.getVariableValue().getSyntaxType(codePoint);
 	}
 
 	/**
@@ -101,17 +101,17 @@ final class ReaderMacroFunctionUtil {
 	}
 
 	/**
-	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
+	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR}
 	 * value.
 	 *
 	 * @param codePoint
-	 * 		the value to get the {@link AttributeType} for from the {@link ReaderVariables#READTABLE} value
+	 * 		the value to get the {@link AttributeType} for from the {@link CommonLispSymbols#READTABLE_VAR} value
 	 *
-	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
+	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR}
 	 * value
 	 */
 	private static AttributeType getAttributeType(final int codePoint) {
-		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
-		return ReaderVariables.READTABLE.getVariableValue().getAttributeType(codePoint, readBase);
+		final IntegerStruct readBase = CommonLispSymbols.READ_BASE_VAR.getVariableValue();
+		return CommonLispSymbols.READTABLE_VAR.getVariableValue().getAttributeType(codePoint, readBase);
 	}
 }

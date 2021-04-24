@@ -53,9 +53,8 @@ import jcl.functions.system.TotalMemory;
 import jcl.lang.FunctionStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.statics.CompilerVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.statics.ReaderVariables;
 import jcl.printer.functions.PrintObjectFunction;
 import jcl.system.function.QuitFunction;
 import jcl.util.CodePointConstants;
@@ -80,7 +79,7 @@ class BootstrapFunctions {
 	private static void bootstrapSystemFunctions() {
 		final FuncallFunction funcallFunction = new FuncallFunction();
 
-		CompilerVariables.MACROEXPAND_HOOK.setValue(funcallFunction);
+		CommonLispSymbols.MACROEXPAND_HOOK_VAR.setValue(funcallFunction);
 
 		final List<FunctionStruct> functions = Arrays.asList(
 				new ApplyFunction(),
@@ -197,8 +196,9 @@ class BootstrapFunctions {
 		final ReadDispatchCharacterFunction readDispatchCharacterFunction = new ReadDispatchCharacterFunction();
 		bootstrapSystemPackageFunctions(Collections.singletonList(readDispatchCharacterFunction));
 
-		ReaderVariables.READTABLE.getVariableValue()
-		                         .makeDispatchMacroCharacter(readDispatchCharacterFunction, CodePointConstants.NUMBER_SIGN, false);
+		CommonLispSymbols.READTABLE_VAR.getVariableValue().makeDispatchMacroCharacter(
+				readDispatchCharacterFunction, CodePointConstants.NUMBER_SIGN, false
+		);
 
 		BootstrapReaderMacroFunctions.bootstrap();
 	}

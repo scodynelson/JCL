@@ -24,8 +24,8 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.java.JavaNameStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -106,7 +106,7 @@ public final class ConsAnalyzer {
 		final ListStruct functionList = (ListStruct) iterator.next();
 
 		final LispStruct functionListFirst = functionList.car();
-		if (!functionListFirst.eq(SpecialOperatorStructImpl.LAMBDA)) {
+		if (!functionListFirst.eq(CommonLispSymbols.LAMBDA)) {
 			throw new ProgramErrorException("CONS ANALYZER: First element of a lambda list must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 

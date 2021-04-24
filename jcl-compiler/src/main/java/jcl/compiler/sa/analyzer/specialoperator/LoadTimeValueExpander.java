@@ -11,7 +11,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +22,7 @@ public final class LoadTimeValueExpander extends MacroFunctionExpander<LispStruc
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.LOAD_TIME_VALUE;
+		return CommonLispSymbols.LOAD_TIME_VALUE;
 	}
 
 	@Override

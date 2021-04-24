@@ -14,7 +14,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +25,7 @@ public final class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.DEFSTRUCT;
+		return CommonLispSymbols.DEFSTRUCT_SO;
 	}
 
 	@Override

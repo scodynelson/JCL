@@ -12,8 +12,8 @@ public class VariableStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 		variableValue = value;
 	}
 
-	public static <T extends LispStruct> VariableStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
-		return new VariableStructImpl<>(name, symbolPackage, value);
+	public static <T extends LispStruct> VariableStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage) {
+		return new VariableStructImpl<>(name, symbolPackage, null);
 	}
 
 	public TYPE getVariableValue() {

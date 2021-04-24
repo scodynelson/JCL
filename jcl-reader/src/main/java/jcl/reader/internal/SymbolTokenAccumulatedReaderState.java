@@ -15,8 +15,8 @@ import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.statics.PackageVariables;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -73,7 +73,7 @@ final class SymbolTokenAccumulatedReaderState {
 		if (hasNoPackageMarkers) {
 			final String symbolName = ReaderProcessor.convertTokenAttributesToString(tokenAttributes);
 
-			final PackageStruct symbolPackage = PackageVariables.PACKAGE.getVariableValue();
+			final PackageStruct symbolPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 			return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 		}
 

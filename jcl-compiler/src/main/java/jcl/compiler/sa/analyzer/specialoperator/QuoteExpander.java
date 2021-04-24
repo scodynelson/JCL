@@ -9,7 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +20,7 @@ public final class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.QUOTE;
+		return CommonLispSymbols.QUOTE;
 	}
 
 	@Override

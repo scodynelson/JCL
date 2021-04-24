@@ -30,7 +30,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -43,7 +43,7 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.MACRO_LAMBDA;
+		return CommonLispSymbols.MACRO_LAMBDA;
 	}
 
 	@Override

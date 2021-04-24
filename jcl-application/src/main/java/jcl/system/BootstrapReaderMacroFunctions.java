@@ -32,7 +32,7 @@ import jcl.functions.reader.SharpUReaderMacroFunction;
 import jcl.functions.reader.SharpVerticalBarReaderMacroFunction;
 import jcl.functions.reader.SharpXReaderMacroFunction;
 import jcl.lang.ReadtableStruct;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
 
@@ -40,7 +40,7 @@ import lombok.experimental.UtilityClass;
 public final class BootstrapReaderMacroFunctions {
 
 	public static void bootstrap() {
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 
 		ReaderMacroFunctionImpl readerMacroFunction = new ApostropheReaderMacroFunction();
 		readtable.setMacroCharacter(CodePointConstants.APOSTROPHE, readerMacroFunction, false);

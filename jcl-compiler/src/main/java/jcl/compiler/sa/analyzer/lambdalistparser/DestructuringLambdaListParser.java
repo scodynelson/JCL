@@ -23,7 +23,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.statics.CompilerConstants;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -55,7 +55,7 @@ public final class DestructuringLambdaListParser {
 		LispStruct currentElement = null;
 
 		WholeParameter wholeBinding = null;
-		if (CompilerConstants.WHOLE.eq(firstElement)) {
+		if (CommonLispSymbols.AND_WHOLE.eq(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
 
@@ -75,7 +75,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
-		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
+		if (CommonLispSymbols.AND_OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, false, true);
 
@@ -84,7 +84,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		RestParameter restBinding = null;
-		if (CompilerConstants.REST.eq(currentElement)) {
+		if (CommonLispSymbols.AND_REST.eq(currentElement)) {
 			final RestParseResult restParseResult
 					= LambdaListParser.parseRestBinding(environment, iterator, declareElement, true);
 
@@ -93,7 +93,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		BodyParameter bodyBinding = null;
-		if (CompilerConstants.BODY.eq(currentElement)) {
+		if (CommonLispSymbols.AND_BODY.eq(currentElement)) {
 			if (restBinding != null) {
 				throw new ProgramErrorException("Destructuring LambdaList &body parameter cannot be supplied alongside &rest parameter.");
 			}
@@ -108,7 +108,7 @@ public final class DestructuringLambdaListParser {
 		boolean keyNotProvided = true;
 
 		List<KeyParameter> keyBindings = Collections.emptyList();
-		if (CompilerConstants.KEY.eq(currentElement)) {
+		if (CommonLispSymbols.AND_KEY.eq(currentElement)) {
 			final KeyParseResult keyParseResult
 					= LambdaListParser.parseKeyBindings(environment, iterator, declareElement, true);
 
@@ -119,7 +119,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		boolean allowOtherKeys = false;
-		if (CompilerConstants.ALLOW_OTHER_KEYS.eq(currentElement)) {
+		if (CommonLispSymbols.AND_ALLOW_OTHER_KEYS.eq(currentElement)) {
 			if (keyNotProvided) {
 				throw new ProgramErrorException("&allow-other-keys cannot be provided when &key is not provided.");
 			}
@@ -131,7 +131,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		List<AuxParameter> auxBindings = Collections.emptyList();
-		if (CompilerConstants.AUX.eq(currentElement)) {
+		if (CommonLispSymbols.AND_AUX.eq(currentElement)) {
 			final AuxParseResult auxParseResult
 					= LambdaListParser.parseAuxBindings(environment, iterator, declareElement, true);
 
@@ -161,7 +161,7 @@ public final class DestructuringLambdaListParser {
 		LispStruct currentElement = null;
 
 		WholeParameter wholeBinding = null;
-		if (CompilerConstants.WHOLE.eq(firstElement)) {
+		if (CommonLispSymbols.AND_WHOLE.eq(firstElement)) {
 			// Now that we've verified the first element is actually '&whole', consume it.
 			currentElement = iterator.next();
 
@@ -181,7 +181,7 @@ public final class DestructuringLambdaListParser {
 		}
 
 		List<OptionalParameter> optionalBindings = Collections.emptyList();
-		if (CompilerConstants.OPTIONAL.eq(currentElement)) {
+		if (CommonLispSymbols.AND_OPTIONAL.eq(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= LambdaListParser.parseOptionalBindings(environment, iterator, declareElement, true, true);
 

@@ -23,7 +23,7 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 	 * 		the symbol name
 	 */
 	public KeywordStructImpl(final String name) {
-		super(name, GlobalPackageStruct.KEYWORD, null, null);
+		super(name, GlobalPackageStruct.KEYWORD);
 		init();
 	}
 

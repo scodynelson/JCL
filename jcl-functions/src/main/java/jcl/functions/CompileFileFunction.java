@@ -9,7 +9,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 
 public final class CompileFileFunction extends BuiltInFunctionStructImpl {
 
@@ -40,13 +39,13 @@ public final class CompileFileFunction extends BuiltInFunctionStructImpl {
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
 			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class);
 		} else {
-			verbose = CompilerVariables.COMPILE_VERBOSE.getVariableValue();
+			verbose = CommonLispSymbols.COMPILE_VERBOSE_VAR.getVariableValue();
 		}
 		final BooleanStruct print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
 			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class);
 		} else {
-			print = CompilerVariables.COMPILE_PRINT.getVariableValue();
+			print = CommonLispSymbols.COMPILE_PRINT_VAR.getVariableValue();
 		}
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);
 		final CompileFileResult compileFileResult = InternalCompile.compileFile(inputFile, outputFile, verbose, print, externalFormat);

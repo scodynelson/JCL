@@ -65,20 +65,20 @@
           (car (cdr function-name))
         (error "Name must either be SYMBOL or CONS")))))
 
-(macro-lambda defmacro (name lambda-list &body doc-decls-body)
-  (declare (system::%java-class-name "jcl.compiler.functions.Defmacro"))
+(compiler::macro-lambda defmacro (name lambda-list &body doc-decls-body)
+  (declare (system::%java-class-name "jcl.common.functions.Defmacro"))
   (let* ((parsed-body (multiple-value-call #'list (parse-body doc-decls-body)))
          (body (car parsed-body))
          (decls (car (cdr parsed-body)))
          (doc (car (cdr (cdr parsed-body)))))
     `(eval-when (:compile-toplevel :load-toplevel)
-       (macro-lambda ,name ,lambda-list
+       (compiler::macro-lambda ,name ,lambda-list
          ,@decls
          ,doc
          (block ,name ,@body)))))
 
-(macro-lambda defun (name lambda-list &body doc-decls-body)
-  (declare (system::%java-class-name "jcl.compiler.functions.Defun"))
+(compiler::macro-lambda defun (name lambda-list &body doc-decls-body)
+  (declare (system::%java-class-name "jcl.common.functions.Defun"))
   (let* ((parsed-body (multiple-value-call #'list (parse-body doc-decls-body)))
          (body (car parsed-body))
          (decls (car (cdr parsed-body)))
@@ -98,7 +98,7 @@
           (block ,block-name ,@body)))
       (quote ,name))))
 
-(macro-lambda in-package (name)
+(compiler::macro-lambda in-package (name)
   (declare (system::%java-class-name "jcl.packages.functions.InPackage"))
   `(eval-when (:compile-toplevel :load-toplevel :execute)
      (system::%in-package ,name)))

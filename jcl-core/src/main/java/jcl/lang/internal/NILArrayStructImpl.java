@@ -12,7 +12,6 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PrinterVariables;
 
 /**
  * The implementation of a zero-ranked {@link ArrayStruct}.
@@ -172,8 +171,8 @@ public class NILArrayStructImpl extends AbstractArrayStructImpl {
 	public String toString() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getVariableValue().toJavaPBoolean();
+		final boolean printArray = CommonLispSymbols.PRINT_ARRAY_VAR.getVariableValue().toJavaPBoolean();
+		final boolean printReadably = CommonLispSymbols.PRINT_READABLY_VAR.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

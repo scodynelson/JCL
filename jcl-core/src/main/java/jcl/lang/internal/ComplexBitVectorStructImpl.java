@@ -20,7 +20,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.statics.PrinterVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -457,7 +457,7 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 
 	@Override
 	public String toString() {
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
+		final boolean printArray = CommonLispSymbols.PRINT_ARRAY_VAR.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

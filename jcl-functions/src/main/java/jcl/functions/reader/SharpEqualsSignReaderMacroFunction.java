@@ -16,7 +16,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.reader.ReaderContext;
 import jcl.reader.ReaderContextHolder;
@@ -36,7 +36,7 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.EQUALS_SIGN;
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 

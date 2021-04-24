@@ -17,7 +17,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.ReaderVariables;
 import jcl.util.CodePointConstants;
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,7 +40,7 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 				= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 		final String tokenString = extendedToken.getTokenString();
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

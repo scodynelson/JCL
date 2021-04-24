@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -33,6 +33,6 @@ public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunctio
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.toLispList(SpecialOperatorStructImpl.FUNCTION, token);
+		return ListStruct.toLispList(CommonLispSymbols.FUNCTION, token);
 	}
 }

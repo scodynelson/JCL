@@ -13,7 +13,6 @@ import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.SymbolVariables;
 
 public final class GensymFunction extends BuiltInFunctionStructImpl {
 
@@ -36,21 +35,21 @@ public final class GensymFunction extends BuiltInFunctionStructImpl {
 	public LispStruct apply(final Arguments arguments) {
 
 		String gensymPrefix = "G";
-		IntegerStruct gensymPostfix = SymbolVariables.GENSYM_COUNTER.getVariableValue();
+		IntegerStruct gensymPostfix = CommonLispSymbols.GENSYM_COUNTER_VAR.getVariableValue();
 		final LispStruct defaulting = arguments.getOptionalArgument(PREFIX_ARGUMENT);
 //		validator.validateTypes(defaulting, functionName(), "Prefix", StringType.INSTANCE, IntegerType.INSTANCE);
 		if (defaulting != null) {
 
 			if (defaulting instanceof StringStruct) {
 				gensymPrefix = ((StringStruct) defaulting).toJavaString();
-				SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
+				CommonLispSymbols.GENSYM_COUNTER_VAR.setValue(gensymPostfix.add(IntegerStruct.ONE));
 			} else if (defaulting instanceof IntegerStruct) {
 				gensymPostfix = (IntegerStruct) defaulting;
 			} else {
 				throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 			}
 		} else {
-			SymbolVariables.GENSYM_COUNTER.setValue(gensymPostfix.add(IntegerStruct.ONE));
+			CommonLispSymbols.GENSYM_COUNTER_VAR.setValue(gensymPostfix.add(IntegerStruct.ONE));
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix;

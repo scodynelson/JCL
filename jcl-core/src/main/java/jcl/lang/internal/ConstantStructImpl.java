@@ -1,6 +1,5 @@
 package jcl.lang.internal;
 
-import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
@@ -9,20 +8,19 @@ import jcl.lang.function.expander.SymbolMacroExpanderInter;
 
 public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImpl {
 
-	private final TYPE constantValue;
+	private TYPE constantValue;
 
-	protected ConstantStructImpl(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
-		super(name, symbolPackage, value, function);
-		constantValue = value;
+	protected ConstantStructImpl(final String name, final PackageStruct symbolPackage) {
+		super(name, symbolPackage);
 	}
 
-	protected ConstantStructImpl(final String name, final PackageStruct symbolPackage, final TYPE value) {
-		super(name, symbolPackage, value);
-		constantValue = value;
+	public static <T extends LispStruct> ConstantStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage) {
+		return new ConstantStructImpl<T>(name, symbolPackage);
 	}
 
-	public static <T extends LispStruct> ConstantStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage, final T value) {
-		return new ConstantStructImpl<T>(name, symbolPackage, value);
+	public void initializeConstant(final TYPE constantValue) {
+		super.setValue(constantValue);
+		this.constantValue = constantValue;
 	}
 
 	@Override

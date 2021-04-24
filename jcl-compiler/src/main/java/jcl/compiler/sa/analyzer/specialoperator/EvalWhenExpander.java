@@ -17,7 +17,6 @@ import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -47,7 +46,7 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.EVAL_WHEN;
+		return CommonLispSymbols.EVAL_WHEN;
 	}
 
 	@Override
@@ -119,7 +118,7 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			switch (action) {
 				case PROCESS:
 					final ListStruct formsList = ListStruct.toLispList(forms);
-					final ListStruct prognOperatorList = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList);
+					final ListStruct prognOperatorList = ConsStruct.toLispCons(CommonLispSymbols.PROGN, formsList);
 					if (mode == Mode.COMPILE_TIME_TOO) {
 						final ListStruct prognOperatorListCopy = prognOperatorList.copyTree();
 						InternalEval.eval(prognOperatorListCopy);
@@ -127,7 +126,7 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 					return FormAnalyzer.analyze(prognOperatorList, environment);
 				case EVALUATE:
 					final ListStruct formsList1 = ListStruct.toLispList(forms);
-					final ListStruct prognOperatorList1 = ConsStruct.toLispCons(SpecialOperatorStructImpl.PROGN, formsList1);
+					final ListStruct prognOperatorList1 = ConsStruct.toLispCons(CommonLispSymbols.PROGN, formsList1);
 					return InternalEval.eval(prognOperatorList1);
 				case DISCARD:
 					return NILStruct.INSTANCE;

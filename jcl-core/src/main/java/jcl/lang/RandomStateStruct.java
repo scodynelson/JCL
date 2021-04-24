@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.number.RandomStateStructImpl;
-import jcl.lang.statics.NumberVariables;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link RandomStateStruct} is the object representation of a Lisp 'random-state' type.
@@ -54,7 +54,7 @@ public interface RandomStateStruct extends LispStruct {
 			return new RandomStateStructImpl((RandomStateStruct) state);
 		}
 		if (NILStruct.INSTANCE.eq(state)) {
-			return new RandomStateStructImpl(NumberVariables.RANDOM_STATE.getVariableValue());
+			return new RandomStateStructImpl(CommonLispSymbols.RANDOM_STATE_VAR.getVariableValue());
 		}
 		if (TStruct.INSTANCE.eq(state)) {
 			return new RandomStateStructImpl();

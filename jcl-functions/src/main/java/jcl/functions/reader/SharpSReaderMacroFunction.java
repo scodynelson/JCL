@@ -14,11 +14,11 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.ReadCharResult;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
-import jcl.lang.ReadCharResult;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -36,7 +36,7 @@ public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 	                            final IntegerStruct numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_S) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_S);
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			return NILStruct.INSTANCE;
 		}

@@ -7,11 +7,11 @@ package jcl.functions.reader;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ReadtableCase;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.java.JavaClassStruct;
 import jcl.lang.java.JavaObjectStruct;
-import jcl.lang.ReadtableCase;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.util.CodePointConstants;
 
 /**
@@ -28,7 +28,7 @@ public final class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.AT_SIGN;
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final ReadtableCase previousCase = readtable.getReadtableCase();
 
 		readtable.setReadtableCase(ReadtableCase.PRESERVE);
@@ -42,7 +42,7 @@ public final class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 			readtable.setReadtableCase(previousCase);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 

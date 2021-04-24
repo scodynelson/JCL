@@ -13,7 +13,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -25,7 +24,7 @@ public final class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.PROGV;
+		return CommonLispSymbols.PROGV;
 	}
 
 	@Override
@@ -43,11 +42,11 @@ public final class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		}
 		final LispStruct second = iterator.next();
 
-		final ListStruct quotedVars = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, first);
+		final ListStruct quotedVars = ListStruct.toLispList(CommonLispSymbols.QUOTE, first);
 		final ListStruct evalVars = ListStruct.toLispList(CommonLispSymbols.EVAL, quotedVars);
 		final LispStruct analyzedEvalVars = FormAnalyzer.analyze(evalVars, environment);
 
-		final ListStruct quotedVals = ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, second);
+		final ListStruct quotedVals = ListStruct.toLispList(CommonLispSymbols.QUOTE, second);
 		final ListStruct evalVals = ListStruct.toLispList(CommonLispSymbols.EVAL, quotedVals);
 		final LispStruct analyzedEvalVals = FormAnalyzer.analyze(evalVals, environment);
 

@@ -18,8 +18,7 @@ import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.DeclarationStructImpl;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -30,7 +29,7 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.DECLARE;
+		return CommonLispSymbols.DECLARE;
 	}
 
 	@Override
@@ -57,32 +56,32 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 			declSpecIterator.forEachRemaining(declSpecBody::add);
 
 			// now come the various cases
-			if (declIdentifier.eq(DeclarationStructImpl.DECLARATION)) {
+			if (declIdentifier.eq(CommonLispSymbols.DECLARATION)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.DYNAMIC_EXTENT)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.DYNAMIC_EXTENT)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.FTYPE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.FTYPE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.IGNORABLE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.IGNORABLE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.IGNORE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.IGNORE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.INLINE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.INLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.NOTINLINE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.NOTINLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.OPTIMIZE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.eq(DeclarationStructImpl.JAVA_CLASS_NAME)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.JAVA_CLASS_NAME)) {
 				final JavaClassNameDeclarationStruct jclds = saJavaClassNameDeclaration(declSpecBody);
 				declareElement.setJavaClassNameDeclaration(jclds);
-			} else if (declIdentifier.eq(DeclarationStructImpl.LISP_NAME)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.LISP_NAME)) {
 				final LispNameDeclarationStruct lnds = saLispNameDeclaration(declSpecBody);
 				declareElement.setLispNameDeclarationStruct(lnds);
-			} else if (declIdentifier.eq(DeclarationStructImpl.SPECIAL)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sds = saSpecialDeclaration(declSpecBody);
 				declareElement.getSpecialDeclarations().addAll(sds);
-			} else if (declIdentifier.eq(DeclarationStructImpl.TYPE)) {
+			} else if (declIdentifier.eq(CommonLispSymbols.TYPE)) {
 				//TODO: we don't do anything here yet
 			} else {
 				throw new ProgramErrorException("DECLARE: Declaration specifier not supported: " + declIdentifier);

@@ -24,7 +24,6 @@ import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
-import jcl.lang.statics.PackageVariables;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -201,7 +200,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	private LispStruct handleUnboundValue() {
 		String variableName = name;
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStruct currentPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 
 		if (!currentPackage.eq(symbolPackage)) {
 			if (symbolPackage == null) {
@@ -239,7 +238,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	private FunctionStruct handleUnboundFunction() {
 		String variableName = name;
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStruct currentPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 
 		if (!currentPackage.eq(symbolPackage)) {
 			if (symbolPackage == null) {
@@ -545,7 +544,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public String toString() {
-//		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue();
+//		final BooleanStruct printEscape = CommonLispSymbols.PRINT_ESCAPE_VAR.getVariableValue();
 
 		// TODO: deal with *PRINT-CASE* and *PRINT-ESCAPE*
 
@@ -562,7 +561,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		// TODO: the following isn't right. It's more like the symbol is not "accessible" in the current package...
 		// TODO: probably by use of 'findSymbol'
 
-		final PackageStruct currentPackage = PackageVariables.PACKAGE.getVariableValue();
+		final PackageStruct currentPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 
 		final PackageSymbolStruct symbol = currentPackage.findSymbol(name);
 		if (symbol.notFound()) {

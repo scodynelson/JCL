@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.RationalStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import lombok.experimental.UtilityClass;
 
@@ -33,23 +33,23 @@ final class RationalReaderMacroFunction {
 	 * @return the properly parsed {@link RationalStruct}
 	 */
 	static LispStruct readRational(final InputStreamStruct inputStreamStruct, final int radix) {
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;
 		}
 
-		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getVariableValue();
+		final IntegerStruct previousReadBase = CommonLispSymbols.READ_BASE_VAR.getVariableValue();
 
 		// read rational
 		final LispStruct token;
 		try {
 			// alter the read-base
-			ReaderVariables.READ_BASE.setValue(IntegerStruct.toLispInteger(radix));
+			CommonLispSymbols.READ_BASE_VAR.setValue(IntegerStruct.toLispInteger(radix));
 
 			token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		} finally {
 			// reset the read-base
-			ReaderVariables.READ_BASE.setValue(previousReadBase);
+			CommonLispSymbols.READ_BASE_VAR.setValue(previousReadBase);
 		}
 
 		if (token instanceof RationalStruct) {

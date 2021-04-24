@@ -44,9 +44,6 @@ import jcl.lang.condition.exception.FileErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
-import jcl.lang.statics.PackageVariables;
-import jcl.lang.statics.ReaderVariables;
 import jcl.reader.InternalRead;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
@@ -166,15 +163,15 @@ public final class InternalCompile {
 		final File outputFilePathnameFile = new File(outputFilePathname.namestring());
 		final Path outputFilePath = outputFilePathnameFile.toPath();
 
-		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();
-		final LispStruct previousCompileFileTruename = CompilerVariables.COMPILE_FILE_TRUENAME.getValue();
+		final LispStruct previousCompileFilePathname = CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.getValue();
+		final LispStruct previousCompileFileTruename = CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.getValue();
 
-		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
+		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setValue(outputFilePathname);
 		final PathnameStruct outputFileTruename = PathnameStruct.toPathname(outputFilePathnameFile.toURI().toString());
-		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
+		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setValue(outputFileTruename);
 
-		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getVariableValue();
-		final PackageStruct previousPackage = PackageVariables.PACKAGE.getVariableValue();
+		final ReadtableStruct previousReadtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
+		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
@@ -363,11 +360,11 @@ public final class InternalCompile {
 			}
 			log.info("");
 
-			CompilerVariables.COMPILE_FILE_TRUENAME.setValue(previousCompileFileTruename);
-			CompilerVariables.COMPILE_FILE_PATHNAME.setValue(previousCompileFilePathname);
+			CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setValue(previousCompileFileTruename);
+			CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setValue(previousCompileFilePathname);
 
-			PackageVariables.PACKAGE.setValue(previousPackage);
-			ReaderVariables.READTABLE.setValue(previousReadtable);
+			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
+			CommonLispSymbols.READTABLE_VAR.setValue(previousReadtable);
 		}
 	}
 
@@ -417,7 +414,7 @@ public final class InternalCompile {
 	}
 
 	public static PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
-//		final PathnameStruct defaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getVariableValue();
+//		final PathnameStruct defaults = CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.getVariableValue();
 
 		final PathnameStruct inputFilePathname = PathnameStruct.fromDesignator(inputFile);
 

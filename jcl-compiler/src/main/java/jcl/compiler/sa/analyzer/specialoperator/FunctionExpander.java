@@ -17,7 +17,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -28,7 +28,7 @@ public final class FunctionExpander extends MacroFunctionExpander<CompilerFuncti
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.FUNCTION;
+		return CommonLispSymbols.FUNCTION;
 	}
 
 	@Override
@@ -58,10 +58,10 @@ public final class FunctionExpander extends MacroFunctionExpander<CompilerFuncti
 
 		final LispStruct functionListFirst = functionList.car();
 
-		if (SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
+		if (CommonLispSymbols.LAMBDA.eq(functionListFirst)) {
 			final LambdaStruct analyzedLambda = LambdaExpander.INSTANCE.expand(functionList, environment);
 			return new LambdaCompilerFunctionStruct(analyzedLambda);
-		} else if(!SpecialOperatorStructImpl.LAMBDA.eq(functionListFirst)) {
+		} else if(!CommonLispSymbols.LAMBDA.eq(functionListFirst)) {
 			final MacroLambdaStruct analyzedMacroLambda = MacroLambdaExpander.INSTANCE.expand(functionList, environment);
 			return new MacroLambdaCompilerFunctionStruct(analyzedMacroLambda);
 		} else {

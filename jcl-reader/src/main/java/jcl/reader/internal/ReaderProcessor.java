@@ -6,6 +6,7 @@ package jcl.reader.internal;
 
 import java.util.List;
 
+import jcl.lang.AttributeType;
 import jcl.lang.CharacterStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.InputStreamStruct;
@@ -13,14 +14,13 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.ReadCharResult;
+import jcl.lang.ReadtableCase;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
-import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.AttributeType;
-import jcl.lang.ReadtableCase;
 import jcl.lang.SyntaxType;
-import jcl.lang.statics.ReaderVariables;
-import jcl.lang.ReadCharResult;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.CommentStruct;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
@@ -86,7 +86,7 @@ public class ReaderProcessor {
 
 		final int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		final LispStruct token;
@@ -106,7 +106,7 @@ public class ReaderProcessor {
 			token = readIllegalCharacter(tokenBuilder);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			if (log.isDebugEnabled()) {
 				log.debug("{} suppressed.", token);
 			}
@@ -196,7 +196,7 @@ public class ReaderProcessor {
 		final ReadCharResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final FunctionStruct readerMacroFunction = readtable.getMacroCharacter(codePoint);
 
 		if (readerMacroFunction == null) {
@@ -293,10 +293,10 @@ public class ReaderProcessor {
 		// This 'codePoint' will not be 'null'. We check for EOFs after each 'read'.
 		int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final ReadtableCase readtableCase = readtable.getReadtableCase();
 
-		final IntegerStruct readBase = ReaderVariables.READ_BASE.getVariableValue();
+		final IntegerStruct readBase = CommonLispSymbols.READ_BASE_VAR.getVariableValue();
 		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
 		codePoint = getProperCaseForCodePoint(codePoint, attributeType, readtableCase);
@@ -369,7 +369,7 @@ public class ReaderProcessor {
 
 		int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {
@@ -451,7 +451,7 @@ public class ReaderProcessor {
 
 		int codePoint = readResult.getResult();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT)
@@ -503,7 +503,7 @@ public class ReaderProcessor {
 	 */
 	private static LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return null;
 		}
 

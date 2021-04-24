@@ -10,8 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
@@ -30,7 +29,7 @@ public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl
 		assert codePoint == CodePointConstants.APOSTROPHE;
 
 		final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 
@@ -38,6 +37,6 @@ public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.toLispList(SpecialOperatorStructImpl.QUOTE, token);
+		return ListStruct.toLispList(CommonLispSymbols.QUOTE, token);
 	}
 }

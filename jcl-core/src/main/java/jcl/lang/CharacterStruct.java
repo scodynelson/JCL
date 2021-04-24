@@ -947,7 +947,7 @@ public interface CharacterStruct extends LispStruct {
 	 * 		if a {@link SymbolStruct} or {@link StringStruct} is provided, and is not representative of a single length
 	 * 		character
 	 * @throws TypeErrorException
-	 * 		if the provided {@code name} is not a valid character-designator (aka, a CharacterStruct, SymbolStruct, or
+	 * 		if the provided {@code struct} is not a valid character-designator (aka, a CharacterStruct, SymbolStruct, or
 	 * 		StringStruct)
 	 */
 	static CharacterStruct fromDesignator(final LispStruct struct) {

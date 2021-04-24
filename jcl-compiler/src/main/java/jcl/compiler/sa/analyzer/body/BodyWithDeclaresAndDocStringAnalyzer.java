@@ -7,7 +7,7 @@ import java.util.List;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.StringStruct;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -24,7 +24,7 @@ public final class BodyWithDeclaresAndDocStringAnalyzer {
 		if (iterator.hasNext()) {
 			LispStruct next = iterator.next();
 
-			declares.add(SpecialOperatorStructImpl.DECLARE);
+			declares.add(CommonLispSymbols.DECLARE);
 
 			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;
@@ -72,6 +72,6 @@ public final class BodyWithDeclaresAndDocStringAnalyzer {
 	}
 
 	private static boolean isDeclaration(final LispStruct next) {
-		return (next instanceof ListStruct) && ((ListStruct) next).car().eq(SpecialOperatorStructImpl.DECLARE);
+		return (next instanceof ListStruct) && ((ListStruct) next).car().eq(CommonLispSymbols.DECLARE);
 	}
 }

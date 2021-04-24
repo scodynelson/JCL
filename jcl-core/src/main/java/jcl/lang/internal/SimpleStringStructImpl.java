@@ -16,15 +16,13 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.StringStruct;
+import jcl.lang.SyntaxType;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.SyntaxType;
 import jcl.lang.statics.CharacterConstants;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PrinterVariables;
-import jcl.lang.statics.ReaderVariables;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -294,9 +292,9 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 
 	@Override
 	public String toString() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getVariableValue().toJavaPBoolean();
+		final boolean printEscape = CommonLispSymbols.PRINT_ESCAPE_VAR.getVariableValue().toJavaPBoolean();
 
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getVariableValue();
+		final ReadtableStruct readtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

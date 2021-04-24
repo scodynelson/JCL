@@ -20,7 +20,7 @@ import jcl.lang.ListStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
-import jcl.lang.internal.SpecialOperatorStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -31,7 +31,7 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 
 	@Override
 	public SymbolStruct getFunctionSymbol() {
-		return SpecialOperatorStructImpl.SYMBOL_MACROLET;
+		return CommonLispSymbols.SYMBOL_MACROLET;
 	}
 
 	@Override

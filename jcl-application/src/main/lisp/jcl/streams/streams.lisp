@@ -271,7 +271,7 @@
   (let ((output-stream (streamify-designator output-stream nil)))
     ($terpri output-stream)))
 
-(defun freshline (&optional (output-stream *standard-output*))
+(defun fresh-line (&optional (output-stream *standard-output*))
   "Outputs a newline only if the output-stream is not already at the start of a line."
   (declare (system::%java-class-name "jcl.streams.functions.FreshLine"))
   (let ((output-stream (streamify-designator output-stream nil)))
@@ -403,7 +403,7 @@
           file-length file-position file-string-length
           open close
           listen
-          terpri freshline
+          terpri fresh-line
           stream-external-format
           clear-input clear-output finish-output force-output
           y-or-n-p yes-or-no-p

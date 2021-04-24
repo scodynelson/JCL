@@ -13,7 +13,6 @@ import jcl.lang.TStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.CompilerVariables;
 
 public final class LoadFunction extends BuiltInFunctionStructImpl {
 
@@ -44,13 +43,13 @@ public final class LoadFunction extends BuiltInFunctionStructImpl {
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
 			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class);
 		} else {
-			verbose = CompilerVariables.LOAD_VERBOSE.getVariableValue();
+			verbose = CommonLispSymbols.LOAD_VERBOSE_VAR.getVariableValue();
 		}
 		final BooleanStruct print;
 		if (arguments.hasKeyArgument(CommonLispSymbols.PRINT_KEYWORD)) {
 			print = arguments.getKeyArgument(CommonLispSymbols.PRINT_KEYWORD, BooleanStruct.class);
 		} else {
-			print = CompilerVariables.LOAD_PRINT.getVariableValue();
+			print = CommonLispSymbols.LOAD_PRINT_VAR.getVariableValue();
 		}
 		final BooleanStruct ifDoesNotExist = arguments.getKeyArgument(CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, BooleanStruct.class);
 		final LispStruct externalFormat = arguments.getKeyArgument(CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD);

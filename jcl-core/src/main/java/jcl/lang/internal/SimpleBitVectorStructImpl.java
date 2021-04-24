@@ -20,7 +20,6 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.statics.PrinterVariables;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -204,7 +203,7 @@ public final class SimpleBitVectorStructImpl extends AbstractBitVectorStructImpl
 
 	@Override
 	public String toString() {
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getVariableValue().toJavaPBoolean();
+		final boolean printArray = CommonLispSymbols.PRINT_ARRAY_VAR.getVariableValue().toJavaPBoolean();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

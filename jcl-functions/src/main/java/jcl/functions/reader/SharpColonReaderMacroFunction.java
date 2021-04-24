@@ -10,7 +10,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.util.CodePointConstants;
 
 /**
@@ -31,7 +31,7 @@ public final class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl
 				= ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 		final String tokenString = extendedToken.getTokenString();
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

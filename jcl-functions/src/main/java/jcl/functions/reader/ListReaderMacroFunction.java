@@ -11,9 +11,9 @@ import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.condition.exception.ReaderErrorException;
-import jcl.lang.statics.ReaderVariables;
 import jcl.lang.ReadCharResult;
+import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 import lombok.experimental.UtilityClass;
@@ -60,7 +60,7 @@ final class ListReaderMacroFunction {
 			codePoint = flushWhitespace(inputStreamStruct);
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getVariableValue().toJavaPBoolean()) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
 			return NILStruct.INSTANCE;
 		}
 

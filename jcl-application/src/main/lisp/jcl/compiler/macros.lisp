@@ -13,7 +13,7 @@
 
 (defun not (object)
   "Returns T if x is false; otherwise, returns NIL."
-  (declare (system::%java-class-name "jcl.compiler.functions.Not"))
+  (declare (system::%java-class-name "jcl.common.functions.Not"))
   (null object))
 
 ;; Define-Compiler-Macro
@@ -31,26 +31,26 @@
 ;; Declaim
 #|
 (defmacro declaim (declaration-specifier)
-  (declare (system::%java-class-name "jcl.compiler.functions.Declaim"))
+  (declare (system::%java-class-name "jcl.common.functions.Declaim"))
   `(eval-when (:compile-toplevel :load-toplevel :execute)
      (proclaim ',declaration-specifier)))
 |#
 ;; Defconstant, Defparameter, Devvar
 #|
 (defmacro defvar (symbol &optional (init-form nil) documentation)
-  (declare (system::%java-class-name "jcl.compiler.functions.Defvar"))
+  (declare (system::%java-class-name "jcl.common.functions.Defvar"))
   `(progn
      (system::%set-special ',symbol t)
      (unless (boundp ',symbol) (setq ,symbol ,init-form))))
 
 (defmacro defparameter (symbol init-form &optional documentation)
-  (declare (system::%java-class-name "jcl.compiler.functions.Defparameter"))
+  (declare (system::%java-class-name "jcl.common.functions.Defparameter"))
   `(progn
      (system::%set-special ',symbol t)
      (setq ,symbol ,init-form)))
 
 (defmacro defconstant (symbol init-form &optional documentation)
-  (declare (system::%java-class-name "jcl.compiler.functions.Defconstant"))
+  (declare (system::%java-class-name "jcl.common.functions.Defconstant"))
   `(progn
      (system::%set-special ',symbol t)
      (system::%set-constant ',symbol nil)
@@ -62,19 +62,19 @@
 ;; Return
 
 (defmacro return (&optional result)
-  (declare (system::%java-class-name "jcl.compiler.functions.Return"))
+  (declare (system::%java-class-name "jcl.common.functions.Return"))
   `(return-from nil ,result))
 
 ;; When, Unless
 
 (defmacro when (test-form &rest body)
-  (declare (system::%java-class-name "jcl.compiler.functions.When"))
+  (declare (system::%java-class-name "jcl.common.functions.When"))
   (if (cdr body)
       `(if ,test-form (progn ,@body))
     `(if ,test-form ,(car body))))
 
 (defmacro unless (test-form &rest body)
-  (declare (system::%java-class-name "jcl.compiler.functions.Unless"))
+  (declare (system::%java-class-name "jcl.common.functions.Unless"))
   (if (cdr body)
       `(if (not ,test-form) (progn ,@body))
     `(if (not ,test-form) ,(car body))))
@@ -82,7 +82,7 @@
 ;; Cond
 
 (defmacro cond (&rest clauses)
-  (declare (system::%java-class-name "jcl.compiler.functions.Cond"))
+  (declare (system::%java-class-name "jcl.common.functions.Cond"))
   (if (null clauses)
       nil
     (let ((clause (car clauses)))
@@ -114,7 +114,7 @@
                 (map-psetq-pairs (cdr (cdr pairs)) (cdr bindings))))))
 
 (defmacro psetq (&whole w &rest pairs)
-  (declare (system::%java-class-name "jcl.compiler.functions.Psetq"))
+  (declare (system::%java-class-name "jcl.common.functions.Psetq"))
   (when pairs
     (unless (evenp (length pairs))
       (error "Uneven number of args in the call: ~S" w))
@@ -127,7 +127,7 @@
 ;; And, Or
 
 (defmacro and (&rest forms)
-  (declare (system::%java-class-name "jcl.compiler.functions.And"))
+  (declare (system::%java-class-name "jcl.common.functions.And"))
   (cond ((null forms) t)
 		((null (cdr forms)) (car forms))
 		(t
@@ -136,7 +136,7 @@
 		    nil))))
 
 (defmacro or (&rest forms)
-  (declare (system::%java-class-name "jcl.compiler.functions.Or"))
+  (declare (system::%java-class-name "jcl.common.functions.Or"))
   (cond ((null forms) nil)
 		((null (cdr forms)) (car forms))
 		(t
@@ -223,7 +223,7 @@
 ;; Multiple-Value-Bind
 
 (defmacro multiple-value-bind ((&rest vars) value-form &body body)
-  (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueBind"))
+  (declare (system::%java-class-name "jcl.common.functions.MultipleValueBind"))
   (let ((ignore (gensym)))
     `(multiple-value-call #'(lambda (&optional ,@vars &rest ,ignore)
                               (declare (ignore ,ignore))
@@ -233,13 +233,13 @@
 ;; Multiple-Value-List
 
 (defmacro multiple-value-list (form)
-  (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueList"))
+  (declare (system::%java-class-name "jcl.common.functions.MultipleValueList"))
   `(multiple-value-call #'list ,form))
 
 ;; Multiple-Value-Setq
 #|
 (defmacro multiple-value-setq (varlist value-form)
-  (declare (system::%java-class-name "jcl.compiler.functions.MultipleValueSetq"))
+  (declare (system::%java-class-name "jcl.common.functions.MultipleValueSetq"))
   (unless (and (listp varlist) (every #'symbolp varlist))
     (error "~S is not a list of symbols." varlist))
   (if varlist
@@ -249,13 +249,13 @@
 ;; Nth-Value
 
 (defmacro nth-value (index form)
-  (declare (system::%java-class-name "jcl.compiler.functions.NthValue"))
+  (declare (system::%java-class-name "jcl.common.functions.NthValue"))
   `(nth ,index (multiple-value-list ,form)))
 
 ;; Prog,Prog*,Prog1,Prog2
 
 (defmacro prog (varlist &body decls-body)
-  (declare (system::%java-class-name "jcl.compiler.functions.Prog"))
+  (declare (system::%java-class-name "jcl.common.functions.Prog"))
   (multiple-value-bind (body decls)
                        (parse-body decls-body)
     `(block nil
@@ -264,7 +264,7 @@
          (tagbody ,@body)))))
 
 (defmacro prog* (varlist &body decls-body)
-  (declare (system::%java-class-name "jcl.compiler.functions.ProgStar"))
+  (declare (system::%java-class-name "jcl.common.functions.ProgStar"))
   (multiple-value-bind (body decls)
                        (parse-body decls-body)
     `(block nil
@@ -273,14 +273,14 @@
          (tagbody ,@body)))))
 
 (defmacro prog1 (first-form &rest forms)
-  (declare (system::%java-class-name "jcl.compiler.functions.Prog1"))
+  (declare (system::%java-class-name "jcl.common.functions.Prog1"))
   (let ((result (gensym)))
     `(let ((,result ,first-form))
        ,@forms
        ,result)))
 
 (defmacro prog2 (first-form second-form &rest forms)
-  (declare (system::%java-class-name "jcl.compiler.functions.Prog2"))
+  (declare (system::%java-class-name "jcl.common.functions.Prog2"))
   (let ((result (gensym)))
     `(let ((,result (progn ,first-form ,second-form)))
        ,@forms

@@ -7,6 +7,7 @@ package testground.structures;
 import jcl.lang.PackageStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.classes.StructureClassStruct;
 
 @SuppressWarnings("all")
 public class BarStructureClass extends FooStructureClass {
@@ -21,7 +22,7 @@ public class BarStructureClass extends FooStructureClass {
 		final SymbolStruct constructorSymbol = constructorPackage.findSymbol("MAKE-BAR").getSymbol();
 
 		INSTANCE = new BarStructureClass(nameSymbol, constructorSymbol, null);
-		nameSymbol.setStructureClass(INSTANCE);
+		StructureClassStruct.setStructureClass(nameSymbol, INSTANCE);
 	}
 
 	protected BarStructureClass(final SymbolStruct name, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol) {

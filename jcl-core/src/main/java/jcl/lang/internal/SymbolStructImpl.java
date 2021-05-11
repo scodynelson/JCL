@@ -1,7 +1,5 @@
 package jcl.lang.internal;
 
-import java.util.Stack;
-
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -17,11 +15,7 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.function.expander.CompilerMacroFunctionExpanderInter;
-import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -41,16 +35,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	protected LispStruct value;
 
 	protected FunctionStruct function;
-
-	protected FunctionStruct setfFunction;
-
-	protected MacroFunctionExpanderInter macroFunctionExpander;
-
-	protected CompilerMacroFunctionExpanderInter compilerMacroFunctionExpander;
-
-	protected Stack<SymbolMacroExpanderInter> symbolMacroExpanderStack = new Stack<>();
-
-	protected StructureClassStruct structureClass;
 
 	/**
 	 * Public constructor.
@@ -72,30 +56,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	 */
 	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage) {
 		this(name, symbolPackage, null, null);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the symbol name
-	 * @param value
-	 * 		the symbol value
-	 */
-	protected SymbolStructImpl(final String name, final LispStruct value) {
-		this(name, null, value, null);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the symbol name
-	 * @param function
-	 * 		the symbol function
-	 */
-	protected SymbolStructImpl(final String name, final FunctionStruct function) {
-		this(name, null, null, function);
 	}
 
 	/**
@@ -149,32 +109,16 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		}
 	}
 
-	/**
-	 * Getter for symbol {@link #name} property.
-	 *
-	 * @return symbol {@link #name} property
-	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Getter for symbol {@link #symbolPackage} property.
-	 *
-	 * @return symbol {@link #symbolPackage} property
-	 */
 	@Override
 	public PackageStruct getSymbolPackage() {
 		return symbolPackage;
 	}
 
-	/**
-	 * Setter for symbol {@link #symbolPackage} property.
-	 *
-	 * @param symbolPackage
-	 * 		new symbol {@link #symbolPackage} property value
-	 */
 	@Override
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
@@ -185,11 +129,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		return BooleanStruct.toLispBoolean(value != null);
 	}
 
-	//	/**
-//	 * Getter for symbol {@link #value} property.
-//	 *
-//	 * @return symbol {@link #value} property
-//	 */
 	@Override
 	public LispStruct getValue() {
 		if (value == null) {
@@ -262,93 +201,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public void setSetfFunction(final FunctionStruct function) {
-		setfFunction = function;
-	}
-
-	/**
-	 * Getter for symbol {@link #macroFunctionExpander} property.
-	 *
-	 * @return symbol {@link #macroFunctionExpander} property
-	 */
-	@Override
-	public MacroFunctionExpanderInter getMacroFunctionExpander() {
-		return macroFunctionExpander;
-	}
-
-	/**
-	 * Setter for symbol {@link #macroFunctionExpander} property.
-	 *
-	 * @param macroFunctionExpander
-	 * 		new symbol {@link #macroFunctionExpander} property value
-	 */
-	@Override
-	public void setMacroFunctionExpander(final MacroFunctionExpanderInter macroFunctionExpander) {
-		this.macroFunctionExpander = macroFunctionExpander;
-	}
-
-	/**
-	 * Getter for symbol {@link #compilerMacroFunctionExpander} property.
-	 *
-	 * @return symbol {@link #compilerMacroFunctionExpander} property
-	 */
-	@Override
-	public CompilerMacroFunctionExpanderInter getCompilerMacroFunctionExpander() {
-		return compilerMacroFunctionExpander;
-	}
-
-	/**
-	 * Setter for symbol {@link #compilerMacroFunctionExpander} property.
-	 *
-	 * @param compilerMacroFunctionExpander
-	 * 		new symbol {@link #compilerMacroFunctionExpander} property value
-	 */
-	@Override
-	public void setCompilerMacroFunctionExpander(final CompilerMacroFunctionExpanderInter compilerMacroFunctionExpander) {
-		this.compilerMacroFunctionExpander = compilerMacroFunctionExpander;
-	}
-
-	//	/**
-//	 * Getter for symbol {@link #symbolMacroExpander} property.
-//	 *
-//	 * @return symbol {@link #symbolMacroExpander} property
-//	 */
-	@Override
-	public SymbolMacroExpanderInter getSymbolMacroExpander() {
-		if (symbolMacroExpanderStack.isEmpty()) {
-			return null;
-		}
-		return symbolMacroExpanderStack.peek();
-	}
-
-	//	/**
-//	 * Setter for symbol {@link #symbolMacroExpander} property.
-//	 *
-//	 * @param symbolMacroExpander
-//	 * 		new symbol {@link #symbolMacroExpander} property value
-//	 */
-	@Override
-	public void setSymbolMacroExpander(final SymbolMacroExpanderInter symbolMacroExpander) {
-		symbolMacroExpanderStack.pop();
-		symbolMacroExpanderStack.push(symbolMacroExpander);
-	}
-
-	@Override
-	public void bindSymbolMacroExpander(final SymbolMacroExpanderInter symbolMacroExpander) {
-		symbolMacroExpanderStack.push(symbolMacroExpander);
-	}
-
-	@Override
-	public void unbindSymbolMacroExpander() {
-		symbolMacroExpanderStack.pop();
-	}
-
-	/**
-	 * Getter for symbol {@link #properties} property.
-	 *
-	 * @return symbol {@link #properties} property
-	 */
-	@Override
 	public ListStruct getProperties() {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
@@ -363,36 +215,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		this.properties = properties;
 	}
 
-	/**
-	 * Getter for symbol {@link #structureClass} property.
-	 *
-	 * @return symbol {@link #structureClass} property
-	 */
-	@Override
-	public StructureClassStruct getStructureClass() {
-		return structureClass;
-	}
-
-	/**
-	 * Setter for symbol {@link #structureClass} property.
-	 *
-	 * @param structureClass
-	 * 		new symbol {@link #structureClass} property value
-	 */
-	@Override
-	public void setStructureClass(final StructureClassStruct structureClass) {
-		this.structureClass = structureClass;
-	}
-
-	/**
-	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code indicator}. If the
-	 * property is not found, {@code null} is returned.
-	 *
-	 * @param indicator
-	 * 		the key for the property to retrieve
-	 *
-	 * @return the property from the symbol {@link #properties} or {@code null} if the property cannot be found.
-	 */
 	@Override
 	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
 		if (properties == null) {
@@ -403,15 +225,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		return properties.getf(indicator, defaultValue);
 	}
 
-	/**
-	 * Sets the property in the symbol {@link #properties} associated with the provided {@code indicator} to the provided
-	 * {@code value}.
-	 *
-	 * @param indicator
-	 * 		the key for the property to set
-	 * @param newValue
-	 * 		the value of the property
-	 */
 	@Override
 	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
 		if (properties == null) {
@@ -419,17 +232,10 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
-		return properties.putf(indicator, newValue);
+		properties = properties.putf(indicator, newValue);
+		return properties;
 	}
 
-	/**
-	 * Removes the first property in the symbol {@link #properties} associated with the provided {@code indicator}.
-	 *
-	 * @param indicator
-	 * 		the key for the property to remove
-	 *
-	 * @return whether or not the property was removed
-	 */
 	@Override
 	public BooleanStruct removeProperty(final LispStruct indicator) {
 		if (properties == null) {
@@ -440,14 +246,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		return BooleanStruct.toLispBoolean(properties.remf(indicator));
 	}
 
-	/**
-	 * Copies the symbol and possibly its {@link #properties}.
-	 *
-	 * @param copyProperties
-	 * 		whether or not to copy the symbol's {@link #properties}
-	 *
-	 * @return the newly copied symbol
-	 */
 	@Override
 	public SymbolStruct copySymbol(final BooleanStruct copyProperties) {
 		if (copyProperties.toJavaPBoolean()) {

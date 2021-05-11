@@ -3,7 +3,6 @@ package jcl.lang;
 import java.util.List;
 
 import jcl.lang.classes.StructureClassStruct;
-import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,24 +25,14 @@ public interface StructureObjectStruct extends LispStruct {
 	void setSlot(final SymbolStruct slotName, final LispStruct newSlotValue);
 
 	static StructureObjectStruct makeStructureInstance(final SymbolStruct structSymbol) {
-		final StructureClassStruct structureClass = structSymbol.getStructureClass();
-		if (structureClass == null) {
-			throw new ProgramErrorException(
-					"Provided symbol '" + structSymbol + "' does not have a defined structure-class.");
-		}
-
+		final StructureClassStruct structureClass = StructureClassStruct.getStructureClass(structSymbol);
 		return structureClass.newInstance();
 	}
 
 	static LispStruct getStructureSlotValue(final SymbolStruct structureClassSymbol,
 	                                        final StructureObjectStruct structureInstance,
 	                                        final SymbolStruct slotName) {
-		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
-		if (symbolStructureClass == null) {
-			throw new ProgramErrorException(
-					"Provided symbol '" + structureClassSymbol + "' does not have a defined structure-class.");
-		}
-
+		final StructureClassStruct symbolStructureClass = StructureClassStruct.getStructureClass(structureClassSymbol);
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 		final LispStruct instanceStructureType = instanceStructureClass.typeOf();
 
@@ -78,12 +67,7 @@ public interface StructureObjectStruct extends LispStruct {
 	                                        final StructureObjectStruct structureInstance,
 	                                        final SymbolStruct slotName,
 	                                        final LispStruct slotValue) {
-		final StructureClassStruct symbolStructureClass = structureClassSymbol.getStructureClass();
-		if (symbolStructureClass == null) {
-			throw new ProgramErrorException(
-					"Provided symbol '" + structureClassSymbol + "' does not have a defined structure-class.");
-		}
-
+		final StructureClassStruct symbolStructureClass = StructureClassStruct.getStructureClass(structureClassSymbol);
 		final StructureClassStruct instanceStructureClass = structureInstance.getStructureClass();
 		final LispStruct instanceStructureType = instanceStructureClass.typeOf();
 

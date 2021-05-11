@@ -42,7 +42,7 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	public void generate(final GeneratorState generatorState) {
-		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
+		final JavaEnvironmentMethodBuilder methodBuilder = generatorState.getCurrentEnvironmentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final Set<SymbolStruct> existingLexicalSymbols = new HashSet<>(generatorState.getLexicalSymbols());
@@ -55,6 +55,7 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 		final Set<Integer> symbolVarStores = new HashSet<>(vars.size());
 
+		final int environmentStore = methodBuilder.getEnvironmentStore();
 		final int packageStore = methodBuilder.getNextAvailableStore();
 		final int expansionStore = methodBuilder.getNextAvailableStore();
 
@@ -75,9 +76,14 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, symbolMacroExpanderClassName, "<init>", "()V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, expansionStore);
 
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, expansionStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, GenerationConstants.SYMBOL_STRUCT_NAME, "bindSymbolMacroExpander", "(Ljcl/lang/function/expander/SymbolMacroExpanderInter;)V", true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_BIND_SYMBOL_MACRO_EXPANDER_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_BIND_SYMBOL_MACRO_EXPANDER_METHOD_DESC,
+			                   false);
 
 			generatorState.getLexicalSymbols().add(symbolVar);
 		}
@@ -90,14 +96,14 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, symbolVarStores);
+		generateFinallyCode(mv, environmentStore, symbolVarStores);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, symbolVarStores);
+		generateFinallyCode(mv, environmentStore, symbolVarStores);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -113,10 +119,16 @@ public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 		}
 	}
 
-	private static void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
+	private static void generateFinallyCode(final MethodVisitor mv, final int environmentStore,
+	                                        final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, GenerationConstants.SYMBOL_STRUCT_NAME, "unbindSymbolMacroExpander", "()V", true);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+			                   GenerationConstants.ENVIRONMENT_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_SYMBOL_MACRO_EXPANDER_METHOD_NAME,
+			                   GenerationConstants.ENVIRONMENT_UNBIND_SYMBOL_MACRO_EXPANDER_METHOD_DESC,
+			                   false);
 		}
 	}
 

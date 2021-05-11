@@ -63,7 +63,7 @@ public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final SymbolStruct structureSymbol = (SymbolStruct) structureType;
-		final StructureClassStruct structureClass = structureSymbol.getStructureClass();
+		final StructureClassStruct structureClass = StructureClassStruct.getStructureClass(structureSymbol, false);
 		if (structureClass == null) {
 			final String message = structureType + " is not a defined structure type for symbol: " + structureSymbol;
 			throw new ReaderErrorException(message);

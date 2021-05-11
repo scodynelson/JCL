@@ -19,6 +19,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.StructureObjectStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StructureClassStruct;
+import jcl.lang.internal.StructureObjectStructImpl;
 import lombok.Getter;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -72,9 +73,13 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 	private static final String STRUCTURE_CLASS_NEW_INSTANCE_METHOD_DESC = "()Ljcl/lang/StructureObjectStruct;";
 
-	private static final String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME = "setStructureClass";
+	private static final String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStructImpl.class);
 
-	private static final String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
+	private static final String STRUCTURE_CLASS_STRUCT_NAME = Type.getInternalName(StructureClassStruct.class);
+
+	private static final String SET_STRUCTURE_CLASS_METHOD_NAME = "setStructureClass";
+
+	private static final String SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(StructureClassStruct.class, SET_STRUCTURE_CLASS_METHOD_NAME, SymbolStruct.class, StructureClassStruct.class);
 
 	@Override
 	public void generate(final GeneratorState generatorState) {
@@ -109,11 +114,11 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 			previousMv.visitInsn(Opcodes.DUP); // DUP the symbol so it will still be on the stack after we set the structure class.
 
 			previousMv.visitFieldInsn(Opcodes.GETSTATIC, structureClassClassName, GenerationConstants.SINGLETON_INSTANCE, structureClassClassDesc);
-			previousMv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-			                           GenerationConstants.SYMBOL_STRUCT_NAME,
-			                           GenerationConstants.SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME,
-			                           GenerationConstants.SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC,
-			                           true);
+			previousMv.visitMethodInsn(Opcodes.INVOKESTATIC,
+			                           STRUCTURE_CLASS_STRUCT_NAME,
+			                           SET_STRUCTURE_CLASS_METHOD_NAME,
+			                           SET_STRUCTURE_CLASS_METHOD_DESC,
+			                           false);
 		}
 	}
 
@@ -409,7 +414,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 *      PackageStruct var3 = PackageStruct.findPackage("COMMON-LISP-USER");
 	 *      SymbolStruct var4 = var1.intern("MAKE-FOO").getSymbol();
 	 *      INSTANCE = new FOOStructureClass_1(var2, var4, (SymbolStruct)null);
-	 *      var2.setStructureClass(INSTANCE);
+	 *      StructureClassStruct.setStructureClass(var2, INSTANCE);
 	 * }
 	 * }
 	 * </pre>
@@ -487,11 +492,11 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		                  structureClassClassName,
 		                  GenerationConstants.SINGLETON_INSTANCE,
 		                  structureClassClassDesc);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-		                   GenerationConstants.SYMBOL_STRUCT_NAME,
-		                   SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME,
-		                   SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC,
-		                   true);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		                   STRUCTURE_CLASS_STRUCT_NAME,
+		                   SET_STRUCTURE_CLASS_METHOD_NAME,
+		                   SET_STRUCTURE_CLASS_METHOD_DESC,
+		                   false);
 
 		mv.visitInsn(Opcodes.RETURN);
 
@@ -573,7 +578,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         structureObjectClassName,
 		         null,
-		         GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
+		         STRUCTURE_OBJECT_STRUCT_NAME,
 		         null);
 
 		cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
@@ -694,7 +699,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 			                   false);
 		}
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.STRUCTURE_OBJECT_STRUCT_NAME,
+		                   STRUCTURE_OBJECT_STRUCT_NAME,
 		                   GenerationConstants.INIT_METHOD_NAME,
 		                   STRUCTURE_OBJECT_INIT_SCS_SS_SOS_METHOD_DESC,
 		                   false);

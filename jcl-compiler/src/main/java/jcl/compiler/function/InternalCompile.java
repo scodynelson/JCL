@@ -111,7 +111,7 @@ public final class InternalCompile {
 		}
 		final SymbolStruct nameSymbol = (SymbolStruct) name;
 
-		final MacroFunctionExpanderInter macroFunction = nameSymbol.getMacroFunctionExpander();
+		final MacroFunctionExpanderInter macroFunction = SymbolStruct.getMacroFunctionDefinition(nameSymbol);
 		if (macroFunction != null) {
 			return new CompileResult(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}

@@ -23,13 +23,7 @@ public interface FunctionStruct extends LispStruct {
 				function = functionSymbol.getFunction();
 			}
 			if (function == null) {
-				function = functionSymbol.getMacroFunctionExpander();
-			}
-			if (function == null) {
-				function = (FunctionStruct) functionSymbol.getSymbolMacroExpander();
-			}
-			if (function == null) {
-				function = functionSymbol.getCompilerMacroFunctionExpander();
+				function = SymbolStruct.getMacroFunctionDefinition(functionSymbol);
 			}
 			if (function != null) {
 				return function;

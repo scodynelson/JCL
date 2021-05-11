@@ -39,11 +39,6 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 	}
 
 	@Override
-	public void setSymbolMacroExpander(final SymbolMacroExpanderInter symbolMacroExpander) {
-		throw new ProgramErrorException("Can't set symbol macro expansion for constant " + name + '.');
-	}
-
-	@Override
 	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
 		throw new ProgramErrorException("Can't set properties for constant " + name + '.');
 	}

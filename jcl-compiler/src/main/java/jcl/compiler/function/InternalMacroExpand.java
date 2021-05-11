@@ -55,7 +55,7 @@ public final class InternalMacroExpand {
 			if (symbolStruct.isPresent()) {
 				final SymbolStruct theSymbol = symbolStruct.get();
 
-				final MacroFunctionExpanderInter macroFunctionExpander = theSymbol.getMacroFunctionExpander();
+				final MacroFunctionExpanderInter macroFunctionExpander = environment.getMacroFunctionExpander(theSymbol);
 
 				if (macroFunctionExpander != null) {
 					final FunctionStruct macroExpandHook = CommonLispSymbols.MACROEXPAND_HOOK_VAR.getVariableValue();
@@ -76,7 +76,7 @@ public final class InternalMacroExpand {
 		if (symbolStruct.isPresent()) {
 			final SymbolStruct theSymbol = symbolStruct.get();
 
-			final SymbolMacroExpanderInter symbolMacroExpander = theSymbol.getSymbolMacroExpander();
+			final SymbolMacroExpanderInter symbolMacroExpander = environment.getSymbolMacroExpander(theSymbol);
 
 			if (symbolMacroExpander != null) {
 				final FunctionStruct macroExpandHook = CommonLispSymbols.MACROEXPAND_HOOK_VAR.getVariableValue();

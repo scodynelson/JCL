@@ -84,7 +84,7 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 	 * </pre>
 	 * NOTE: If the value of {@link SymbolFunctionCallStruct#isRecursiveCall} is true, the current lambda will be used
 	 * via 'this' reference to invoke a recursive call, rather than re-retrieving the {@link
-	 * SymbolStruct#getFunction()} value
+	 * jcl.compiler.environment.Environment#getFunction(SymbolStruct)} value
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

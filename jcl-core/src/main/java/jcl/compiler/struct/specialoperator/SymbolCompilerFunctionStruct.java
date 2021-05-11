@@ -26,7 +26,7 @@ public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 	 * Generation method for {@link SymbolCompilerFunctionStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link SymbolCompilerFunctionStruct#functionSymbol} value</li>
-	 * <li>Generating the code to retrieve the {@link SymbolStruct#getFunction()} call to retrieve the associated
+	 * <li>Generating the code to retrieve the {@link jcl.compiler.environment.Environment#getFunction(SymbolStruct)} call to retrieve the associated
 	 * {@link FunctionStruct} associated with the function symbol</li>
 	 * </ol>
 	 * As an example, it will transform the function symbol '+' for {@code (+ 1)} into the following Java code:

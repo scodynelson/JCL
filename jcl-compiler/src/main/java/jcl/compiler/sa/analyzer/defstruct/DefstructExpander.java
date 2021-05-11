@@ -59,7 +59,7 @@ public final class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		StructureClassStruct includeStructureClass = null;
 		if (includeStructureSymbol != null) {
-			includeStructureClass = includeStructureSymbol.getStructureClass();
+			includeStructureClass = StructureClassStruct.getStructureClass(includeStructureSymbol, false);
 			if (includeStructureClass == null) {
 				throw new ProgramErrorException("%DEFSTRUCT: Include structure name '" + second + "' must have an already defined structure class.");
 			}

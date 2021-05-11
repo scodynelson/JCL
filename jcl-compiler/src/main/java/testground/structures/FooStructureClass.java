@@ -22,7 +22,7 @@ public class FooStructureClass extends StructureClassStruct {
 		final SymbolStruct constructorSymbol = constructorPackage.findSymbol("MAKE-FOO").getSymbol();
 
 		INSTANCE = new FooStructureClass(nameSymbol, constructorSymbol, null);
-		nameSymbol.setStructureClass(INSTANCE);
+		StructureClassStruct.setStructureClass(nameSymbol, INSTANCE);
 	}
 
 	protected FooStructureClass(final SymbolStruct name, final SymbolStruct defaultConstructorSymbol, final SymbolStruct printerSymbol) {

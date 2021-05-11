@@ -84,7 +84,7 @@ public final class InternalEval {
 		if (exp instanceof SymbolCompilerFunctionStruct) {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = (SymbolCompilerFunctionStruct) exp;
 			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
-			return functionSymbol.getFunction();
+			return environment.getFunction(functionSymbol);
 		}
 
 		if (exp instanceof LambdaCompilerFunctionStruct) {
@@ -100,7 +100,7 @@ public final class InternalEval {
 			final SymbolCompilerFunctionStruct symbolCompilerFunction = functionCall.getSymbolCompilerFunction();
 			final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
 
-			final FunctionStruct function = functionSymbol.getFunction();
+			final FunctionStruct function = environment.getFunction(functionSymbol);
 
 			final List<LispStruct> arguments = functionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());

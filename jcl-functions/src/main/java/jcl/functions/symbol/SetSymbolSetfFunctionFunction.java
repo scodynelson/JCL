@@ -39,7 +39,7 @@ public final class SetSymbolSetfFunctionFunction extends BuiltInFunctionStructIm
 		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
 
 		final SymbolStruct symbol = (SymbolStruct) consStruct.nth(FixnumStruct.ONE);
-		symbol.setSetfFunction(function);
+		SymbolStruct.setSetfDefinition(symbol, function);
 		return function;
 	}
 }

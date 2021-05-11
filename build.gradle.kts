@@ -67,7 +67,7 @@ subprojects {
 
 	dependencies {
 		implementation("com.google.guava:guava:30.1.1-jre")
-		implementation("com.ibm.icu:icu4j:68.2")
+		implementation("com.ibm.icu:icu4j:69.1")
 		implementation("commons-io:commons-io:2.8.0")
 		implementation("org.apache.commons:commons-collections4:4.4")
 		implementation("org.apache.commons:commons-lang3:3.12.0")
@@ -80,10 +80,10 @@ subprojects {
 		implementation("org.ow2.asm:asm-util:9.1")
 		implementation("info.picocli:picocli:4.6.1")
 
-		compileOnly("org.projectlombok:lombok:1.18.18")
-		annotationProcessor("org.projectlombok:lombok:1.18.18")
+		compileOnly("org.projectlombok:lombok:1.18.20")
+		annotationProcessor("org.projectlombok:lombok:1.18.20")
 
-		testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+		testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 		testImplementation("org.assertj:assertj-core:3.19.0")
 
 		implementation("org.apache.logging.log4j:log4j-api:2.14.1")
@@ -106,7 +106,7 @@ subprojects {
 	}
 
 	configure<JacocoPluginExtension> {
-		toolVersion = "0.8.6"
+		toolVersion = "0.8.7"
 	}
 
 	tasks.named<JacocoReport>("jacocoTestReport") {
@@ -121,6 +121,6 @@ subprojects {
 }
 
 tasks.named<Wrapper>("wrapper") {
-	gradleVersion = "6.8.3"
+	gradleVersion = "7.0"
 	distributionType = Wrapper.DistributionType.ALL
 }

@@ -35,6 +35,7 @@ import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -54,6 +55,10 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private final StringStruct docString;
 	private final PrognStruct forms;
 	private final Environment lambdaEnvironment;
+
+	private static final String SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_NAME = "setMacroFunctionDefinition";
+
+	private static final String SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_NAME, SymbolStruct.class, MacroFunctionExpanderInter.class);
 
 	public MacroLambdaStruct(final String className, final SymbolStruct macroName, final MacroLambdaList lambdaListBindings,
 	                         final StringStruct docString, final PrognStruct forms, final Environment lambdaEnvironment) {
@@ -364,10 +369,10 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, macroNameSymbolStore);
 		previousMv.visitVarInsn(Opcodes.ALOAD, expanderStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
+		previousMv.visitMethodInsn(Opcodes.INVOKESTATIC,
 		                           GenerationConstants.SYMBOL_STRUCT_NAME,
-		                           GenerationConstants.SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME,
-		                           GenerationConstants.SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC,
+		                           SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_NAME,
+		                           SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_DESC,
 		                           true);
 		previousMv.visitVarInsn(Opcodes.ALOAD, expanderStore);
 	}

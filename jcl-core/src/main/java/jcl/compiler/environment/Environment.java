@@ -19,6 +19,7 @@ import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StandardObjectStruct;
+import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -33,6 +34,8 @@ public class Environment extends StandardObjectStruct {
 	private static final Map<SymbolStruct, Deque<LispStruct>> dynamicSymbolBindings = new LinkedHashMap<>();
 
 	private static final Map<SymbolStruct, Deque<FunctionStruct>> lexicalFunctionBindings = new LinkedHashMap<>();
+
+	private static final Map<SymbolStruct, Deque<MacroFunctionExpanderInter>> macroFunctionBindings = new LinkedHashMap<>();
 
 	private static final Map<SymbolStruct, Deque<SymbolMacroExpanderInter>> symbolMacroBindings = new LinkedHashMap<>();
 
@@ -374,6 +377,10 @@ public class Environment extends StandardObjectStruct {
 		return lexicalFunctionBindings;
 	}
 
+	public Map<SymbolStruct, Deque<MacroFunctionExpanderInter>> getMacroFunctionBindings() {
+		return macroFunctionBindings;
+	}
+
 	public Map<SymbolStruct, Deque<SymbolMacroExpanderInter>> getSymbolMacroBindings() {
 		return symbolMacroBindings;
 	}
@@ -542,6 +549,54 @@ public class Environment extends StandardObjectStruct {
 		}
 	}
 
+	public boolean hasMacroFunctionExpander(final SymbolStruct var) {
+		return !CollectionUtils.isEmpty(macroFunctionBindings.get(var))
+				|| (SymbolStruct.getMacroFunctionDefinition(var) != null);
+	}
+
+	public MacroFunctionExpanderInter getMacroFunctionExpander(final SymbolStruct var) {
+		if (CollectionUtils.isEmpty(macroFunctionBindings.get(var))) {
+			return SymbolStruct.getMacroFunctionDefinition(var);
+		}
+		return macroFunctionBindings.get(var).peek();
+	}
+
+	public void setMacroFunctionExpander(final SymbolStruct var, final MacroFunctionExpanderInter macroFunction) {
+		if (CollectionUtils.isEmpty(macroFunctionBindings.get(var))) {
+			macroFunctionBindings.get(var).push(macroFunction);
+		} else {
+			macroFunctionBindings.get(var).pop();
+			macroFunctionBindings.get(var).push(macroFunction);
+		}
+	}
+
+	public void bindMacroFunctionExpander(final SymbolStruct var, final MacroFunctionExpanderInter macroFunction) {
+		if (macroFunction == null) {
+			if (!macroFunctionBindings.containsKey(var)) {
+				macroFunctionBindings.put(var, new ArrayDeque<>());
+			}
+		} else {
+			if (CollectionUtils.isEmpty(macroFunctionBindings.get(var))) {
+				final Deque<MacroFunctionExpanderInter> values = new ArrayDeque<>();
+				values.push(macroFunction);
+				macroFunctionBindings.put(var, values);
+			} else {
+				macroFunctionBindings.get(var).push(macroFunction);
+			}
+		}
+	}
+
+	public void unbindMacroFunctionExpander(final SymbolStruct var) {
+		if (!CollectionUtils.isEmpty(macroFunctionBindings.get(var))) {
+			macroFunctionBindings.get(var).pop();
+		}
+	}
+
+	public boolean hasSymbolMacroExpander(final SymbolStruct var) {
+		return !CollectionUtils.isEmpty(symbolMacroBindings.get(var))
+				|| (SymbolStruct.getSymbolMacroDefinition(var) != null);
+	}
+
 	public SymbolMacroExpanderInter getSymbolMacroExpander(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
 			return null;
@@ -549,16 +604,34 @@ public class Environment extends StandardObjectStruct {
 		return symbolMacroBindings.get(var).peek();
 	}
 
-	public void setSymbolMacroExpander(final SymbolStruct var, final SymbolMacroExpanderInter symbolMacroExpander) {
-		symbolMacroBindings.get(var).pop();
-		symbolMacroBindings.get(var).push(symbolMacroExpander);
+	public void setSymbolMacroExpander(final SymbolStruct var, final SymbolMacroExpanderInter symbolMacro) {
+		if (CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
+			symbolMacroBindings.get(var).push(symbolMacro);
+		} else {
+			symbolMacroBindings.get(var).pop();
+			symbolMacroBindings.get(var).push(symbolMacro);
+		}
 	}
 
-	public void bindSymbolMacroExpander(final SymbolStruct var, final SymbolMacroExpanderInter symbolMacroExpander) {
-		symbolMacroBindings.get(var).push(symbolMacroExpander);
+	public void bindSymbolMacroExpander(final SymbolStruct var, final SymbolMacroExpanderInter symbolMacro) {
+		if (symbolMacro == null) {
+			if (!symbolMacroBindings.containsKey(var)) {
+				symbolMacroBindings.put(var, new ArrayDeque<>());
+			}
+		} else {
+			if (CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
+				final Deque<SymbolMacroExpanderInter> values = new ArrayDeque<>();
+				values.push(symbolMacro);
+				symbolMacroBindings.put(var, values);
+			} else {
+				symbolMacroBindings.get(var).push(symbolMacro);
+			}
+		}
 	}
 
 	public void unbindSymbolMacroExpander(final SymbolStruct var) {
-		symbolMacroBindings.get(var).pop();
+		if (!CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
+			symbolMacroBindings.get(var).pop();
+		}
 	}
 }

@@ -45,10 +45,9 @@ import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
-import jcl.lang.classes.StructureClassStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.internal.StructureObjectStructImpl;
+import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.statics.GlobalPackageStruct;
@@ -242,14 +241,6 @@ public interface GenerationConstants {
 
 	String SYMBOL_STRUCT_TO_SYMBOL_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_TO_SYMBOL_METHOD_NAME, String.class);
 
-	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME = "setStructureClass";
-
-	String SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_STRUCTURE_CLASS_METHOD_NAME, StructureClassStruct.class);
-
-	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "setMacroFunctionExpander";
-
-	String SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, MacroFunctionExpanderInter.class);
-
 	String ENVIRONMENT_NAME = Type.getInternalName(Environment.class);
 
 	String ENVIRONMENT_NULL_NAME = "NULL";
@@ -309,6 +300,30 @@ public interface GenerationConstants {
 	String ENVIRONMENT_UNBIND_FUNCTION_METHOD_NAME = "unbindFunction";
 
 	String ENVIRONMENT_UNBIND_FUNCTION_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_FUNCTION_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_GET_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "getMacroFunctionExpander";
+
+	String ENVIRONMENT_GET_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_MACRO_FUNCTION_EXPANDER_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_BIND_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "bindMacroFunctionExpander";
+
+	String ENVIRONMENT_BIND_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_MACRO_FUNCTION_EXPANDER_METHOD_NAME, SymbolStruct.class, MacroFunctionExpanderInter.class);
+
+	String ENVIRONMENT_UNBIND_MACRO_FUNCTION_EXPANDER_METHOD_NAME = "unbindMacroFunctionExpander";
+
+	String ENVIRONMENT_UNBIND_MACRO_FUNCTION_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_MACRO_FUNCTION_EXPANDER_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_GET_SYMBOL_MACRO_EXPANDER_METHOD_NAME = "getSymbolMacroExpander";
+
+	String ENVIRONMENT_GET_SYMBOL_MACRO_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_GET_SYMBOL_MACRO_EXPANDER_METHOD_NAME, SymbolStruct.class);
+
+	String ENVIRONMENT_BIND_SYMBOL_MACRO_EXPANDER_METHOD_NAME = "bindSymbolMacroExpander";
+
+	String ENVIRONMENT_BIND_SYMBOL_MACRO_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_BIND_SYMBOL_MACRO_EXPANDER_METHOD_NAME, SymbolStruct.class, SymbolMacroExpanderInter.class);
+
+	String ENVIRONMENT_UNBIND_SYMBOL_MACRO_EXPANDER_METHOD_NAME = "unbindSymbolMacroExpander";
+
+	String ENVIRONMENT_UNBIND_SYMBOL_MACRO_EXPANDER_METHOD_DESC = CodeGenerators.getMethodDescription(Environment.class, ENVIRONMENT_UNBIND_SYMBOL_MACRO_EXPANDER_METHOD_NAME, SymbolStruct.class);
 
 	String PACKAGE_STRUCT_NAME = Type.getInternalName(PackageStruct.class);
 
@@ -469,6 +484,4 @@ public interface GenerationConstants {
 	String LIST_STRUCT_STREAM_METHOD_NAME = "stream";
 
 	String LIST_STRUCT_STREAM_METHOD_DESC = CodeGenerators.getMethodDescription(ListStruct.class, LIST_STRUCT_STREAM_METHOD_NAME);
-
-	String STRUCTURE_OBJECT_STRUCT_NAME = Type.getInternalName(StructureObjectStructImpl.class);
 }

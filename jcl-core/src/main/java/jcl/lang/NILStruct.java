@@ -113,7 +113,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
 	@Override
 	public ListStruct putf(final LispStruct indicator, final LispStruct newValue) {
-		return ConsStruct.toLispCons(indicator, newValue);
+		return ConsStruct.toLispCons(indicator, ConsStruct.toLispCons(newValue, INSTANCE));
 	}
 
 	@Override

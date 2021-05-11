@@ -459,13 +459,13 @@ public class TestGround {
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
-		symbol.bindSymbolMacroExpander(symbolMacroExpander);
+		currentEnvironment.bindSymbolMacroExpander(symbol, symbolMacroExpander);
 
 		final LispStruct result;
 		try {
 			result = CharacterStruct.toLispCharacter(197);
 		} finally {
-			symbol.unbindSymbolMacroExpander();
+			currentEnvironment.unbindSymbolMacroExpander(symbol);
 		}
 		return result;
 	}
@@ -609,7 +609,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct macroName = pkg.findSymbol("FOO").getSymbol();
 
-		macroName.setMacroFunctionExpander(expanderGenerator);
+		SymbolStruct.setMacroFunctionDefinition(macroName, expanderGenerator);
 		return expanderGenerator;
 	}
 }

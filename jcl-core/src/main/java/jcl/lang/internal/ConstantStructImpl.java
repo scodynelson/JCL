@@ -4,7 +4,6 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.function.expander.SymbolMacroExpanderInter;
 
 public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImpl {
 
@@ -19,14 +18,15 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 	}
 
 	public void initializeConstant(final TYPE constantValue) {
-		super.setValue(constantValue);
+		super.setSymbolValue(constantValue);
 		this.constantValue = constantValue;
 	}
 
 	@Override
-	public void setSymbolPackage(final PackageStruct symbolPackage) {
+	public PackageStruct setSymbolPackage(final PackageStruct symbolPackage) {
 		// TODO: temp hacks
 //		throw new ProgramErrorException("Can't set package for constant " + name + '.');
+		return symbolPackage;
 	}
 
 	public TYPE getConstantValue() {
@@ -34,12 +34,12 @@ public class ConstantStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 	}
 
 	@Override
-	public void setValue(final LispStruct value) {
+	public LispStruct setSymbolValue(final LispStruct value) {
 		throw new ProgramErrorException("Can't set value for constant " + name + '.');
 	}
 
 	@Override
-	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+	public LispStruct setProp(final LispStruct indicator, final LispStruct newValue) {
 		throw new ProgramErrorException("Can't set properties for constant " + name + '.');
 	}
 }

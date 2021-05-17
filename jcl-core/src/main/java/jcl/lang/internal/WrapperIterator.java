@@ -7,7 +7,7 @@ import jcl.lang.LispStruct;
 
 final class WrapperIterator<TYPE extends LispStruct> implements Iterator<LispStruct> {
 
-	private Iterator<TYPE> iterator;
+	private final Iterator<TYPE> iterator;
 
 	WrapperIterator(final Iterator<TYPE> iterator) {
 		this.iterator = iterator;

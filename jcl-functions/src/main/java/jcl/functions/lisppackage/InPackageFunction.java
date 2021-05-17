@@ -53,7 +53,7 @@ public final class InPackageFunction extends BuiltInFunctionStructImpl {
 		final String name = StringStruct.fromDesignator(lispStruct).toJavaString();
 
 		final PackageStruct newCurrentPackage = PackageStruct.findPackage(name);
-		CommonLispSymbols.PACKAGE_VAR.setValue(newCurrentPackage);
+		CommonLispSymbols.PACKAGE_VAR.setSymbolValue(newCurrentPackage);
 
 		return newCurrentPackage;
 	}

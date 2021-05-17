@@ -20,21 +20,21 @@ public class ReadEvalPrint {
 
 	public static void funcall() {
 		try {
-			CommonLispSymbols.DASH.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.DASH.setSymbolValue(NILStruct.INSTANCE);
 
-			CommonLispSymbols.PLUS.setValue(NILStruct.INSTANCE);
-			CommonLispSymbols.PLUS_PLUS.setValue(NILStruct.INSTANCE);
-			CommonLispSymbols.PLUS_PLUS_PLUS.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.PLUS.setSymbolValue(NILStruct.INSTANCE);
+			CommonLispSymbols.PLUS_PLUS.setSymbolValue(NILStruct.INSTANCE);
+			CommonLispSymbols.PLUS_PLUS_PLUS.setSymbolValue(NILStruct.INSTANCE);
 
-			CommonLispSymbols.SLASH.setValue(NILStruct.INSTANCE);
-			CommonLispSymbols.SLASH_SLASH.setValue(NILStruct.INSTANCE);
-			CommonLispSymbols.SLASH_SLASH_SLASH.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.SLASH.setSymbolValue(NILStruct.INSTANCE);
+			CommonLispSymbols.SLASH_SLASH.setSymbolValue(NILStruct.INSTANCE);
+			CommonLispSymbols.SLASH_SLASH_SLASH.setSymbolValue(NILStruct.INSTANCE);
 
-			CommonLispSymbols.STAR.setValue(NILStruct.INSTANCE);
-			CommonLispSymbols.STAR_STAR.setValue(NILStruct.INSTANCE);
-			CommonLispSymbols.STAR_STAR_STAR.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.STAR.setSymbolValue(NILStruct.INSTANCE);
+			CommonLispSymbols.STAR_STAR.setSymbolValue(NILStruct.INSTANCE);
+			CommonLispSymbols.STAR_STAR_STAR.setSymbolValue(NILStruct.INSTANCE);
 
-			final InputStreamStruct inputStreamStruct = (InputStreamStruct) CommonLispSymbols.STANDARD_INPUT.getValue();
+			final InputStreamStruct inputStreamStruct = (InputStreamStruct) CommonLispSymbols.STANDARD_INPUT.symbolValue();
 
 			int counter = 1;
 			while (true) {
@@ -48,38 +48,38 @@ public class ReadEvalPrint {
 					final LispStruct whatRead = InternalRead.read(inputStreamStruct, true, NILStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
-					CommonLispSymbols.DASH.setValue(whatRead);
+					CommonLispSymbols.DASH.setSymbolValue(whatRead);
 
 					// EVAL --------------
 					final LispStruct value = InternalEval.eval(whatRead);
 
 					// bind '**' and '***' to their appropriate values
-					CommonLispSymbols.STAR_STAR_STAR.setValue(CommonLispSymbols.STAR_STAR.getValue());
-					CommonLispSymbols.STAR_STAR.setValue(CommonLispSymbols.STAR.getValue());
+					CommonLispSymbols.STAR_STAR_STAR.setSymbolValue(CommonLispSymbols.STAR_STAR.symbolValue());
+					CommonLispSymbols.STAR_STAR.setSymbolValue(CommonLispSymbols.STAR.symbolValue());
 
 					// bind '//' and '///' to their appropriate values
-					CommonLispSymbols.SLASH_SLASH_SLASH.setValue(CommonLispSymbols.SLASH_SLASH.getValue());
-					CommonLispSymbols.SLASH_SLASH.setValue(CommonLispSymbols.SLASH.getValue());
+					CommonLispSymbols.SLASH_SLASH_SLASH.setSymbolValue(CommonLispSymbols.SLASH_SLASH.symbolValue());
+					CommonLispSymbols.SLASH_SLASH.setSymbolValue(CommonLispSymbols.SLASH.symbolValue());
 
 					// bind '*' and '/' values to the form just evaluated
 					if (value instanceof ValuesStruct) {
 						final ValuesStruct values = (ValuesStruct) value;
-						CommonLispSymbols.STAR.setValue(values.getPrimaryValue());
-						CommonLispSymbols.SLASH.setValue(ListStruct.toLispList(values.getValuesList()));
+						CommonLispSymbols.STAR.setSymbolValue(values.getPrimaryValue());
+						CommonLispSymbols.SLASH.setSymbolValue(ListStruct.toLispList(values.getValuesList()));
 					} else {
-						CommonLispSymbols.STAR.setValue(value);
+						CommonLispSymbols.STAR.setSymbolValue(value);
 						// null check
-						CommonLispSymbols.SLASH.setValue(ListStruct.toLispList(value));
+						CommonLispSymbols.SLASH.setSymbolValue(ListStruct.toLispList(value));
 					}
 
 					// bind '+' to the form just evaluated and '++' and '+++' to their appropriate values
-					CommonLispSymbols.PLUS_PLUS_PLUS.setValue(CommonLispSymbols.PLUS_PLUS.getValue());
-					CommonLispSymbols.PLUS_PLUS.setValue(CommonLispSymbols.PLUS.getValue());
-					CommonLispSymbols.PLUS.setValue(CommonLispSymbols.DASH.getValue());
+					CommonLispSymbols.PLUS_PLUS_PLUS.setSymbolValue(CommonLispSymbols.PLUS_PLUS.symbolValue());
+					CommonLispSymbols.PLUS_PLUS.setSymbolValue(CommonLispSymbols.PLUS.symbolValue());
+					CommonLispSymbols.PLUS.setSymbolValue(CommonLispSymbols.DASH.symbolValue());
 
 					if (value == null) {
 						log.warn("Setting * to NIL since it had no value.");
-						CommonLispSymbols.STAR.setValue(NILStruct.INSTANCE);
+						CommonLispSymbols.STAR.setSymbolValue(NILStruct.INSTANCE);
 					}
 
 					// PRINT -------------

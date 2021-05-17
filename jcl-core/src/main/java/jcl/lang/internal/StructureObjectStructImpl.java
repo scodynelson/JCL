@@ -39,18 +39,22 @@ public class StructureObjectStructImpl extends LispStructImpl implements Structu
 		this.parentStructure = parentStructure;
 	}
 
+	@Override
 	public StructureClassStruct getStructureClass() {
 		return structureClass;
 	}
 
+	@Override
 	public SymbolStruct getStructureSymbol() {
 		return structureSymbol;
 	}
 
+	@Override
 	public StructureObjectStruct getParentStructure() {
 		return parentStructure;
 	}
 
+	@Override
 	public List<Pair<SymbolStruct, LispStruct>> getSlots() {
 		final List<Pair<SymbolStruct, LispStruct>> allSlots = new ArrayList<>();
 
@@ -69,6 +73,7 @@ public class StructureObjectStructImpl extends LispStructImpl implements Structu
 		return allSlots;
 	}
 
+	@Override
 	public LispStruct getSlot(final SymbolStruct slotName) {
 		if (slots.containsKey(slotName)) {
 			return slots.get(slotName);
@@ -77,6 +82,7 @@ public class StructureObjectStructImpl extends LispStructImpl implements Structu
 		throw new SimpleErrorException("Slot " + slotName + " is not present for structure " + this);
 	}
 
+	@Override
 	public void setSlot(final SymbolStruct slotName, final LispStruct newSlotValue) {
 		if (slots.containsKey(slotName)) {
 			slots.put(slotName, newSlotValue);

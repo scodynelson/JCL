@@ -19,7 +19,7 @@ public final class InternalApply {
 
 		FunctionStruct functionStruct = null;
 		if (functionDesignator instanceof SymbolStruct) {
-			functionStruct = ((SymbolStruct) functionDesignator).getFunction();
+			functionStruct = ((SymbolStruct) functionDesignator).symbolFunction();
 		} else if (functionDesignator instanceof FunctionStruct) {
 			functionStruct = (FunctionStruct) functionDesignator;
 		}

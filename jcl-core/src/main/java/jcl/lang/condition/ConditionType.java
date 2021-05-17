@@ -41,5 +41,5 @@ public enum ConditionType implements LispStruct {
 
 	PRINT_NOT_READABLE,
 
-	READER_ERROR;
+	READER_ERROR
 }

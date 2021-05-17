@@ -1,59 +1,54 @@
 package jcl.lang;
 
-import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.internal.SymbolStructImpl;
+import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
  */
 public interface SymbolStruct extends LispStruct {
 
-	SymbolStruct MACRO_FUNCTION_DEFINITION = toLispSymbol("MACRO-FUNCTION-DEFINITION");
-	SymbolStruct SYMBOL_MACRO_DEFINITION = toLispSymbol("SYMBOL-MACRO-DEFINITION");
-	SymbolStruct SETF_DEFINITION = toLispSymbol("SETF-DEFINITION");
-
 	String getName();
 
-	default StringStruct getLispName() {
+	default StringStruct symbolName() {
 		return StringStruct.toLispString(getName());
 	}
 
-	default LispStruct getPackage() {
+	default LispStruct symbolPackage() {
 		final PackageStruct symbolPackage = getSymbolPackage();
 		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
 	}
 
 	PackageStruct getSymbolPackage();
 
-	void setSymbolPackage(final PackageStruct symbolPackage);
+	PackageStruct setSymbolPackage(final PackageStruct symbolPackage);
 
-	BooleanStruct hasValue();
+	BooleanStruct boundP();
 
-	LispStruct getValue();
+	SymbolStruct makunbound();
 
-	void setValue(final LispStruct value);
+	LispStruct symbolValue();
 
-	default LispStruct setValue1(final LispStruct value) {
-		setValue(value);
-		return value;
-	}
+	LispStruct setSymbolValue(final LispStruct value);
 
-	boolean hasFunction();
+	BooleanStruct fBoundP();
 
-	FunctionStruct getFunction();
+	SymbolStruct fMakunbound();
 
-	void setFunction(final FunctionStruct function);
+	FunctionStruct symbolFunction();
+
+	FunctionStruct setSymbolFunction(final FunctionStruct function);
 
 	/**
 	 * Getter for symbol {@link ListStruct} properties.
 	 *
 	 * @return symbol {@link ListStruct} properties
 	 */
-	ListStruct getProperties();
+	ListStruct symbolPlist();
 
-	void setProperties(final ListStruct properties);
+	ListStruct setSymbolPlist(final ListStruct properties);
 
 	/**
 	 * Retrieves the property from the symbol {@link ListStruct} properties associated with the provided {@code
@@ -67,7 +62,7 @@ public interface SymbolStruct extends LispStruct {
 	 * @return the property from the symbol {@link ListStruct} properties or {@code null} if the property cannot be
 	 * found.
 	 */
-	LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue);
+	LispStruct getProp(final LispStruct indicator, final LispStruct defaultValue);
 
 	/**
 	 * Sets the property in the symbol {@link ListStruct} properties associated with the provided {@code indicator} to
@@ -80,7 +75,7 @@ public interface SymbolStruct extends LispStruct {
 	 *
 	 * @return the symbol properties {@link ListStruct}
 	 */
-	ListStruct setProperty(final LispStruct indicator, final LispStruct newValue);
+	LispStruct setProp(final LispStruct indicator, final LispStruct newValue);
 
 	/**
 	 * Removes the first property in the symbol {@link ListStruct} properties associated with the provided {@code
@@ -91,7 +86,7 @@ public interface SymbolStruct extends LispStruct {
 	 *
 	 * @return whether or not the property was removed
 	 */
-	BooleanStruct removeProperty(final LispStruct indicator);
+	BooleanStruct remProp(final LispStruct indicator);
 
 	/**
 	 * Copies the symbol and possibly its {@link ListStruct} properties.
@@ -117,16 +112,12 @@ public interface SymbolStruct extends LispStruct {
 		return struct;
 	}
 
-	static SymbolStruct fromDesignator(final LispStruct struct) {
-		if (struct instanceof SymbolStruct) {
-			return (SymbolStruct) struct;
-		} else {
-			throw new TypeErrorException("Type cannot be converted to Symbol: " + struct);
-		}
-	}
+	/*
+	TODO: things below...
+	 */
 
 	static MacroFunctionExpanderInter getMacroFunctionDefinition(final SymbolStruct symbol) {
-		final LispStruct definition = symbol.getProperty(MACRO_FUNCTION_DEFINITION, NILStruct.INSTANCE);
+		final LispStruct definition = symbol.getProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, NILStruct.INSTANCE);
 		if (NILStruct.INSTANCE.eq(definition)) {
 			return null; // TODO: return null??
 		}
@@ -137,11 +128,11 @@ public interface SymbolStruct extends LispStruct {
 	}
 
 	static void setMacroFunctionDefinition(final SymbolStruct symbol, final MacroFunctionExpanderInter macro) {
-		symbol.setProperty(MACRO_FUNCTION_DEFINITION, macro);
+		symbol.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, macro);
 	}
 
 	static SymbolMacroExpanderInter getSymbolMacroDefinition(final SymbolStruct symbol) {
-		final LispStruct definition = symbol.getProperty(SYMBOL_MACRO_DEFINITION, NILStruct.INSTANCE);
+		final LispStruct definition = symbol.getProp(CommonLispSymbols.SYMBOL_MACRO_DEFINITION, NILStruct.INSTANCE);
 		if (NILStruct.INSTANCE.eq(definition)) {
 			return null; // TODO: return null??
 		}
@@ -152,11 +143,11 @@ public interface SymbolStruct extends LispStruct {
 	}
 
 	static void setSymbolMacroDefinition(final SymbolStruct symbol, final SymbolMacroExpanderInter symbolMacro) {
-		symbol.setProperty(SYMBOL_MACRO_DEFINITION, symbolMacro);
+		symbol.setProp(CommonLispSymbols.SYMBOL_MACRO_DEFINITION, symbolMacro);
 	}
 
 	static FunctionStruct getSetfDefinition(final SymbolStruct symbol) {
-		final LispStruct definition = symbol.getProperty(SETF_DEFINITION, NILStruct.INSTANCE);
+		final LispStruct definition = symbol.getProp(CommonLispSymbols.SETF_DEFINITION, NILStruct.INSTANCE);
 		if (NILStruct.INSTANCE.eq(definition)) {
 			return null; // TODO: return null??
 		}
@@ -167,11 +158,6 @@ public interface SymbolStruct extends LispStruct {
 	}
 
 	static void setSetfDefinition(final SymbolStruct symbol, final FunctionStruct function) {
-		symbol.setProperty(SETF_DEFINITION, function);
-	}
-
-	default SymbolStruct makunbound() {
-		setValue(null);
-		return this;
+		symbol.setProp(CommonLispSymbols.SETF_DEFINITION, function);
 	}
 }

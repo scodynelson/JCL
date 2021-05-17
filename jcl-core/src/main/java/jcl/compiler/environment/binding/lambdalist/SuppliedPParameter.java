@@ -14,7 +14,7 @@ public class SuppliedPParameter extends Parameter {
 	}
 
 	public SuppliedPParameter(final SymbolStruct var, final boolean isSpecial) {
-		super(var, null,null, isSpecial);
+		super(var, null, null, isSpecial);
 	}
 
 	public static Builder builder(final PackageStruct aPackage, final String symbolName) {

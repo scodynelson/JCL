@@ -79,7 +79,7 @@ class BootstrapFunctions {
 	private static void bootstrapSystemFunctions() {
 		final FuncallFunction funcallFunction = new FuncallFunction();
 
-		CommonLispSymbols.MACROEXPAND_HOOK_VAR.setValue(funcallFunction);
+		CommonLispSymbols.MACROEXPAND_HOOK_VAR.setSymbolValue(funcallFunction);
 
 		final List<FunctionStruct> functions = Arrays.asList(
 				new ApplyFunction(),
@@ -252,7 +252,7 @@ class BootstrapFunctions {
 	private static void bootstrapFunctions(final List<FunctionStruct> functions, final PackageStruct aPackage) {
 		for (final FunctionStruct function : functions) {
 			final SymbolStruct functionSymbol = function.getFunctionSymbol();
-			functionSymbol.setFunction(function);
+			functionSymbol.setSymbolFunction(function);
 			aPackage.export(functionSymbol);
 		}
 	}

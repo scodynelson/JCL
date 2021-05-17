@@ -18,7 +18,7 @@ public final class InternalModuleHandler {
 		final ListStruct currentModulesList = CommonLispSymbols.MODULES_VAR.getVariableValue();
 
 		if (currentModulesList == NILStruct.INSTANCE) {
-			CommonLispSymbols.MODULES_VAR.setValue(ListStruct.toLispList(moduleName));
+			CommonLispSymbols.MODULES_VAR.setSymbolValue(ListStruct.toLispList(moduleName));
 		} else {
 			final boolean moduleAlreadyExists = moduleAlreadyExists(moduleName);
 			if (moduleAlreadyExists) {
@@ -26,7 +26,7 @@ public final class InternalModuleHandler {
 			}
 
 			final ListStruct newModulesList = ConsStruct.toLispCons(moduleName, currentModulesList);
-			CommonLispSymbols.MODULES_VAR.setValue(newModulesList);
+			CommonLispSymbols.MODULES_VAR.setSymbolValue(newModulesList);
 		}
 		return TStruct.INSTANCE;
 	}

@@ -20,6 +20,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.NumberStruct;
+import jcl.lang.QuotientRemainder;
 import jcl.lang.RationalStruct;
 import jcl.lang.RealStruct;
 import jcl.lang.SingleFloatStruct;
@@ -27,7 +28,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.QuotientRemainder;
 import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
@@ -957,7 +957,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 				if (minusp().toJavaPBoolean()) {
 					return NILStruct.INSTANCE;
 				}
-				return isLessThan((RealStruct) UNSIGNED_BYTE_32_MAX_VALUE) ? TStruct.INSTANCE : NILStruct.INSTANCE;
+				return isLessThan(UNSIGNED_BYTE_32_MAX_VALUE) ? TStruct.INSTANCE : NILStruct.INSTANCE;
 			}
 		}
 		return super.typep(typeSpecifier);

@@ -141,7 +141,7 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 				} else if (v.equals(NEWEST_UPPERCASE) || v.equals(NEWEST_LOWERCASE)) {
 					version = CommonLispSymbols.NEWEST_KEYWORD;
 				} else {
-					version = CommonLispSymbols.PARSE_INTEGER.getFunction().apply(StringStruct.toLispString(v)); // TODO
+					version = CommonLispSymbols.PARSE_INTEGER.symbolFunction().apply(StringStruct.toLispString(v)); // TODO
 				}
 			} else {
 				if (WILDCARD_STRING.equals(rest)) {
@@ -343,7 +343,7 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 					result = (ListStruct) result.cdr();
 					continue;
 				}
-				obj= CommonLispSymbols.UP_KEYWORD;
+				obj = CommonLispSymbols.UP_KEYWORD;
 			} else {
 				obj = StringStruct.toLispString(token.toUpperCase());
 			}

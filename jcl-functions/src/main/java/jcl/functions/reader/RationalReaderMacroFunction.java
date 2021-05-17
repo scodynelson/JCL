@@ -44,12 +44,12 @@ final class RationalReaderMacroFunction {
 		final LispStruct token;
 		try {
 			// alter the read-base
-			CommonLispSymbols.READ_BASE_VAR.setValue(IntegerStruct.toLispInteger(radix));
+			CommonLispSymbols.READ_BASE_VAR.setSymbolValue(IntegerStruct.toLispInteger(radix));
 
 			token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 		} finally {
 			// reset the read-base
-			CommonLispSymbols.READ_BASE_VAR.setValue(previousReadBase);
+			CommonLispSymbols.READ_BASE_VAR.setSymbolValue(previousReadBase);
 		}
 
 		if (token instanceof RationalStruct) {

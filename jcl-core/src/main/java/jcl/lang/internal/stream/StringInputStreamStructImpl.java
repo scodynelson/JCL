@@ -8,6 +8,7 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ReadCharResult;
 import jcl.lang.StringInputStreamStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
@@ -15,7 +16,6 @@ import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.ReadCharResult;
 
 /**
  * The {@link StringInputStreamStructImpl} is the object representation of a Lisp 'string-stream' input type.

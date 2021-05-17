@@ -6,7 +6,6 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.classes.BuiltInClassStruct;

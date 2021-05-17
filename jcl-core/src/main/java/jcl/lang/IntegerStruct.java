@@ -3,7 +3,6 @@ package jcl.lang;
 import java.math.BigInteger;
 import java.util.List;
 
-import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.BignumStructImpl;
 import jcl.lang.internal.FixnumStructImpl;
 import jcl.lang.internal.LongnumStructImpl;

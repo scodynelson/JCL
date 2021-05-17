@@ -48,7 +48,7 @@ public final class ClassFileUtils {
 
 		// TODO: Should be STANDARD_OUTPUT
 		final CharacterStreamStruct standardOutput
-				= (CharacterStreamStruct) ((TwoWayStreamStruct) CommonLispSymbols.TERMINAL_IO.getValue()).twoWayStreamOutputStream();
+				= (CharacterStreamStruct) ((TwoWayStreamStruct) CommonLispSymbols.TERMINAL_IO.symbolValue()).twoWayStreamOutputStream();
 
 		// NOTE: Don't close this writer, as it's the standard output.
 		final PrintWriter writer = standardOutput.getJavaWriter();

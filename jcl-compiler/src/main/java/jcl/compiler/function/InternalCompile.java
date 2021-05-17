@@ -90,7 +90,7 @@ public final class InternalCompile {
 
 			if (name instanceof SymbolStruct) {
 				final SymbolStruct nameSymbol = (SymbolStruct) name;
-				nameSymbol.setFunction(function);
+				nameSymbol.setSymbolFunction(function);
 			} else if (!NILStruct.INSTANCE.eq(name)) {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
 			}
@@ -111,14 +111,13 @@ public final class InternalCompile {
 		}
 		final SymbolStruct nameSymbol = (SymbolStruct) name;
 
-		final MacroFunctionExpanderInter macroFunction = SymbolStruct.getMacroFunctionDefinition(nameSymbol);
+		final MacroFunctionExpanderInter macroFunction = Environment.NULL.getMacroFunctionExpander(nameSymbol);
 		if (macroFunction != null) {
 			return new CompileResult(macroFunction, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
-		final boolean hasFunction = nameSymbol.hasFunction(); // TODO: use environment??
-		if (hasFunction) {
-			final FunctionStruct function = nameSymbol.getFunction();
+		if (Environment.NULL.hasFunction(nameSymbol)) {
+			final FunctionStruct function = nameSymbol.symbolFunction();
 			return new CompileResult(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
 		}
 
@@ -163,12 +162,12 @@ public final class InternalCompile {
 		final File outputFilePathnameFile = new File(outputFilePathname.namestring());
 		final Path outputFilePath = outputFilePathnameFile.toPath();
 
-		final LispStruct previousCompileFilePathname = CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.getValue();
-		final LispStruct previousCompileFileTruename = CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.getValue();
+		final LispStruct previousCompileFilePathname = CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.symbolValue();
+		final LispStruct previousCompileFileTruename = CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.symbolValue();
 
-		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setValue(outputFilePathname);
+		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setSymbolValue(outputFilePathname);
 		final PathnameStruct outputFileTruename = PathnameStruct.toPathname(outputFilePathnameFile.toURI().toString());
-		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setValue(outputFileTruename);
+		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setSymbolValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
@@ -360,11 +359,11 @@ public final class InternalCompile {
 			}
 			log.info("");
 
-			CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setValue(previousCompileFileTruename);
-			CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setValue(previousCompileFilePathname);
+			CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setSymbolValue(previousCompileFileTruename);
+			CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setSymbolValue(previousCompileFilePathname);
 
-			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
-			CommonLispSymbols.READTABLE_VAR.setValue(previousReadtable);
+			CommonLispSymbols.PACKAGE_VAR.setSymbolValue(previousPackage);
+			CommonLispSymbols.READTABLE_VAR.setSymbolValue(previousReadtable);
 		}
 	}
 

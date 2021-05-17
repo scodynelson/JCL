@@ -67,7 +67,7 @@ public final class CompileForm {
 				if (isFunctionStruct) {
 					function = (FunctionStruct) classLoaded.getConstructor().newInstance();
 					final SymbolStruct functionSymbol = function.getFunctionSymbol();
-					functionSymbol.setFunction(function);
+					functionSymbol.setSymbolFunction(function);
 				}
 			} catch (final Exception ex) {
 				log.error("Error compiling definition.", ex);

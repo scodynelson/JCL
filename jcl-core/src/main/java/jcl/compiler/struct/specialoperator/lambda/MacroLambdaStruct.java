@@ -386,7 +386,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -398,7 +398,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -409,7 +409,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(suppliedPVar)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -434,7 +434,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -445,7 +445,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(suppliedPVar)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -457,7 +457,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}

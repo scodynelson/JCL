@@ -43,7 +43,7 @@ public class JCL implements Runnable {
 
 			final TwoWayStreamStruct terminalIoStream = TwoWayStreamStruct.toTwoWayStream(characterStream, characterStream);
 			terminalIoStream.setInteractive(true);
-			CommonLispSymbols.TERMINAL_IO.setValue(terminalIoStream);
+			CommonLispSymbols.TERMINAL_IO.setSymbolValue(terminalIoStream);
 		}
 	}
 
@@ -75,8 +75,8 @@ public class JCL implements Runnable {
 		final List<String> sourceFiles = compileFileSrcDir;
 		final String destDir = compileFileDestDir.get(0);
 
-		CommonLispSymbols.COMPILE_VERBOSE_VAR.setValue(TStruct.INSTANCE);
-		CommonLispSymbols.LOAD_VERBOSE_VAR.setValue(TStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_VERBOSE_VAR.setSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.LOAD_VERBOSE_VAR.setSymbolValue(TStruct.INSTANCE);
 
 		for (final String fileName : sourceFiles) {
 			final PathnameStruct sourceFile = PathnameStruct.toPathname(fileName);

@@ -15,7 +15,8 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
-import jcl.lang.condition.exception.ErrorException;
+import jcl.lang.condition.exception.UnboundVariableException;
+import jcl.lang.condition.exception.UndefinedFunctionException;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -43,7 +44,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	 * 		the symbol name
 	 */
 	public SymbolStructImpl(final String name) {
-		this(name, null, null, null);
+		this(name, null, null);
 	}
 
 	/**
@@ -55,7 +56,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	 * 		the symbol package
 	 */
 	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage) {
-		this(name, symbolPackage, null, null);
+		this(name, symbolPackage, null);
 	}
 
 	/**
@@ -69,27 +70,10 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	 * 		the symbol value
 	 */
 	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value) {
-		this(name, symbolPackage, value, null);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the symbol name
-	 * @param symbolPackage
-	 * 		the symbol package
-	 * @param value
-	 * 		the symbol value
-	 * @param function
-	 * 		the symbol function
-	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value, final FunctionStruct function) {
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
 		this.value = value;
-		this.function = function;
 
 		init();
 	}
@@ -120,88 +104,63 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public void setSymbolPackage(final PackageStruct symbolPackage) {
+	public PackageStruct setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
+		return symbolPackage;
 	}
 
 	@Override
-	public BooleanStruct hasValue() {
+	public BooleanStruct boundP() {
 		return BooleanStruct.toLispBoolean(value != null);
 	}
 
 	@Override
-	public LispStruct getValue() {
+	public SymbolStruct makunbound() {
+		setSymbolValue(null);
+		return this;
+	}
+
+	@Override
+	public LispStruct symbolValue() {
 		if (value == null) {
-			return handleUnboundValue();
+			throw new UnboundVariableException("Unbound variable: " + this);
 		}
 		return value;
 	}
 
-	private LispStruct handleUnboundValue() {
-		String variableName = name;
-		final PackageStruct currentPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
-
-		if (!currentPackage.eq(symbolPackage)) {
-			if (symbolPackage == null) {
-				variableName = "#:" + name;
-			} else {
-				final String packageName = symbolPackage.getName();
-				if (currentPackage.findExternalSymbol(name).isPresent()) {
-					variableName = packageName + ':' + name;
-				} else {
-					variableName = packageName + "::" + name;
-				}
-			}
-		}
-
-		throw new ErrorException("Unbound variable: " + variableName);
-	}
-
 	@Override
-	public void setValue(final LispStruct value) {
+	public LispStruct setSymbolValue(final LispStruct value) {
 		this.value = value;
+		return value;
 	}
 
 	@Override
-	public boolean hasFunction() {
-		return function != null;
+	public BooleanStruct fBoundP() {
+		return BooleanStruct.toLispBoolean(function != null);
 	}
 
 	@Override
-	public FunctionStruct getFunction() {
+	public SymbolStruct fMakunbound() {
+		setSymbolFunction(null);
+		return this;
+	}
+
+	@Override
+	public FunctionStruct symbolFunction() {
 		if (function == null) {
-			return handleUnboundFunction();
+			throw new UndefinedFunctionException("Undefined function: " + this);
 		}
 		return function;
 	}
 
-	private FunctionStruct handleUnboundFunction() {
-		String variableName = name;
-		final PackageStruct currentPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
-
-		if (!currentPackage.eq(symbolPackage)) {
-			if (symbolPackage == null) {
-				variableName = "#:" + name;
-			} else {
-				final String packageName = symbolPackage.getName();
-				if (currentPackage.findExternalSymbol(name).isPresent()) {
-					variableName = packageName + ':' + name;
-				} else {
-					variableName = packageName + "::" + name;
-				}
-			}
-		}
-
-		throw new ErrorException("Undefined function: " + variableName);
-	}
-
 	@Override
-	public void setFunction(final FunctionStruct function) {
+	public FunctionStruct setSymbolFunction(final FunctionStruct function) {
 		this.function = function;
+		return function;
 	}
 
 	@Override
-	public ListStruct getProperties() {
+	public ListStruct symbolPlist() {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
 			//      the constant NIL symbol with a dependence on its existence.
@@ -211,12 +170,13 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public void setProperties(final ListStruct properties) {
+	public ListStruct setSymbolPlist(final ListStruct properties) {
 		this.properties = properties;
+		return properties;
 	}
 
 	@Override
-	public LispStruct getProperty(final LispStruct indicator, final LispStruct defaultValue) {
+	public LispStruct getProp(final LispStruct indicator, final LispStruct defaultValue) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
 			//      the constant NIL symbol with a dependence on its existence.
@@ -226,18 +186,18 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public ListStruct setProperty(final LispStruct indicator, final LispStruct newValue) {
+	public LispStruct setProp(final LispStruct indicator, final LispStruct newValue) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
 			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
 		properties = properties.putf(indicator, newValue);
-		return properties;
+		return newValue;
 	}
 
 	@Override
-	public BooleanStruct removeProperty(final LispStruct indicator) {
+	public BooleanStruct remProp(final LispStruct indicator) {
 		if (properties == null) {
 			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
 			//      the constant NIL symbol with a dependence on its existence.
@@ -253,7 +213,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 			newSymbol.value = value;
 			newSymbol.function = function;
 			if (properties == null) {
-				// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
+				// We MUST lazy load this. Because NILStruct is a symbol and can have its own Plist, but we can't initialize
 				//      the constant NIL symbol with a dependence on its existence.
 				properties = NILStruct.INSTANCE;
 			}

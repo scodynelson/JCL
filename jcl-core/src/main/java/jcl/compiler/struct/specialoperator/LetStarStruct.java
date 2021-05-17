@@ -5,7 +5,6 @@
 package jcl.compiler.struct.specialoperator;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;

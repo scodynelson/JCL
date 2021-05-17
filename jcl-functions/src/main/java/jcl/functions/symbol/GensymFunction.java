@@ -42,14 +42,14 @@ public final class GensymFunction extends BuiltInFunctionStructImpl {
 
 			if (defaulting instanceof StringStruct) {
 				gensymPrefix = ((StringStruct) defaulting).toJavaString();
-				CommonLispSymbols.GENSYM_COUNTER_VAR.setValue(gensymPostfix.add(IntegerStruct.ONE));
+				CommonLispSymbols.GENSYM_COUNTER_VAR.setSymbolValue(gensymPostfix.add(IntegerStruct.ONE));
 			} else if (defaulting instanceof IntegerStruct) {
 				gensymPostfix = (IntegerStruct) defaulting;
 			} else {
 				throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 			}
 		} else {
-			CommonLispSymbols.GENSYM_COUNTER_VAR.setValue(gensymPostfix.add(IntegerStruct.ONE));
+			CommonLispSymbols.GENSYM_COUNTER_VAR.setSymbolValue(gensymPostfix.add(IntegerStruct.ONE));
 		}
 
 		final String symbolName = gensymPrefix + gensymPostfix;

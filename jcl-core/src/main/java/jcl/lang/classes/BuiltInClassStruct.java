@@ -55,7 +55,7 @@ public final class BuiltInClassStruct extends ClassStruct {
 	public static final BuiltInClassStruct SINGLE_FLOAT = addClass(CommonLispSymbols.SINGLE_FLOAT);
 	public static final BuiltInClassStruct STREAM = addClass(CommonLispSymbols.STREAM);
 	public static final BuiltInClassStruct STRING = addClass(CommonLispSymbols.STRING);
-	public static final BuiltInClassStruct STRING_INPUT_STREAM  = addClass(CommonLispSymbols.STRING_INPUT_STREAM);
+	public static final BuiltInClassStruct STRING_INPUT_STREAM = addClass(CommonLispSymbols.STRING_INPUT_STREAM);
 	public static final BuiltInClassStruct STRING_OUTPUT_STREAM = addClass(CommonLispSymbols.STRING_OUTPUT_STREAM);
 	public static final BuiltInClassStruct STRING_STREAM = addClass(CommonLispSymbols.STRING_STREAM);
 	public static final BuiltInClassStruct SYMBOL = addClass(CommonLispSymbols.SYMBOL);
@@ -66,7 +66,7 @@ public final class BuiltInClassStruct extends ClassStruct {
 	public static final BuiltInClassStruct STRUCTURE_OBJECT = addClass(CommonLispSymbols.STRUCTURE_OBJECT);
 //	public static final StructureClassStruct STRUCTURE_OBJECT   = addClass(CommonLispSymbols.STRUCTURE_OBJECT);
 
-	public static final BuiltInClassStruct NIL_VECTOR           = addClass(CommonLispSymbols.NIL_VECTOR);
+	public static final BuiltInClassStruct NIL_VECTOR = addClass(CommonLispSymbols.NIL_VECTOR);
 
 	static {
 		ARRAY.setDirectSuperClasses(CLASS_T);

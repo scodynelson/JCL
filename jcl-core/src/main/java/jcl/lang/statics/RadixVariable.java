@@ -24,7 +24,7 @@ public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 	}
 
 	@Override
-	public void setValue(final LispStruct value) {
+	public LispStruct setSymbolValue(final LispStruct value) {
 		if (!(value instanceof IntegerStruct)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be Integer value.");
@@ -34,11 +34,11 @@ public class RadixVariable extends VariableStructImpl<IntegerStruct> {
 		// TODO: optimize??
 		final BigInteger bigIntegerValue = variableValue.toJavaBigInteger();
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
-			super.setValue(variableValue);
+			return super.setSymbolValue(variableValue);
 		} else {
 			log.warn("Error: {} had illegal value {}. Reset to 10", name, variableValue);
 
-			super.setValue(IntegerStruct.TEN);
+			return super.setSymbolValue(IntegerStruct.TEN);
 		}
 	}
 }

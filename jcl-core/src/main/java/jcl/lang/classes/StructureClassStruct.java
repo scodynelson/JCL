@@ -48,7 +48,7 @@ public abstract class StructureClassStruct extends ClassStruct {
 	}
 
 	public static StructureClassStruct getStructureClass(final SymbolStruct symbol, final boolean errorP) {
-		final LispStruct definition = symbol.getProperty(STRUCTURE_CLASS_DEFINITION, NILStruct.INSTANCE);
+		final LispStruct definition = symbol.getProp(STRUCTURE_CLASS_DEFINITION, NILStruct.INSTANCE);
 		if (NILStruct.INSTANCE.eq(definition)) {
 			if (errorP) {
 				throw new ProgramErrorException(
@@ -63,7 +63,7 @@ public abstract class StructureClassStruct extends ClassStruct {
 	}
 
 	public static void setStructureClass(final SymbolStruct symbol, final StructureClassStruct structureClass) {
-		symbol.setProperty(STRUCTURE_CLASS_DEFINITION, structureClass);
+		symbol.setProp(STRUCTURE_CLASS_DEFINITION, structureClass);
 	}
 
 	@Override

@@ -44,15 +44,15 @@ final class FeaturesReaderMacroFunction {
 		final BooleanStruct previousReadSuppress = CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue();
 		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
 		try {
-			CommonLispSymbols.READ_SUPPRESS_VAR.setValue(NILStruct.INSTANCE);
+			CommonLispSymbols.READ_SUPPRESS_VAR.setSymbolValue(NILStruct.INSTANCE);
 
-			CommonLispSymbols.PACKAGE_VAR.setValue(GlobalPackageStruct.KEYWORD);
+			CommonLispSymbols.PACKAGE_VAR.setSymbolValue(GlobalPackageStruct.KEYWORD);
 			final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
+			CommonLispSymbols.PACKAGE_VAR.setSymbolValue(previousPackage);
 
 			final boolean isFeature = isFeature(token);
 			if (isFeature && shouldHideFeatures) {
-				CommonLispSymbols.READ_SUPPRESS_VAR.setValue(TStruct.INSTANCE);
+				CommonLispSymbols.READ_SUPPRESS_VAR.setSymbolValue(TStruct.INSTANCE);
 				Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
@@ -60,8 +60,8 @@ final class FeaturesReaderMacroFunction {
 				log.debug("Error occurred when reading feature.", ree);
 			}
 		} finally {
-			CommonLispSymbols.PACKAGE_VAR.setValue(previousPackage);
-			CommonLispSymbols.READ_SUPPRESS_VAR.setValue(previousReadSuppress);
+			CommonLispSymbols.PACKAGE_VAR.setSymbolValue(previousPackage);
+			CommonLispSymbols.READ_SUPPRESS_VAR.setSymbolValue(previousReadSuppress);
 		}
 	}
 

@@ -463,8 +463,7 @@ public interface PackageStruct extends LispStruct {
 
 	/**
 	 * Creates a new PackageStruct with the name {@code name} and nicknames {@code nicknames}, and adds it to the
-	 * {@link
-	 * GlobalPackageStruct#ALL_PACKAGES} map. The resulting PackageStruct will also use the packages in {@code
+	 * {@link GlobalPackageStruct#ALL_PACKAGES} map. The resulting PackageStruct will also use the packages in {@code
 	 * usePackages}.
 	 *
 	 * @param packageName

@@ -31,9 +31,7 @@ public interface ConsStruct extends ListStruct {
 		}
 		if (object instanceof ConsStruct) {
 			final ConsStruct objectCons = (ConsStruct) object;
-			if (car().equal(objectCons.car()) && cdr().equal(objectCons.cdr())) {
-				return true;
-			}
+			return car().equal(objectCons.car()) && cdr().equal(objectCons.cdr());
 		}
 		return false;
 	}
@@ -45,9 +43,7 @@ public interface ConsStruct extends ListStruct {
 		}
 		if (object instanceof ConsStruct) {
 			final ConsStruct objectCons = (ConsStruct) object;
-			if (car().equalp(objectCons.car()) && cdr().equalp(objectCons.cdr())) {
-				return true;
-			}
+			return car().equalp(objectCons.car()) && cdr().equalp(objectCons.cdr());
 		}
 		return false;
 	}

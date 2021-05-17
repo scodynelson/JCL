@@ -27,14 +27,14 @@ final class BootstrapSymbols {
 				EmptyStreamStructImpl.INSTANCE, EmptyStreamStructImpl.INSTANCE
 		);
 		terminalIo.setInteractive(true);
-		CommonLispSymbols.TERMINAL_IO.setValue(terminalIo);
+		CommonLispSymbols.TERMINAL_IO.setSymbolValue(terminalIo);
 
-		CommonLispSymbols.DEBUG_IO.setValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.ERROR_OUTPUT.setValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.QUERY_IO.setValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.STANDARD_INPUT.setValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.STANDARD_OUTPUT.setValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.TRACE_OUTPUT.setValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.DEBUG_IO.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.ERROR_OUTPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.QUERY_IO.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.STANDARD_INPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.STANDARD_OUTPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.TRACE_OUTPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
 	}
 
 	static void bootstrapConstants() {
@@ -125,39 +125,39 @@ final class BootstrapSymbols {
 
 		// Done in Bootstrap Functions for now
 //		CommonLispSymbols.MACROEXPAND_HOOK_VAR.setValue(funcallFunction);
-		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_PATHNAME_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_TRUENAME_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.COMPILE_PRINT_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.COMPILE_VERBOSE_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_PRINT_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_VERBOSE_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.MODULES_VAR.setValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_PATHNAME_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_TRUENAME_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_PRINT_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_VERBOSE_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_PRINT_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_VERBOSE_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.MODULES_VAR.setSymbolValue(NILStruct.INSTANCE);
 
-		CommonLispSymbols.GENSYM_COUNTER_VAR.setValue(IntegerStruct.ZERO);
+		CommonLispSymbols.GENSYM_COUNTER_VAR.setSymbolValue(IntegerStruct.ZERO);
 
-		CommonLispSymbols.PACKAGE_VAR.setValue(GlobalPackageStruct.COMMON_LISP_USER);
+		CommonLispSymbols.PACKAGE_VAR.setSymbolValue(GlobalPackageStruct.COMMON_LISP_USER);
 
-		CommonLispSymbols.PRINT_ARRAY_VAR.setValue(TStruct.INSTANCE);
-		CommonLispSymbols.PRINT_BASE_VAR.setValue(IntegerStruct.TEN);
+		CommonLispSymbols.PRINT_ARRAY_VAR.setSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.PRINT_BASE_VAR.setSymbolValue(IntegerStruct.TEN);
 		CommonLispSymbols.PRINT_CASE_VAR.initMatches();
-		CommonLispSymbols.PRINT_CASE_VAR.setValue(CommonLispSymbols.UPCASE_KEYWORD);
-		CommonLispSymbols.PRINT_RADIX_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.PRINT_CIRCLE_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.PRINT_ESCAPE_VAR.setValue(TStruct.INSTANCE);
-		CommonLispSymbols.PRINT_GENSYM_VAR.setValue(TStruct.INSTANCE);
-		CommonLispSymbols.PRINT_PRETTY_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.PRINT_READABLY_VAR.setValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_CASE_VAR.setSymbolValue(CommonLispSymbols.UPCASE_KEYWORD);
+		CommonLispSymbols.PRINT_RADIX_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_CIRCLE_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_ESCAPE_VAR.setSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.PRINT_GENSYM_VAR.setSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.PRINT_PRETTY_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_READABLY_VAR.setSymbolValue(NILStruct.INSTANCE);
 
-		CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.setValue(PathnameStruct.toPathname(""));
+		CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.setSymbolValue(PathnameStruct.toPathname(""));
 
-		CommonLispSymbols.RANDOM_STATE_VAR.setValue(RandomStateStruct.toLispRandomState());
+		CommonLispSymbols.RANDOM_STATE_VAR.setSymbolValue(RandomStateStruct.toLispRandomState());
 
-		CommonLispSymbols.READ_BASE_VAR.setValue(IntegerStruct.TEN);
-		CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.setValue(CommonLispSymbols.SINGLE_FLOAT);
-		CommonLispSymbols.READ_EVAL_VAR.setValue(TStruct.INSTANCE);
-		CommonLispSymbols.READ_SUPPRESS_VAR.setValue(NILStruct.INSTANCE);
-		CommonLispSymbols.READTABLE_VAR.setValue(ReadtableStruct.toReadtable());
+		CommonLispSymbols.READ_BASE_VAR.setSymbolValue(IntegerStruct.TEN);
+		CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.setSymbolValue(CommonLispSymbols.SINGLE_FLOAT);
+		CommonLispSymbols.READ_EVAL_VAR.setSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.READ_SUPPRESS_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.READTABLE_VAR.setSymbolValue(ReadtableStruct.toReadtable());
 	}
 }

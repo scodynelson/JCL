@@ -18,11 +18,11 @@ import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStreamStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.ReadCharResult;
 import jcl.lang.TStruct;
 import jcl.lang.condition.exception.EndOfFileException;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.ReadCharResult;
 import org.apache.commons.lang3.SystemUtils;
 
 /**

@@ -21,7 +21,7 @@ public final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 	}
 
 	@Override
-	public void setValue(final LispStruct value) {
+	public LispStruct setSymbolValue(final LispStruct value) {
 		if (!(value instanceof KeywordStruct)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be Keyword value.");
@@ -29,11 +29,11 @@ public final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 		final KeywordStruct variableValue = (KeywordStruct) value;
 
 		if (CASE_KEYWORDS.contains(variableValue)) {
-			super.setValue(variableValue);
+			return super.setSymbolValue(variableValue);
 		} else {
 			log.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", variableValue);
 
-			super.setValue(CommonLispSymbols.UPCASE_KEYWORD);
+			return super.setSymbolValue(CommonLispSymbols.UPCASE_KEYWORD);
 		}
 	}
 

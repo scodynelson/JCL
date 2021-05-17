@@ -8,18 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.lang.AttributeType;
 import jcl.lang.BooleanStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ReadtableCase;
 import jcl.lang.ReadtableStruct;
+import jcl.lang.SyntaxType;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.internal.LispStructImpl;
-import jcl.lang.AttributeType;
-import jcl.lang.ReadtableCase;
-import jcl.lang.SyntaxType;
 import jcl.lang.statics.CommonLispSymbols;
 
 /**

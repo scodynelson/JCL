@@ -1,5 +1,6 @@
 package jcl.lang;
 
+import jcl.compiler.environment.Environment;
 import jcl.lang.condition.exception.TypeErrorException;
 
 /**
@@ -18,12 +19,14 @@ public interface FunctionStruct extends LispStruct {
 		if (functionDesignator instanceof SymbolStruct) {
 			final SymbolStruct functionSymbol = (SymbolStruct) functionDesignator;
 
+			// TODO: using global environment here???
+
 			FunctionStruct function = null;
-			if (functionSymbol.hasFunction()) { // TODO: Can check in Environment??
-				function = functionSymbol.getFunction();
+			if (Environment.NULL.hasFunction(functionSymbol)) {
+				function = Environment.NULL.getFunction(functionSymbol);
 			}
 			if (function == null) {
-				function = SymbolStruct.getMacroFunctionDefinition(functionSymbol);
+				function = Environment.NULL.getMacroFunctionExpander(functionSymbol);
 			}
 			if (function != null) {
 				return function;

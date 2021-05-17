@@ -73,7 +73,7 @@ subprojects {
 		implementation("org.apache.commons:commons-lang3:3.12.0")
 		implementation("org.apache.commons:commons-math3:3.6.1")
 		implementation("org.apache.commons:commons-text:1.9")
-		implementation("org.apfloat:apfloat:1.9.1")
+		implementation("org.apfloat:apfloat:1.10.0")
 		implementation("org.benf:cfr:0.151")
 		implementation("org.glassfish.external:javahelp:2.0.06")
 		implementation("org.ow2.asm:asm:9.1")
@@ -121,6 +121,6 @@ subprojects {
 }
 
 tasks.named<Wrapper>("wrapper") {
-	gradleVersion = "7.0"
+	gradleVersion = "7.0.2"
 	distributionType = Wrapper.DistributionType.ALL
 }

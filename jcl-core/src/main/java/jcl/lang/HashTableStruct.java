@@ -116,7 +116,7 @@ public interface HashTableStruct extends LispStruct {
 		if (designator instanceof FunctionStruct) {
 			functionVal = (FunctionStruct) designator;
 		} else if (designator instanceof SymbolStruct) {
-			functionVal = ((SymbolStruct) designator).getFunction();
+			functionVal = ((SymbolStruct) designator).symbolFunction();
 		} else {
 			throw new TypeErrorException("UNCAUGHT TYPE ERROR.");
 		}

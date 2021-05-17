@@ -10,7 +10,6 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ErrorException;
 import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.OutOfRangeException;

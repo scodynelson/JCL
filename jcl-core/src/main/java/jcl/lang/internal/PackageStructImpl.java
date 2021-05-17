@@ -24,6 +24,7 @@ import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.PackageErrorException;
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 
@@ -44,6 +45,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	/**
 	 * The {@link Map} of the packages external {@link SymbolStruct}s.
+	 * <p>
 	 * NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols (aka. anything in ExternalSymbols or
 	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
 	 */
@@ -56,6 +58,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	/**
 	 * The {@link Map} of the packages shadowing {@link SymbolStruct}s.
+	 * <p>
 	 * NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols (aka. anything in ExternalSymbols or
 	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
 	 */
@@ -345,7 +348,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	@Override
 	public BooleanStruct importSymbols(final ListStruct symbols) {
 		for (final LispStruct current : symbols) {
-			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			final SymbolStruct symbol = checkSymbol(current);
 			importSymbol(symbol);
 		}
 		return TStruct.INSTANCE;
@@ -378,7 +381,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	@Override
 	public BooleanStruct shadowingImport(final ListStruct symbols) {
 		for (final LispStruct current : symbols) {
-			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			final SymbolStruct symbol = checkSymbol(current);
 			shadowingImport(symbol);
 		}
 		return TStruct.INSTANCE;
@@ -424,7 +427,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	@Override
 	public BooleanStruct export(final ListStruct symbols) {
 		for (final LispStruct current : symbols) {
-			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			final SymbolStruct symbol = checkSymbol(current);
 			export(symbol);
 		}
 		return TStruct.INSTANCE;
@@ -445,7 +448,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	@Override
 	public BooleanStruct unexport(final ListStruct symbols) {
 		for (final LispStruct current : symbols) {
-			final SymbolStruct symbol = SymbolStruct.fromDesignator(current);
+			final SymbolStruct symbol = checkSymbol(current);
 			unexport(symbol);
 		}
 		return TStruct.INSTANCE;
@@ -548,9 +551,8 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	/**
 	 * Verifies the provided {@link SymbolStruct} is valid to be uninterned from the package, meaning exist multiple
-	 * external symbols in the {@link
-	 * #useList} packages with the same name as the provided {@link SymbolStruct}, a {@link PackageErrorException} will
-	 * be thrown noting the symbol conflicts.
+	 * external symbols in the {@link #useList} packages with the same name as the provided {@link SymbolStruct}, a
+	 * {@link PackageErrorException} will be thrown noting the symbol conflicts.
 	 *
 	 * @param symbol
 	 * 		the symbol the verify can be uninterned from the packag e
@@ -571,6 +573,23 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 					throw new PackageErrorException(message, this);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Checks the provided structure is a {@link SymbolStruct} and returns it. If the value is not a {@link
+	 * SymbolStruct} a {@link TypeErrorException} is thrown.
+	 *
+	 * @param struct
+	 * 		the structure to check
+	 *
+	 * @return the structure as a {@link SymbolStruct}
+	 */
+	private static SymbolStruct checkSymbol(final LispStruct struct) {
+		if (struct instanceof SymbolStruct) {
+			return (SymbolStruct) struct;
+		} else {
+			throw new TypeErrorException("Type cannot be converted to Symbol: " + struct);
 		}
 	}
 

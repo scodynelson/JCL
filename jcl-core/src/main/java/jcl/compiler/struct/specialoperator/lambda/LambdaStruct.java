@@ -185,8 +185,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	/**
 	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getInitForm(Environment,
-	 * SymbolStruct)}
-	 * method.
+	 * SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
@@ -321,7 +320,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -333,7 +332,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -344,7 +343,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(suppliedPVar)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -369,7 +368,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -380,7 +379,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(suppliedPVar)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}
@@ -392,7 +391,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 				if (!existingDynamicSymbols.contains(var)) {
 					generatorState.getDynamicSymbols().remove(var);
 				}
-			} else{
+			} else {
 				if (!existingLexicalSymbols.contains(var)) {
 					generatorState.getLexicalSymbols().remove(var);
 				}

@@ -299,7 +299,7 @@ public interface CommonLispSymbols {
 	SymbolStruct CALL_NEXT_METHOD = internAndExportCLSymbol("CALL-NEXT-METHOD");
 	SymbolStruct CAR = internAndExportCLSymbol("CAR");
 	SymbolStruct CASE = internAndExportCLSymbol("CASE");
-	SpecialOperatorStructImpl CATCH = SpecialOperatorStructImpl.valueOf("CATCH", GlobalPackageStruct.COMMON_LISP);;
+	SpecialOperatorStructImpl CATCH = SpecialOperatorStructImpl.valueOf("CATCH", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct CCASE = internAndExportCLSymbol("CCASE");
 	SymbolStruct CDAAAR = internAndExportCLSymbol("CDAAAR");
 	SymbolStruct CDAADR = internAndExportCLSymbol("CDAADR");
@@ -1114,6 +1114,10 @@ public interface CommonLispSymbols {
 	SymbolStruct READ_DISPATCH_CHARACTER = internAndExportSystemSymbol("READ-DISPATCH-CHARACTER");
 	SymbolStruct BIND_SYMBOL_FUNCTION = internAndExportSystemSymbol("BIND-SYMBOL-FUNCTION");
 	SymbolStruct UNBIND_SYMBOL_FUNCTION = internAndExportSystemSymbol("UNBIND-SYMBOL-FUNCTION");
+
+	SymbolStruct MACRO_FUNCTION_DEFINITION = GlobalPackageStruct.SYSTEM.intern("MACRO-FUNCTION-DEFINITION").getSymbol();
+	SymbolStruct SYMBOL_MACRO_DEFINITION = GlobalPackageStruct.SYSTEM.intern("SYMBOL-MACRO-DEFINITION").getSymbol();
+	SymbolStruct SETF_DEFINITION = GlobalPackageStruct.SYSTEM.intern("SETF-DEFINITION").getSymbol();
 
 	// Backquote
 	SymbolStruct BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();

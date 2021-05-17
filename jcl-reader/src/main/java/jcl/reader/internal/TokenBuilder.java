@@ -6,9 +6,9 @@ package jcl.reader.internal;
 
 import java.util.LinkedList;
 
+import jcl.lang.AttributeType;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.AttributeType;
 import jcl.lang.ReadCharResult;
 import jcl.reader.Reader;
 import lombok.Getter;

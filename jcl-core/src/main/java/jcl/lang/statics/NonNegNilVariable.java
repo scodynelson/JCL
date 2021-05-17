@@ -17,7 +17,7 @@ class NonNegNilVariable extends VariableStructImpl<IntegerStruct> {
 	}
 
 	@Override
-	public void setValue(final LispStruct value) {
+	public LispStruct setSymbolValue(final LispStruct value) {
 		if (!(value instanceof IntegerStruct)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be Integer value.");
@@ -27,12 +27,12 @@ class NonNegNilVariable extends VariableStructImpl<IntegerStruct> {
 		// TODO: optimize??
 		final BigInteger bigIntegerValue = variableValue.toJavaBigInteger();
 		if (bigIntegerValue.compareTo(BigInteger.ZERO) >= 0) {
-			super.setValue(variableValue);
+			return super.setSymbolValue(variableValue);
 		} else {
 			log.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
 			// TODO: check this set here...
-			super.setValue(null);
+			return super.setSymbolValue(null);
 		}
 	}
 }

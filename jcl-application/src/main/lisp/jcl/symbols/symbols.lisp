@@ -34,59 +34,68 @@
 (defun symbol-name (symbol)
   "Gets the name of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolName"))
-  ($getLispName symbol))
+  ($symbolName symbol))
 
 (defun symbol-package (symbol)
   "Gets the package of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolPackage"))
-  ($getPackage symbol))
+  ($symbolPackage symbol))
 
 (defun symbol-function (symbol)
   "Gets the function value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolFunction"))
-  ($getFunction symbol))
+  ($symbolFunction symbol))
 
-;; TODO: setf-symbol-function
+(defun (setf symbol-function) (symbol new-contents)
+  "Sets the contents of symbol's function cell the new-contents provided."
+  (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolFunction"))
+  ($setSymbolFunction symbol new-contents))
 
 (defun symbol-plist (symbol)
   "Gets the plist value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolPlist"))
-  ($getProperties symbol))
+  ($symbolPlist symbol))
 
-;; TODO: setf-symbol-plist
+(defun (setf symbol-plist) (symbol new-plist)
+  "Sets the contents of symbol's property-list cell the new-plist provided."
+  (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolPlist"))
+  ($setSymbolPlist symbol new-plist))
 
 (defun symbol-value (symbol)
   "Gets the value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolValue"))
-  ($getValue symbol))
+  ($symbolValue symbol))
 
-;; TODO: setf-symbol-value
+(defun (setf symbol-value) (symbol new-value)
+  "Sets the contents of symbol's value cell the new-value provided."
+  (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolValue"))
+  ($setSymbolValue symbol new-value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get (symbol indicator &optional default)
   "Finds a property on the property list of symbol whose property indicator is identical to indicator, and returns its corresponding property value."
   (declare (system::%java-class-name "jcl.symbols.functions.Get"))
-  ($getProperty symbol indicator default))
+  ($getProp symbol indicator default))
 
 (defun (setf get) (symbol indicator value &optional default)
   "Finds a property on the property list of symbol whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfGet")
            (ignore default))
-  ($setProperty symbol indicator value)
+  ($setProp symbol indicator value)
   value)
 
 (defun remprop (symbol indicator)
   "Removes from the property list of symbol a property[1] with a property indicator identical to indicator."
   (declare (system::%java-class-name "jcl.symbols.functions.RemProp"))
-  ($removeProperty symbol indicator))
+  ($remProp symbol indicator))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun boundp (symbol)
   "Returns true if symbol is bound; otherwise, returns false."
   (declare (system::%java-class-name "jcl.symbols.functions.BoundP"))
-  ($hasValue symbol))
+  ($boundP symbol))
 
 (defun makunbound (symbol)
   "Makes the symbol be unbound, regardless of whether it was previously bound."
@@ -96,8 +105,7 @@
 (defun set (symbol value)
   "Sets the value of the provided symbol to the provided value."
   (declare (system::%java-class-name "jcl.symbols.functions.Set"))
-  ($setValue symbol value)
-  value)
+  ($setSymbolValue symbol value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

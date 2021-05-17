@@ -7,7 +7,7 @@ import jcl.lang.LispStruct;
 
 class WrapperSpliterator<TYPE extends LispStruct> implements Spliterator<LispStruct> {
 
-	private Spliterator<TYPE> spliterator;
+	private final Spliterator<TYPE> spliterator;
 
 	WrapperSpliterator(final Spliterator<TYPE> spliterator) {
 		this.spliterator = spliterator;

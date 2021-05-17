@@ -80,7 +80,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSymbolValue() {
-		final String setSymbolValue = "($setValue1 'a 1)";
+		final String setSymbolValue = "($setSymbolValue 'a 1)";
 
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(setSymbolValue),
@@ -90,7 +90,7 @@ class SymbolBindingsTest {
 		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		InternalEval.eval(whatRead);
 
-		final String retrieveSymbolValue = "($getValue 'a)";
+		final String retrieveSymbolValue = "($symbolValue 'a)";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(retrieveSymbolValue),
 				IntegerStruct.ZERO,
@@ -104,7 +104,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSymbolValue_SpecialSymbols() {
-		String test = "($getValue :any-keyword)";
+		String test = "($symbolValue :any-keyword)";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -117,7 +117,7 @@ class SymbolBindingsTest {
 		final KeywordStruct result = (KeywordStruct) value;
 		assertThat(result.getName()).isEqualToIgnoringCase("any-keyword");
 
-		test = "($getValue 'nil)";
+		test = "($symbolValue 'nil)";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -127,7 +127,7 @@ class SymbolBindingsTest {
 		value = InternalEval.eval(whatRead);
 
 		assertThat(value).satisfies(NILStruct.INSTANCE::eq);
-		test = "($getValue '())";
+		test = "($symbolValue '())";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -143,7 +143,7 @@ class SymbolBindingsTest {
 	void testSymbolValue_CannotSeeLexical() {
 		String test = """
 				(let ((a 2))
-				  ($getValue 'a))
+				  ($symbolValue 'a))
 										   """;
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -157,7 +157,7 @@ class SymbolBindingsTest {
 		test = """
 				(let ((a 2))
 				  (setq a 3)
-				  ($getValue 'a))
+				  ($symbolValue 'a))
 										   """;
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -174,7 +174,7 @@ class SymbolBindingsTest {
 		String test = """
 				(let ((a 2))
 				  (declare (special a))
-				  ($getValue 'a))
+				  ($symbolValue 'a))
 										   """;
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -189,7 +189,7 @@ class SymbolBindingsTest {
 				(let ((a 2))
 				  (declare (special a))
 				  (setq a 3)
-				  ($getValue 'a))
+				  ($symbolValue 'a))
 										   """;
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -202,7 +202,7 @@ class SymbolBindingsTest {
 
 		test = """
 				(let ((a 2))
-				  ($setValue 'a 3)
+				  ($setSymbolValue 'a 3)
 				  a)
 										   """;
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -227,8 +227,8 @@ class SymbolBindingsTest {
 		test = """
 				(let ((a 4))
 				  (declare (special a))
-				  (let ((b ($getValue 'a)))
-				    ($setValue 'a 5)
+				  (let ((b ($symbolValue 'a)))
+				    ($setSymbolValue 'a 5)
 				    (values a b)))
 										     """;
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -285,7 +285,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSpecialBindings_SymbolValue() {
-		String test = "($setValue 'x 6)";
+		String test = "($setSymbolValue 'x 6)";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -381,7 +381,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSpecialBindings_Shadowing() {
-		String test = "($setValue 'x 6)";
+		String test = "($setSymbolValue 'x 6)";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,

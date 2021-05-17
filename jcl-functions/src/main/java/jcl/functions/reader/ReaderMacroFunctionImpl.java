@@ -4,8 +4,6 @@
 
 package jcl.functions.reader;
 
-import java.util.Optional;
-
 import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.CharacterStruct;
 import jcl.lang.InputStreamStruct;

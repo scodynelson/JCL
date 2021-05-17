@@ -10,6 +10,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.OutputStreamStruct;
+import jcl.lang.ReadCharResult;
 import jcl.lang.StreamStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.SynonymStreamStruct;
@@ -18,7 +19,6 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.StreamErrorException;
 import jcl.lang.statics.CommonLispSymbols;
-import jcl.lang.ReadCharResult;
 
 /**
  * The {@link SynonymStreamStructImpl} is the object representation of a Lisp 'synonym-stream' type.
@@ -50,7 +50,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	 * @return the current element type for stream
 	 */
 	private static LispStruct getElementType(final SymbolStruct symbol) {
-		return ((StreamStruct) symbol.getValue()).streamElementType();
+		return ((StreamStruct) symbol.symbolValue()).streamElementType();
 	}
 
 	/*
@@ -68,7 +68,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public ReadCharResult readChar(final boolean eofErrorP, final LispStruct eofValue) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof InputStreamStruct) {
 			return ((InputStreamStruct) stream).readChar(eofErrorP, eofValue);
 		} else {
@@ -78,7 +78,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public ReadCharResult readCharNoHang(final boolean eofErrorP, final LispStruct eofValue) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof InputStreamStruct) {
 			return ((InputStreamStruct) stream).readCharNoHang(eofErrorP, eofValue);
 		} else {
@@ -88,7 +88,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public ReadCharResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof InputStreamStruct) {
 			return ((InputStreamStruct) stream).readByte(eofErrorP, eofValue);
 		} else {
@@ -98,7 +98,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof InputStreamStruct) {
 			return ((InputStreamStruct) stream).unreadChar(codePoint);
 		} else {
@@ -108,7 +108,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public LispStruct clearInput() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof InputStreamStruct) {
 			((InputStreamStruct) stream).clearInput();
 		}
@@ -117,7 +117,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public BooleanStruct listen() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof InputStreamStruct) {
 			return ((InputStreamStruct) stream).listen();
 		}
@@ -130,7 +130,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public void writeChar(final int codePoint) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).writeChar(codePoint);
 		} else {
@@ -140,7 +140,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public void writeByte(final int aByte) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).writeByte(aByte);
 		} else {
@@ -150,7 +150,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public void writeString(final String outputString) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).writeString(outputString);
 		} else {
@@ -160,7 +160,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public void writeLine(final String outputString) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).writeLine(outputString);
 		} else {
@@ -170,7 +170,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public BooleanStruct freshLine() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			return ((OutputStreamStruct) stream).freshLine();
 		}
@@ -179,7 +179,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public BooleanStruct terpri() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			return ((OutputStreamStruct) stream).terpri();
 		}
@@ -188,7 +188,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public LispStruct clearOutput() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).clearOutput();
 		}
@@ -197,7 +197,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public LispStruct finishOutput() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).finishOutput();
 		}
@@ -206,7 +206,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public LispStruct forceOutput() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		if (stream instanceof OutputStreamStruct) {
 			((OutputStreamStruct) stream).forceOutput();
 		}
@@ -221,7 +221,7 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 	public BooleanStruct close(final BooleanStruct abort) {
 		final boolean wasClosed = super.close(abort).toJavaPBoolean();
 
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		final boolean wasSynonymClosed = stream.close(abort).toJavaPBoolean();
 
 		return BooleanStruct.toLispBoolean(wasClosed || wasSynonymClosed);
@@ -229,19 +229,19 @@ public final class SynonymStreamStructImpl extends StreamStructImpl implements S
 
 	@Override
 	public LispStruct fileLength() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		return stream.fileLength();
 	}
 
 	@Override
 	public LispStruct filePosition() {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		return stream.filePosition();
 	}
 
 	@Override
 	public BooleanStruct filePosition(final IntegerStruct position) {
-		final StreamStruct stream = (StreamStruct) symbol.getValue();
+		final StreamStruct stream = (StreamStruct) symbol.symbolValue();
 		return stream.filePosition(position);
 	}
 

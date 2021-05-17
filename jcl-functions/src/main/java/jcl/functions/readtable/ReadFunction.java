@@ -46,9 +46,9 @@ public final class ReadFunction extends BuiltInFunctionStructImpl {
 		final LispStruct inputStreamArg = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT);
 		final InputStreamStruct inputStreamStruct;
 		if (TStruct.INSTANCE.eq(inputStreamArg)) {
-			inputStreamStruct = (InputStreamStruct) CommonLispSymbols.TERMINAL_IO.getValue();
+			inputStreamStruct = (InputStreamStruct) CommonLispSymbols.TERMINAL_IO.symbolValue();
 		} else if (NILStruct.INSTANCE.eq(inputStreamArg)) {
-			inputStreamStruct = (InputStreamStruct) CommonLispSymbols.STANDARD_INPUT.getValue();
+			inputStreamStruct = (InputStreamStruct) CommonLispSymbols.STANDARD_INPUT.symbolValue();
 		} else if (inputStreamArg instanceof InputStreamStruct) {
 			inputStreamStruct = (InputStreamStruct) inputStreamArg;
 		} else {

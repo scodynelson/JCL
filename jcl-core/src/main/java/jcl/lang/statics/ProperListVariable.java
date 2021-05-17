@@ -21,7 +21,7 @@ class ProperListVariable extends VariableStructImpl<ListStruct> {
 	}
 
 	@Override
-	public void setValue(final LispStruct value) {
+	public LispStruct setSymbolValue(final LispStruct value) {
 		if (!(value instanceof ListStruct)) {
 			// TODO: Fix me
 			throw new TypeErrorException("Must be List value.");
@@ -30,11 +30,11 @@ class ProperListVariable extends VariableStructImpl<ListStruct> {
 
 		final LispStruct last = variableValue.last(IntegerStruct.ZERO);
 		if (NILStruct.INSTANCE.eq(last)) {
-			super.setValue(variableValue);
+			return super.setSymbolValue(variableValue);
 		} else {
 			log.warn("Error: {} had illegal value {}. Reset to NIL", name, variableValue);
 
-			super.setValue(NILStruct.INSTANCE);
+			return super.setSymbolValue(NILStruct.INSTANCE);
 		}
 	}
 }

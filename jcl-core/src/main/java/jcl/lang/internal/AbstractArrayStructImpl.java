@@ -10,7 +10,6 @@ import jcl.lang.ArrayStruct;
 import jcl.lang.BooleanStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
-import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;

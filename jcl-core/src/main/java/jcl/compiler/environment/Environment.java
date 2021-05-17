@@ -394,7 +394,7 @@ public class Environment extends StandardObjectStruct {
 		}
 
 		if (value == null) {
-			return var.getValue();
+			return var.symbolValue();
 		}
 
 		return value;
@@ -402,12 +402,12 @@ public class Environment extends StandardObjectStruct {
 
 	public LispStruct getLexicalSymbolValue(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(lexicalSymbolBindings.get(var))) {
-			return var.getValue();
+			return var.symbolValue();
 		}
 
 		final LispStruct value = lexicalSymbolBindings.get(var).peek();
 		if (value == null) {
-			return var.getValue();
+			return var.symbolValue();
 		}
 
 		return value;
@@ -415,12 +415,12 @@ public class Environment extends StandardObjectStruct {
 
 	public LispStruct getDynamicSymbolValue(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(dynamicSymbolBindings.get(var))) {
-			return var.getValue();
+			return var.symbolValue();
 		}
 
 		final LispStruct value = dynamicSymbolBindings.get(var).peek();
 		if (value == null) {
-			return var.getValue();
+			return var.symbolValue();
 		}
 
 		return value;
@@ -430,7 +430,7 @@ public class Environment extends StandardObjectStruct {
 		// TODO: handle constants
 		if (CollectionUtils.isEmpty(lexicalSymbolBindings.get(var))) {
 			if (CollectionUtils.isEmpty(dynamicSymbolBindings.get(var))) {
-				var.setValue(value);
+				var.setSymbolValue(value);
 			} else {
 				setDynamicSymbolValue(var, value);
 			}
@@ -508,12 +508,13 @@ public class Environment extends StandardObjectStruct {
 	}
 
 	public boolean hasFunction(final SymbolStruct var) {
-		return !CollectionUtils.isEmpty(lexicalFunctionBindings.get(var)) || var.hasFunction();
+		return !CollectionUtils.isEmpty(lexicalFunctionBindings.get(var))
+				|| var.fBoundP().toJavaPBoolean();
 	}
 
 	public FunctionStruct getFunction(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(lexicalFunctionBindings.get(var))) {
-			return var.getFunction();
+			return var.symbolFunction();
 		}
 		return lexicalFunctionBindings.get(var).peek();
 	}

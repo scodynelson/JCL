@@ -42,8 +42,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(make-structure-instance
-          get-structure-slot-value set-structure-slot-value)
-        "SYSTEM")
-
 (provide "structures")

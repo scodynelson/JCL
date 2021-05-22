@@ -230,15 +230,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(stringp simple-string-p
-          string
-          make-string
-          char schar
-          string-trim string-left-trim string-right-trim
-          string-upcase string-downcase string-capitalize
-          nstring-upcase nstring-downcase nstring-capitalize
-          string= string/= string< string> string<= string>=
-          string-equal string-not-equal string-lessp string-greaterp string-not-greaterp string-not-lessp)
-        "COMMON-LISP")
-
 (provide "strings")

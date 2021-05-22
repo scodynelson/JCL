@@ -76,17 +76,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(*read-base* *read-default-float-format* *read-eval* *read-suppress*
-          *readtable*
-          copy-readtable
-          make-dispatch-macro-character
-          read read-preserving-whitespace
-          read-delimited-list
-          read-from-string
-          readtable-case
-          get-dispatch-macro-character set-dispatch-macro-character
-          get-macro-character set-macro-character
-          set-syntax-from-char)
-        "COMMON-LISP")
-
 (provide "reader")

@@ -64,7 +64,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(mapc mapcar mapcan mapl maplist mapcon)
-        "COMMON-LISP")
-
 (provide "base-lists")

@@ -22,7 +22,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(disassemble)
-        "COMMON-LISP")
-
 (provide "environment")

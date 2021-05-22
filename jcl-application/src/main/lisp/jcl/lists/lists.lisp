@@ -1895,37 +1895,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(caar cadr cdar cddr caaar caadr cadar cdaar caddr cdadr cddar cdddr caaaar caaadr caadar caaddr cadaar cadadr
-          caddar cadddr cdaaar cdaadr cdadar cdaddr cddaar cddadr cdddar cddddr
-          first second third fourth fifth sixth seventh eighth ninth tenth rest
-          acons
-          last butlast nbutlast
-          copy-list copy-alist copy-tree
-          endp tailp
-          getf get-properties
-          list-length
-          nth nthcdr
-          make-list
-          ldiff
-          pairlis
-          rplaca rplacd
-          revappend nreconc
-          tree-equal
-          member member-if member-if-not
-          adjoin
-          assoc assoc-if assoc-if-not
-          rassoc rassoc-if rassoc-if-not
-          mapc mapcar mapcan mapl maplist mapcon
-          intersection nintersection
-          union nunion
-          set-difference nset-difference
-          set-exclusive-or nset-exclusive-or
-          subsetp
-          subst subst-if subst-if-not
-          nsubst nsubst-if nsubst-if-not
-          sublis nsublis
-          push pushnew pop
-          remf)
-        "COMMON-LISP")
-
 (provide "lists")

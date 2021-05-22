@@ -192,13 +192,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(char-code-limit
-          character
-          char-name name-char char-code code-char char-int digit-char digit-char-p
-          char-upcase char-downcase
-          alpha-char-p alphanumericp graphic-char-p standard-char-p upper-case-p lower-case-p both-case-p
-          char= char/= char< char> char<= char>=
-          char-equal char-not-equal char-lessp char-greaterp char-not-greaterp char-not-lessp)
-        "COMMON-LISP")
-
 (provide "characters")

@@ -300,8 +300,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(psetq return when unless cond and or multiple-value-bind multiple-value-list multiple-value-setq nth-value
-		  prog prog* prog1 prog2)
-        "COMMON-LISP")
-
 (provide "macros")

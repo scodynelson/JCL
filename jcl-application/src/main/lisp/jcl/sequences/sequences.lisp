@@ -37,7 +37,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(elt length reverse nreverse)
-        "COMMON-LISP")
-
 (provide "sequences")

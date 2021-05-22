@@ -283,25 +283,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(*package*
-          find-package list-all-packages
-          package-name package-nicknames package-shadowing-symbols package-use-list package-used-by-list
-          packagep
-          find-symbol find-all-symbols
-          intern unintern
-          use-package unuse-package
-          export import
-          shadowing-import
-          unexport
-          make-package
-          rename-package
-          delete-package
-          shadow
-          package-error-package
-          in-package
-          defpackage
-          do-symbols do-external-symbols do-all-symbols
-          with-package-iterator)
-        "COMMON-LISP")
-
 (provide "packages")

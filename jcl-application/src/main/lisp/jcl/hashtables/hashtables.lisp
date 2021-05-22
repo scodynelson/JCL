@@ -109,10 +109,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(make-hash-table
-          hash-table-test hash-table-size hash-table-rehash-size hash-table-rehash-threshold hash-table-count
-          gethash remhash clrhash sxhash maphash
-          with-hash-table-iterator)
-        "COMMON-LISP")
-
 (provide "hashtables")

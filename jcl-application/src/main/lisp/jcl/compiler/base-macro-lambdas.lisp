@@ -105,7 +105,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(defmacro defun in-package)
-        "COMMON-LISP")
-
 (provide "base-macro-lambdas")

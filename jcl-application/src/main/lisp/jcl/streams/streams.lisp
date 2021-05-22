@@ -387,34 +387,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(*terminal-io* *debug-io* *query-io*
-          *standard-input*
-          *standard-output* *error-output* *trace-output*
-          make-broadcast-stream make-concatenated-stream
-          make-echo-stream make-two-way-stream
-          make-string-input-stream make-string-output-stream
-          make-synonym-stream
-          input-stream-p output-stream-p interactive-stream-p open-stream-p
-          stream-element-type
-          read-byte write-byte
-          peek-char read-char read-char-no-hang unread-char write-char
-          read-line write-line
-          read-sequence write-sequence
-          file-length file-position file-string-length
-          open close
-          listen
-          terpri fresh-line
-          stream-external-format
-          clear-input clear-output finish-output force-output
-          y-or-n-p yes-or-no-p
-          broadcast-stream-streams concatenated-stream-streams
-          echo-stream-input-stream echo-stream-output-stream
-          two-way-stream-input-stream two-way-stream-output-stream
-          synonym-stream-symbol
-          get-output-stream-string
-          stream-error-stream
-          with-open-stream with-open-file
-          with-input-from-string with-output-to-string)
-        "COMMON-LISP")
-
 (provide "streams")

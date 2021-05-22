@@ -93,7 +93,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(dolist dotimes do do*)
-        "COMMON-LISP")
-
 (provide "iterators")

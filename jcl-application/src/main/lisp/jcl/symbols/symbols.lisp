@@ -109,14 +109,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(export '(make-symbol
-          copy-symbol
-          *gensym-counter*
-          gensym
-          gentemp
-          symbol-name symbol-package symbol-function symbol-plist symbol-value
-          get remprop
-          boundp makunbound set)
-        "COMMON-LISP")
-
 (provide "symbols")

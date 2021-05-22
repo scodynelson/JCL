@@ -22,7 +22,6 @@ import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -152,20 +151,7 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(currentParam::eq);
 
-				final String paramName = currentParam.getName();
-				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
-
-				final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
-
-				final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
-				                                                 .stream()
-				                                                 .map(SpecialDeclarationStruct::getVar)
-				                                                 .anyMatch(customSuppliedPCurrent::eq);
-
-				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
-
-				final OptionalParameter optionalBinding = new OptionalParameter(currentParam, null, NILStruct.INSTANCE, isSpecial, suppliedPBinding);
+				final OptionalParameter optionalBinding = new OptionalParameter(currentParam, null, NILStruct.INSTANCE, isSpecial, null);
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -236,18 +222,7 @@ public final class LambdaListParser {
 
 					final SuppliedPParameter suppliedPBinding;
 					if (thirdInCurrent.eq(NILStruct.INSTANCE)) {
-						final String paramName = varNameCurrent.getName();
-						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
-
-						final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
-
-						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
-						                                                 .stream()
-						                                                 .map(SpecialDeclarationStruct::getVar)
-						                                                 .anyMatch(customSuppliedPCurrent::eq);
-
-						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
+						suppliedPBinding = null;
 					} else {
 						if (!(thirdInCurrent instanceof SymbolStruct)) {
 							throw new ProgramErrorException("LambdaList &optional supplied-p parameters must be a symbol: " + thirdInCurrent);
@@ -426,20 +401,7 @@ public final class LambdaListParser {
 				                                        .map(SpecialDeclarationStruct::getVar)
 				                                        .anyMatch(currentParam::eq);
 
-				final String paramName = currentParam.getName();
-				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
-
-				final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
-
-				final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
-				                                                 .stream()
-				                                                 .map(SpecialDeclarationStruct::getVar)
-				                                                 .anyMatch(customSuppliedPCurrent::eq);
-
-				final SuppliedPParameter suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
-
-				final KeyParameter keyBinding = new KeyParameter(currentParam, null, NILStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
+				final KeyParameter keyBinding = new KeyParameter(currentParam, null, NILStruct.INSTANCE, isSpecial, keyName, null);
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -529,18 +491,7 @@ public final class LambdaListParser {
 
 					final SuppliedPParameter suppliedPBinding;
 					if (thirdInCurrent.eq(NILStruct.INSTANCE)) {
-						final String paramName = varNameCurrent.getName();
-						final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-						final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
-
-						final SymbolStruct customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
-
-						final boolean isSuppliedPSpecial = declareElement.getSpecialDeclarations()
-						                                                 .stream()
-						                                                 .map(SpecialDeclarationStruct::getVar)
-						                                                 .anyMatch(customSuppliedPCurrent::eq);
-
-						suppliedPBinding = new SuppliedPParameter(customSuppliedPCurrent, isSuppliedPSpecial);
+						suppliedPBinding = null;
 					} else {
 						if (!(thirdInCurrent instanceof SymbolStruct)) {
 							throw new ProgramErrorException("LambdaList &key supplied-p parameters must be a symbol: " + thirdInCurrent);

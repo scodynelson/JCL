@@ -1,5 +1,7 @@
 package jcl.lang;
 
+import java.util.Optional;
+
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.internal.SymbolStructImpl;
@@ -12,18 +14,15 @@ public interface SymbolStruct extends LispStruct {
 
 	String getName();
 
-	default StringStruct symbolName() {
-		return StringStruct.toLispString(getName());
-	}
+	Optional<PackageStruct> getSymbolPackage();
 
-	default LispStruct symbolPackage() {
-		final PackageStruct symbolPackage = getSymbolPackage();
-		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
-	}
+	void setSymbolPackage(final PackageStruct symbolPackage);
 
-	PackageStruct getSymbolPackage();
+	void setConstant();
 
-	PackageStruct setSymbolPackage(final PackageStruct symbolPackage);
+	StringStruct symbolName();
+
+	LispStruct symbolPackage();
 
 	BooleanStruct boundP();
 
@@ -104,12 +103,6 @@ public interface SymbolStruct extends LispStruct {
 
 	static SymbolStruct toLispSymbol(final String name) {
 		return new SymbolStructImpl(name);
-	}
-
-	static SymbolStruct toLispSymbol(final String name, final PackageStruct pkg) {
-		final SymbolStructImpl struct = new SymbolStructImpl(name);
-		struct.setSymbolPackage(pkg);
-		return struct;
 	}
 
 	/*

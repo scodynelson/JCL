@@ -90,11 +90,11 @@ public final class InternalMacroExpand {
 	}
 
 	private static Optional<SymbolStruct> getSymbolStruct(final SymbolStruct symbolElement) {
-		final PackageStruct thePackage = symbolElement.getSymbolPackage();
-		if (thePackage != null) {
+		final Optional<PackageStruct> thePackage = symbolElement.getSymbolPackage();
+		if (thePackage.isPresent()) {
 
 			final String symbolName = symbolElement.getName();
-			final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
+			final PackageSymbolStruct thePackageSymbol = thePackage.get().findSymbol(symbolName);
 
 			if (thePackageSymbol.found()) {
 				final SymbolStruct theSymbol = thePackageSymbol.getSymbol();

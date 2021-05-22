@@ -237,7 +237,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	 */
 	private void makeSymbolsUninterned(final Map<String, SymbolStruct> symbolMap) {
 		for (final SymbolStruct symbol : symbolMap.values()) {
-			if (symbol.getSymbolPackage() == this) {
+			if (symbol.symbolPackage() == this) {
 				symbol.setSymbolPackage(null);
 			}
 		}
@@ -331,8 +331,8 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	@Override
 	public void importSymbol(final SymbolStruct symbol) {
-		final PackageStruct symbolPackage = symbol.getSymbolPackage();
-		if (symbolPackage == this) {
+		final Optional<PackageStruct> symbolPackage = symbol.getSymbolPackage();
+		if (symbolPackage.isPresent() && (symbolPackage.get() == this)) {
 			return;
 		}
 		final String symbolName = symbol.getName();
@@ -340,7 +340,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 		verifySymbolAccessibility(symbol, symbolName, false);
 
 		internalSymbols.put(symbolName, symbol);
-		if (symbolPackage == null) {
+		if (symbolPackage.isEmpty()) {
 			symbol.setSymbolPackage(this);
 		}
 	}
@@ -391,7 +391,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	public void export(final SymbolStruct symbol) {
 		final String symbolName = symbol.getName();
 		boolean added = false;
-		if (symbol.getSymbolPackage() != this) {
+		if (symbol.symbolPackage() != this) {
 			verifySymbolAccessibility(symbol, symbolName, true);
 			internalSymbols.put(symbolName, symbol);
 			added = true;
@@ -508,7 +508,10 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	 * @return the newly created {@link SymbolStruct}
 	 */
 	protected SymbolStruct internNewSymbol(final String symbolName) {
-		final SymbolStruct symbol = SymbolStruct.toLispSymbol(symbolName, this);
+		final SymbolStruct symbol = SymbolStruct.toLispSymbol(symbolName);
+		symbol.setSymbolPackage(this);
+
+		verifySymbolAccessibility(symbol, symbolName, false);
 		internalSymbols.put(symbolName, symbol);
 		return symbol;
 	}
@@ -543,7 +546,7 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 			shadowingSymbols.remove(symbolName);
 		}
 
-		if (symbol.getSymbolPackage() == this) {
+		if (symbol.symbolPackage() == this) {
 			symbol.setSymbolPackage(null);
 		}
 		return TStruct.INSTANCE;

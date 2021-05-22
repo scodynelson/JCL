@@ -7,13 +7,15 @@ public class VariableStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 
 	private TYPE variableValue;
 
-	protected VariableStructImpl(final String name, final PackageStruct symbolPackage, final TYPE value) {
-		super(name, symbolPackage, value);
-		variableValue = value;
+	protected VariableStructImpl(final String name) {
+		super(name);
 	}
 
 	public static <T extends LispStruct> VariableStructImpl<T> valueOf(final String name, final PackageStruct symbolPackage) {
-		return new VariableStructImpl<>(name, symbolPackage, null);
+		final VariableStructImpl<T> struct = new VariableStructImpl<>(name);
+		symbolPackage.importSymbol(struct);
+		struct.setSymbolPackage(symbolPackage);
+		return struct;
 	}
 
 	public TYPE getVariableValue() {

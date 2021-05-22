@@ -4,9 +4,11 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.KeywordStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -14,7 +16,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link KeywordStructImpl} is the object representation of a Lisp 'keyword' type.
  */
-public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImpl> implements KeywordStruct {
+public final class KeywordStructImpl extends SymbolStructImpl implements KeywordStruct {
 
 	/**
 	 * Public constructor.
@@ -23,16 +25,15 @@ public final class KeywordStructImpl extends ConstantStructImpl<KeywordStructImp
 	 * 		the symbol name
 	 */
 	public KeywordStructImpl(final String name) {
-		super(name, GlobalPackageStruct.KEYWORD);
-		init();
+		super(name);
 	}
 
-	/**
-	 * Post construction method.
-	 */
-	private void init() {
-		value = this;
-		symbolPackage = KeywordPackageStructImpl.INSTANCE;
+	@Override
+	public LispStruct setSymbolValue(final LispStruct value) {
+		if (isConstant) {
+			throw new SimpleErrorException("Can't set SYMBOL-VALUE of " + this + '.');
+		}
+		return super.setSymbolValue(value);
 	}
 
 	/*

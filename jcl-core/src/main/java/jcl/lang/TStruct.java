@@ -4,6 +4,7 @@ import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.internal.BooleanStructImpl;
+import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -17,6 +18,15 @@ public final class TStruct extends BooleanStructImpl {
 	 * Global constant singleton instance of 't'.
 	 */
 	public static final TStruct INSTANCE = new TStruct();
+
+	static {
+		INSTANCE.setSymbolValue(INSTANCE);
+		INSTANCE.setConstant();
+
+		GlobalPackageStruct.COMMON_LISP.importSymbol(INSTANCE);
+		GlobalPackageStruct.COMMON_LISP.export(INSTANCE);
+		INSTANCE.setSymbolPackage(GlobalPackageStruct.COMMON_LISP);
+	}
 
 	/**
 	 * Private constructor.

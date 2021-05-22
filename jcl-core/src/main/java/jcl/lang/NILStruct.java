@@ -15,6 +15,7 @@ import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.internal.BooleanStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.GlobalPackageStruct;
 import org.apache.commons.lang3.ArrayUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -34,6 +35,15 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	 */
 	private static final GetPropertiesResult GET_PROPERTIES_RESULT
 			= new GetPropertiesResult(INSTANCE, INSTANCE, INSTANCE);
+
+	static {
+		INSTANCE.setSymbolValue(INSTANCE);
+		INSTANCE.setConstant();
+
+		GlobalPackageStruct.COMMON_LISP.importSymbol(INSTANCE);
+		GlobalPackageStruct.COMMON_LISP.export((SymbolStruct) INSTANCE);
+		INSTANCE.setSymbolPackage(GlobalPackageStruct.COMMON_LISP);
+	}
 
 	/**
 	 * Private constructor.

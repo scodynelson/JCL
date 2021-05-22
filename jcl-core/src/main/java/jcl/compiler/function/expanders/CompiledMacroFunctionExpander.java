@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
@@ -131,11 +132,13 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 
-			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+			final Optional<SuppliedPParameter> suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				final SymbolStruct suppliedPSymbol = suppliedPBinding.get().getVar();
 
-			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
-			functionParametersToBind.add(functionParameterBinding);
+				functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.get().isSpecial());
+				functionParametersToBind.add(functionParameterBinding);
+			}
 		}
 
 		final int numberOfKeys = keyBindings.size();
@@ -164,11 +167,13 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, INIT_FORM_PLACEHOLDER, keyBinding.isSpecial());
 			keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+			final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				final SymbolStruct suppliedPSymbol = suppliedPBinding.get().getVar();
 
-			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
-			keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+				functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.get().isSpecial());
+				keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+			}
 		}
 
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
@@ -202,12 +207,14 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 						FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, keyInitForm, keyBinding.isSpecial());
 						keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-						final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-						final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
-						final LispStruct suppliedPInitForm = TStruct.INSTANCE;
+						final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+						if (suppliedPBinding.isPresent()) {
+							final SymbolStruct suppliedPSymbol = suppliedPBinding.get().getVar();
+							final LispStruct suppliedPInitForm = TStruct.INSTANCE;
 
-						functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
-						keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+							functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.get().isSpecial());
+							keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+						}
 					} else {
 						throw new ProgramErrorException("Expected argument to follow keyword name argument for call to '" + functionClassName + " with key name: " + keywordArgument);
 					}
@@ -346,11 +353,13 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 
-			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+			final Optional<SuppliedPParameter> suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				final SymbolStruct suppliedPSymbol = suppliedPBinding.get().getVar();
 
-			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
-			functionParametersToBind.add(functionParameterBinding);
+				functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.get().isSpecial());
+				functionParametersToBind.add(functionParameterBinding);
+			}
 		}
 
 		final int numberOfKeys = keyBindings.size();
@@ -379,11 +388,13 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, INIT_FORM_PLACEHOLDER, keyBinding.isSpecial());
 			keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
+			final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				final SymbolStruct suppliedPSymbol = suppliedPBinding.get().getVar();
 
-			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
-			keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+				functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.get().isSpecial());
+				keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+			}
 		}
 
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
@@ -417,12 +428,14 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 						FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, keyInitForm, keyBinding.isSpecial());
 						keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-						final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-						final SymbolStruct suppliedPSymbol = suppliedPBinding.getVar();
-						final LispStruct suppliedPInitForm = TStruct.INSTANCE;
+						final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+						if (suppliedPBinding.isPresent()) {
+							final SymbolStruct suppliedPSymbol = suppliedPBinding.get().getVar();
+							final LispStruct suppliedPInitForm = TStruct.INSTANCE;
 
-						functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
-						keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+							functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.get().isSpecial());
+							keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+						}
 					} else {
 						throw new ProgramErrorException("Expected argument to follow keyword name argument for call to '" + functionClassName + " with key name: " + keywordArgument);
 					}

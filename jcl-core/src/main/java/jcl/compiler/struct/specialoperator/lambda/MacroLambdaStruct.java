@@ -7,6 +7,7 @@ package jcl.compiler.struct.specialoperator.lambda;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import jcl.compiler.environment.Environment;
@@ -403,15 +404,17 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 					generatorState.getLexicalSymbols().remove(var);
 				}
 			}
-			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPVar = suppliedPBinding.getVar();
-			if (suppliedPBinding.isSpecial()) {
-				if (!existingDynamicSymbols.contains(suppliedPVar)) {
-					generatorState.getDynamicSymbols().remove(var);
-				}
-			} else {
-				if (!existingLexicalSymbols.contains(var)) {
-					generatorState.getLexicalSymbols().remove(var);
+			final Optional<SuppliedPParameter> suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				final SymbolStruct suppliedPVar = suppliedPBinding.get().getVar();
+				if (suppliedPBinding.get().isSpecial()) {
+					if (!existingDynamicSymbols.contains(suppliedPVar)) {
+						generatorState.getDynamicSymbols().remove(var);
+					}
+				} else {
+					if (!existingLexicalSymbols.contains(var)) {
+						generatorState.getLexicalSymbols().remove(var);
+					}
 				}
 			}
 		}
@@ -439,15 +442,17 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 					generatorState.getLexicalSymbols().remove(var);
 				}
 			}
-			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			final SymbolStruct suppliedPVar = suppliedPBinding.getVar();
-			if (suppliedPBinding.isSpecial()) {
-				if (!existingDynamicSymbols.contains(suppliedPVar)) {
-					generatorState.getDynamicSymbols().remove(var);
-				}
-			} else {
-				if (!existingLexicalSymbols.contains(var)) {
-					generatorState.getLexicalSymbols().remove(var);
+			final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				final SymbolStruct suppliedPVar = suppliedPBinding.get().getVar();
+				if (suppliedPBinding.get().isSpecial()) {
+					if (!existingDynamicSymbols.contains(suppliedPVar)) {
+						generatorState.getDynamicSymbols().remove(var);
+					}
+				} else {
+					if (!existingLexicalSymbols.contains(var)) {
+						generatorState.getLexicalSymbols().remove(var);
+					}
 				}
 			}
 		}
@@ -1052,8 +1057,12 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 			NILStruct.INSTANCE.generate(generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
-			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			generateSuppliedPBinding(suppliedPBinding, generatorState, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			final Optional<SuppliedPParameter> suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				generateSuppliedPBinding(suppliedPBinding.get(), generatorState, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			} else {
+				generateSuppliedPBinding(null, generatorState, optionalPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			}
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1267,8 +1276,13 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 			CodeGenerators.generateSymbol(keyName, generatorState, keyPackageStore, keyNameStore);
 			generateDestructuringFormBinding(generatorState, keyBinding.getDestructuringForm(), mv, destructuringFormStore);
 
-			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			generateSuppliedPBinding(suppliedPBinding, generatorState, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+			final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				generateSuppliedPBinding(suppliedPBinding.get(), generatorState, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+			} else {
+				generateSuppliedPBinding(null, generatorState, keyPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+
+			}
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -1885,8 +1899,12 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 			NILStruct.INSTANCE.generate(generatorState);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
-			final SuppliedPParameter suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			generateSuppliedPBinding(suppliedPBinding, generatorState, parameterPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			final Optional<SuppliedPParameter> suppliedPBinding = optionalBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				generateSuppliedPBinding(suppliedPBinding.get(), generatorState, parameterPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			} else {
+				generateSuppliedPBinding(null, generatorState, parameterPackageStore, optionalSuppliedPSymbolStore, optionalSuppliedPStore);
+			}
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.OPTIONAL_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);
@@ -2017,8 +2035,12 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 			CodeGenerators.generateSymbol(keyName, generatorState, parameterPackageStore, keyNameStore);
 			generateDestructuringFormBinding(generatorState, keyBinding.getDestructuringForm(), mv, parameterDestructuringFormStore);
 
-			final SuppliedPParameter suppliedPBinding = keyBinding.getSuppliedPBinding();
-			generateSuppliedPBinding(suppliedPBinding, generatorState, parameterPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+			final Optional<SuppliedPParameter> suppliedPBinding = keyBinding.getSuppliedPBinding();
+			if (suppliedPBinding.isPresent()) {
+				generateSuppliedPBinding(suppliedPBinding.get(), generatorState, parameterPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+			} else {
+				generateSuppliedPBinding(null, generatorState, parameterPackageStore, keySuppliedPSymbolStore, keySuppliedPStore);
+			}
 
 			mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.KEY_BINDING_NAME);
 			mv.visitInsn(Opcodes.DUP);

@@ -6,6 +6,7 @@ package jcl.compiler.environment.binding.lambdalist;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
@@ -16,9 +17,9 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.statics.GlobalPackageStruct;
 import lombok.Getter;
 
-@Getter
 public class KeyParameter extends Parameter {
 
+	@Getter
 	private final SymbolStruct keyName;
 	private final SuppliedPParameter suppliedPBinding;
 
@@ -38,6 +39,10 @@ public class KeyParameter extends Parameter {
 		super(var, destructuringForm, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
+	}
+
+	public Optional<SuppliedPParameter> getSuppliedPBinding() {
+		return Optional.ofNullable(suppliedPBinding);
 	}
 
 	public static Builder builder(final PackageStruct aPackage, final String symbolName) {
@@ -93,13 +98,13 @@ public class KeyParameter extends Parameter {
 			return this;
 		}
 
-		public Builder suppliedPBinding() {
-			final PackageStruct aPackage = var.getSymbolPackage();
-			final String symbolName = var.getName();
-
-			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
-			return suppliedPBinding(new SuppliedPParameter(suppliedP));
-		}
+//		public Builder suppliedPBinding() {
+//			final PackageStruct aPackage = var.getSymbolPackage();
+//			final String symbolName = var.getName();
+//
+//			final SymbolStruct suppliedP = aPackage.intern(symbolName + "-P-" + System.nanoTime()).getSymbol();
+//			return suppliedPBinding(new SuppliedPParameter(suppliedP));
+//		}
 
 		public Builder suppliedPBinding(final SuppliedPParameter suppliedPBinding) {
 			this.suppliedPBinding = suppliedPBinding;
@@ -132,9 +137,11 @@ public class KeyParameter extends Parameter {
 		if (!initForm.eq(NILStruct.INSTANCE)) {
 			builder.append(initForm);
 
-			final SymbolStruct suppliedPBindingVar = suppliedPBinding.getVar();
-			if (!suppliedPBindingVar.getSymbolPackage().eq(GlobalPackageStruct.SYSTEM)) {
-				builder.append(suppliedPBindingVar);
+			if (suppliedPBinding != null) {
+				final SymbolStruct suppliedPBindingVar = suppliedPBinding.getVar();
+				if (!suppliedPBindingVar.symbolPackage().eq(GlobalPackageStruct.SYSTEM)) {
+					builder.append(suppliedPBindingVar);
+				}
 			}
 		}
 

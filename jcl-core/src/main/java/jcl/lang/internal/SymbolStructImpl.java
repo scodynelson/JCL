@@ -1,5 +1,7 @@
 package jcl.lang.internal;
 
+import java.util.Optional;
+
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -11,10 +13,12 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.PackageStruct;
 import jcl.lang.PackageSymbolStruct;
+import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
+import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.condition.exception.UnboundVariableException;
 import jcl.lang.condition.exception.UndefinedFunctionException;
 import jcl.lang.statics.CommonLispSymbols;
@@ -29,6 +33,8 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	protected final String name;
 
+	// We MUST lazy load this. Because NILStruct is a symbol and can have its own Plist, but we can't initialize
+	//      the constant NIL symbol with a dependence on its existence.
 	protected ListStruct properties;
 
 	protected PackageStruct symbolPackage;
@@ -37,6 +43,8 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	protected FunctionStruct function;
 
+	protected boolean isConstant;
+
 	/**
 	 * Public constructor.
 	 *
@@ -44,53 +52,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	 * 		the symbol name
 	 */
 	public SymbolStructImpl(final String name) {
-		this(name, null, null);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the symbol name
-	 * @param symbolPackage
-	 * 		the symbol package
-	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage) {
-		this(name, symbolPackage, null);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param name
-	 * 		the symbol name
-	 * @param symbolPackage
-	 * 		the symbol package
-	 * @param value
-	 * 		the symbol value
-	 */
-	protected SymbolStructImpl(final String name, final PackageStruct symbolPackage, final LispStruct value) {
 		this.name = name;
-
-		this.symbolPackage = symbolPackage;
-		this.value = value;
-
-		init();
-	}
-
-	/**
-	 * Post construction method.
-	 */
-	private void init() {
-		if (symbolPackage != null) {
-			// TODO: some hacks
-			final PackageStruct tempPkg = symbolPackage;
-			symbolPackage = null;
-			tempPkg.importSymbol(this);
-			// TODO: we REALLY shouldn't be exporting here, BUT so we can test things right now, we will.
-			tempPkg.export(this);
-			symbolPackage = tempPkg;
-		}
 	}
 
 	@Override
@@ -99,14 +61,28 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public PackageStruct getSymbolPackage() {
-		return symbolPackage;
+	public Optional<PackageStruct> getSymbolPackage() {
+		return Optional.ofNullable(symbolPackage);
 	}
 
 	@Override
-	public PackageStruct setSymbolPackage(final PackageStruct symbolPackage) {
+	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
-		return symbolPackage;
+	}
+
+	@Override
+	public void setConstant() {
+		isConstant = true;
+	}
+
+	@Override
+	public StringStruct symbolName() {
+		return StringStruct.toLispString(name);
+	}
+
+	@Override
+	public LispStruct symbolPackage() {
+		return (symbolPackage == null) ? NILStruct.INSTANCE : symbolPackage;
 	}
 
 	@Override
@@ -130,6 +106,9 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public LispStruct setSymbolValue(final LispStruct value) {
+		if (isConstant) {
+			throw new ProgramErrorException("Can't set value for constant " + name + '.');
+		}
 		this.value = value;
 		return value;
 	}
@@ -162,8 +141,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	@Override
 	public ListStruct symbolPlist() {
 		if (properties == null) {
-			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
-			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
 		return properties;
@@ -178,9 +155,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	@Override
 	public LispStruct getProp(final LispStruct indicator, final LispStruct defaultValue) {
 		if (properties == null) {
-			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
-			//      the constant NIL symbol with a dependence on its existence.
-			properties = NILStruct.INSTANCE;
+			return defaultValue;
 		}
 		return properties.getf(indicator, defaultValue);
 	}
@@ -188,8 +163,6 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	@Override
 	public LispStruct setProp(final LispStruct indicator, final LispStruct newValue) {
 		if (properties == null) {
-			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
-			//      the constant NIL symbol with a dependence on its existence.
 			properties = NILStruct.INSTANCE;
 		}
 		properties = properties.putf(indicator, newValue);
@@ -199,9 +172,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	@Override
 	public BooleanStruct remProp(final LispStruct indicator) {
 		if (properties == null) {
-			// We MUST lazy load this. Because NIlStruct is a symbol and can have its own Plist, but we can't initialize
-			//      the constant NIL symbol with a dependence on its existence.
-			properties = NILStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 		return BooleanStruct.toLispBoolean(properties.remf(indicator));
 	}

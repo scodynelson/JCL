@@ -12,12 +12,10 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public final class PrintCaseVariable extends VariableStructImpl<KeywordStruct> {
 
-	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
-
 	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
-	private PrintCaseVariable() {
-		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, CommonLispSymbols.UPCASE_KEYWORD);
+	PrintCaseVariable() {
+		super("*PRINT-CASE*");
 	}
 
 	@Override

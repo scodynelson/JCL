@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -66,10 +67,10 @@ public final class CodeGenerators {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final PackageStruct pkg = input.getSymbolPackage();
+		final Optional<PackageStruct> pkg = input.getSymbolPackage();
 		final String symbolName = input.getName();
 
-		if (pkg == null) {
+		if (pkg.isEmpty()) {
 			/*
 			There is alot going on here, so let me explain:
 
@@ -144,7 +145,7 @@ public final class CodeGenerators {
 			                  GenerationConstants.SYMBOL_STRUCT_DESC);
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 		} else {
-			final String packageName = pkg.getName();
+			final String packageName = pkg.get().getName();
 
 			mv.visitLdcInsn(packageName);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC,

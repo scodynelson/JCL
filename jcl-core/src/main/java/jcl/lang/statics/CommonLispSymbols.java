@@ -15,151 +15,145 @@ import jcl.lang.ReadtableStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
 import jcl.lang.internal.ConstantStructImpl;
-import jcl.lang.internal.DeclarationStructImpl;
-import jcl.lang.internal.SpecialOperatorStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 
 public interface CommonLispSymbols {
 
-	ConstantStructImpl<?> AND_ALLOW_OTHER_KEYS = ConstantStructImpl.valueOf("&ALLOW-OTHER-KEYS", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_AUX = ConstantStructImpl.valueOf("&AUX", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_BODY = ConstantStructImpl.valueOf("&BODY", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_ENVIRONMENT = ConstantStructImpl.valueOf("&ENVIRONMENT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_KEY = ConstantStructImpl.valueOf("&KEY", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_OPTIONAL = ConstantStructImpl.valueOf("&OPTIONAL", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_REST = ConstantStructImpl.valueOf("&REST", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<?> AND_WHOLE = ConstantStructImpl.valueOf("&WHOLE", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<?> AND_ALLOW_OTHER_KEYS = internAndExportCLConstant("&ALLOW-OTHER-KEYS");
+	ConstantStructImpl<?> AND_AUX = internAndExportCLConstant("&AUX");
+	ConstantStructImpl<?> AND_BODY = internAndExportCLConstant("&BODY");
+	ConstantStructImpl<?> AND_ENVIRONMENT = internAndExportCLConstant("&ENVIRONMENT");
+	ConstantStructImpl<?> AND_KEY = internAndExportCLConstant("&KEY");
+	ConstantStructImpl<?> AND_OPTIONAL = internAndExportCLConstant("&OPTIONAL");
+	ConstantStructImpl<?> AND_REST = internAndExportCLConstant("&REST");
+	ConstantStructImpl<?> AND_WHOLE = internAndExportCLConstant("&WHOLE");
 
-	ConstantStructImpl<IntegerStruct> ARRAY_DIMENSION_LIMIT = ConstantStructImpl.valueOf("ARRAY-DIMENSION-LIMIT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> ARRAY_RANK_LIMIT = ConstantStructImpl.valueOf("ARRAY-RANK-LIMIT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> ARRAY_TOTAL_SIZE_LIMIT = ConstantStructImpl.valueOf("ARRAY-TOTAL-SIZE-LIMIT", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<IntegerStruct> ARRAY_DIMENSION_LIMIT = internAndExportCLConstant("ARRAY-DIMENSION-LIMIT");
+	ConstantStructImpl<IntegerStruct> ARRAY_RANK_LIMIT = internAndExportCLConstant("ARRAY-RANK-LIMIT");
+	ConstantStructImpl<IntegerStruct> ARRAY_TOTAL_SIZE_LIMIT = internAndExportCLConstant("ARRAY-TOTAL-SIZE-LIMIT");
 
-	ConstantStructImpl<IntegerStruct> BOOLE_1 = ConstantStructImpl.valueOf("BOOLE-1", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_2 = ConstantStructImpl.valueOf("BOOLE-2", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_AND = ConstantStructImpl.valueOf("BOOLE-AND", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_ANDC1 = ConstantStructImpl.valueOf("BOOLE-ANDC1", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_ANDC2 = ConstantStructImpl.valueOf("BOOLE-ANDC2", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_C1 = ConstantStructImpl.valueOf("BOOLE-C1", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_C2 = ConstantStructImpl.valueOf("BOOLE-C2", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_CLR = ConstantStructImpl.valueOf("BOOLE-CLR", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_EQV = ConstantStructImpl.valueOf("BOOLE-EQV", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_IOR = ConstantStructImpl.valueOf("BOOLE-IOR", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_NAND = ConstantStructImpl.valueOf("BOOLE-NAND", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_NOR = ConstantStructImpl.valueOf("BOOLE-NOR", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_ORC1 = ConstantStructImpl.valueOf("BOOLE-ORC1", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_ORC2 = ConstantStructImpl.valueOf("BOOLE-ORC2", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_SET = ConstantStructImpl.valueOf("BOOLE-SET", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> BOOLE_XOR = ConstantStructImpl.valueOf("BOOLE-XOR", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<IntegerStruct> BOOLE_1 = internAndExportCLConstant("BOOLE-1");
+	ConstantStructImpl<IntegerStruct> BOOLE_2 = internAndExportCLConstant("BOOLE-2");
+	ConstantStructImpl<IntegerStruct> BOOLE_AND = internAndExportCLConstant("BOOLE-AND");
+	ConstantStructImpl<IntegerStruct> BOOLE_ANDC1 = internAndExportCLConstant("BOOLE-ANDC1");
+	ConstantStructImpl<IntegerStruct> BOOLE_ANDC2 = internAndExportCLConstant("BOOLE-ANDC2");
+	ConstantStructImpl<IntegerStruct> BOOLE_C1 = internAndExportCLConstant("BOOLE-C1");
+	ConstantStructImpl<IntegerStruct> BOOLE_C2 = internAndExportCLConstant("BOOLE-C2");
+	ConstantStructImpl<IntegerStruct> BOOLE_CLR = internAndExportCLConstant("BOOLE-CLR");
+	ConstantStructImpl<IntegerStruct> BOOLE_EQV = internAndExportCLConstant("BOOLE-EQV");
+	ConstantStructImpl<IntegerStruct> BOOLE_IOR = internAndExportCLConstant("BOOLE-IOR");
+	ConstantStructImpl<IntegerStruct> BOOLE_NAND = internAndExportCLConstant("BOOLE-NAND");
+	ConstantStructImpl<IntegerStruct> BOOLE_NOR = internAndExportCLConstant("BOOLE-NOR");
+	ConstantStructImpl<IntegerStruct> BOOLE_ORC1 = internAndExportCLConstant("BOOLE-ORC1");
+	ConstantStructImpl<IntegerStruct> BOOLE_ORC2 = internAndExportCLConstant("BOOLE-ORC2");
+	ConstantStructImpl<IntegerStruct> BOOLE_SET = internAndExportCLConstant("BOOLE-SET");
+	ConstantStructImpl<IntegerStruct> BOOLE_XOR = internAndExportCLConstant("BOOLE-XOR");
 
-	ConstantStructImpl<IntegerStruct> MOST_POSITIVE_FIXNUM = ConstantStructImpl.valueOf("MOST-POSITIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> MOST_NEGATIVE_FIXNUM = ConstantStructImpl.valueOf("MOST-NEGATIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<IntegerStruct> MOST_POSITIVE_FIXNUM = internAndExportCLConstant("MOST-POSITIVE-FIXNUM");
+	ConstantStructImpl<IntegerStruct> MOST_NEGATIVE_FIXNUM = internAndExportCLConstant("MOST-NEGATIVE-FIXNUM");
 
-	ConstantStructImpl<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = ConstantStructImpl.valueOf("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_SHORT_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_SHORT_FLOAT = ConstantStructImpl.valueOf("MOST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_SHORT_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SHORT_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> SHORT_FLOAT_EPSILON = ConstantStructImpl.valueOf("SHORT-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> SHORT_FLOAT_NEGATIVE_EPSILON = ConstantStructImpl.valueOf("SHORT-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = internAndExportCLConstant("MOST-POSITIVE-SHORT-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-SHORT-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_SHORT_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT");
+	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_SHORT_FLOAT = internAndExportCLConstant("MOST-NEGATIVE-SHORT-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_SHORT_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-SHORT-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SHORT_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT");
+	ConstantStructImpl<FloatStruct> SHORT_FLOAT_EPSILON = internAndExportCLConstant("SHORT-FLOAT-EPSILON");
+	ConstantStructImpl<FloatStruct> SHORT_FLOAT_NEGATIVE_EPSILON = internAndExportCLConstant("SHORT-FLOAT-NEGATIVE-EPSILON");
 
-	ConstantStructImpl<FloatStruct> MOST_POSITIVE_SINGLE_FLOAT = ConstantStructImpl.valueOf("MOST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_SINGLE_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_SINGLE_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_SINGLE_FLOAT = ConstantStructImpl.valueOf("MOST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_SINGLE_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SINGLE_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> SINGLE_FLOAT_EPSILON = ConstantStructImpl.valueOf("SINGLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> SINGLE_FLOAT_NEGATIVE_EPSILON = ConstantStructImpl.valueOf("SINGLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<FloatStruct> MOST_POSITIVE_SINGLE_FLOAT = internAndExportCLConstant("MOST-POSITIVE-SINGLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_SINGLE_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-SINGLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_SINGLE_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT");
+	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_SINGLE_FLOAT = internAndExportCLConstant("MOST-NEGATIVE-SINGLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_SINGLE_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-SINGLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SINGLE_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT");
+	ConstantStructImpl<FloatStruct> SINGLE_FLOAT_EPSILON = internAndExportCLConstant("SINGLE-FLOAT-EPSILON");
+	ConstantStructImpl<FloatStruct> SINGLE_FLOAT_NEGATIVE_EPSILON = internAndExportCLConstant("SINGLE-FLOAT-NEGATIVE-EPSILON");
 
-	ConstantStructImpl<FloatStruct> MOST_POSITIVE_DOUBLE_FLOAT = ConstantStructImpl.valueOf("MOST-POSITIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_DOUBLE_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_DOUBLE_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-NORMALIZED-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_DOUBLE_FLOAT = ConstantStructImpl.valueOf("MOST-NEGATIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_DOUBLE_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_DOUBLE_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-NORMALIZED-DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> DOUBLE_FLOAT_EPSILON = ConstantStructImpl.valueOf("DOUBLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> DOUBLE_FLOAT_NEGATIVE_EPSILON = ConstantStructImpl.valueOf("DOUBLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<FloatStruct> MOST_POSITIVE_DOUBLE_FLOAT = internAndExportCLConstant("MOST-POSITIVE-DOUBLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_DOUBLE_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-DOUBLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_DOUBLE_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-NORMALIZED-DOUBLE-FLOAT");
+	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_DOUBLE_FLOAT = internAndExportCLConstant("MOST-NEGATIVE-DOUBLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_DOUBLE_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-DOUBLE-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_DOUBLE_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-NORMALIZED-DOUBLE-FLOAT");
+	ConstantStructImpl<FloatStruct> DOUBLE_FLOAT_EPSILON = internAndExportCLConstant("DOUBLE-FLOAT-EPSILON");
+	ConstantStructImpl<FloatStruct> DOUBLE_FLOAT_NEGATIVE_EPSILON = internAndExportCLConstant("DOUBLE-FLOAT-NEGATIVE-EPSILON");
 
-	ConstantStructImpl<FloatStruct> MOST_POSITIVE_LONG_FLOAT = ConstantStructImpl.valueOf("MOST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_LONG_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_LONG_FLOAT = ConstantStructImpl.valueOf("LEAST-POSITIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_LONG_FLOAT = ConstantStructImpl.valueOf("MOST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_LONG_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_LONG_FLOAT = ConstantStructImpl.valueOf("LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LONG_FLOAT_EPSILON = ConstantStructImpl.valueOf("LONG-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<FloatStruct> LONG_FLOAT_NEGATIVE_EPSILON = ConstantStructImpl.valueOf("LONG-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<FloatStruct> MOST_POSITIVE_LONG_FLOAT = internAndExportCLConstant("MOST-POSITIVE-LONG-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_LONG_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-LONG-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_POSITIVE_NORMALIZED_LONG_FLOAT = internAndExportCLConstant("LEAST-POSITIVE-NORMALIZED-LONG-FLOAT");
+	ConstantStructImpl<FloatStruct> MOST_NEGATIVE_LONG_FLOAT = internAndExportCLConstant("MOST-NEGATIVE-LONG-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_LONG_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-LONG-FLOAT");
+	ConstantStructImpl<FloatStruct> LEAST_NEGATIVE_NORMALIZED_LONG_FLOAT = internAndExportCLConstant("LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT");
+	ConstantStructImpl<FloatStruct> LONG_FLOAT_EPSILON = internAndExportCLConstant("LONG-FLOAT-EPSILON");
+	ConstantStructImpl<FloatStruct> LONG_FLOAT_NEGATIVE_EPSILON = internAndExportCLConstant("LONG-FLOAT-NEGATIVE-EPSILON");
 
-	ConstantStructImpl<FloatStruct> PI = ConstantStructImpl.valueOf("PI", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<FloatStruct> PI = internAndExportCLConstant("PI");
 
-	ConstantStructImpl<IntegerStruct> CALL_ARGUMENTS_LIMIT = ConstantStructImpl.valueOf("CALL-ARGUMENTS-LIMIT", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<IntegerStruct> CALL_ARGUMENTS_LIMIT = internAndExportCLConstant("CALL-ARGUMENTS-LIMIT");
 
-	ConstantStructImpl<IntegerStruct> CHAR_CODE_LIMIT = ConstantStructImpl.valueOf("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> INTERNAL_TIME_UNITS_PER_SECOND = ConstantStructImpl.valueOf("INTERNAL-TIME-UNITS-PER-SECOND", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<ListStruct> LAMBDA_LIST_KEYWORDS = ConstantStructImpl.valueOf("LAMBDA-LIST-KEYWORDS", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> LAMBDA_PARAMETERS_LIMIT = ConstantStructImpl.valueOf("LAMBDA-PARAMETERS-LIMIT", GlobalPackageStruct.COMMON_LISP);
-	ConstantStructImpl<IntegerStruct> MULTIPLE_VALUES_LIMIT = ConstantStructImpl.valueOf("MULTIPLE-VALUES-LIMIT", GlobalPackageStruct.COMMON_LISP);
+	ConstantStructImpl<IntegerStruct> CHAR_CODE_LIMIT = internAndExportCLConstant("CHAR-CODE-LIMIT");
+	ConstantStructImpl<IntegerStruct> INTERNAL_TIME_UNITS_PER_SECOND = internAndExportCLConstant("INTERNAL-TIME-UNITS-PER-SECOND");
+	ConstantStructImpl<ListStruct> LAMBDA_LIST_KEYWORDS = internAndExportCLConstant("LAMBDA-LIST-KEYWORDS");
+	ConstantStructImpl<IntegerStruct> LAMBDA_PARAMETERS_LIMIT = internAndExportCLConstant("LAMBDA-PARAMETERS-LIMIT");
+	ConstantStructImpl<IntegerStruct> MULTIPLE_VALUES_LIMIT = internAndExportCLConstant("MULTIPLE-VALUES-LIMIT");
 
 	SymbolStruct T = TStruct.INSTANCE;
 	SymbolStruct NIL = NILStruct.INSTANCE;
 
-	// TODO: These are NOT declared in the "COMMON_LISP" package. They probably exist in the "SYSTEM" package instead. Have to work this in...
-	DeclarationStructImpl COMPILATION_SPEED = DeclarationStructImpl.valueOf("COMPILATION-SPEED", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl DEBUG = DeclarationStructImpl.valueOf("DEBUG", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl DECLARATION = DeclarationStructImpl.valueOf("DECLARATION", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl DYNAMIC_EXTENT = DeclarationStructImpl.valueOf("DYNAMIC-EXTENT", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl FTYPE = DeclarationStructImpl.valueOf("FTYPE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl IGNORABLE = DeclarationStructImpl.valueOf("IGNORABLE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl IGNORE = DeclarationStructImpl.valueOf("IGNORE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl INLINE = DeclarationStructImpl.valueOf("INLINE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl NOTINLINE = DeclarationStructImpl.valueOf("NOTINLINE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl OPTIMIZE = DeclarationStructImpl.valueOf("OPTIMIZE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl SAFETY = DeclarationStructImpl.valueOf("SAFETY", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl SPACE = DeclarationStructImpl.valueOf("SPACE", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl SPECIAL = DeclarationStructImpl.valueOf("SPECIAL", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl SPEED = DeclarationStructImpl.valueOf("SPEED", GlobalPackageStruct.COMMON_LISP);
-	DeclarationStructImpl TYPE = DeclarationStructImpl.valueOf("TYPE", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct COMPILATION_SPEED = internAndExportCLSymbol("COMPILATION-SPEED");
+	SymbolStruct DEBUG = internAndExportCLSymbol("DEBUG");
+	SymbolStruct DECLARATION = internAndExportCLSymbol("DECLARATION");
+	SymbolStruct DYNAMIC_EXTENT = internAndExportCLSymbol("DYNAMIC-EXTENT");
+	SymbolStruct FTYPE = internAndExportCLSymbol("FTYPE");
+	SymbolStruct IGNORABLE = internAndExportCLSymbol("IGNORABLE");
+	SymbolStruct IGNORE = internAndExportCLSymbol("IGNORE");
+	SymbolStruct INLINE = internAndExportCLSymbol("INLINE");
+	SymbolStruct NOTINLINE = internAndExportCLSymbol("NOTINLINE");
+	SymbolStruct OPTIMIZE = internAndExportCLSymbol("OPTIMIZE");
+	SymbolStruct SAFETY = internAndExportCLSymbol("SAFETY");
+	SymbolStruct SPACE = internAndExportCLSymbol("SPACE");
+	SymbolStruct SPECIAL = internAndExportCLSymbol("SPECIAL");
+	SymbolStruct SPEED = internAndExportCLSymbol("SPEED");
+	SymbolStruct TYPE = internAndExportCLSymbol("TYPE");
 
-	DeclarationStructImpl JAVA_CLASS_NAME = DeclarationStructImpl.valueOf("%JAVA-CLASS-NAME", GlobalPackageStruct.SYSTEM);
-	DeclarationStructImpl LISP_NAME = DeclarationStructImpl.valueOf("%LISP-NAME", GlobalPackageStruct.SYSTEM);
-
-	VariableStructImpl<?> BREAK_ON_SIGNALS_VAR = VariableStructImpl.valueOf("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> COMPILE_FILE_PATHNAME_VAR = VariableStructImpl.valueOf("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> COMPILE_FILE_TRUENAME_VAR = VariableStructImpl.valueOf("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> COMPILE_PRINT_VAR = VariableStructImpl.valueOf("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> COMPILE_VERBOSE_VAR = VariableStructImpl.valueOf("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<?> DEBUGGER_HOOK_VAR = VariableStructImpl.valueOf("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<PathnameStruct> DEFAULT_PATHNAME_DEFAULTS_VAR = VariableStructImpl.valueOf("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<ListStruct> FEATURES_VAR = new ProperListVariable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> GENSYM_COUNTER_VAR = VariableStructImpl.valueOf("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> LOAD_PATHNAME_VAR = VariableStructImpl.valueOf("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> LOAD_PRINT_VAR = VariableStructImpl.valueOf("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> LOAD_TRUENAME_VAR = VariableStructImpl.valueOf("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> LOAD_VERBOSE_VAR = VariableStructImpl.valueOf("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<FunctionStruct> MACROEXPAND_HOOK_VAR = VariableStructImpl.valueOf("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<ListStruct> MODULES_VAR = VariableStructImpl.valueOf("*MODULES*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<PackageStruct> PACKAGE_VAR = VariableStructImpl.valueOf("*PACKAGE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> PRINT_ARRAY_VAR = VariableStructImpl.valueOf("*PRINT-ARRAY*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> PRINT_BASE_VAR = new RadixVariable("*PRINT-BASE*", GlobalPackageStruct.COMMON_LISP);
-	PrintCaseVariable PRINT_CASE_VAR = PrintCaseVariable.INSTANCE;
-	VariableStructImpl<BooleanStruct> PRINT_CIRCLE_VAR = VariableStructImpl.valueOf("*PRINT-CIRCLE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> PRINT_ESCAPE_VAR = VariableStructImpl.valueOf("*PRINT-ESCAPE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> PRINT_GENSYM_VAR = VariableStructImpl.valueOf("*PRINT-GENSYM*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> PRINT_LENGTH_VAR = new NonNegNilVariable("*PRINT-LENGTH*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> PRINT_LEVEL_VAR = new NonNegNilVariable("*PRINT-LEVEL*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> PRINT_LINES_VAR = new NonNegNilVariable("*PRINT-LINES*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> PRINT_MISER_WIDTH_VAR = new NonNegNilVariable("*PRINT-MISER-WIDTH*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<?> PRINT_PPRINT_DISPATCH_VAR = VariableStructImpl.valueOf("*PRINT-PPRINT-DISPATCH*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> PRINT_PRETTY_VAR = VariableStructImpl.valueOf("*PRINT-PRETTY*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> PRINT_RADIX_VAR = VariableStructImpl.valueOf("*PRINT-RADIX*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> PRINT_READABLY_VAR = VariableStructImpl.valueOf("*PRINT-READABLY*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> PRINT_RIGHT_MARGIN_VAR = new NonNegNilVariable("*PRINT-RIGHT-MARGIN*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<RandomStateStruct> RANDOM_STATE_VAR = VariableStructImpl.valueOf("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<IntegerStruct> READ_BASE_VAR = new RadixVariable("*READ-BASE*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<SymbolStruct> READ_DEFAULT_FLOAT_FORMAT_VAR = VariableStructImpl.valueOf("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> READ_EVAL_VAR = VariableStructImpl.valueOf("*READ-EVAL*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<BooleanStruct> READ_SUPPRESS_VAR = VariableStructImpl.valueOf("*READ-SUPPRESS*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<ReadtableStruct> READTABLE_VAR = VariableStructImpl.valueOf("*READTABLE*", GlobalPackageStruct.COMMON_LISP);
+	VariableStructImpl<?> BREAK_ON_SIGNALS_VAR = internAndExportCLVariable("*BREAK-ON-SIGNALS*");
+	VariableStructImpl<LispStruct> COMPILE_FILE_PATHNAME_VAR = internAndExportCLVariable("*COMPILE-FILE-PATHNAME*");
+	VariableStructImpl<LispStruct> COMPILE_FILE_TRUENAME_VAR = internAndExportCLVariable("*COMPILE-FILE-TRUENAME*");
+	VariableStructImpl<BooleanStruct> COMPILE_PRINT_VAR = internAndExportCLVariable("*COMPILE-PRINT*");
+	VariableStructImpl<BooleanStruct> COMPILE_VERBOSE_VAR = internAndExportCLVariable("*COMPILE-VERBOSE*");
+	VariableStructImpl<?> DEBUGGER_HOOK_VAR = internAndExportCLVariable("*DEBUGGER-HOOK*");
+	VariableStructImpl<PathnameStruct> DEFAULT_PATHNAME_DEFAULTS_VAR = internAndExportCLVariable("*DEFAULT-PATHNAME-DEFAULTS*");
+	VariableStructImpl<ListStruct> FEATURES_VAR = importAndExportCLSymbol(new ProperListVariable("*FEATURES*"));
+	VariableStructImpl<IntegerStruct> GENSYM_COUNTER_VAR = internAndExportCLVariable("*GENSYM-COUNTER*");
+	VariableStructImpl<LispStruct> LOAD_PATHNAME_VAR = internAndExportCLVariable("*LOAD-PATHNAME*");
+	VariableStructImpl<BooleanStruct> LOAD_PRINT_VAR = internAndExportCLVariable("*LOAD-PRINT*");
+	VariableStructImpl<LispStruct> LOAD_TRUENAME_VAR = internAndExportCLVariable("*LOAD-TRUENAME*");
+	VariableStructImpl<BooleanStruct> LOAD_VERBOSE_VAR = internAndExportCLVariable("*LOAD-VERBOSE*");
+	VariableStructImpl<FunctionStruct> MACROEXPAND_HOOK_VAR = internAndExportCLVariable("*MACROEXPAND-HOOK*");
+	VariableStructImpl<ListStruct> MODULES_VAR = internAndExportCLVariable("*MODULES*");
+	VariableStructImpl<PackageStruct> PACKAGE_VAR = internAndExportCLVariable("*PACKAGE*");
+	VariableStructImpl<BooleanStruct> PRINT_ARRAY_VAR = internAndExportCLVariable("*PRINT-ARRAY*");
+	VariableStructImpl<IntegerStruct> PRINT_BASE_VAR = importAndExportCLSymbol(new RadixVariable("*PRINT-BASE*"));
+	PrintCaseVariable PRINT_CASE_VAR = importAndExportCLSymbol(new PrintCaseVariable());
+	VariableStructImpl<BooleanStruct> PRINT_CIRCLE_VAR = internAndExportCLVariable("*PRINT-CIRCLE*");
+	VariableStructImpl<BooleanStruct> PRINT_ESCAPE_VAR = internAndExportCLVariable("*PRINT-ESCAPE*");
+	VariableStructImpl<BooleanStruct> PRINT_GENSYM_VAR = internAndExportCLVariable("*PRINT-GENSYM*");
+	VariableStructImpl<IntegerStruct> PRINT_LENGTH_VAR = importAndExportCLSymbol(new NonNegNilVariable("*PRINT-LENGTH*"));
+	VariableStructImpl<IntegerStruct> PRINT_LEVEL_VAR = importAndExportCLSymbol(new NonNegNilVariable("*PRINT-LEVEL*"));
+	VariableStructImpl<IntegerStruct> PRINT_LINES_VAR = importAndExportCLSymbol(new NonNegNilVariable("*PRINT-LINES*"));
+	VariableStructImpl<IntegerStruct> PRINT_MISER_WIDTH_VAR = importAndExportCLSymbol(new NonNegNilVariable("*PRINT-MISER-WIDTH*"));
+	VariableStructImpl<?> PRINT_PPRINT_DISPATCH_VAR = internAndExportCLVariable("*PRINT-PPRINT-DISPATCH*");
+	VariableStructImpl<BooleanStruct> PRINT_PRETTY_VAR = internAndExportCLVariable("*PRINT-PRETTY*");
+	VariableStructImpl<BooleanStruct> PRINT_RADIX_VAR = internAndExportCLVariable("*PRINT-RADIX*");
+	VariableStructImpl<BooleanStruct> PRINT_READABLY_VAR = internAndExportCLVariable("*PRINT-READABLY*");
+	VariableStructImpl<IntegerStruct> PRINT_RIGHT_MARGIN_VAR = importAndExportCLSymbol(new NonNegNilVariable("*PRINT-RIGHT-MARGIN*"));
+	VariableStructImpl<RandomStateStruct> RANDOM_STATE_VAR = internAndExportCLVariable("*RANDOM-STATE*");
+	VariableStructImpl<IntegerStruct> READ_BASE_VAR = importAndExportCLSymbol(new RadixVariable("*READ-BASE*"));
+	VariableStructImpl<SymbolStruct> READ_DEFAULT_FLOAT_FORMAT_VAR = internAndExportCLVariable("*READ-DEFAULT-FLOAT-FORMAT*");
+	VariableStructImpl<BooleanStruct> READ_EVAL_VAR = internAndExportCLVariable("*READ-EVAL*");
+	VariableStructImpl<BooleanStruct> READ_SUPPRESS_VAR = internAndExportCLVariable("*READ-SUPPRESS*");
+	VariableStructImpl<ReadtableStruct> READTABLE_VAR = internAndExportCLVariable("*READTABLE*");
 
 	SymbolStruct TERMINAL_IO = internAndExportCLSymbol("*TERMINAL-IO*");
 	SymbolStruct DEBUG_IO = internAndExportCLSymbol("*DEBUG-IO*");
@@ -169,16 +163,16 @@ public interface CommonLispSymbols {
 	SymbolStruct STANDARD_OUTPUT = internAndExportCLSymbol("*STANDARD-OUTPUT*");
 	SymbolStruct TRACE_OUTPUT = internAndExportCLSymbol("*TRACE-OUTPUT*");
 
-	VariableStructImpl<LispStruct> STAR = VariableStructImpl.valueOf("*", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> STAR_STAR = VariableStructImpl.valueOf("**", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> STAR_STAR_STAR = VariableStructImpl.valueOf("***", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> PLUS = VariableStructImpl.valueOf("+", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> PLUS_PLUS = VariableStructImpl.valueOf("++", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> PLUS_PLUS_PLUS = VariableStructImpl.valueOf("+++", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<LispStruct> DASH = VariableStructImpl.valueOf("-", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<ListStruct> SLASH = VariableStructImpl.valueOf("/", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<ListStruct> SLASH_SLASH = VariableStructImpl.valueOf("//", GlobalPackageStruct.COMMON_LISP);
-	VariableStructImpl<ListStruct> SLASH_SLASH_SLASH = VariableStructImpl.valueOf("///", GlobalPackageStruct.COMMON_LISP);
+	VariableStructImpl<LispStruct> STAR = internAndExportCLVariable("*");
+	VariableStructImpl<LispStruct> STAR_STAR = internAndExportCLVariable("**");
+	VariableStructImpl<LispStruct> STAR_STAR_STAR = internAndExportCLVariable("***");
+	VariableStructImpl<LispStruct> PLUS = internAndExportCLVariable("+");
+	VariableStructImpl<LispStruct> PLUS_PLUS = internAndExportCLVariable("++");
+	VariableStructImpl<LispStruct> PLUS_PLUS_PLUS = internAndExportCLVariable("+++");
+	VariableStructImpl<LispStruct> DASH = internAndExportCLVariable("-");
+	VariableStructImpl<ListStruct> SLASH = internAndExportCLVariable("/");
+	VariableStructImpl<ListStruct> SLASH_SLASH = internAndExportCLVariable("//");
+	VariableStructImpl<ListStruct> SLASH_SLASH_SLASH = internAndExportCLVariable("///");
 
 	SymbolStruct NOT_EQUAL_SIGN = internAndExportCLSymbol("/=");
 	SymbolStruct ONE_PLUS = internAndExportCLSymbol("1+");
@@ -251,7 +245,7 @@ public interface CommonLispSymbols {
 	SymbolStruct BIT_VECTOR = internAndExportCLSymbol("BIT-VECTOR");
 	SymbolStruct BIT_VECTOR_P = internAndExportCLSymbol("BIT-VECTOR-P");
 	SymbolStruct BIT_XOR = internAndExportCLSymbol("BIT-XOR");
-	SpecialOperatorStructImpl BLOCK = SpecialOperatorStructImpl.valueOf("BLOCK", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct BLOCK = internAndExportCLSymbol("BLOCK");
 	SymbolStruct BOOLE = internAndExportCLSymbol("BOOLE");
 	// BOOLE-1
 	// BOOLE-2
@@ -299,7 +293,7 @@ public interface CommonLispSymbols {
 	SymbolStruct CALL_NEXT_METHOD = internAndExportCLSymbol("CALL-NEXT-METHOD");
 	SymbolStruct CAR = internAndExportCLSymbol("CAR");
 	SymbolStruct CASE = internAndExportCLSymbol("CASE");
-	SpecialOperatorStructImpl CATCH = SpecialOperatorStructImpl.valueOf("CATCH", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct CATCH = internAndExportCLSymbol("CATCH");
 	SymbolStruct CCASE = internAndExportCLSymbol("CCASE");
 	SymbolStruct CDAAAR = internAndExportCLSymbol("CDAAAR");
 	SymbolStruct CDAADR = internAndExportCLSymbol("CDAADR");
@@ -396,7 +390,7 @@ public interface CommonLispSymbols {
 	SymbolStruct DECF = internAndExportCLSymbol("DECF");
 	SymbolStruct DECLAIM = internAndExportCLSymbol("DECLAIM");
 	// DECLARATION
-	SpecialOperatorStructImpl DECLARE = SpecialOperatorStructImpl.valueOf("DECLARE", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct DECLARE = internAndExportCLSymbol("DECLARE");
 	SymbolStruct DECODE_FLOAT = internAndExportCLSymbol("DECODE-FLOAT");
 	SymbolStruct DECODE_UNIVERSAL_TIME = internAndExportCLSymbol("DECODE-UNIVERSAL-TIME");
 	SymbolStruct DEFCLASS = internAndExportCLSymbol("DEFCLASS");
@@ -468,7 +462,7 @@ public interface CommonLispSymbols {
 	SymbolStruct ERROR = internAndExportCLSymbol("ERROR");
 	SymbolStruct ETYPECASE = internAndExportCLSymbol("ETYPECASE");
 	SymbolStruct EVAL = internAndExportCLSymbol("EVAL");
-	SpecialOperatorStructImpl EVAL_WHEN = SpecialOperatorStructImpl.valueOf("EVAL-WHEN", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct EVAL_WHEN = internAndExportCLSymbol("EVAL-WHEN");
 	SymbolStruct EVENP = internAndExportCLSymbol("EVENP");
 	SymbolStruct EVERY = internAndExportCLSymbol("EVERY");
 	SymbolStruct EXP = internAndExportCLSymbol("EXP");
@@ -503,7 +497,7 @@ public interface CommonLispSymbols {
 	SymbolStruct FINISH_OUTPUT = internAndExportCLSymbol("FINISH-OUTPUT");
 	SymbolStruct FIRST = internAndExportCLSymbol("FIRST");
 	SymbolStruct FIXNUM = internAndExportCLSymbol("FIXNUM");
-	SpecialOperatorStructImpl FLET = SpecialOperatorStructImpl.valueOf("FLET", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct FLET = internAndExportCLSymbol("FLET");
 	SymbolStruct FLOAT = internAndExportCLSymbol("FLOAT");
 	SymbolStruct FLOAT_DIGITS = internAndExportCLSymbol("FLOAT-DIGITS");
 	SymbolStruct FLOAT_PRECISION = internAndExportCLSymbol("FLOAT-PRECISION");
@@ -525,7 +519,7 @@ public interface CommonLispSymbols {
 	SymbolStruct FTRUNCATE = internAndExportCLSymbol("FTRUNCATE");
 	// FTYPE
 	SymbolStruct FUNCALL = internAndExportCLSymbol("FUNCALL");
-	SpecialOperatorStructImpl FUNCTION = SpecialOperatorStructImpl.valueOf("FUNCTION", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct FUNCTION = internAndExportCLSymbol("FUNCTION");
 	SymbolStruct FUNCTION_KEYWORDS = internAndExportCLSymbol("FUNCTION-KEYWORDS");
 	SymbolStruct FUNCTION_LAMBDA_EXPRESSION = internAndExportCLSymbol("FUNCTION-LAMBDA-EXPRESSION");
 	SymbolStruct FUNCTIONP = internAndExportCLSymbol("FUNCTIONP");
@@ -545,7 +539,7 @@ public interface CommonLispSymbols {
 	SymbolStruct GET_UNIVERSAL_TIME = internAndExportCLSymbol("GET-UNIVERSAL-TIME");
 	SymbolStruct GETF = internAndExportCLSymbol("GETF");
 	SymbolStruct GETHASH = internAndExportCLSymbol("GETHASH");
-	SpecialOperatorStructImpl GO = SpecialOperatorStructImpl.valueOf("GO", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct GO = internAndExportCLSymbol("GO");
 	SymbolStruct GRAPHIC_CHAR_P = internAndExportCLSymbol("GRAPHIC-CHAR-P");
 	SymbolStruct HANDLER_BIND = internAndExportCLSymbol("HANDLER-BIND");
 	SymbolStruct HANDLER_CASE = internAndExportCLSymbol("HANDLER-CASE");
@@ -558,7 +552,7 @@ public interface CommonLispSymbols {
 	SymbolStruct HASH_TABLE_TEST = internAndExportCLSymbol("HASH-TABLE-TEST");
 	SymbolStruct HOST_NAMESTRING = internAndExportCLSymbol("HOST-NAMESTRING");
 	SymbolStruct IDENTITY = internAndExportCLSymbol("IDENTITY");
-	SpecialOperatorStructImpl IF = SpecialOperatorStructImpl.valueOf("IF", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct IF = internAndExportCLSymbol("IF");
 	// IGNORABLE
 	// IGNORE
 	SymbolStruct IGNORE_ERRORS = internAndExportCLSymbol("IGNORE-ERRORS");
@@ -585,8 +579,8 @@ public interface CommonLispSymbols {
 	SymbolStruct ISQRT = internAndExportCLSymbol("ISQRT");
 	SymbolStruct KEYWORD = internAndExportCLSymbol("KEYWORD");
 	SymbolStruct KEYWORDP = internAndExportCLSymbol("KEYWORDP");
-	SpecialOperatorStructImpl LABELS = SpecialOperatorStructImpl.valueOf("LABELS", GlobalPackageStruct.COMMON_LISP);
-	SpecialOperatorStructImpl LAMBDA = SpecialOperatorStructImpl.valueOf("LAMBDA", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct LABELS = internAndExportCLSymbol("LABELS");
+	SymbolStruct LAMBDA = internAndExportCLSymbol("LAMBDA");
 	// LAMBDA-LIST-KEYWORDS
 	// LAMBDA-PARAMETERS-LIMIT
 	SymbolStruct LAST = internAndExportCLSymbol("LAST");
@@ -611,8 +605,8 @@ public interface CommonLispSymbols {
 	// LEAST-POSITIVE-SHORT-FLOAT
 	// LEAST-POSITIVE-SINGLE-FLOAT
 	SymbolStruct LENGTH = internAndExportCLSymbol("LENGTH");
-	SpecialOperatorStructImpl LET = SpecialOperatorStructImpl.valueOf("LET", GlobalPackageStruct.COMMON_LISP);
-	SpecialOperatorStructImpl LET_STAR = SpecialOperatorStructImpl.valueOf("LET*", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct LET = internAndExportCLSymbol("LET");
+	SymbolStruct LET_STAR = internAndExportCLSymbol("LET*");
 	SymbolStruct LISP_IMPLEMENTATION_TYPE = internAndExportCLSymbol("LISP-IMPLEMENTATION-TYPE");
 	SymbolStruct LISP_IMPLEMENTATION_VERSION = internAndExportCLSymbol("LISP-IMPLEMENTATION-VERSION");
 	SymbolStruct LIST = internAndExportCLSymbol("LIST");
@@ -623,8 +617,8 @@ public interface CommonLispSymbols {
 	SymbolStruct LISTP = internAndExportCLSymbol("LISTP");
 	SymbolStruct LOAD = internAndExportCLSymbol("LOAD");
 	SymbolStruct LOAD_LOGICAL_PATHNAME_TRANSLATIONS = internAndExportCLSymbol("LOAD-LOGICAL-PATHNAME-TRANSLATIONS");
-	SpecialOperatorStructImpl LOAD_TIME_VALUE = SpecialOperatorStructImpl.valueOf("LOAD-TIME-VALUE", GlobalPackageStruct.COMMON_LISP);
-	SpecialOperatorStructImpl LOCALLY = SpecialOperatorStructImpl.valueOf("LOCALLY", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct LOAD_TIME_VALUE = internAndExportCLSymbol("LOAD-TIME-VALUE");
+	SymbolStruct LOCALLY = internAndExportCLSymbol("LOCALLY");
 	SymbolStruct LOG = internAndExportCLSymbol("LOG");
 	SymbolStruct LOGAND = internAndExportCLSymbol("LOGAND");
 	SymbolStruct LOGANDC1 = internAndExportCLSymbol("LOGANDC1");
@@ -655,7 +649,7 @@ public interface CommonLispSymbols {
 	SymbolStruct MACRO_FUNCTION = internAndExportCLSymbol("MACRO-FUNCTION");
 	SymbolStruct MACROEXPAND = internAndExportCLSymbol("MACROEXPAND");
 	SymbolStruct MACROEXPAND_1 = internAndExportCLSymbol("MACROEXPAND-1");
-	SpecialOperatorStructImpl MACROLET = SpecialOperatorStructImpl.valueOf("MACROLET", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct MACROLET = internAndExportCLSymbol("MACROLET");
 	SymbolStruct MAKE_ARRAY = internAndExportCLSymbol("MAKE-ARRAY");
 	SymbolStruct MAKE_BROADCAST_STREAM = internAndExportCLSymbol("MAKE-BROADCAST-STREAM");
 	SymbolStruct MAKE_CONCATENATED_STREAM = internAndExportCLSymbol("MAKE-CONCATENATED-STREAM");
@@ -716,9 +710,9 @@ public interface CommonLispSymbols {
 	// MOST-POSITIVE-SINGLE-FLOAT
 	SymbolStruct MUFFLE_WARNING = internAndExportCLSymbol("MUFFLE-WARNING");
 	SymbolStruct MULTIPLE_VALUE_BIND = internAndExportCLSymbol("MULTIPLE-VALUE-BIND");
-	SpecialOperatorStructImpl MULTIPLE_VALUE_CALL = SpecialOperatorStructImpl.valueOf("MULTIPLE-VALUE-CALL", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct MULTIPLE_VALUE_CALL = internAndExportCLSymbol("MULTIPLE-VALUE-CALL");
 	SymbolStruct MULTIPLE_VALUE_LIST = internAndExportCLSymbol("MULTIPLE-VALUE-LIST");
-	SpecialOperatorStructImpl MULTIPLE_VALUE_PROG1 = SpecialOperatorStructImpl.valueOf("MULTIPLE-VALUE-PROG1", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct MULTIPLE_VALUE_PROG1 = internAndExportCLSymbol("MULTIPLE-VALUE-PROG1");
 	SymbolStruct MULTIPLE_VALUE_SETQ = internAndExportCLSymbol("MULTIPLE-VALUE-SETQ");
 	// MULTIPLE-VALUES-LIMIT
 	SymbolStruct NAME_CHAR = internAndExportCLSymbol("NAME-CHAR");
@@ -820,15 +814,15 @@ public interface CommonLispSymbols {
 	SymbolStruct PROG_STAR = internAndExportCLSymbol("PROG*");
 	SymbolStruct PROG1 = internAndExportCLSymbol("PROG1");
 	SymbolStruct PROG2 = internAndExportCLSymbol("PROG2");
-	SpecialOperatorStructImpl PROGN = SpecialOperatorStructImpl.valueOf("PROGN", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct PROGN = internAndExportCLSymbol("PROGN");
 	SymbolStruct PROGRAM_ERROR = internAndExportCLSymbol("PROGRAM-ERROR");
-	SpecialOperatorStructImpl PROGV = SpecialOperatorStructImpl.valueOf("PROGV", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct PROGV = internAndExportCLSymbol("PROGV");
 	SymbolStruct PROVIDE = internAndExportCLSymbol("PROVIDE");
 	SymbolStruct PSETF = internAndExportCLSymbol("PSETF");
 	SymbolStruct PSETQ = internAndExportCLSymbol("PSETQ");
 	SymbolStruct PUSH = internAndExportCLSymbol("PUSH");
 	SymbolStruct PUSHNEW = internAndExportCLSymbol("PUSHNEW");
-	SpecialOperatorStructImpl QUOTE = SpecialOperatorStructImpl.valueOf("QUOTE", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct QUOTE = internAndExportCLSymbol("QUOTE");
 	SymbolStruct RANDOM = internAndExportCLSymbol("RANDOM");
 	SymbolStruct RANDOM_STATE = internAndExportCLSymbol("RANDOM-STATE");
 	SymbolStruct RANDOM_STATE_P = internAndExportCLSymbol("RANDOM-STATE-P");
@@ -876,7 +870,7 @@ public interface CommonLispSymbols {
 	SymbolStruct RESTART_CASE = internAndExportCLSymbol("RESTART-CASE");
 	SymbolStruct RESTART_NAME = internAndExportCLSymbol("RESTART-NAME");
 	SymbolStruct RETURN = internAndExportCLSymbol("RETURN");
-	SpecialOperatorStructImpl RETURN_FROM = SpecialOperatorStructImpl.valueOf("RETURN-FROM", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct RETURN_FROM = internAndExportCLSymbol("RETURN-FROM");
 	SymbolStruct REVAPPEND = internAndExportCLSymbol("REVAPPEND");
 	SymbolStruct REVERSE = internAndExportCLSymbol("REVERSE");
 	SymbolStruct ROOM = internAndExportCLSymbol("ROOM");
@@ -902,7 +896,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SET_PPRINT_DISPATCH = internAndExportCLSymbol("SET-PPRINT-DISPATCH");
 	SymbolStruct SET_SYNTAX_FROM_CHAR = internAndExportCLSymbol("SET-SYNTAX-FROM-CHAR");
 	SymbolStruct SETF = internAndExportCLSymbol("SETF");
-	SpecialOperatorStructImpl SETQ = SpecialOperatorStructImpl.valueOf("SETQ", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct SETQ = internAndExportCLSymbol("SETQ");
 	SymbolStruct SEVENTH = internAndExportCLSymbol("SEVENTH");
 	SymbolStruct SHADOW = internAndExportCLSymbol("SHADOW");
 	SymbolStruct SHADOWING_IMPORT = internAndExportCLSymbol("SHADOWING-IMPORT");
@@ -1007,7 +1001,7 @@ public interface CommonLispSymbols {
 	SymbolStruct SXHASH = internAndExportCLSymbol("SXHASH");
 	SymbolStruct SYMBOL = internAndExportCLSymbol("SYMBOL");
 	SymbolStruct SYMBOL_FUNCTION = internAndExportCLSymbol("SYMBOL-FUNCTION");
-	SpecialOperatorStructImpl SYMBOL_MACROLET = SpecialOperatorStructImpl.valueOf("SYMBOL-MACROLET", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct SYMBOL_MACROLET = internAndExportCLSymbol("SYMBOL-MACROLET");
 	SymbolStruct SYMBOL_NAME = internAndExportCLSymbol("SYMBOL-NAME");
 	SymbolStruct SYMBOL_PACKAGE = internAndExportCLSymbol("SYMBOL-PACKAGE");
 	SymbolStruct SYMBOL_PLIST = internAndExportCLSymbol("SYMBOL-PLIST");
@@ -1016,15 +1010,15 @@ public interface CommonLispSymbols {
 	SymbolStruct SYNONYM_STREAM = internAndExportCLSymbol("SYNONYM-STREAM");
 	SymbolStruct SYNONYM_STREAM_SYMBOL = internAndExportCLSymbol("SYNONYM-STREAM-SYMBOL");
 	// T
-	SpecialOperatorStructImpl TAGBODY = SpecialOperatorStructImpl.valueOf("TAGBODY", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct TAGBODY = internAndExportCLSymbol("TAGBODY");
 	SymbolStruct TAILP = internAndExportCLSymbol("TAILP");
 	SymbolStruct TAN = internAndExportCLSymbol("TAN");
 	SymbolStruct TANH = internAndExportCLSymbol("TANH");
 	SymbolStruct TENTH = internAndExportCLSymbol("TENTH");
 	SymbolStruct TERPRI = internAndExportCLSymbol("TERPRI");
-	SpecialOperatorStructImpl THE = SpecialOperatorStructImpl.valueOf("THE", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct THE = internAndExportCLSymbol("THE");
 	SymbolStruct THIRD = internAndExportCLSymbol("THIRD");
-	SpecialOperatorStructImpl THROW = SpecialOperatorStructImpl.valueOf("THROW", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct THROW = internAndExportCLSymbol("THROW");
 	SymbolStruct TIME = internAndExportCLSymbol("TIME");
 	SymbolStruct TRACE = internAndExportCLSymbol("TRACE");
 	SymbolStruct TRANSLATE_LOGICAL_PATHNAME = internAndExportCLSymbol("TRANSLATE-LOGICAL-PATHNAME");
@@ -1054,7 +1048,7 @@ public interface CommonLispSymbols {
 	SymbolStruct UNSIGNED_BYTE = internAndExportCLSymbol("UNSIGNED-BYTE");
 	SymbolStruct UNTRACE = internAndExportCLSymbol("UNTRACE");
 	SymbolStruct UNUSE_PACKAGE = internAndExportCLSymbol("UNUSE-PACKAGE");
-	SpecialOperatorStructImpl UNWIND_PROTECT = SpecialOperatorStructImpl.valueOf("UNWIND-PROTECT", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct UNWIND_PROTECT = internAndExportCLSymbol("UNWIND-PROTECT");
 	SymbolStruct UPDATE_INSTANCE_FOR_DIFFERENT_CLASS = internAndExportCLSymbol("UPDATE-INSTANCE-FOR-DIFFERENT-CLASS");
 	SymbolStruct UPDATE_INSTANCE_FOR_REDEFINED_CLASS = internAndExportCLSymbol("UPDATE-INSTANCE-FOR-REDEFINED-CLASS");
 	SymbolStruct UPGRADED_ARRAY_ELEMENT_TYPE = internAndExportCLSymbol("UPGRADED-ARRAY-ELEMENT-TYPE");
@@ -1099,11 +1093,10 @@ public interface CommonLispSymbols {
 	SymbolStruct ZEROP = internAndExportCLSymbol("ZEROP");
 
 	// COMPILER
-	SpecialOperatorStructImpl DEFSTRUCT_SO = SpecialOperatorStructImpl.valueOf("%DEFSTRUCT", GlobalPackageStruct.COMPILER);
-	// TODO: Temporarily having this in the COMMON_LISP package
-	SpecialOperatorStructImpl MACRO_LAMBDA = SpecialOperatorStructImpl.valueOf("MACRO-LAMBDA", GlobalPackageStruct.COMPILER);
-	SpecialOperatorStructImpl TAIL_CALL = SpecialOperatorStructImpl.valueOf("%TAIL-CALL", GlobalPackageStruct.COMPILER);
-	SpecialOperatorStructImpl TAIL_RECURSION = SpecialOperatorStructImpl.valueOf("%TAIL-RECURSION", GlobalPackageStruct.COMPILER);
+	SymbolStruct DEFSTRUCT_SO = internAndExportCompilerSymbol("%DEFSTRUCT");
+	SymbolStruct MACRO_LAMBDA = internAndExportCompilerSymbol("MACRO-LAMBDA");
+	SymbolStruct TAIL_CALL = internAndExportCompilerSymbol("%TAIL-CALL");
+	SymbolStruct TAIL_RECURSION = internAndExportCompilerSymbol("%TAIL-RECURSION");
 
 	// System
 	SymbolStruct SYSTEM_IN_PACKAGE = internAndExportSystemSymbol("%IN-PACKAGE");
@@ -1114,6 +1107,9 @@ public interface CommonLispSymbols {
 	SymbolStruct READ_DISPATCH_CHARACTER = internAndExportSystemSymbol("READ-DISPATCH-CHARACTER");
 	SymbolStruct BIND_SYMBOL_FUNCTION = internAndExportSystemSymbol("BIND-SYMBOL-FUNCTION");
 	SymbolStruct UNBIND_SYMBOL_FUNCTION = internAndExportSystemSymbol("UNBIND-SYMBOL-FUNCTION");
+
+	SymbolStruct JAVA_CLASS_NAME = internAndExportSystemSymbol("%JAVA-CLASS-NAME");
+	SymbolStruct LISP_NAME = internAndExportSystemSymbol("%LISP-NAME");
 
 	SymbolStruct MACRO_FUNCTION_DEFINITION = GlobalPackageStruct.SYSTEM.intern("MACRO-FUNCTION-DEFINITION").getSymbol();
 	SymbolStruct SYMBOL_MACRO_DEFINITION = GlobalPackageStruct.SYSTEM.intern("SYMBOL-MACRO-DEFINITION").getSymbol();
@@ -1249,6 +1245,14 @@ public interface CommonLispSymbols {
 
 	SymbolStruct QUIT = internAndExportExtensionSymbol("QUIT");
 
+	private static <S extends SymbolStruct> S importAndExportCLSymbol(final S symbol) {
+		GlobalPackageStruct.COMMON_LISP.importSymbol(symbol);
+		symbol.setSymbolPackage(GlobalPackageStruct.COMMON_LISP);
+
+		GlobalPackageStruct.COMMON_LISP.export(symbol);
+		return symbol;
+	}
+
 	private static SymbolStruct internAndExportCLSymbol(final String name) {
 		final SymbolStruct symbol = GlobalPackageStruct.COMMON_LISP.intern(name).getSymbol();
 		GlobalPackageStruct.COMMON_LISP.export(symbol);
@@ -1271,5 +1275,17 @@ public interface CommonLispSymbols {
 		final SymbolStruct symbol = GlobalPackageStruct.EXTENSIONS.intern(name).getSymbol();
 		GlobalPackageStruct.EXTENSIONS.export(symbol);
 		return symbol;
+	}
+
+	private static <TYPE extends LispStruct> ConstantStructImpl<TYPE> internAndExportCLConstant(final String name) {
+		final ConstantStructImpl<TYPE> struct = ConstantStructImpl.valueOf(name, GlobalPackageStruct.COMMON_LISP);
+		GlobalPackageStruct.COMMON_LISP.export(struct);
+		return struct;
+	}
+
+	private static <TYPE extends LispStruct> VariableStructImpl<TYPE> internAndExportCLVariable(final String name) {
+		final VariableStructImpl<TYPE> struct = VariableStructImpl.valueOf(name, GlobalPackageStruct.COMMON_LISP);
+		GlobalPackageStruct.COMMON_LISP.export(struct);
+		return struct;
 	}
 }

@@ -8,7 +8,6 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
-import jcl.lang.PackageStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.internal.VariableStructImpl;
 import lombok.extern.log4j.Log4j2;
@@ -16,8 +15,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 class ProperListVariable extends VariableStructImpl<ListStruct> {
 
-	ProperListVariable(final String name, final PackageStruct symbolPackage) {
-		super(name, symbolPackage, NILStruct.INSTANCE);
+	ProperListVariable(final String name) {
+		super(name);
 	}
 
 	@Override

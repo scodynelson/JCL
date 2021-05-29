@@ -26,6 +26,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: *gensym-counter*
+#|
+(defvar *gensym-counter* 0
+  "Counter for generating unique GENSYM symbols.")
+(declaim (type unsigned-byte *gensym-counter*))
+|#
 ;; TODO: gensym
 ;; TODO: gentemp
 
@@ -49,7 +54,7 @@
 (defun (setf symbol-function) (symbol new-contents)
   "Sets the contents of symbol's function cell the new-contents provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolFunction"))
-  ($setSymbolFunction symbol new-contents))
+  ($setfSymbolFunction symbol new-contents))
 
 (defun symbol-plist (symbol)
   "Gets the plist value of the provided symbol."
@@ -59,7 +64,7 @@
 (defun (setf symbol-plist) (symbol new-plist)
   "Sets the contents of symbol's property-list cell the new-plist provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolPlist"))
-  ($setSymbolPlist symbol new-plist))
+  ($setfSymbolPlist symbol new-plist))
 
 (defun symbol-value (symbol)
   "Gets the value of the provided symbol."
@@ -69,7 +74,7 @@
 (defun (setf symbol-value) (symbol new-value)
   "Sets the contents of symbol's value cell the new-value provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolValue"))
-  ($setSymbolValue symbol new-value))
+  ($setfSymbolValue symbol new-value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -105,7 +110,7 @@
 (defun set (symbol value)
   "Sets the value of the provided symbol to the provided value."
   (declare (system::%java-class-name "jcl.symbols.functions.Set"))
-  ($setSymbolValue symbol value))
+  ($setfSymbolValue symbol value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

@@ -30,7 +30,7 @@ public interface SymbolStruct extends LispStruct {
 
 	LispStruct symbolValue();
 
-	LispStruct setSymbolValue(final LispStruct value);
+	LispStruct setfSymbolValue(final LispStruct newValue);
 
 	BooleanStruct fBoundP();
 
@@ -38,7 +38,7 @@ public interface SymbolStruct extends LispStruct {
 
 	FunctionStruct symbolFunction();
 
-	FunctionStruct setSymbolFunction(final FunctionStruct function);
+	FunctionStruct setfSymbolFunction(final FunctionStruct newFunction);
 
 	/**
 	 * Getter for symbol {@link ListStruct} properties.
@@ -47,7 +47,7 @@ public interface SymbolStruct extends LispStruct {
 	 */
 	ListStruct symbolPlist();
 
-	ListStruct setSymbolPlist(final ListStruct properties);
+	ListStruct setfSymbolPlist(final ListStruct newPlist);
 
 	/**
 	 * Retrieves the property from the symbol {@link ListStruct} properties associated with the provided {@code

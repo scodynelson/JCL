@@ -37,7 +37,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 			= new GetPropertiesResult(INSTANCE, INSTANCE, INSTANCE);
 
 	static {
-		INSTANCE.setSymbolValue(INSTANCE);
+		INSTANCE.setfSymbolValue(INSTANCE);
 		INSTANCE.setConstant();
 
 		GlobalPackageStruct.COMMON_LISP.importSymbol(INSTANCE);

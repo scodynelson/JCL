@@ -27,14 +27,14 @@ final class BootstrapSymbols {
 				EmptyStreamStructImpl.INSTANCE, EmptyStreamStructImpl.INSTANCE
 		);
 		terminalIo.setInteractive(true);
-		CommonLispSymbols.TERMINAL_IO.setSymbolValue(terminalIo);
+		CommonLispSymbols.TERMINAL_IO.setfSymbolValue(terminalIo);
 
-		CommonLispSymbols.DEBUG_IO.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.ERROR_OUTPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.QUERY_IO.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.STANDARD_INPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.STANDARD_OUTPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
-		CommonLispSymbols.TRACE_OUTPUT.setSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.DEBUG_IO.setfSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.ERROR_OUTPUT.setfSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.QUERY_IO.setfSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.STANDARD_INPUT.setfSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.STANDARD_OUTPUT.setfSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
+		CommonLispSymbols.TRACE_OUTPUT.setfSymbolValue(SynonymStreamStruct.toSynonymStream(CommonLispSymbols.TERMINAL_IO));
 	}
 
 	static void bootstrapConstants() {
@@ -125,39 +125,38 @@ final class BootstrapSymbols {
 
 		// Done in Bootstrap Functions for now
 //		CommonLispSymbols.MACROEXPAND_HOOK_VAR.setValue(funcallFunction);
-		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_PATHNAME_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_TRUENAME_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.COMPILE_PRINT_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.COMPILE_VERBOSE_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_PRINT_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.LOAD_VERBOSE_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.MODULES_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_PATHNAME_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_TRUENAME_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_PRINT_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.COMPILE_VERBOSE_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_PRINT_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.LOAD_VERBOSE_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.MODULES_VAR.setfSymbolValue(NILStruct.INSTANCE);
 
-		CommonLispSymbols.GENSYM_COUNTER_VAR.setSymbolValue(IntegerStruct.ZERO);
+		CommonLispSymbols.GENSYM_COUNTER_VAR.setfSymbolValue(IntegerStruct.ZERO);
 
-		CommonLispSymbols.PACKAGE_VAR.setSymbolValue(GlobalPackageStruct.COMMON_LISP_USER);
+		CommonLispSymbols.PACKAGE_VAR.setfSymbolValue(GlobalPackageStruct.COMMON_LISP_USER);
 
-		CommonLispSymbols.PRINT_ARRAY_VAR.setSymbolValue(TStruct.INSTANCE);
-		CommonLispSymbols.PRINT_BASE_VAR.setSymbolValue(IntegerStruct.TEN);
-		CommonLispSymbols.PRINT_CASE_VAR.initMatches();
-		CommonLispSymbols.PRINT_CASE_VAR.setSymbolValue(CommonLispSymbols.UPCASE_KEYWORD);
-		CommonLispSymbols.PRINT_RADIX_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.PRINT_CIRCLE_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.PRINT_ESCAPE_VAR.setSymbolValue(TStruct.INSTANCE);
-		CommonLispSymbols.PRINT_GENSYM_VAR.setSymbolValue(TStruct.INSTANCE);
-		CommonLispSymbols.PRINT_PRETTY_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.PRINT_READABLY_VAR.setSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_ARRAY_VAR.setfSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.PRINT_BASE_VAR.setfSymbolValue(IntegerStruct.TEN);
+		CommonLispSymbols.PRINT_CASE_VAR.setfSymbolValue(CommonLispSymbols.UPCASE_KEYWORD);
+		CommonLispSymbols.PRINT_RADIX_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_CIRCLE_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_ESCAPE_VAR.setfSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.PRINT_GENSYM_VAR.setfSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.PRINT_PRETTY_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.PRINT_READABLY_VAR.setfSymbolValue(NILStruct.INSTANCE);
 
-		CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.setSymbolValue(PathnameStruct.toPathname(""));
+		CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.setfSymbolValue(PathnameStruct.toPathname(""));
 
-		CommonLispSymbols.RANDOM_STATE_VAR.setSymbolValue(RandomStateStruct.toLispRandomState());
+		CommonLispSymbols.RANDOM_STATE_VAR.setfSymbolValue(RandomStateStruct.toLispRandomState());
 
-		CommonLispSymbols.READ_BASE_VAR.setSymbolValue(IntegerStruct.TEN);
-		CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.setSymbolValue(CommonLispSymbols.SINGLE_FLOAT);
-		CommonLispSymbols.READ_EVAL_VAR.setSymbolValue(TStruct.INSTANCE);
-		CommonLispSymbols.READ_SUPPRESS_VAR.setSymbolValue(NILStruct.INSTANCE);
-		CommonLispSymbols.READTABLE_VAR.setSymbolValue(ReadtableStruct.toReadtable());
+		CommonLispSymbols.READ_BASE_VAR.setfSymbolValue(IntegerStruct.TEN);
+		CommonLispSymbols.READ_DEFAULT_FLOAT_FORMAT_VAR.setfSymbolValue(CommonLispSymbols.SINGLE_FLOAT);
+		CommonLispSymbols.READ_EVAL_VAR.setfSymbolValue(TStruct.INSTANCE);
+		CommonLispSymbols.READ_SUPPRESS_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.READTABLE_VAR.setfSymbolValue(ReadtableStruct.toReadtable());
 	}
 }

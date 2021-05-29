@@ -29,11 +29,11 @@ public final class KeywordStructImpl extends SymbolStructImpl implements Keyword
 	}
 
 	@Override
-	public LispStruct setSymbolValue(final LispStruct value) {
+	public LispStruct setfSymbolValue(final LispStruct newValue) {
 		if (isConstant) {
 			throw new SimpleErrorException("Can't set SYMBOL-VALUE of " + this + '.');
 		}
-		return super.setSymbolValue(value);
+		return super.setfSymbolValue(newValue);
 	}
 
 	/*

@@ -9,7 +9,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: defvar char-code-limit
-
+#|
+(defconstant char-code-limit
+  #-unicode 256
+  #+unicode 65536
+  "The upper exclusive bound on values produced by CHAR-CODE.")
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun character (character)

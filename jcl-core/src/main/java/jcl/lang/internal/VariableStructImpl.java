@@ -24,9 +24,9 @@ public class VariableStructImpl<TYPE extends LispStruct> extends SymbolStructImp
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public LispStruct setSymbolValue(final LispStruct value) {
+	public LispStruct setfSymbolValue(final LispStruct newValue) {
 		// TODO: This isn't really safe...
-		variableValue = (TYPE) value;
-		return super.setSymbolValue(value);
+		variableValue = (TYPE) newValue;
+		return super.setfSymbolValue(newValue);
 	}
 }

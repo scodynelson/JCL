@@ -9,7 +9,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: def-var: *read-base* *read-default-float-format* *read-eval* *read-suppress* *readtable*
+#|
+(defvar *read-eval* t
+  "If false, then the #. read macro is disabled.")
 
+(defvar *read-default-float-format* 'single-float "Float format for 1.0E1")
+(declaim (type (member short-float single-float double-float long-float)
+	       *read-default-float-format*))
+
+(defvar *read-suppress* nil
+  "Suppresses most interpreting of the reader when T")
+
+(defvar *read-base* 10
+  "The radix that Lisp reads numbers in.")
+(declaim (type (integer 2 36) *read-base*))
+
+(defvar *readtable*)
+(declaim (type readtable *readtable*))
+(setf (documentation '*readtable* 'variable)
+      "Variable bound to current readtable.")
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun copy-readtable (&optional (from-readtable *readtable*) to-readtable)

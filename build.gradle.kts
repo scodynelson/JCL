@@ -1,5 +1,5 @@
 plugins {
-	id("com.github.ben-manes.versions") version "0.38.0"
+	id("com.github.ben-manes.versions") version "0.39.0"
 }
 
 allprojects {
@@ -68,7 +68,7 @@ subprojects {
 	dependencies {
 		implementation("com.google.guava:guava:30.1.1-jre")
 		implementation("com.ibm.icu:icu4j:69.1")
-		implementation("commons-io:commons-io:2.8.0")
+		implementation("commons-io:commons-io:2.9.0")
 		implementation("org.apache.commons:commons-collections4:4.4")
 		implementation("org.apache.commons:commons-lang3:3.12.0")
 		implementation("org.apache.commons:commons-math3:3.6.1")

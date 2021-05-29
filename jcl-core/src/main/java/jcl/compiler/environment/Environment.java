@@ -430,7 +430,7 @@ public class Environment extends StandardObjectStruct {
 		// TODO: handle constants
 		if (CollectionUtils.isEmpty(lexicalSymbolBindings.get(var))) {
 			if (CollectionUtils.isEmpty(dynamicSymbolBindings.get(var))) {
-				var.setSymbolValue(value);
+				var.setfSymbolValue(value);
 			} else {
 				setDynamicSymbolValue(var, value);
 			}
@@ -600,7 +600,7 @@ public class Environment extends StandardObjectStruct {
 
 	public SymbolMacroExpanderInter getSymbolMacroExpander(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
-			return null;
+			return SymbolStruct.getSymbolMacroDefinition(var);
 		}
 		return symbolMacroBindings.get(var).peek();
 	}

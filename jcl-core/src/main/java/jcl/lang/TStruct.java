@@ -20,7 +20,7 @@ public final class TStruct extends BooleanStructImpl {
 	public static final TStruct INSTANCE = new TStruct();
 
 	static {
-		INSTANCE.setSymbolValue(INSTANCE);
+		INSTANCE.setfSymbolValue(INSTANCE);
 		INSTANCE.setConstant();
 
 		GlobalPackageStruct.COMMON_LISP.importSymbol(INSTANCE);

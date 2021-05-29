@@ -11,7 +11,7 @@ public interface KeywordStruct extends SymbolStruct {
 	static KeywordStruct toLispKeyword(final String name) {
 		final KeywordStructImpl struct = new KeywordStructImpl(name);
 
-		struct.setSymbolValue(struct);
+		struct.setfSymbolValue(struct);
 		struct.setConstant();
 
 		GlobalPackageStruct.KEYWORD.importSymbol(struct);

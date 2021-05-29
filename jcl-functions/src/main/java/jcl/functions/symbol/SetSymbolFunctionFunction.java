@@ -36,7 +36,7 @@ public final class SetSymbolFunctionFunction extends BuiltInFunctionStructImpl {
 		final SymbolStruct symbol = arguments.getRequiredArgument(SYMBOL_ARGUMENT, SymbolStruct.class);
 		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
 
-		symbol.setSymbolFunction(function);
+		symbol.setfSymbolFunction(function);
 		return function;
 	}
 }

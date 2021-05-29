@@ -169,9 +169,9 @@ public final class InternalLoad {
 		final LispStruct previousLoadPathname = CommonLispSymbols.LOAD_PATHNAME_VAR.symbolValue();
 		final LispStruct previousLoadTruename = CommonLispSymbols.LOAD_TRUENAME_VAR.symbolValue();
 
-		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setSymbolValue(filespecPathname);
+		CommonLispSymbols.COMPILE_FILE_PATHNAME_VAR.setfSymbolValue(filespecPathname);
 		final PathnameStruct filespecTruename = PathnameStruct.toPathname(pathnameFile.toURI().toString());
-		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setSymbolValue(filespecTruename);
+		CommonLispSymbols.COMPILE_FILE_TRUENAME_VAR.setfSymbolValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = CommonLispSymbols.READTABLE_VAR.getVariableValue();
 		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
@@ -192,11 +192,11 @@ public final class InternalLoad {
 				throw new FileErrorException("Cannot LOAD file with unsupported extension: " + pathnameFile, filespecFileStream);
 			}
 		} finally {
-			CommonLispSymbols.LOAD_TRUENAME_VAR.setSymbolValue(previousLoadTruename);
-			CommonLispSymbols.LOAD_PATHNAME_VAR.setSymbolValue(previousLoadPathname);
+			CommonLispSymbols.LOAD_TRUENAME_VAR.setfSymbolValue(previousLoadTruename);
+			CommonLispSymbols.LOAD_PATHNAME_VAR.setfSymbolValue(previousLoadPathname);
 
-			CommonLispSymbols.PACKAGE_VAR.setSymbolValue(previousPackage);
-			CommonLispSymbols.READTABLE_VAR.setSymbolValue(previousReadtable);
+			CommonLispSymbols.PACKAGE_VAR.setfSymbolValue(previousPackage);
+			CommonLispSymbols.READTABLE_VAR.setfSymbolValue(previousReadtable);
 		}
 	}
 

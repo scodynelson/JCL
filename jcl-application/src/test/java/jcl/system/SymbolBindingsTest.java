@@ -80,7 +80,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSymbolValue() {
-		final String setSymbolValue = "($setSymbolValue 'a 1)";
+		final String setSymbolValue = "($setfSymbolValue 'a 1)";
 
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(setSymbolValue),
@@ -202,7 +202,7 @@ class SymbolBindingsTest {
 
 		test = """
 				(let ((a 2))
-				  ($setSymbolValue 'a 3)
+				  ($setfSymbolValue 'a 3)
 				  a)
 										   """;
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -228,7 +228,7 @@ class SymbolBindingsTest {
 				(let ((a 4))
 				  (declare (special a))
 				  (let ((b ($symbolValue 'a)))
-				    ($setSymbolValue 'a 5)
+				    ($setfSymbolValue 'a 5)
 				    (values a b)))
 										     """;
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -285,7 +285,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSpecialBindings_SymbolValue() {
-		String test = "($setSymbolValue 'x 6)";
+		String test = "($setfSymbolValue 'x 6)";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -381,7 +381,7 @@ class SymbolBindingsTest {
 
 	@Test
 	void testSpecialBindings_Shadowing() {
-		String test = "($setSymbolValue 'x 6)";
+		String test = "($setfSymbolValue 'x 6)";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,

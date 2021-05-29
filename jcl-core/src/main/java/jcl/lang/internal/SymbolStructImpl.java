@@ -92,7 +92,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public SymbolStruct makunbound() {
-		setSymbolValue(null);
+		setfSymbolValue(null);
 		return this;
 	}
 
@@ -105,12 +105,12 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public LispStruct setSymbolValue(final LispStruct value) {
+	public LispStruct setfSymbolValue(final LispStruct newValue) {
 		if (isConstant) {
 			throw new ProgramErrorException("Can't set value for constant " + name + '.');
 		}
-		this.value = value;
-		return value;
+		value = newValue;
+		return newValue;
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public SymbolStruct fMakunbound() {
-		setSymbolFunction(null);
+		setfSymbolFunction(null);
 		return this;
 	}
 
@@ -133,9 +133,9 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public FunctionStruct setSymbolFunction(final FunctionStruct function) {
-		this.function = function;
-		return function;
+	public FunctionStruct setfSymbolFunction(final FunctionStruct newFunction) {
+		function = newFunction;
+		return newFunction;
 	}
 
 	@Override
@@ -147,9 +147,9 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 	}
 
 	@Override
-	public ListStruct setSymbolPlist(final ListStruct properties) {
-		this.properties = properties;
-		return properties;
+	public ListStruct setfSymbolPlist(final ListStruct newPlist) {
+		properties = newPlist;
+		return newPlist;
 	}
 
 	@Override

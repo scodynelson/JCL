@@ -204,7 +204,7 @@ public final class InternalCompile {
 
 			final ClassWriter cw = currentClass.getClassWriter();
 
-			cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+			cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 			                  className,
 			                  null,
 			                  GenerationConstants.JAVA_OBJECT_NAME,

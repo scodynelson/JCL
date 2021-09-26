@@ -10,11 +10,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.lang.PackageStruct;
 import jcl.lang.internal.KeywordPackageStructImpl;
+import lombok.experimental.UtilityClass;
 
 /**
  * The {@link GlobalPackageStruct} is the global location for system defined packages.
  */
 @SuppressWarnings("all")
+@UtilityClass
 public final class GlobalPackageStruct {
 
 	public static final Map<String, PackageStruct> ALL_PACKAGES = new ConcurrentHashMap<>();
@@ -49,8 +51,5 @@ public final class GlobalPackageStruct {
 
 		COMMON_LISP_USER.usePackage(COMMON_LISP);
 		COMMON_LISP_USER.usePackage(EXTENSIONS);
-	}
-
-	private GlobalPackageStruct() {
 	}
 }

@@ -17,6 +17,7 @@ import jcl.lang.TStruct;
 import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 
+@SuppressWarnings("all")
 public interface CommonLispSymbols {
 
 	ConstantStructImpl<?> AND_ALLOW_OTHER_KEYS = internAndExportCLConstant("&ALLOW-OTHER-KEYS");

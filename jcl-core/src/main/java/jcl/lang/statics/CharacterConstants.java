@@ -17,7 +17,7 @@ import lombok.experimental.UtilityClass;
  */
 @SuppressWarnings("all")
 @UtilityClass
-public class CharacterConstants {
+public final class CharacterConstants {
 
 	// CharacterStruct Standard-Char Constants
 

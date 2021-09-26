@@ -17,10 +17,12 @@ import java.util.Stack;
 import jcl.compiler.struct.specialoperator.go.GoStruct;
 import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.classes.StandardObjectStruct;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
+import jcl.lang.statics.CommonLispSymbols;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class Environment extends StandardObjectStruct {
@@ -552,14 +554,25 @@ public class Environment extends StandardObjectStruct {
 
 	public boolean hasMacroFunctionExpander(final SymbolStruct var) {
 		return !CollectionUtils.isEmpty(macroFunctionBindings.get(var))
-				|| (SymbolStruct.getMacroFunctionDefinition(var) != null);
+				|| (getMacroFunctionDefinition(var) != null);
 	}
 
 	public MacroFunctionExpanderInter getMacroFunctionExpander(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(macroFunctionBindings.get(var))) {
-			return SymbolStruct.getMacroFunctionDefinition(var);
+			return getMacroFunctionDefinition(var);
 		}
 		return macroFunctionBindings.get(var).peek();
+	}
+
+	private static MacroFunctionExpanderInter getMacroFunctionDefinition(final SymbolStruct symbol) {
+		final LispStruct definition = symbol.getProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, NILStruct.INSTANCE);
+		if (NILStruct.INSTANCE.eq(definition)) {
+			return null; // TODO: return null??
+		}
+		if (!(definition instanceof MacroFunctionExpanderInter)) {
+			throw new IllegalStateException("Invalid macro-function definition: " + definition);
+		}
+		return (MacroFunctionExpanderInter) definition;
 	}
 
 	public void setMacroFunctionExpander(final SymbolStruct var, final MacroFunctionExpanderInter macroFunction) {
@@ -595,14 +608,25 @@ public class Environment extends StandardObjectStruct {
 
 	public boolean hasSymbolMacroExpander(final SymbolStruct var) {
 		return !CollectionUtils.isEmpty(symbolMacroBindings.get(var))
-				|| (SymbolStruct.getSymbolMacroDefinition(var) != null);
+				|| (getSymbolMacroDefinition(var) != null);
 	}
 
 	public SymbolMacroExpanderInter getSymbolMacroExpander(final SymbolStruct var) {
 		if (CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
-			return SymbolStruct.getSymbolMacroDefinition(var);
+			return getSymbolMacroDefinition(var);
 		}
 		return symbolMacroBindings.get(var).peek();
+	}
+
+	private static SymbolMacroExpanderInter getSymbolMacroDefinition(final SymbolStruct symbol) {
+		final LispStruct definition = symbol.getProp(CommonLispSymbols.SYMBOL_MACRO_DEFINITION, NILStruct.INSTANCE);
+		if (NILStruct.INSTANCE.eq(definition)) {
+			return null; // TODO: return null??
+		}
+		if (!(definition instanceof SymbolMacroExpanderInter)) {
+			throw new IllegalStateException("Invalid symbol-macro definition: " + definition);
+		}
+		return (SymbolMacroExpanderInter) definition;
 	}
 
 	public void setSymbolMacroExpander(final SymbolStruct var, final SymbolMacroExpanderInter symbolMacro) {
@@ -634,5 +658,16 @@ public class Environment extends StandardObjectStruct {
 		if (!CollectionUtils.isEmpty(symbolMacroBindings.get(var))) {
 			symbolMacroBindings.get(var).pop();
 		}
+	}
+
+	private static FunctionStruct getSetfDefinition(final SymbolStruct symbol) {
+		final LispStruct definition = symbol.getProp(CommonLispSymbols.SETF_DEFINITION, NILStruct.INSTANCE);
+		if (NILStruct.INSTANCE.eq(definition)) {
+			return null; // TODO: return null??
+		}
+		if (!(definition instanceof FunctionStruct)) {
+			throw new IllegalStateException("Invalid setf definition: " + definition);
+		}
+		return (FunctionStruct) definition;
 	}
 }

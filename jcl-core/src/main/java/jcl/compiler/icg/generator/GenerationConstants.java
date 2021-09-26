@@ -50,6 +50,7 @@ import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
+import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.Type;
 
@@ -232,6 +233,8 @@ public interface GenerationConstants {
 	String JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_NAME = "toJavaReflectionMethod";
 
 	String JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(JavaMethodStruct.class, JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_NAME, String.class, Class.class, Class[].class);
+
+	String COMMON_LISP_SYMBOLS_NAME = Type.getInternalName(CommonLispSymbols.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

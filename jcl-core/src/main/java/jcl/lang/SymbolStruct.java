@@ -2,51 +2,149 @@ package jcl.lang;
 
 import java.util.Optional;
 
-import jcl.lang.function.expander.MacroFunctionExpanderInter;
-import jcl.lang.function.expander.SymbolMacroExpanderInter;
 import jcl.lang.internal.SymbolStructImpl;
-import jcl.lang.statics.CommonLispSymbols;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
  */
 public interface SymbolStruct extends LispStruct {
 
+	/**
+	 * Returns the {@link String} name of the symbol.
+	 *
+	 * @return the name of the symbol
+	 */
 	String getName();
 
+	/**
+	 * Returns the {@link PackageStruct} package of the symbol. The return is {@link Optional} since the symbol may or
+	 * may not have a package.
+	 * <p>
+	 * TODO: This method may only be necessary due to the return of {@link NILStruct#INSTANCE} from the {@link
+	 *      #symbolPackage()} method.
+	 *
+	 * @return the package of the symbol
+	 */
 	Optional<PackageStruct> getSymbolPackage();
 
+	/**
+	 * Modifies the current symbol package, setting the value to the provided {@code symbolPackage}.
+	 * <p>
+	 * TODO: This value is mostly used for internally setting up symbol packages and should not be used externally.
+	 *      Need to determine how to do this more cleanly.
+	 *
+	 * @param symbolPackage
+	 * 		the new symbol package value
+	 */
 	void setSymbolPackage(final PackageStruct symbolPackage);
 
+	/**
+	 * Modification method used internally to make the symbol instance a "constant", meaning values are no longer
+	 * modifiable.
+	 * <p>
+	 * TODO: This is currently used internally to control making a symbol a "constant".
+	 *      There may be a better way to do this.
+	 */
 	void setConstant();
 
+	/*
+	SYMBOL-STRUCT
+	 */
+
+	/**
+	 * Returns the {@link StringStruct} name of the symbol.
+	 *
+	 * @return the name of the symbol
+	 */
 	StringStruct symbolName();
 
+	/**
+	 * Returns the {@link PackageStruct} package of the symbol. If there is no package, {@link NILStruct#INSTANCE} is
+	 * returned.
+	 *
+	 * @return the package of the symbol
+	 */
 	LispStruct symbolPackage();
 
+	/**
+	 * Returns whether or not the symbol has a value.
+	 *
+	 * @return whether or not the symbol has a value
+	 */
 	BooleanStruct boundP();
 
+	/**
+	 * Removes the symbol value. Returns the current instance.
+	 *
+	 * @return the current instance
+	 */
 	SymbolStruct makunbound();
 
+	/**
+	 * Returns the value of the symbol. If there is no value, an {@link jcl.lang.condition.exception.UnboundVariableException}
+	 * is thrown.
+	 *
+	 * @return the value of the symbol
+	 */
 	LispStruct symbolValue();
 
+	/**
+	 * Sets the value of the symbol to {@code newValue}.
+	 *
+	 * @param newValue
+	 * 		the new symbol value
+	 *
+	 * @return the new value
+	 */
 	LispStruct setfSymbolValue(final LispStruct newValue);
 
+	/**
+	 * Returns whether or not the symbol has a function assignment.
+	 *
+	 * @return whether or not the symbol has a function assignment
+	 */
 	BooleanStruct fBoundP();
 
+	/**
+	 * Removes the symbol function value. Returns the current instance.
+	 *
+	 * @return the current instance
+	 */
 	SymbolStruct fMakunbound();
 
+	/**
+	 * Returns the value of the symbol function. If there is no value, an {@link jcl.lang.condition.exception.UndefinedFunctionException}
+	 * is thrown.
+	 *
+	 * @return the value of the symbol function
+	 */
 	FunctionStruct symbolFunction();
 
+	/**
+	 * Sets the value of the symbol function to {@code newFunction}.
+	 *
+	 * @param newFunction
+	 * 		the new symbol function value
+	 *
+	 * @return the new function value
+	 */
 	FunctionStruct setfSymbolFunction(final FunctionStruct newFunction);
 
 	/**
-	 * Getter for symbol {@link ListStruct} properties.
+	 * Returns the symbol property list.
 	 *
-	 * @return symbol {@link ListStruct} properties
+	 * @return the symbol property list
 	 */
 	ListStruct symbolPlist();
 
+	/**
+	 * Sets the symbol property list.
+	 *
+	 * @param newPlist
+	 * 		the new property list
+	 *
+	 * @return the new property list
+	 */
 	ListStruct setfSymbolPlist(final ListStruct newPlist);
 
 	/**
@@ -97,60 +195,27 @@ public interface SymbolStruct extends LispStruct {
 	 */
 	SymbolStruct copySymbol(final BooleanStruct copyProperties);
 
-	static SymbolStruct toLispSymbol(final StringStruct struct) {
-		return new SymbolStructImpl(struct.toJavaString());
+	/**
+	 * Returns a new SymbolStruct with the provided {@link StringStruct} name.
+	 *
+	 * @param name
+	 * 		the name of the new symbol
+	 *
+	 * @return a new SymbolStruct
+	 */
+	static SymbolStruct toLispSymbol(final StringStruct name) {
+		return new SymbolStructImpl(name.toJavaString());
 	}
 
+	/**
+	 * Returns a new SymbolStruct with the provided {@link String} name.
+	 *
+	 * @param name
+	 * 		the name of the new symbol
+	 *
+	 * @return a new SymbolStruct
+	 */
 	static SymbolStruct toLispSymbol(final String name) {
 		return new SymbolStructImpl(name);
-	}
-
-	/*
-	TODO: things below...
-	 */
-
-	static MacroFunctionExpanderInter getMacroFunctionDefinition(final SymbolStruct symbol) {
-		final LispStruct definition = symbol.getProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, NILStruct.INSTANCE);
-		if (NILStruct.INSTANCE.eq(definition)) {
-			return null; // TODO: return null??
-		}
-		if (!(definition instanceof MacroFunctionExpanderInter)) {
-			throw new IllegalStateException("Invalid macro-function definition: " + definition);
-		}
-		return (MacroFunctionExpanderInter) definition;
-	}
-
-	static void setMacroFunctionDefinition(final SymbolStruct symbol, final MacroFunctionExpanderInter macro) {
-		symbol.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, macro);
-	}
-
-	static SymbolMacroExpanderInter getSymbolMacroDefinition(final SymbolStruct symbol) {
-		final LispStruct definition = symbol.getProp(CommonLispSymbols.SYMBOL_MACRO_DEFINITION, NILStruct.INSTANCE);
-		if (NILStruct.INSTANCE.eq(definition)) {
-			return null; // TODO: return null??
-		}
-		if (!(definition instanceof SymbolMacroExpanderInter)) {
-			throw new IllegalStateException("Invalid symbol-macro definition: " + definition);
-		}
-		return (SymbolMacroExpanderInter) definition;
-	}
-
-	static void setSymbolMacroDefinition(final SymbolStruct symbol, final SymbolMacroExpanderInter symbolMacro) {
-		symbol.setProp(CommonLispSymbols.SYMBOL_MACRO_DEFINITION, symbolMacro);
-	}
-
-	static FunctionStruct getSetfDefinition(final SymbolStruct symbol) {
-		final LispStruct definition = symbol.getProp(CommonLispSymbols.SETF_DEFINITION, NILStruct.INSTANCE);
-		if (NILStruct.INSTANCE.eq(definition)) {
-			return null; // TODO: return null??
-		}
-		if (!(definition instanceof FunctionStruct)) {
-			throw new IllegalStateException("Invalid setf definition: " + definition);
-		}
-		return (FunctionStruct) definition;
-	}
-
-	static void setSetfDefinition(final SymbolStruct symbol, final FunctionStruct function) {
-		symbol.setProp(CommonLispSymbols.SETF_DEFINITION, function);
 	}
 }

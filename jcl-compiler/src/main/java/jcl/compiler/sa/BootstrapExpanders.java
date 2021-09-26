@@ -29,7 +29,6 @@ import jcl.compiler.sa.analyzer.specialoperator.TagbodyExpander;
 import jcl.compiler.sa.analyzer.specialoperator.TheExpander;
 import jcl.compiler.sa.analyzer.specialoperator.ThrowExpander;
 import jcl.compiler.sa.analyzer.specialoperator.UnwindProtectExpander;
-import jcl.lang.SymbolStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
@@ -37,37 +36,37 @@ import lombok.experimental.UtilityClass;
 public final class BootstrapExpanders {
 
 	public static void bootstrap() {
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.LAMBDA, LambdaExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.MACRO_LAMBDA, MacroLambdaExpander.INSTANCE);
+		CommonLispSymbols.LAMBDA.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, LambdaExpander.INSTANCE);
+		CommonLispSymbols.MACRO_LAMBDA.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, MacroLambdaExpander.INSTANCE);
 
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.DECLARE, DeclareExpander.INSTANCE);
+		CommonLispSymbols.DECLARE.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, DeclareExpander.INSTANCE);
 
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.DEFSTRUCT_SO, DefstructExpander.INSTANCE);
+		CommonLispSymbols.DEFSTRUCT_SO.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, DefstructExpander.INSTANCE);
 
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.BLOCK, BlockExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.CATCH, CatchExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.EVAL_WHEN, EvalWhenExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.FLET, FletExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.FUNCTION, FunctionExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.GO, GoExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.IF, IfExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.LABELS, LabelsExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.LET, LetExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.LET_STAR, LetStarExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.LOAD_TIME_VALUE, LoadTimeValueExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.LOCALLY, LocallyExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.MACROLET, MacroletExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.MULTIPLE_VALUE_CALL, MultipleValueCallExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.MULTIPLE_VALUE_PROG1, MultipleValueProg1Expander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.PROGN, PrognExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.PROGV, ProgvExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.QUOTE, QuoteExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.RETURN_FROM, ReturnFromExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.SETQ, SetqExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.SYMBOL_MACROLET, SymbolMacroletExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.TAGBODY, TagbodyExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.THE, TheExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.THROW, ThrowExpander.INSTANCE);
-		SymbolStruct.setMacroFunctionDefinition(CommonLispSymbols.UNWIND_PROTECT, UnwindProtectExpander.INSTANCE);
+		CommonLispSymbols.BLOCK.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, BlockExpander.INSTANCE);
+		CommonLispSymbols.CATCH.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, CatchExpander.INSTANCE);
+		CommonLispSymbols.EVAL_WHEN.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, EvalWhenExpander.INSTANCE);
+		CommonLispSymbols.FLET.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, FletExpander.INSTANCE);
+		CommonLispSymbols.FUNCTION.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, FunctionExpander.INSTANCE);
+		CommonLispSymbols.GO.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, GoExpander.INSTANCE);
+		CommonLispSymbols.IF.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, IfExpander.INSTANCE);
+		CommonLispSymbols.LABELS.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, LabelsExpander.INSTANCE);
+		CommonLispSymbols.LET.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, LetExpander.INSTANCE);
+		CommonLispSymbols.LET_STAR.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, LetStarExpander.INSTANCE);
+		CommonLispSymbols.LOAD_TIME_VALUE.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, LoadTimeValueExpander.INSTANCE);
+		CommonLispSymbols.LOCALLY.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, LocallyExpander.INSTANCE);
+		CommonLispSymbols.MACROLET.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, MacroletExpander.INSTANCE);
+		CommonLispSymbols.MULTIPLE_VALUE_CALL.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, MultipleValueCallExpander.INSTANCE);
+		CommonLispSymbols.MULTIPLE_VALUE_PROG1.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, MultipleValueProg1Expander.INSTANCE);
+		CommonLispSymbols.PROGN.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, PrognExpander.INSTANCE);
+		CommonLispSymbols.PROGV.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, ProgvExpander.INSTANCE);
+		CommonLispSymbols.QUOTE.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, QuoteExpander.INSTANCE);
+		CommonLispSymbols.RETURN_FROM.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, ReturnFromExpander.INSTANCE);
+		CommonLispSymbols.SETQ.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, SetqExpander.INSTANCE);
+		CommonLispSymbols.SYMBOL_MACROLET.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, SymbolMacroletExpander.INSTANCE);
+		CommonLispSymbols.TAGBODY.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, TagbodyExpander.INSTANCE);
+		CommonLispSymbols.THE.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, TheExpander.INSTANCE);
+		CommonLispSymbols.THROW.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, ThrowExpander.INSTANCE);
+		CommonLispSymbols.UNWIND_PROTECT.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, UnwindProtectExpander.INSTANCE);
 	}
 }

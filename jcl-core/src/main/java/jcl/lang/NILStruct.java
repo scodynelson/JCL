@@ -13,7 +13,7 @@ import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.SimpleErrorException;
-import jcl.lang.internal.BooleanStructImpl;
+import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.apache.commons.lang3.ArrayUtils;
@@ -23,7 +23,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * The {@link NILStruct} is the object representation of a Lisp 'nil' type.
  */
-public final class NILStruct extends BooleanStructImpl implements ListStruct {
+public final class NILStruct extends SymbolStructImpl implements BooleanStruct, ListStruct {
 
 	/**
 	 * Global constant singleton instance of 'nil'.
@@ -49,7 +49,16 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 	 * Private constructor.
 	 */
 	private NILStruct() {
-		super("NIL", false);
+		super("NIL");
+	}
+
+	/*
+	BOOLEAN-STRUCT
+	 */
+
+	@Override
+	public boolean toJavaPBoolean() {
+		return false;
 	}
 
 	/*
@@ -220,7 +229,7 @@ public final class NILStruct extends BooleanStructImpl implements ListStruct {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link NILStruct} objects, by retrieving the static singleton {@link NILStruct#INSTANCE}.
+	 * Generation method for {@code NILStruct} objects, by retrieving the static singleton {@link NILStruct#INSTANCE}.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

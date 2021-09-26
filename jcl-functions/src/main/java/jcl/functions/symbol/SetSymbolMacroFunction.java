@@ -38,7 +38,7 @@ public final class SetSymbolMacroFunction extends BuiltInFunctionStructImpl {
 		final LispStruct expansion = arguments.getRequiredArgument(EXPANSION_ARGUMENT);
 
 		final SymbolMacroExpander symbolMacroExpander = new SymbolMacroExpanderImpl(expansion);
-		SymbolStruct.setSymbolMacroDefinition(symbol, symbolMacroExpander);
+		symbol.setProp(CommonLispSymbols.SYMBOL_MACRO_DEFINITION, symbolMacroExpander);
 		return symbol;
 	}
 }

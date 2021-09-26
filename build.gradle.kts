@@ -23,8 +23,8 @@ subprojects {
 	apply(plugin = "jacoco")
 
 	configure<JavaPluginExtension> {
-		sourceCompatibility = JavaVersion.VERSION_15
-		targetCompatibility = JavaVersion.VERSION_15
+		sourceCompatibility = JavaVersion.VERSION_17
+		targetCompatibility = JavaVersion.VERSION_17
 		withSourcesJar()
 //		withJavadocJar()
 	}
@@ -66,25 +66,25 @@ subprojects {
 	val testRuntimeOnly by configurations
 
 	dependencies {
-		implementation("com.google.guava:guava:30.1.1-jre")
+		implementation("com.google.guava:guava:31.0-jre")
 		implementation("com.ibm.icu:icu4j:69.1")
-		implementation("commons-io:commons-io:2.9.0")
+		implementation("commons-io:commons-io:2.11.0")
 		implementation("org.apache.commons:commons-collections4:4.4")
 		implementation("org.apache.commons:commons-lang3:3.12.0")
 		implementation("org.apache.commons:commons-math3:3.6.1")
 		implementation("org.apache.commons:commons-text:1.9")
-		implementation("org.apfloat:apfloat:1.10.0")
+		implementation("org.apfloat:apfloat:1.10.1")
 		implementation("org.benf:cfr:0.151")
 		implementation("org.glassfish.external:javahelp:2.0.06")
-		implementation("org.ow2.asm:asm:9.1")
-		implementation("org.ow2.asm:asm-util:9.1")
+		implementation("org.ow2.asm:asm:9.2")
+		implementation("org.ow2.asm:asm-util:9.2")
 		implementation("info.picocli:picocli:4.6.1")
 
 		compileOnly("org.projectlombok:lombok:1.18.20")
 		annotationProcessor("org.projectlombok:lombok:1.18.20")
 
-		testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-		testImplementation("org.assertj:assertj-core:3.19.0")
+		testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+		testImplementation("org.assertj:assertj-core:3.21.0")
 
 		implementation("org.apache.logging.log4j:log4j-api:2.14.1")
 		runtimeOnly("org.apache.logging.log4j:log4j-core:2.14.1")
@@ -111,16 +111,16 @@ subprojects {
 
 	tasks.named<JacocoReport>("jacocoTestReport") {
 		reports {
-			xml.isEnabled = true
-			xml.destination = file("${buildDir}/reports/jacoco/report.xml")
-			csv.isEnabled = false
-			html.isEnabled = true
-			html.destination = file("${buildDir}/reports/jacoco/html")
+			xml.required.set(true)
+			xml.outputLocation.set(file("${buildDir}/reports/jacoco/report.xml"))
+			csv.required.set(false)
+			html.required.set(true)
+			html.outputLocation.set(file("${buildDir}/reports/jacoco/html"))
 		}
 	}
 }
 
 tasks.named<Wrapper>("wrapper") {
-	gradleVersion = "7.0.2"
+	gradleVersion = "7.2"
 	distributionType = Wrapper.DistributionType.ALL
 }

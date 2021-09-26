@@ -31,18 +31,37 @@ import org.objectweb.asm.Opcodes;
  */
 public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
+	/**
+	 * The name of the symbol. A symbol will always have a name, even if the name is auto-generated.
+	 */
 	protected final String name;
 
-	// We MUST lazy load this. Because NILStruct is a symbol and can have its own Plist, but we can't initialize
-	//      the constant NIL symbol with a dependence on its existence.
+	/**
+	 * The property list of the symbol.
+	 * <p>
+	 * NOTE: We MUST lazy load this. Because {@link NILStruct} is a symbol and can have its own Plist, but we can't
+	 * initialize the constant NIL symbol with a dependence on its existence.
+	 */
 	protected ListStruct properties;
 
+	/**
+	 * The package of the symbol.
+	 */
 	protected PackageStruct symbolPackage;
 
+	/**
+	 * The value of the symbol.
+	 */
 	protected LispStruct value;
 
+	/**
+	 * The function value of the symbol.
+	 */
 	protected FunctionStruct function;
 
+	/**
+	 * Whether or not the symbol is a constant.
+	 */
 	protected boolean isConstant;
 
 	/**

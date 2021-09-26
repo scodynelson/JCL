@@ -57,9 +57,11 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private final PrognStruct forms;
 	private final Environment lambdaEnvironment;
 
-	private static final String SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_NAME = "setMacroFunctionDefinition";
+	private static final String SYMBOL_STRUCT_SET_PROP_METHOD_NAME = "setProp";
 
-	private static final String SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_DESC = CodeGenerators.getMethodDescription(SymbolStruct.class, SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_NAME, SymbolStruct.class, MacroFunctionExpanderInter.class);
+	private static final String SYMBOL_STRUCT_SET_PROP_METHOD_DESC = CodeGenerators.getMethodDescription(
+			SymbolStruct.class, SYMBOL_STRUCT_SET_PROP_METHOD_NAME, LispStruct.class, LispStruct.class
+	);
 
 	public MacroLambdaStruct(final String className, final SymbolStruct macroName, final MacroLambdaList lambdaListBindings,
 	                         final StringStruct docString, final PrognStruct forms, final Environment lambdaEnvironment) {
@@ -313,7 +315,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		cw.visit(Opcodes.V15, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
+		cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         className,
 		         GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_CLASS_SIGNATURE,
 		         GenerationConstants.COMPILED_MACRO_FUNCTION_EXPANDER_NAME,
@@ -369,12 +371,17 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 		CodeGenerators.generateSymbol(macroName, generatorState, macroNamePackageStore, macroNameSymbolStore);
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, macroNameSymbolStore);
+		previousMv.visitFieldInsn(Opcodes.GETSTATIC,
+		                          GenerationConstants.COMMON_LISP_SYMBOLS_NAME,
+		                          "MACRO_FUNCTION_DEFINITION",
+		                          GenerationConstants.SYMBOL_STRUCT_DESC);
 		previousMv.visitVarInsn(Opcodes.ALOAD, expanderStore);
-		previousMv.visitMethodInsn(Opcodes.INVOKESTATIC,
+		previousMv.visitMethodInsn(Opcodes.INVOKEINTERFACE,
 		                           GenerationConstants.SYMBOL_STRUCT_NAME,
-		                           SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_NAME,
-		                           SYMBOL_STRUCT_SET_MACRO_FUNCTION_DEFINITION_METHOD_DESC,
+		                           SYMBOL_STRUCT_SET_PROP_METHOD_NAME,
+		                           SYMBOL_STRUCT_SET_PROP_METHOD_DESC,
 		                           true);
+		previousMv.visitInsn(Opcodes.POP);
 		previousMv.visitVarInsn(Opcodes.ALOAD, expanderStore);
 	}
 

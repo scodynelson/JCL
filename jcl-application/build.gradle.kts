@@ -91,7 +91,7 @@ val lispSourceFiles = listOf(
 
 fun createLispGenerationTask(taskName: String, lispSourceFile: String): Task {
 	return tasks.create(taskName, JavaExec::class) {
-		main = "jcl.system.JCL"
+		mainClass.set("jcl.system.JCL")
 		classpath = sourceSets["main"].runtimeClasspath
 		args("--compileFileSrcDir=$projectDir/src/main/lisp/${lispSourceFile}",
 				"--compileFileDestDir=$projectDir/compiled-lisp/")

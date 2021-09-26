@@ -3,7 +3,7 @@ package jcl.lang;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
-import jcl.lang.internal.BooleanStructImpl;
+import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -12,7 +12,7 @@ import org.objectweb.asm.Type;
 /**
  * The {@link TStruct} is the object representation of a Lisp 't' type.
  */
-public final class TStruct extends BooleanStructImpl {
+public final class TStruct extends SymbolStructImpl implements BooleanStruct {
 
 	/**
 	 * Global constant singleton instance of 't'.
@@ -32,10 +32,18 @@ public final class TStruct extends BooleanStructImpl {
 	 * Private constructor.
 	 */
 	private TStruct() {
-		super("T", true);
+		super("T");
 	}
 
 	/*
+	BOOLEAN-STRUCT
+	 */
+
+	@Override
+	public boolean toJavaPBoolean() {
+		return true;
+	}
+/*
 	LISP-STRUCT
 	 */
 
@@ -51,7 +59,7 @@ public final class TStruct extends BooleanStructImpl {
 
 	/**
 	 * {@inheritDoc}
-	 * Generation method for {@link TStruct} objects, by retrieving the static singleton {@link TStruct#INSTANCE}.
+	 * Generation method for {@code TStruct} objects, by retrieving the static singleton {@link TStruct#INSTANCE}.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

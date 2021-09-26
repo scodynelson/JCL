@@ -609,7 +609,7 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct macroName = pkg.findSymbol("FOO").getSymbol();
 
-		SymbolStruct.setMacroFunctionDefinition(macroName, expanderGenerator);
+		macroName.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, expanderGenerator);
 		return expanderGenerator;
 	}
 }

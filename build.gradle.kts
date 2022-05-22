@@ -143,12 +143,11 @@ subprojects {
     }
 
     tasks.named<JacocoReport>("jacocoTestReport") {
+        dependsOn("test") // tests are required to run before generating the report
         reports {
             xml.required.set(true)
-            xml.outputLocation.set(file("${buildDir}/reports/jacoco/report.xml"))
             csv.required.set(false)
             html.required.set(true)
-            html.outputLocation.set(file("${buildDir}/reports/jacoco/html"))
         }
     }
 }

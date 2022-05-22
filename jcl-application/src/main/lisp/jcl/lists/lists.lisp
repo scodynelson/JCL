@@ -219,12 +219,7 @@
   "Creates a fresh cons, the cdr of which is alist and the car of which is another fresh cons, the car of which is key
   and the cdr of which is datum."
   (declare (system::%java-class-name "jcl.lists.functions.ACons"))
-  (ext:jinvoke-static
-    (ext:jmethod "acons" (ext:jclass "jcl.lang.ConsStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.ListStruct"))
-    key datum alist))
+  (cons (cons key datum) alist))
 
 (defun last (list &optional (n 1))
   "Returns the last n conses (not the last n elements) of list)."
@@ -259,12 +254,12 @@
 (defun endp (list)
   "Returns true if list is the empty list. Returns false if list is a cons."
   (declare (system::%java-class-name "jcl.lists.functions.EndP"))
-  ($endP1 list))
+  ($endp list))
 
 (defun tailp (object list)
   "If object is the same as some tail of list, returns true; otherwise, returns false."
   (declare (system::%java-class-name "jcl.lists.functions.TailP"))
-  ($tailP1 list object))
+  ($tailp list object))
 
 (defun getf (plist indicator &optional default)
   "Finds a property on the property list whose property indicator is identical to indicator, and returns its corresponding
@@ -287,18 +282,18 @@
 (defun list-length (list)
   "Returns the length of list if list is a proper list. Returns nil if list is a circular list."
   (declare (system::%java-class-name "jcl.lists.functions.ListLength"))
-  ($listLength1 list))
+  ($listLength list))
 
 (defun nth (index list)
   "Locates the nth element of list, where the car of the list is the ``zeroth'' element."
   (declare (system::%java-class-name "jcl.lists.functions.Nth"))
-  ($nth list index))
+  (car (nthcdr index list)))
 
-(defun (setf getf) (plist indicator value &optional default)
-  "Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding
-  property value with the new-value provided."
+(defun (setf nth) (index list new-object)
+  "Locates the nth element of list, where the car of the list is the ``zeroth'' element, and sets its corresponding
+  value with the new-value provided."
   (declare (system::%java-class-name "jcl.lists.functions.SetfNth"))
-  ($putf plist indicator value))
+  (setf (car (nthcdr n list)) new-object))
 
 (defun nthcdr (n list)
   "Returns the tail of list that would be obtained by calling cdr n times in succession."
@@ -344,13 +339,13 @@
   "Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that
   reversed list and returns the result."
   (declare (system::%java-class-name "jcl.lists.functions.Revappend"))
-  ($revAppend list tail))
+  (nconc (reverse list) tail))
 
 (defun nreconc (list tail)
   "Reverses the order of elements in list (as if by nreverse). It then appends (as if by nconc) the tail to that
   reversed list and returns the result."
   (declare (system::%java-class-name "jcl.lists.functions.Nreconc"))
-  ($nReconc list tail))
+  (nconc (nreverse list) tail))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

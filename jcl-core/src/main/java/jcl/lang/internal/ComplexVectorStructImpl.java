@@ -370,6 +370,7 @@ public class ComplexVectorStructImpl extends AbstractVectorStructImpl {
 		                                totalSize.toJavaInt(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
+				                                Spliterator.NONNULL |
 				                                Spliterator.SUBSIZED
 		);
 	}

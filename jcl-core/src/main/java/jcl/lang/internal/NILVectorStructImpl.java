@@ -2,7 +2,10 @@ package jcl.lang.internal;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -18,6 +21,7 @@ import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -120,6 +124,21 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	 */
 
 	@Override
+	public Stream<LispStruct> stream() {
+		return Stream.empty();
+	}
+
+	@Override
+	public Stream<LispStruct> parallelStream() {
+		return Stream.empty();
+	}
+
+	@Override
+	public LispStruct[] toArray() {
+		return ArrayUtils.toArray();
+	}
+
+	@Override
 	public StringStruct reverse() {
 		return new NILVectorStructImpl(totalSize);
 	}
@@ -136,6 +155,11 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	@Override
 	public Iterator<LispStruct> iterator() {
 		return Collections.emptyIterator();
+	}
+
+	@Override
+	public Spliterator<LispStruct> spliterator() {
+		return Spliterators.emptySpliterator();
 	}
 
 	/*

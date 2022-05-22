@@ -30,7 +30,7 @@ class DisplacedArrayIterator implements Iterator<LispStruct> {
 	/**
 	 * The current index of the iteration.
 	 */
-	private IntegerStruct current;
+	private IntegerStruct current = IntegerStruct.ZERO;
 
 	/**
 	 * Constructor for building the iterator.

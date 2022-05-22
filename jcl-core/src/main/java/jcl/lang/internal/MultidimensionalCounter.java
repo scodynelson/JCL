@@ -30,6 +30,7 @@ public class MultidimensionalCounter {
 
 	/*
 		Adapted from commons-math3 implementation.
+		-- This is forked to handle 0-ranked arrays, which the original does not. --
 	 */
 
 	/**

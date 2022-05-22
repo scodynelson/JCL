@@ -91,28 +91,18 @@ public final class NILStruct extends SymbolStructImpl implements BooleanStruct, 
 	}
 
 	@Override
-	public LispStruct nth(final FixnumStruct index) {
-		return INSTANCE;
-	}
-
-	@Override
-	public LispStruct setNth(final FixnumStruct index, final LispStruct newValue) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
 	public ListStruct nthCdr(final FixnumStruct index) {
 		return INSTANCE;
 	}
 
 	@Override
-	public boolean endP() {
-		return true;
+	public BooleanStruct endp() {
+		return TStruct.INSTANCE;
 	}
 
 	@Override
-	public boolean tailp(final LispStruct object) {
-		return INSTANCE.eq(object);
+	public BooleanStruct tailp(final LispStruct object) {
+		return BooleanStruct.toLispBoolean(INSTANCE.eq(object));
 	}
 
 	@Override

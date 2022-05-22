@@ -8,6 +8,14 @@ import jcl.lang.statics.GlobalPackageStruct;
  */
 public interface KeywordStruct extends SymbolStruct {
 
+	/**
+	 * Returns a new KeywordStruct with the provided {@link String} name.
+	 *
+	 * @param name
+	 * 		the name of the new keyword
+	 *
+	 * @return a new KeywordStruct
+	 */
 	static KeywordStruct toLispKeyword(final String name) {
 		final KeywordStructImpl struct = new KeywordStructImpl(name);
 

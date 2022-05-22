@@ -201,6 +201,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 		                                totalSize.toJavaInt(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
+				                                Spliterator.NONNULL |
 				                                Spliterator.IMMUTABLE |
 				                                Spliterator.SUBSIZED
 		);

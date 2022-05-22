@@ -2,14 +2,11 @@ package jcl.lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.iterators.ReverseListIterator;
 
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.
@@ -55,18 +52,12 @@ public interface ListStruct extends SequenceStruct {
 	 * @return the length of the list if the list is a proper-list; otherwise {@link NILStruct#INSTANCE} if the list is
 	 * a circular-list
 	 */
-	FixnumStruct listLength();
-
-	default LispStruct listLength1() {
-		final IntegerStruct lispStruct = listLength();
-		if (IntegerStruct.MINUS_ONE.eql(lispStruct)) {
-			return NILStruct.INSTANCE;
-		}
-		return lispStruct;
-	}
+	LispStruct listLength();
 
 	/**
 	 * Returns a list of length given by size, each of the elements of which is initial-element.
+	 * <p>
+	 * NOTE: We're doing this in Java instead of Lisp for the performance.
 	 *
 	 * @param size
 	 * 		the size of the resulting list
@@ -88,28 +79,6 @@ public interface ListStruct extends SequenceStruct {
 	}
 
 	/**
-	 * Returns the nth element of list at the provided index.
-	 *
-	 * @param index
-	 * 		the index of the element to return
-	 *
-	 * @return the nth element of list at the provided index
-	 */
-	LispStruct nth(final FixnumStruct index);
-
-	/**
-	 * Sets the nth element of list at the provided index to the provided new value.
-	 *
-	 * @param index
-	 * 		the index of the element to set
-	 * @param newValue
-	 * 		the new value to be set
-	 *
-	 * @return the new value
-	 */
-	LispStruct setNth(final FixnumStruct index, final LispStruct newValue);
-
-	/**
 	 * Returns the cons within the list where the head of the returned list is at the provided index.
 	 *
 	 * @param index
@@ -124,176 +93,7 @@ public interface ListStruct extends SequenceStruct {
 	 *
 	 * @return true if the list is the empty list; false if the list is a cons
 	 */
-	boolean endP();
-
-	/**
-	 * Returns true if the list is the empty list. Returns false if the list is a cons.
-	 *
-	 * @return true if the list is the empty list; false if the list is a cons
-	 */
-	default BooleanStruct endP1() {
-		final boolean endP = endP();
-		return BooleanStruct.toLispBoolean(endP);
-	}
-
-	static LispStruct append(final LispStruct... args) {
-		final int size = args.length;
-		if (size == 0) {
-			return NILStruct.INSTANCE;
-		}
-		if (size == 1) {
-			return args[0];
-		}
-
-		return append(Arrays.asList(args));
-	}
-
-	static LispStruct append(final List<LispStruct> listArg) {
-		final int size = listArg.size();
-		if (size == 0) {
-			return NILStruct.INSTANCE;
-		}
-		if (size == 1) {
-			return listArg.get(0);
-		}
-
-		final ReverseListIterator<LispStruct> reverseListIterator = new ReverseListIterator<>(listArg);
-		final LispStruct object = reverseListIterator.next();
-
-		final List<ListStruct> lists = new ArrayList<>();
-		reverseListIterator.forEachRemaining(argument -> {
-			if (argument instanceof ListStruct) {
-				lists.add((ListStruct) argument);
-			} else {
-				throw new TypeErrorException("Cannot convert value '" + argument + "' to type 'LIST'");
-			}
-		});
-		return append(lists, object);
-	}
-
-	private static LispStruct append(final List<ListStruct> lists, final LispStruct object) {
-		final Iterator<ListStruct> iterator = lists.iterator();
-
-		ListStruct result = NILStruct.INSTANCE;
-
-		while (iterator.hasNext()) {
-			final ListStruct list = iterator.next();
-
-			if (NILStruct.INSTANCE.eq(list)) {
-				continue;
-			}
-
-			final ListStruct copyList = list.copyList();
-			if (NILStruct.INSTANCE.eq(result)) {
-				result = copyList;
-				continue;
-			}
-
-			final LispStruct last = result.last();
-			if (!(last instanceof ConsStruct)) {
-				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
-			}
-			final ConsStruct lastOfResult = (ConsStruct) last;
-			lastOfResult.rplacd(copyList);
-		}
-
-		if (NILStruct.INSTANCE.eq(result)) {
-			return object;
-		}
-
-		final LispStruct last = result.last();
-		if (!(last instanceof ConsStruct)) {
-			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
-		}
-		final ConsStruct lastOfResult = (ConsStruct) last;
-		lastOfResult.rplacd(object);
-
-		return result;
-	}
-
-	static LispStruct nConc(final LispStruct... args) {
-		final int size = args.length;
-		if (size == 0) {
-			return NILStruct.INSTANCE;
-		}
-		if (size == 1) {
-			return args[0];
-		}
-
-		return nConc(Arrays.asList(args));
-	}
-
-	static LispStruct nConc(final List<LispStruct> listArg) {
-		final int size = listArg.size();
-		if (size == 0) {
-			return NILStruct.INSTANCE;
-		}
-		if (size == 1) {
-			return listArg.get(0);
-		}
-
-		final ReverseListIterator<LispStruct> reverseListIterator = new ReverseListIterator<>(listArg);
-		final LispStruct object = reverseListIterator.next();
-
-		final List<ListStruct> lists = new ArrayList<>();
-		reverseListIterator.forEachRemaining(argument -> {
-			if (argument instanceof ListStruct) {
-				lists.add((ListStruct) argument);
-			} else {
-				throw new TypeErrorException("Cannot convert value '" + argument + "' to type 'LIST'");
-			}
-		});
-		return nConc(lists, object);
-	}
-
-	static LispStruct nConc(final List<ListStruct> lists, final LispStruct object) {
-		final Iterator<ListStruct> iterator = lists.iterator();
-
-		ListStruct result = NILStruct.INSTANCE;
-
-		while (iterator.hasNext()) {
-			final ListStruct list = iterator.next();
-
-			if (NILStruct.INSTANCE.eq(list)) {
-				continue;
-			}
-
-			if (NILStruct.INSTANCE.eq(result)) {
-				result = list;
-				continue;
-			}
-
-			final LispStruct last = result.last();
-			if (!(last instanceof ConsStruct)) {
-				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
-			}
-			final ConsStruct lastOfResult = (ConsStruct) last;
-			lastOfResult.rplacd(list);
-		}
-
-		if (NILStruct.INSTANCE.eq(result)) {
-			return object;
-		}
-
-		final LispStruct last = result.last();
-		if (!(last instanceof ConsStruct)) {
-			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
-		}
-		final ConsStruct lastOfResult = (ConsStruct) last;
-		lastOfResult.rplacd(object);
-
-		return result;
-	}
-
-	default LispStruct revAppend(final LispStruct tail) {
-		final ListStruct reverse = reverse();
-		return nConc(Collections.singletonList(reverse), tail);
-	}
-
-	default LispStruct nReconc(final LispStruct tail) {
-		final ListStruct nReverse = nReverse();
-		return nConc(Collections.singletonList(nReverse), tail);
-	}
+	BooleanStruct endp();
 
 	default ListStruct butLast() {
 		return butLast(IntegerStruct.ONE);
@@ -338,113 +138,7 @@ public interface ListStruct extends SequenceStruct {
 		return theAlist;
 	}
 
-	boolean tailp(final LispStruct object);
-
-	default BooleanStruct tailp1(final LispStruct object) {
-		final boolean tailp = tailp(object);
-		return BooleanStruct.toLispBoolean(tailp);
-	}
-
-	// TODO: Fast-Member???
-
-	enum Accumulate {
-		NONE,
-		LIST,
-		NCONC
-	}
-
-	static LispStruct mapC(final FunctionStruct function, final ListStruct lists) {
-		return listMapper(function, lists, Accumulate.NONE, true);
-	}
-
-	static LispStruct mapCar(final FunctionStruct function, final ListStruct lists) {
-		return listMapper(function, lists, Accumulate.LIST, true);
-	}
-
-	static LispStruct mapCan(final FunctionStruct function, final ListStruct lists) {
-		return listMapper(function, lists, Accumulate.NCONC, true);
-	}
-
-	static LispStruct mapL(final FunctionStruct function, final ListStruct lists) {
-		return listMapper(function, lists, Accumulate.NONE, false);
-	}
-
-	static LispStruct mapList(final FunctionStruct function, final ListStruct lists) {
-		return listMapper(function, lists, Accumulate.LIST, false);
-	}
-
-	static LispStruct mapCon(final FunctionStruct function, final ListStruct lists) {
-		return listMapper(function, lists, Accumulate.NCONC, false);
-	}
-
-	private static LispStruct listMapper(final FunctionStruct function, final ListStruct originalArglists,
-	                                     final Accumulate accumulate, final boolean takeCar) {
-		final ListStruct arglists = originalArglists.copyList();
-		final ConsStruct retList = ConsStruct.toLispCons(NILStruct.INSTANCE, NILStruct.INSTANCE);
-		ConsStruct temp = retList;
-
-		// Outer 'DO' vars
-		ListStruct args = NILStruct.INSTANCE;
-
-		while (true) {
-			for (final LispStruct arglist : arglists) {
-				if (NILStruct.INSTANCE.eq(arglist)) {
-					if (accumulate != null) {
-						return retList.cdr();
-					} else {
-						return originalArglists.car();
-					}
-				}
-			}
-
-			// Inner 'DO' vars
-			ListStruct remainingLists = arglists;
-
-			while (!NILStruct.INSTANCE.eq(remainingLists)) {
-
-				// PUSH
-				final LispStruct carToPush;
-				if (takeCar) {
-					carToPush = ((ListStruct) remainingLists.car()).car();
-				} else {
-					carToPush = remainingLists.car();
-				}
-				args = ConsStruct.toLispCons(carToPush, args);
-
-				// SETF
-				final LispStruct cdarL = ((ListStruct) remainingLists.car()).cdr();
-				((ConsStruct) remainingLists).rplaca(cdarL);
-
-				// Update remainingLists Inner 'DO' var
-				remainingLists = (ListStruct) remainingLists.cdr();
-			}
-
-			// SETQ
-			final LispStruct res = function.apply(args.nReverse().toArray());
-
-			// CASE
-			switch (accumulate) {
-				case NCONC:
-					final List<ListStruct> lists = new ArrayList<>();
-					for (final LispStruct curr : temp) {
-						lists.add((ListStruct) curr);
-					}
-					final ListStruct nconc = (ListStruct) nConc(lists, res);
-					temp = (ConsStruct) nconc.last();
-					break;
-				case LIST:
-					temp.rplacd(toLispList(res));
-					temp = (ConsStruct) temp.cdr();
-					break;
-				case NONE:
-					break;
-			}
-
-			// Update Args Outer 'DO' var
-			args = NILStruct.INSTANCE;
-		}
-	}
-
+	BooleanStruct tailp(final LispStruct object);
 
 	/**
 	 * Returns a copy of alist. The list structure of alist is copied, and the elements of alist which are conses are
@@ -454,12 +148,6 @@ public interface ListStruct extends SequenceStruct {
 	 * @return a copy of alist
 	 */
 	ListStruct copyAlist();
-
-	// TODO: Fast-Assoc???
-
-	// TODO: Pairlis
-
-	// TODO: Fast Rassoc???
 
 	GetPropertiesResult getProperties(final ListStruct indicators);
 
@@ -473,8 +161,6 @@ public interface ListStruct extends SequenceStruct {
 
 	boolean remf(final LispStruct indicator);
 
-	// TODO: Fast-Adjoin???
-
 	List<LispStruct> toJavaList();
 
 	/**
@@ -487,7 +173,7 @@ public interface ListStruct extends SequenceStruct {
 	 * @return a new ListStruct containing the provided {@link LispStruct} arguments as the elements
 	 */
 	static ListStruct toLispList(final LispStruct... args) {
-		return (args.length == 0) ? NILStruct.INSTANCE : buildLispList(Arrays.asList(args));
+		return (args.length == 0) ? NILStruct.INSTANCE : buildLispList(List.of(args));
 	}
 
 	/**

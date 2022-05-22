@@ -26,12 +26,14 @@ public class ReturnFromException extends ProgramErrorException {
 	/**
 	 * The {@link SymbolStruct} name of the 'block' generated that matches this exception.
 	 */
-	private final SymbolStruct name;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	private final transient SymbolStruct name;
 
 	/**
 	 * The resulting {@link LispStruct} value to return when the appropriate 'block' is hit.
 	 */
-	private final LispStruct result;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	private final transient LispStruct result;
 
 	/**
 	 * Public constructor.

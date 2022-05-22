@@ -35,7 +35,6 @@ public class LoadLispFilesExtension implements BeforeAllCallback, ExtensionConte
 			final List<String> sourceFiles = List.of(
 					"jcl/compiler/base-macro-lambdas.lisp",
 					"jcl/sequences/sequences.lisp",
-					"jcl/lists/base-lists.lisp",
 					"jcl/compiler/macros.lisp",
 					"jcl/iterators/iterators.lisp",
 					"jcl/characters/characters.lisp",

@@ -6,8 +6,8 @@ package jcl.functions.symbol;
 
 import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.ConsStruct;
-import jcl.lang.FixnumStruct;
 import jcl.lang.FunctionStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
@@ -38,7 +38,7 @@ public final class SetSymbolSetfFunctionFunction extends BuiltInFunctionStructIm
 		final ConsStruct consStruct = arguments.getRequiredArgument(SYMBOL_ARGUMENT, ConsStruct.class);
 		final FunctionStruct function = arguments.getRequiredArgument(FUNCTION_ARGUMENT, FunctionStruct.class);
 
-		final SymbolStruct symbol = (SymbolStruct) consStruct.nth(FixnumStruct.ONE);
+		final SymbolStruct symbol = (SymbolStruct) consStruct.elt(IntegerStruct.ONE);
 		symbol.setProp(CommonLispSymbols.SETF_DEFINITION, function);
 		return function;
 	}

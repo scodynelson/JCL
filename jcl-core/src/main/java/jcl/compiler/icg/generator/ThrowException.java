@@ -25,12 +25,14 @@ public class ThrowException extends ProgramErrorException {
 	/**
 	 * The {@link LispStruct} tag of the 'catch' generated that matches this exception.
 	 */
-	private final LispStruct catchTag;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	private final transient LispStruct catchTag;
 
 	/**
 	 * The resulting {@link LispStruct} value to return when the appropriate 'catch' is hit.
 	 */
-	private final LispStruct resultForm;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	private final transient LispStruct resultForm;
 
 	/**
 	 * Public constructor.

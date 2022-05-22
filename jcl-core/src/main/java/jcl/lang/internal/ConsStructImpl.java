@@ -103,7 +103,15 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 	}
 
 	@Override
-	public FixnumStruct listLength() {
+	public LispStruct listLength() {
+		final IntegerStruct lispStruct = innerListLength();
+		if (IntegerStruct.MINUS_ONE.eql(lispStruct)) {
+			return NILStruct.INSTANCE;
+		}
+		return lispStruct;
+	}
+
+	private FixnumStruct innerListLength() {
 		int n = 0; // Counter.
 		LispStruct fast = this; // Fast pointer: leaps by 2.
 		ListStruct slow = this; // Slow pointer: leaps by 1.
@@ -141,58 +149,6 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 	}
 
 	@Override
-	public LispStruct nth(final FixnumStruct index) {
-		if (index.minusp().toJavaPBoolean()) {
-			throw new TypeErrorException("N value must be non-negative.");
-		}
-		final int indexInt = index.toJavaInt();
-
-		int currentIndex = 0;
-		ListStruct list = this;
-		while (true) {
-			if (currentIndex == indexInt) {
-				return list.car();
-			}
-
-			final LispStruct listCdr = list.cdr();
-			if (listCdr instanceof ListStruct) {
-				list = (ListStruct) listCdr;
-				currentIndex++;
-			} else {
-				throw new ErrorException("Cannot retrieve index " + currentIndex + " from " + listCdr);
-			}
-		}
-	}
-
-	@Override
-	public LispStruct setNth(final FixnumStruct index, final LispStruct newValue) {
-		if (index.minusp().toJavaPBoolean()) {
-			throw new TypeErrorException("N value must be non-negative.");
-		}
-		final int indexInt = index.toJavaInt();
-
-		int currentIndex = 0;
-		ListStruct list = this;
-		while (true) {
-			if (currentIndex == indexInt) {
-				if (NILStruct.INSTANCE.eq(list)) {
-					throw new SimpleErrorException("Cannot set element within NIL.");
-				}
-				((ConsStruct) list).rplaca(newValue);
-				return newValue;
-			}
-
-			final LispStruct listCdr = list.cdr();
-			if (listCdr instanceof ListStruct) {
-				list = (ListStruct) listCdr;
-				currentIndex++;
-			} else {
-				throw new ErrorException("Cannot retrieve index " + currentIndex + " from " + listCdr);
-			}
-		}
-	}
-
-	@Override
 	public ListStruct nthCdr(final FixnumStruct index) {
 		if (index.minusp().toJavaPBoolean()) {
 			throw new TypeErrorException("N value must be non-negative.");
@@ -217,20 +173,20 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 	}
 
 	@Override
-	public boolean endP() {
-		return false;
+	public BooleanStruct endp() {
+		return NILStruct.INSTANCE;
 	}
 
 	@Override
-	public boolean tailp(final LispStruct object) {
+	public BooleanStruct tailp(final LispStruct object) {
 		if (eql(object)) {
-			return true;
+			return TStruct.INSTANCE;
 		}
 		if (cdr instanceof ListStruct) {
 			final ListStruct listCdr = (ListStruct) cdr;
 			return listCdr.tailp(object);
 		}
-		return cdr.eql(object);
+		return BooleanStruct.toLispBoolean(cdr.eql(object));
 	}
 
 	@Override
@@ -242,7 +198,7 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 			final ListStruct listCdr = (ListStruct) cdr;
 			return ConsStruct.toLispCons(car, listCdr.ldiff(object));
 		}
-		return (cdr.eql(object)) ? ConsStruct.toLispCons(car, NILStruct.INSTANCE) : ConsStruct.toLispCons(car, cdr);
+		return cdr.eql(object) ? ConsStruct.toLispCons(car, NILStruct.INSTANCE) : ConsStruct.toLispCons(car, cdr);
 	}
 
 	@Override
@@ -356,7 +312,7 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
-		final FixnumStruct listLength = listLength();
+		final FixnumStruct listLength = innerListLength();
 		if (IntegerStruct.MINUS_ONE.eql(listLength)) {
 			return NILStruct.INSTANCE;
 		}
@@ -386,7 +342,7 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 			throw new TypeErrorException("N value must be non-negative.");
 		}
 
-		final FixnumStruct listLength = listLength();
+		final FixnumStruct listLength = innerListLength();
 		if (IntegerStruct.MINUS_ONE.eql(listLength)) {
 			return NILStruct.INSTANCE;
 		}
@@ -451,16 +407,6 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 	/*
 	SEQUENCE
 	 */
-
-	@Override
-	public Stream<LispStruct> stream() {
-		return StreamSupport.stream(spliterator(), false);
-	}
-
-	@Override
-	public Stream<LispStruct> parallelStream() {
-		return StreamSupport.stream(spliterator(), true);
-	}
 
 	@Override
 	public LispStruct[] toArray() {
@@ -591,7 +537,7 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 	@Override
 	public Spliterator<LispStruct> spliterator() {
 		return Spliterators.spliterator(iterator(),
-		                                listLength().toJavaPLong(),
+		                                innerListLength().toJavaPLong(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
 				                                Spliterator.NONNULL |

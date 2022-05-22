@@ -17,6 +17,9 @@ import jcl.lang.TStruct;
 import jcl.lang.internal.ConstantStructImpl;
 import jcl.lang.internal.VariableStructImpl;
 
+/**
+ * The {@link CommonLispSymbols} is the global location for system defined symbols.
+ */
 @SuppressWarnings("all")
 public interface CommonLispSymbols {
 

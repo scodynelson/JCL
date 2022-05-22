@@ -371,6 +371,7 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 		                                totalSize.toJavaInt(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
+				                                Spliterator.NONNULL |
 				                                Spliterator.SUBSIZED
 		);
 	}

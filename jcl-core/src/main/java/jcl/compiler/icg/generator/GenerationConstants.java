@@ -52,9 +52,12 @@ import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.java.JavaNameStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 public interface GenerationConstants {
+
+	int JAVA_VERSION = Opcodes.V18;
 
 	String JAVA_EXTENSION = ".java";
 

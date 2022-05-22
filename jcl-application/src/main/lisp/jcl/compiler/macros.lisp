@@ -2,7 +2,6 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (require "base-macro-lambdas")
-  (require "base-lists")
 ) ;eval-when
 
 (in-package "COMMON-LISP")

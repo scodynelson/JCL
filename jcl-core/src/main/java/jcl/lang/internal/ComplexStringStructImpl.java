@@ -471,6 +471,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 		                                totalSize.toJavaInt(),
 		                                Spliterator.ORDERED |
 				                                Spliterator.SIZED |
+				                                Spliterator.NONNULL |
 				                                Spliterator.SUBSIZED
 		);
 	}

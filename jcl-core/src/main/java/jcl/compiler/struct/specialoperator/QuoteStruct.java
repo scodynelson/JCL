@@ -151,7 +151,7 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		if (IntegerStruct.MINUS_ONE.eql(quotedCons.listLength())) {
+		if (NILStruct.INSTANCE.eql(quotedCons.listLength())) {
 			throw new ProgramErrorException("Generation of circular lists is not yet supported.");
 		}
 

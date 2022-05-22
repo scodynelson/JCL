@@ -36,6 +36,12 @@ import jcl.functions.list.CdrFunction;
 import jcl.functions.list.ConsFunction;
 import jcl.functions.list.ListFunction;
 import jcl.functions.list.ListStarFunction;
+import jcl.functions.list.MapCFunction;
+import jcl.functions.list.MapCanFunction;
+import jcl.functions.list.MapCarFunction;
+import jcl.functions.list.MapConFunction;
+import jcl.functions.list.MapLFunction;
+import jcl.functions.list.MapListFunction;
 import jcl.functions.list.NconcFunction;
 import jcl.functions.readtable.ReadDispatchCharacterFunction;
 import jcl.functions.readtable.ReadFunction;
@@ -181,6 +187,12 @@ class BootstrapFunctions {
 				new ConsFunction(),
 				new ListFunction(),
 				new ListStarFunction(),
+				new MapCFunction(),
+				new MapCarFunction(),
+				new MapCanFunction(),
+				new MapLFunction(),
+				new MapListFunction(),
+				new MapConFunction(),
 				new NconcFunction()
 		);
 		bootstrapCommonLispPackageFunctions(functions);

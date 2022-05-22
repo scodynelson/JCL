@@ -6,7 +6,8 @@ public class StreamErrorException extends ErrorException {
 
 	private static final long serialVersionUID = -3552853955037901071L;
 
-	private final StreamStruct streamWithError;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	private final transient StreamStruct streamWithError;
 
 	public StreamErrorException(final String message, final StreamStruct streamWithError) {
 		super(message);

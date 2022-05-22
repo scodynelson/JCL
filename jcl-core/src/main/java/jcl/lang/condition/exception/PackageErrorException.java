@@ -6,7 +6,8 @@ public class PackageErrorException extends ErrorException {
 
 	private static final long serialVersionUID = 6077398599899378194L;
 
-	private final PackageStruct packageWithError;
+	@SuppressWarnings("TransientFieldNotInitialized")
+	private final transient PackageStruct packageWithError;
 
 	public PackageErrorException(final String message, final PackageStruct packageWithError) {
 		super(message);

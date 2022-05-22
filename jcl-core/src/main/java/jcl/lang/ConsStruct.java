@@ -7,17 +7,38 @@ import jcl.lang.internal.ConsStructImpl;
  */
 public interface ConsStruct extends ListStruct {
 
+	/**
+	 * Replaces the car of the cons with the provided object.
+	 *
+	 * @param car
+	 * 		the new "car" value
+	 *
+	 * @return the cons instance
+	 */
 	ConsStruct rplaca(final LispStruct car);
 
+	/**
+	 * Replaces the cdr of the cons with the provided object.
+	 *
+	 * @param cdr
+	 * 		the new "cdr" value
+	 *
+	 * @return the cons instance
+	 */
 	ConsStruct rplacd(final LispStruct cdr);
 
-	static LispStruct acons(final LispStruct key, final LispStruct datum, final ListStruct alist) {
-		final ConsStruct pair = toLispCons(key, datum);
-		return toLispCons(pair, alist);
-	}
-
-	static ConsStruct toLispCons(final LispStruct lispStruct1, final LispStruct lispStruct2) {
-		return new ConsStructImpl(lispStruct1, lispStruct2);
+	/**
+	 * Returns a new ConsStruct with the provided "car" and "cdr" values.
+	 *
+	 * @param car
+	 * 		the "car" of the cons
+	 * @param cdr
+	 * 		the "cdr" of the cons
+	 *
+	 * @return a new ConsStruct
+	 */
+	static ConsStruct toLispCons(final LispStruct car, final LispStruct cdr) {
+		return new ConsStructImpl(car, cdr);
 	}
 
 	/*
@@ -29,9 +50,8 @@ public interface ConsStruct extends ListStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof ConsStruct) {
-			final ConsStruct objectCons = (ConsStruct) object;
-			return car().equal(objectCons.car()) && cdr().equal(objectCons.cdr());
+		if (object instanceof final ConsStruct cons) {
+			return car().equal(cons.car()) && cdr().equal(cons.cdr());
 		}
 		return false;
 	}
@@ -41,9 +61,8 @@ public interface ConsStruct extends ListStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof ConsStruct) {
-			final ConsStruct objectCons = (ConsStruct) object;
-			return car().equalp(objectCons.car()) && cdr().equalp(objectCons.cdr());
+		if (object instanceof final ConsStruct cons) {
+			return car().equalp(cons.car()) && cdr().equalp(cons.cdr());
 		}
 		return false;
 	}

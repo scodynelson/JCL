@@ -7,6 +7,8 @@ package jcl.lang;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.collections4.IteratorUtils;
+
 /**
  * The {@link SequenceStruct} is the object representation of a Lisp 'sequence' type.
  */
@@ -36,8 +38,7 @@ public interface SequenceStruct extends LispStruct, Iterable<LispStruct> {
 	 * @return an array of elements
 	 */
 	default LispStruct[] toArray() {
-		// TODO fill in subclass implementations
-		throw new UnsupportedOperationException("Not supported yet.");
+		return IteratorUtils.toArray(iterator(), LispStruct.class);
 	}
 
 	/**

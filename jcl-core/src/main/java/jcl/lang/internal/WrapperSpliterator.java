@@ -5,10 +5,25 @@ import java.util.function.Consumer;
 
 import jcl.lang.LispStruct;
 
+/**
+ * Spliterator for wrapping a more specific {@link LispStruct} type with a generic {@link Spliterator}.
+ *
+ * @param <TYPE>
+ * 		the wrapped type of iterable contents
+ */
 class WrapperSpliterator<TYPE extends LispStruct> implements Spliterator<LispStruct> {
 
+	/**
+	 * The wrapped {@link Spliterator} for the type.
+	 */
 	private final Spliterator<TYPE> spliterator;
 
+	/**
+	 * Constructor for building the spliterator.
+	 *
+	 * @param spliterator
+	 * 		the {@link Spliterator} to wrap and delegate to
+	 */
 	WrapperSpliterator(final Spliterator<TYPE> spliterator) {
 		this.spliterator = spliterator;
 	}

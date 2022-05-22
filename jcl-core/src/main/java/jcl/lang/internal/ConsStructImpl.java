@@ -3,11 +3,8 @@ package jcl.lang.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -25,7 +22,6 @@ import jcl.lang.TStruct;
 import jcl.lang.classes.BuiltInClassStruct;
 import jcl.lang.classes.ClassStruct;
 import jcl.lang.condition.exception.ErrorException;
-import jcl.lang.condition.exception.SimpleErrorException;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.MethodVisitor;
@@ -111,6 +107,13 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 		return lispStruct;
 	}
 
+	/**
+	 * Algorithm used to determine the length of the cons. If the cons is not a "proper list" and is a "dotted-cons", a
+	 * {@link TypeErrorException} is thrown. If the cons is a "circular list" (meaning an element reference another part
+	 * of the list), {@link IntegerStruct#MINUS_ONE} is returned.
+	 *
+	 * @return the length of the list, or {@link IntegerStruct#MINUS_ONE} if the list is "circular"
+	 */
 	private FixnumStruct innerListLength() {
 		int n = 0; // Counter.
 		LispStruct fast = this; // Fast pointer: leaps by 2.
@@ -324,6 +327,16 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 		return butLastAux(this, limit);
 	}
 
+	/**
+	 * Helper method for returning all but the last (n) elements, with no side effects.
+	 *
+	 * @param list
+	 * 		the list to recurse over
+	 * @param limit
+	 * 		the number of elements to exclude
+	 *
+	 * @return the filtered list excluding the last (n) elements
+	 */
 	private static ListStruct butLastAux(final ListStruct list, final int limit) {
 		if (limit <= 0) {
 			return NILStruct.INSTANCE;
@@ -358,6 +371,14 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 		return this;
 	}
 
+	/**
+	 * Helper method for returning all but the last (n) elements, with potential side effects.
+	 *
+	 * @param list
+	 * 		the list to recurse over
+	 * @param limit
+	 * 		the number of elements to exclude
+	 */
 	private static void nButLastAux(final ListStruct list, final int limit) {
 		if (limit <= 0) {
 			((ConsStruct) list).rplacd(NILStruct.INSTANCE);
@@ -648,6 +669,16 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 		return stringBuilder.toString();
 	}
 
+	/**
+	 * Helper method for printing the elements of a cons.
+	 *
+	 * @param object
+	 * 		the cons to print
+	 * @param stringBuilder
+	 * 		the {@link StringBuilder} used to write the printed cons
+	 *
+	 * @return the {@link String} containing the printed cons elements
+	 */
 	private static String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
 
 		final LispStruct car = object.car();
@@ -671,34 +702,5 @@ public final class ConsStructImpl extends LispStructImpl implements ConsStruct {
 		}
 
 		return stringBuilder.toString();
-	}
-
-	private static final class ConsIterator implements Iterator<LispStruct> {
-
-		private ListStruct current;
-
-		private ConsIterator(final ConsStruct cons) {
-			current = cons;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return current instanceof ConsStruct;
-		}
-
-		@Override
-		public LispStruct next() {
-			if (!hasNext()) {
-				throw new NoSuchElementException("No elements left in the Cons.");
-			}
-			final ConsStruct currentAsCons = (ConsStruct) current;
-
-			final LispStruct currentCdr = currentAsCons.cdr();
-			if (!(currentCdr instanceof ListStruct)) {
-				throw new TypeErrorException("Not a proper list.");
-			}
-			current = (ListStruct) currentCdr;
-			return currentAsCons.car();
-		}
 	}
 }

@@ -7,12 +7,8 @@ before_script:
 script:
 # Display Gradle, JVM, and other versions
   - ./gradlew --version
-# Run all checks
-  - ./gradlew check
-# Verify Code Generation
-  - ./gradlew assemble
-# Run code coverage report
-  - ./gradlew jacocoTestReport
+# Run Build and generate JaCoCo Report
+  - ./gradlew build jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

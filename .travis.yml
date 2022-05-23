@@ -7,8 +7,10 @@ before_script:
 script:
 # Display Gradle, JVM, and other versions
   - ./gradlew --version
-# Run Build and generate JaCoCo Report
-  - ./gradlew build jacocoTestReport
+# Run Build
+  - ./gradlew build
+# Run Tests, Generate JaCoCo Test Report, Upload Report to SonarQube
+  - ./gradlew test jacocoTestReport sonarqube
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

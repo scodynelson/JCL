@@ -283,7 +283,7 @@ tasks.jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "scodynelson_JCL"
+        property("sonar.projectKey", "scodynelson_JCL")
     }
 }
 

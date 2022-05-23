@@ -16,9 +16,9 @@ install:
 
 script:
 # Run Build
-  - ./gradlew build --warning-mode all
-# Run Tests, Generate JaCoCo Test Report, Upload Report to SonarQube
-  - ./gradlew test jacocoTestReport sonarqube --info --stacktrace --warning-mode all
+  - ./gradlew build
+# Run SonarQube Report
+  - ./gradlew sonarqube
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

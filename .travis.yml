@@ -1,6 +1,12 @@
 language: java
 jdk: openjdk18
 
+addons:
+  sonarcloud:
+    organization: "scodynelson"
+    token:
+      secure: $SONAR_TOKEN
+
 before_script:
   - chmod +x gradlew
 

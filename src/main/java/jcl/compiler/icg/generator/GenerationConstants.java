@@ -43,6 +43,7 @@ import jcl.lang.PackageSymbolStruct;
 import jcl.lang.PathnameStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
@@ -57,7 +58,7 @@ import org.objectweb.asm.Type;
 
 public interface GenerationConstants {
 
-	int JAVA_VERSION = Opcodes.V18;
+	int JAVA_VERSION = Opcodes.V19;
 
 	String JAVA_EXTENSION = ".java";
 
@@ -176,6 +177,16 @@ public interface GenerationConstants {
 	 * Constant {@link String} containing the description for the {@link NILStruct} class.
 	 */
 	String NIL_STRUCT_DESC = Type.getDescriptor(NILStruct.class);
+
+	/**
+	 * Constant {@link String} containing the name for the {@link TStruct} class.
+	 */
+	String T_STRUCT_NAME = Type.getInternalName(TStruct.class);
+
+	/**
+	 * Constant {@link String} containing the description for the {@link TStruct} class.
+	 */
+	String T_STRUCT_DESC = Type.getDescriptor(TStruct.class);
 
 	String CONS_STRUCT_NAME = Type.getInternalName(ConsStruct.class);
 

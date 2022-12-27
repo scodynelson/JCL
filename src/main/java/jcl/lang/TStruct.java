@@ -48,16 +48,6 @@ public final class TStruct extends SymbolStructImpl implements BooleanStruct {
 	 */
 
 	/**
-	 * Constant {@link String} containing the name for the {@link TStruct} class.
-	 */
-	private static final String T_STRUCT_NAME = Type.getInternalName(TStruct.class);
-
-	/**
-	 * Constant {@link String} containing the description for the {@link TStruct} class.
-	 */
-	private static final String T_STRUCT_DESC = Type.getDescriptor(TStruct.class);
-
-	/**
 	 * {@inheritDoc}
 	 * Generation method for {@code TStruct} objects, by retrieving the static singleton {@link TStruct#INSTANCE}.
 	 *
@@ -70,8 +60,8 @@ public final class TStruct extends SymbolStructImpl implements BooleanStruct {
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC,
-		                  T_STRUCT_NAME,
+		                  GenerationConstants.T_STRUCT_NAME,
 		                  GenerationConstants.SINGLETON_INSTANCE,
-		                  T_STRUCT_DESC);
+		                  GenerationConstants.T_STRUCT_DESC);
 	}
 }

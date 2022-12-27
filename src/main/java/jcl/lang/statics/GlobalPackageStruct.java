@@ -29,6 +29,8 @@ public final class GlobalPackageStruct {
 
 	public static final PackageStruct SYSTEM = PackageStruct.toLispPackage("SYSTEM", Collections.emptyList());
 
+	public static final PackageStruct EMIT = PackageStruct.toLispPackage("EMITTER", Collections.emptyList());
+
 	// TODO: Eventually, we must make sure we account for lexical constraints for the CL and Keyword packages defined in the specification.
 	public static final PackageStruct EXTENSIONS = PackageStruct.toLispPackage("EXTENSIONS", Collections.singletonList("EXT"));
 

@@ -1,8 +1,8 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.42.0"
+    id("com.github.ben-manes.versions") version "0.44.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "3.3"
+    id("org.sonarqube") version "3.5.0.2730"
 }
 
 // ************************************************
@@ -25,8 +25,8 @@ configurations.all {
 // ************************************************
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_18
-    targetCompatibility = JavaVersion.VERSION_18
+    sourceCompatibility = JavaVersion.VERSION_19
+    targetCompatibility = JavaVersion.VERSION_19
     withSourcesJar()
 //		withJavadocJar()
 }
@@ -52,29 +52,32 @@ repositories {
 }
 
 dependencies {
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
+    implementation(platform("org.ow2.asm:asm-bom:9.4"))
+
     implementation("com.google.guava:guava:31.1-jre")
-    implementation("com.ibm.icu:icu4j:71.1")
+    implementation("com.ibm.icu:icu4j:72.1")
     implementation("commons-io:commons-io:2.11.0")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.apache.commons:commons-text:1.9")
+    implementation("org.apache.commons:commons-text:1.10.0")
     implementation("org.apfloat:apfloat:1.10.1")
     implementation("org.benf:cfr:0.152")
     implementation("org.glassfish.external:javahelp:2.0.06")
-    implementation("org.ow2.asm:asm:9.3")
-    implementation("org.ow2.asm:asm-util:9.3")
-    implementation("info.picocli:picocli:4.6.3")
+    implementation("org.ow2.asm:asm")
+    implementation("org.ow2.asm:asm-util")
+    implementation("info.picocli:picocli:4.7.0")
 
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
-    testImplementation("org.assertj:assertj-core:3.22.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation("org.assertj:assertj-core:3.23.1")
 
-    implementation("org.apache.logging.log4j:log4j-api:2.17.2")
-    runtimeOnly("org.apache.logging.log4j:log4j-core:2.17.2")
-    testRuntimeOnly("org.apache.logging.log4j:log4j-core:2.17.2")
+    implementation("org.apache.logging.log4j:log4j-api")
+    runtimeOnly("org.apache.logging.log4j:log4j-core")
+    testRuntimeOnly("org.apache.logging.log4j:log4j-core")
 
     runtimeOnly(fileTree(mapOf("dir" to "compiled-lisp", "include" to "*.jar")))
 }
@@ -302,6 +305,6 @@ tasks.jar {
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "7.4.2"
+    gradleVersion = "7.6"
     distributionType = Wrapper.DistributionType.ALL
 }

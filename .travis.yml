@@ -1,5 +1,5 @@
 language: java
-jdk: openjdk18
+jdk: openjdk19
 
 # Need to ensure full depth clone for SonarCloud blame
 git:

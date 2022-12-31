@@ -3,6 +3,7 @@ plugins {
     id("java")
     id("jacoco")
     id("org.sonarqube") version "3.5.0.2730"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 // ************************************************
@@ -64,7 +65,6 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("org.apfloat:apfloat:1.10.1")
     implementation("org.benf:cfr:0.152")
-    implementation("org.glassfish.external:javahelp:2.0.06")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
     implementation("info.picocli:picocli:4.7.0")
@@ -179,16 +179,18 @@ val lispSourceFiles = listOf(
     "jcl/sequences/sequences.lisp",
     "jcl/compiler/macros.lisp",
     "jcl/iterators/iterators.lisp",
+    "jcl/conditions/conditions.lisp",
     "jcl/characters/characters.lisp",
     "jcl/pathnames/pathnames.lisp",
     "jcl/symbols/symbols.lisp",
-    "jcl/reader/reader.lisp",
     "jcl/strings/strings.lisp",
     "jcl/streams/streams.lisp",
+    "jcl/reader/reader.lisp",
     "jcl/packages/packages.lisp",
     "jcl/lists/lists.lisp",
     "jcl/numbers/numbers.lisp",
     "jcl/hashtables/hashtables.lisp",
+    "jcl/files/files.lisp",
     "jcl/environment/environment.lisp",
     "jcl/structures/structures.lisp"
 )
@@ -298,6 +300,14 @@ tasks.jar {
     manifest {
         attributes["Main-Class"] = "jcl.system.JCL"
     }
+}
+
+// ************************************************
+// Shadow Jar
+// ************************************************
+
+tasks.shadowJar {
+    dependsOn("assemble")
 }
 
 // ************************************************

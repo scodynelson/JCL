@@ -20,6 +20,7 @@ import jcl.lang.TwoWayStreamStruct;
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.statics.CommonLispSymbols;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.system.repl.ReadEvalPrint;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
@@ -64,9 +65,15 @@ public class JCL implements Runnable {
 		} else if (hasCompileFileSrcDir || hasCompileFileDestDir) {
 			throw new ErrorException("Both Compile File Source and Destination directories must be provided.");
 		} else {
-//			CommonLispSymbols.LOAD_VERBOSE_VAR.setValue(TStruct.INSTANCE);
+//			CommonLispSymbols.COMPILE_VERBOSE_VAR.setfSymbolValue(TStruct.INSTANCE);
+//			CommonLispSymbols.LOAD_VERBOSE_VAR.setfSymbolValue(TStruct.INSTANCE);
 
 			InternalLoad.autoLoadJavaModules();
+			InternalLoad.autoLoadMainClasses();
+
+			// Ensure we start in CL-USER Package
+			CommonLispSymbols.PACKAGE_VAR.setfSymbolValue(GlobalPackageStruct.COMMON_LISP_USER);
+
 			ReadEvalPrint.funcall();
 		}
 	}

@@ -27,6 +27,7 @@ public final class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_U) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
+			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
 			return NILStruct.INSTANCE;
 		}
 

@@ -102,6 +102,15 @@
   (declare (system::%java-class-name "jcl.symbols.functions.BoundP"))
   ($boundP symbol))
 
+(defun fboundp (name)
+  "Returns true if name is fbound; otherwise, returns false."
+  (declare (system::%java-class-name "jcl.symbols.functions.FBoundP"))
+  (if (symbolp name)
+      ($fBoundP name)
+    (if (consp name)
+        (get (cadr name) 'SETF-DEFINITION)
+      (error "Name must either be SYMBOL or CONS"))))
+
 (defun makunbound (symbol)
   "Makes the symbol be unbound, regardless of whether it was previously bound."
   (declare (system::%java-class-name "jcl.symbols.functions.MakUnbound"))

@@ -222,7 +222,6 @@ import jcl.functions.symbol.SetSymbolMacroFunction;
 import jcl.functions.symbol.SetSymbolSetfFunctionFunction;
 import jcl.functions.system.FreeMemory;
 import jcl.functions.system.GC;
-import jcl.functions.system.Help;
 import jcl.functions.system.MaxMemory;
 import jcl.functions.system.TotalMemory;
 import jcl.lang.FunctionStruct;
@@ -402,9 +401,9 @@ class BootstrapFunctions {
 
 	private static void bootstrapExtensionFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
+				new PredicateFunctions.LogicalPathnamePFunction(),
 				new FreeMemory(),
 				new GC(),
-				new Help(),
 				new MaxMemory(),
 				new QuitFunction(),
 				new TotalMemory()

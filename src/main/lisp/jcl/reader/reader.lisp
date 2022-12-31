@@ -2,6 +2,7 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (require "base-macro-lambdas")
+  (require "streams")
 ) ;eval-when
 
 (in-package "COMMON-LISP")
@@ -54,7 +55,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: read-from-string
+(defun read-from-string (string &optional (eof-error-p t) eof-value
+                                &key (start 0) end preserve-whitespace)
+  "The characters of string are successively given to the lisp reader
+   and the lisp object built by the reader is returned.  Macro chars
+   will take effect."
+  (declare (system::%java-class-name "jcl.reader.functions.ReadFromString"))
+  (let ((stream (make-string-input-stream string start end)))
+    (if preserve-whitespace
+        (read-preservice-whitespace stream eof-error-p eof-value nil)
+      (read stream eof-error-p eof-value nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

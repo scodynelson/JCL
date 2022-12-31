@@ -59,6 +59,10 @@ public final class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 				final LispStruct token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 				commaCons = ConsStruct.toLispCons(BackquoteReaderMacroFunction.BQ_COMMA_FLAG, token);
 			}
+
+			if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
+				return NILStruct.INSTANCE;
+			}
 			return commaCons;
 		} finally {
 			context.incrementBackquoteLevel();

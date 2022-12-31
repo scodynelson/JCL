@@ -7,6 +7,7 @@ package jcl.functions.reader;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.ReadtableCase;
 import jcl.lang.ReadtableStruct;
 import jcl.lang.java.JavaClassStruct;
@@ -43,7 +44,7 @@ public final class AtSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
-			return null;
+			return NILStruct.INSTANCE;
 		}
 
 		final JavaClassStruct javaClass = JavaClassStruct.toJavaClass(tokenString);

@@ -5,6 +5,7 @@
 package jcl.lang.internal;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -175,7 +176,34 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 	 */
 	public LogicalPathnameStructImpl(final LispStruct host, final LispStruct directory,
 	                                 final LispStruct name, final LispStruct type, final LispStruct version) {
-		super(host, CommonLispSymbols.UNSPECIFIC_KEYWORD, directory, name, type, version);
+		super(host, CommonLispSymbols.UNSPECIFIC_KEYWORD, canonicalizeDirectory(directory), canonicalizeString(name),
+		      canonicalizeString(type), version);
+	}
+
+	private static LispStruct canonicalizeDirectory(final LispStruct obj) {
+		if (obj instanceof ListStruct) {
+			final List<LispStruct> list
+					= ((ListStruct) obj).stream()
+					                    .map(LogicalPathnameStructImpl::canonicalizeString)
+					                    .toList();
+			return ListStruct.toLispList(list);
+		}
+		return obj;
+	}
+
+	private static LispStruct canonicalizeString(final LispStruct obj) {
+		if (obj instanceof StringStruct) {
+			final String s = ((StringStruct) obj).toJavaString();
+			final int limit = s.length();
+			for (int i = 0; i < limit; i++) {
+				final char c = s.charAt(i);
+				if (LOGICAL_PATHNAME_CHARS.indexOf(c) < 0) {
+					throw new ParseErrorException("The character #\\" + c + " is not valid in a logical pathname.");
+				}
+			}
+			return StringStruct.toLispString(s.toUpperCase());
+		}
+		return obj;
 	}
 
 	@Override

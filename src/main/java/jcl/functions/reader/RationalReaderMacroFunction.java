@@ -33,11 +33,6 @@ final class RationalReaderMacroFunction {
 	 * @return the properly parsed {@link RationalStruct}
 	 */
 	static LispStruct readRational(final InputStreamStruct inputStreamStruct, final int radix) {
-		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
-			ExtendedTokenReaderMacroFunction.readExtendedToken(inputStreamStruct, false);
-			return NILStruct.INSTANCE;
-		}
-
 		final IntegerStruct previousReadBase = CommonLispSymbols.READ_BASE_VAR.getVariableValue();
 
 		// read rational

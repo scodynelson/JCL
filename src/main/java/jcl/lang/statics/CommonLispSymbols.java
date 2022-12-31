@@ -1237,6 +1237,7 @@ public interface CommonLispSymbols {
 	SymbolStruct NIL_VECTOR = internAndExportExtensionSymbol("NIL-VECTOR");
 
 	SymbolStruct WHITESPACEP = internAndExportExtensionSymbol("WHITESPACEP");
+	SymbolStruct LOGICAL_PATHNAME_P = internAndExportExtensionSymbol("LOGICAL-PATHNAME-P");
 
 	SymbolStruct STRING_INPUT_STREAM = internAndExportExtensionSymbol("STRING-INPUT-STREAM");
 	SymbolStruct STRING_OUTPUT_STREAM = internAndExportExtensionSymbol("STRING-OUTPUT-STREAM");

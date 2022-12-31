@@ -38,8 +38,10 @@ final class FeaturesReaderMacroFunction {
 	 * 		the {@link InputStreamStruct} to read in the next token
 	 * @param shouldHideFeatures
 	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
+	 *
+	 * @return the parsed token
 	 */
-	static void readFeatures(final InputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
+	static LispStruct readFeatures(final InputStreamStruct inputStreamStruct, final boolean shouldHideFeatures) {
 
 		final BooleanStruct previousReadSuppress = CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue();
 		final PackageStruct previousPackage = CommonLispSymbols.PACKAGE_VAR.getVariableValue();
@@ -51,14 +53,21 @@ final class FeaturesReaderMacroFunction {
 			CommonLispSymbols.PACKAGE_VAR.setfSymbolValue(previousPackage);
 
 			final boolean isFeature = isFeature(token);
-			if (isFeature && shouldHideFeatures) {
+			if (!isFeature || shouldHideFeatures) {
 				CommonLispSymbols.READ_SUPPRESS_VAR.setfSymbolValue(TStruct.INSTANCE);
 				Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+				return null;
+			} else {
+				return Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
 			if (log.isDebugEnabled()) {
 				log.debug("Error occurred when reading feature.", ree);
 			}
+			if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
+				return null;
+			}
+			throw ree;
 		} finally {
 			CommonLispSymbols.PACKAGE_VAR.setfSymbolValue(previousPackage);
 			CommonLispSymbols.READ_SUPPRESS_VAR.setfSymbolValue(previousReadSuppress);

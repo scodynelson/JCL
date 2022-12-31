@@ -9,6 +9,7 @@ import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
@@ -84,7 +85,10 @@ abstract class MapperFunction extends BuiltInFunctionStructImpl {
 			}
 
 			// SETQ
-			final LispStruct res = function.apply(args.nReverse().toArray());
+			LispStruct res = function.apply(args.nReverse().toArray());
+			if (res instanceof ValuesStruct) {
+				res = ((ValuesStruct) res).getPrimaryValue();
+			}
 
 			// CASE
 			switch (accumulate()) {

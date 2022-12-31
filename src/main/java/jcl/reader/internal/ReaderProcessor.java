@@ -105,13 +105,6 @@ public class ReaderProcessor {
 		} else {
 			token = readIllegalCharacter(tokenBuilder);
 		}
-
-		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
-			if (log.isDebugEnabled()) {
-				log.debug("{} suppressed.", token);
-			}
-			return NILStruct.INSTANCE;
-		}
 		return token;
 	}
 
@@ -215,9 +208,7 @@ public class ReaderProcessor {
 			if (log.isTraceEnabled()) {
 				log.trace(((CommentStruct) token).getCommentString());
 			}
-			return read(tokenBuilder);
-		} else if (token == null) {
-			return read(tokenBuilder);
+			return null;
 		} else {
 			return token;
 		}
@@ -355,7 +346,9 @@ public class ReaderProcessor {
 
 		final InputStreamStruct inputStreamStruct = tokenBuilder.getInputStreamStruct();
 
-		ReadCharResult readResult = inputStreamStruct.readChar(isEofErrorP, eofValue);
+		// Note: do not throw EOF when attempting to read the even escape. We check for EOF below to handle
+		//          token accumulation, if the token end at the EOF
+		ReadCharResult readResult = inputStreamStruct.readChar(false, eofValue);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -502,9 +495,8 @@ public class ReaderProcessor {
 	 * @return the parsed token
 	 */
 	private static LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
-
 		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
-			return null;
+			return NILStruct.INSTANCE;
 		}
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
@@ -518,6 +510,9 @@ public class ReaderProcessor {
 	}
 
 	private static LispStruct readNumberTokenAccumulated(final TokenBuilder tokenBuilder) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
+			return NILStruct.INSTANCE;
+		}
 		final NumberStruct numberToken = NumberTokenAccumulatedReaderState.getNumberToken(tokenBuilder);
 		if (numberToken == null) {
 			return readSymbolTokenAccumulated(tokenBuilder);
@@ -527,6 +522,9 @@ public class ReaderProcessor {
 	}
 
 	private static LispStruct readSymbolTokenAccumulated(final TokenBuilder tokenBuilder) {
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
+			return NILStruct.INSTANCE;
+		}
 		final SymbolStruct symbolToken = SymbolTokenAccumulatedReaderState.getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
 			return readIllegalCharacter(tokenBuilder);

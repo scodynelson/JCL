@@ -39,6 +39,8 @@ public final class LoadFunction extends BuiltInFunctionStructImpl {
 	public LispStruct apply(final Arguments arguments) {
 
 		final LispStruct filespec = arguments.getRequiredArgument(FILESPEC_ARGUMENT);
+		//System.out.println("Loading: " + filespec);
+
 		final BooleanStruct verbose;
 		if (arguments.hasKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD)) {
 			verbose = arguments.getKeyArgument(CommonLispSymbols.VERBOSE_KEYWORD, BooleanStruct.class);

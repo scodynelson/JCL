@@ -134,6 +134,7 @@ final class BootstrapSymbols {
 		CommonLispSymbols.LOAD_PRINT_VAR.setfSymbolValue(NILStruct.INSTANCE);
 		CommonLispSymbols.LOAD_VERBOSE_VAR.setfSymbolValue(NILStruct.INSTANCE);
 		CommonLispSymbols.MODULES_VAR.setfSymbolValue(NILStruct.INSTANCE);
+		CommonLispSymbols.FEATURES_VAR.setfSymbolValue(NILStruct.INSTANCE);
 
 		CommonLispSymbols.GENSYM_COUNTER_VAR.setfSymbolValue(IntegerStruct.ZERO);
 

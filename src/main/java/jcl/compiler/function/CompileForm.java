@@ -4,6 +4,7 @@
 
 package jcl.compiler.function;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +88,11 @@ public final class CompileForm {
 		// TODO: Maybe set this up as a super debugging variable that we can control or something???
 		if (OUTPUT_FILE) {
 			final String fileName = javaClassBuilder.getFileName();
-			final String tmpDir = "/Users/codynelson/workspace/JCL/jcl-application/compiled-lisp/";
+			final String tmpDir = "/Users/codynelson/workspace/JCL/compiled-lisp/tmp/";
+			final File tmpDirFile = new File(tmpDir);
+			if (!tmpDirFile.exists()) {
+				tmpDirFile.mkdir();
+			}
 			try (final FileOutputStream outputStream = new FileOutputStream(tmpDir + fileName + ".class")) {
 				outputStream.write(byteArray);
 			} catch (final IOException ioe) {

@@ -7,7 +7,10 @@ package jcl.functions.reader;
 import jcl.lang.InputStreamStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.condition.exception.ReaderErrorException;
+import jcl.lang.statics.CommonLispSymbols;
+import jcl.reader.Reader;
 import jcl.util.CodePointConstants;
 
 /**
@@ -33,6 +36,11 @@ public final class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public LispStruct readMacro(final InputStreamStruct inputStreamStruct, final int codePoint,
 	                            final IntegerStruct numberArgument) {
 		assert (codePoint == CodePointConstants.LATIN_SMALL_LETTER_R) || (codePoint == CodePointConstants.LATIN_CAPITAL_LETTER_R);
+
+		if (CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean()) {
+			Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
+			return NILStruct.INSTANCE;
+		}
 
 		if (numberArgument == null) {
 			throw new ReaderErrorException("Radix missing in #R.");

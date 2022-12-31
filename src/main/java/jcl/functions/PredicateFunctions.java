@@ -14,6 +14,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.LogicalPathnameStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.NumberStruct;
 import jcl.lang.PackageStruct;
@@ -185,6 +186,15 @@ public final class PredicateFunctions {
 
 		public ListPFunction() {
 			super(CommonLispSymbols.LISTP, TYPE, ListStruct.class);
+		}
+	}
+
+	public static final class LogicalPathnamePFunction extends AbstractPredicateFunction {
+
+		private static final String TYPE = "PATHNAME";
+
+		public LogicalPathnamePFunction() {
+			super(CommonLispSymbols.LOGICAL_PATHNAME_P, TYPE, LogicalPathnameStruct.class);
 		}
 	}
 

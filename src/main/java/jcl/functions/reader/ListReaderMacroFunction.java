@@ -101,7 +101,7 @@ final class ListReaderMacroFunction {
 		final int nextCodePoint = readResult.getResult();
 
 		if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(nextCodePoint)) {
-			if (currentTokenList.isEmpty()) {
+			if (currentTokenList.isEmpty()  && errorOnRead()) {
 				throw new ReaderErrorException("Nothing appears before . in list.");
 			}
 
@@ -136,7 +136,7 @@ final class ListReaderMacroFunction {
 
 		while (token == null) {
 
-			if (firstCodePoint == CodePointConstants.RIGHT_PARENTHESIS) {
+			if ((firstCodePoint == CodePointConstants.RIGHT_PARENTHESIS) && errorOnRead()) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
 			}
 			inputStreamStruct.unreadChar(firstCodePoint);
@@ -152,12 +152,22 @@ final class ListReaderMacroFunction {
 
 			// NOTE: This will throw errors when it reaches an EOF
 			token = Reader.read(inputStreamStruct, true, NILStruct.INSTANCE, true);
-			if (token != null) {
+			if ((token != null) && errorOnRead()) {
 				throw new ReaderErrorException("More than one object follows . in list: " + token);
 			}
 
 			firstCodePoint = flushWhitespace(inputStreamStruct);
 		}
+	}
+
+	/**
+	 * Whether an error should be thrown when attempting to read dotted lists. This is based on the current
+	 * *read-suppress* variable value.
+	 *
+	 * @return true if an error should be thrown on read; false otherwise
+	 */
+	private static boolean errorOnRead() {
+		return !CommonLispSymbols.READ_SUPPRESS_VAR.getVariableValue().toJavaPBoolean();
 	}
 
 	/**

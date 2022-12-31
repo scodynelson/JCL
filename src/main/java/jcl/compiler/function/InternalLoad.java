@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.Attributes;
@@ -26,6 +27,8 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
+import static java.util.Map.entry;
+
 @Log4j2
 @UtilityClass
 public final class InternalLoad {
@@ -33,6 +36,73 @@ public final class InternalLoad {
 	private static final String MANIFEST_RESOURCE_LOCATION = "META-INF/MANIFEST.MF";
 
 	private static final Map<String, String> LISP_MODULE_TO_MAIN_CLASS_MAP = new ConcurrentHashMap<>();
+
+	public static void autoLoadMainClasses() {
+		if (!LISP_MODULE_TO_MAIN_CLASS_MAP.isEmpty()) {
+			return;
+		}
+
+		// TODO: this manual loading of main classes isn't sustainable. Should be replaced with something better...
+		try {
+			final Map<String, String> mainClasses = Map.ofEntries(
+					entry("base-macro-lambdas", "jcl.Base_macro_lambdas"),
+					entry("sequences", "jcl.Sequences"),
+					entry("macros", "jcl.Macros"),
+					entry("iterators", "jcl.Iterators"),
+					entry("conditions", "jcl.Conditions"),
+					entry("characters", "jcl.Characters"),
+					entry("pathnames", "jcl.Pathnames"),
+					entry("symbols", "jcl.Symbols"),
+					entry("strings", "jcl.Strings"),
+					entry("streams", "jcl.Streams"),
+					entry("reader", "jcl.Reader"),
+					entry("packages", "jcl.Packages"),
+					entry("lists", "jcl.Lists"),
+					entry("numbers", "jcl.Numbers"),
+					entry("hashtables", "jcl.Hashtables"),
+					entry("files", "jcl.Files"),
+					entry("environment", "jcl.Environment"),
+					entry("structures", "jcl.Structures")
+			);
+			final List<String> modules = List.of(
+					"base-macro-lambdas",
+					"sequences",
+					"macros",
+					"iterators",
+					"conditions",
+					"characters",
+					"pathnames",
+					"symbols",
+					"strings",
+					"streams",
+					"reader",
+					"packages",
+					"lists",
+					"numbers",
+					"hashtables",
+					"files",
+					"environment",
+					"structures"
+			);
+
+			for (final String lispModuleName : modules) {
+				final String mainClassName = mainClasses.get(lispModuleName);
+				LISP_MODULE_TO_MAIN_CLASS_MAP.put(lispModuleName, mainClassName);
+
+				final boolean compileVerbose = CommonLispSymbols.COMPILE_VERBOSE_VAR.getVariableValue().toJavaPBoolean();
+				final boolean loadVerbose = CommonLispSymbols.LOAD_VERBOSE_VAR.getVariableValue().toJavaPBoolean();
+				if (compileVerbose || loadVerbose) {
+					// TODO: is this verbose check correct???
+					log.info("; Loading Module: {}", lispModuleName);
+				}
+
+				final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+				loadMainClass(systemClassLoader, mainClassName);
+			}
+		} catch (final Exception ex) {
+			log.error("Error auto-loading main classes.", ex);
+		}
+	}
 
 	public static void autoLoadJavaModules() {
 		try {
@@ -151,10 +221,26 @@ public final class InternalLoad {
 			filespecFileStream = (FileStreamStruct) filespec;
 			filespecPathname = filespecFileStream.toPathname();
 		} else {
-//			final PathnameStruct filespecAsPathname = PathnameStruct.toPathname(filespec);
-//			final PathnameStruct defaultPathspec = CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.getVariableValue();
+			final PathnameStruct filespecAsPathname = PathnameStruct.fromDesignator(filespec);
+			final PathnameStruct defaultPathspec = CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.getVariableValue();
 //			filespecPathname = PathnameStructs.mergePathnames(filespecAsPathname, defaultPathspec);
-			filespecPathname = PathnameStruct.fromDesignator(filespec);
+
+			// TODO: temp hack for merge
+			filespecPathname = PathnameStruct.toPathname(
+					filespecAsPathname.pathnameHost().eq(NILStruct.INSTANCE)
+					? defaultPathspec.pathnameHost() : filespecAsPathname.pathnameHost(),
+					filespecAsPathname.pathnameDevice().eq(NILStruct.INSTANCE)
+					? defaultPathspec.pathnameDevice() : filespecAsPathname.pathnameDevice(),
+					filespecAsPathname.pathnameDirectory().eq(NILStruct.INSTANCE)
+					? defaultPathspec.pathnameDirectory() : filespecAsPathname.pathnameDirectory(),
+					filespecAsPathname.pathnameName().eq(NILStruct.INSTANCE)
+					? defaultPathspec.pathnameName() : filespecAsPathname.pathnameName(),
+					filespecAsPathname.pathnameType().eq(NILStruct.INSTANCE)
+					? defaultPathspec.pathnameType() : filespecAsPathname.pathnameType(),
+					filespecAsPathname.pathnameVersion().eq(NILStruct.INSTANCE)
+					? defaultPathspec.pathnameVersion() : filespecAsPathname.pathnameVersion()
+			);
+//			filespecPathname = PathnameStruct.fromDesignator(filespec);
 		}
 
 		final File pathnameFile = new File(filespecPathname.namestring());
@@ -207,10 +293,13 @@ public final class InternalLoad {
 			log.info("; Loading '{}'", pathnameFile);
 		}
 
+		final LispStruct eofValue = new LispStruct() {
+		};
+
 		LispStruct form;
 		do {
-			form = InternalRead.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
-			if (form == null) {
+			form = InternalRead.read(filespecFileStream, NILStruct.INSTANCE, eofValue, NILStruct.INSTANCE);
+			if (form == eofValue) {
 				continue;
 			}
 
@@ -218,7 +307,7 @@ public final class InternalLoad {
 			if (print) {
 				log.info("; {}", evaluatedForm);
 			}
-		} while (form != null);
+		} while (form != eofValue);
 
 		return TStruct.INSTANCE;
 	}

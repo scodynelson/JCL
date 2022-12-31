@@ -34,28 +34,7 @@
   `(eval-when (:compile-toplevel :load-toplevel :execute)
      (proclaim ',declaration-specifier)))
 |#
-;; Defconstant, Defparameter, Devvar
-#|
-(defmacro defvar (symbol &optional (init-form nil) documentation)
-  (declare (system::%java-class-name "jcl.common.functions.Defvar"))
-  `(progn
-     (system::%set-special ',symbol t)
-     (unless (boundp ',symbol) (setq ,symbol ,init-form))))
 
-(defmacro defparameter (symbol init-form &optional documentation)
-  (declare (system::%java-class-name "jcl.common.functions.Defparameter"))
-  `(progn
-     (system::%set-special ',symbol t)
-     (setq ,symbol ,init-form)))
-
-(defmacro defconstant (symbol init-form &optional documentation)
-  (declare (system::%java-class-name "jcl.common.functions.Defconstant"))
-  `(progn
-     (system::%set-special ',symbol t)
-     (system::%set-constant ',symbol nil)
-     (setq ,symbol ,init-form)
-     (system::%set-constant ',symbol t)))
-|#
 ;; Destructuring-Bind
 
 ;; Return
@@ -77,6 +56,43 @@
   (if (cdr body)
       `(if (not ,test-form) (progn ,@body))
     `(if (not ,test-form) ,(car body))))
+
+;; Defconstant, Defparameter, Devvar
+
+(defmacro defvar (var &optional (val nil valp) (doc nil docp))
+  (declare (system::%java-class-name "jcl.common.functions.Defvar"))
+  `(progn
+     ;(declaim (special ,var))
+     ;(system::%set-special ',var t)
+     ;,@(when valp ;; TODO: this when block should be used... but this is a hack
+     ;    `((unless (boundp ',var)
+     ;        (setq ,var ,val))))
+     (setq ,var ,val)
+     ;,@(when docp
+     ;    `((setf (documentation ',var 'variable) ',doc)))
+     ',var))
+
+(defmacro defparameter (var val &optional (doc nil docp))
+  (declare (system::%java-class-name "jcl.common.functions.Defparameter"))
+  `(progn
+     ;(declaim (special ,var))
+     ;(system::%set-special ',symbol t)
+     (setq ,var ,val)
+     ;,@(when docp
+     ;    `((setf (documentation ',var 'variable) ',doc)))
+     ',var))
+
+(defmacro defconstant (var val &optional (doc nil docp))
+  (declare (system::%java-class-name "jcl.common.functions.Defconstant"))
+  `(progn
+     ;(declaim (special ,var))
+     ;(system::%set-special ',symbol t)
+     ;(system::%set-constant ',symbol nil)
+     (setq ,var ,val)
+     ;,@(when docp
+     ;    `((setf (documentation ',var 'variable) ',doc)))
+     ;(system::%set-constant ',symbol t)
+     ',var))
 
 ;; Cond
 
@@ -196,25 +212,25 @@
                  (list `(error "There were no matches in the ECASE to value" ,key-test)))))))
 
 (defmacro case (keyform &rest clauses)
-  (declare (system::%java-class-name "lisp.common.function.Case"))
+  (declare (system::%java-class-name "jcl.common.functions.Case"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
       ,(handle-normal-clauses clauses 'eql test-val))))
 
 (defmacro ecase (keyform &rest clauses)
-  (declare (system::%java-class-name "lisp.common.function.Ecase"))
+  (declare (system::%java-class-name "jcl.common.functions.Ecase"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
       ,(handle-error-clauses clauses 'eql test-val nil))))
 
 (defmacro typecase (keyform &rest clauses)
-  (declare (system::%java-class-name "lisp.common.function.Typecase"))
+  (declare (system::%java-class-name "jcl.common.functions.Typecase"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
        ,(handle-normal-clauses clauses 'typep test-val))))
 
 (defmacro etypecase (keyform &rest clauses)
-  (declare (system::%java-class-name "lisp.common.function.Etypecase"))
+  (declare (system::%java-class-name "jcl.common.functions.Etypecase"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
        ,(handle-error-clauses clauses 'typep test-val t))))
@@ -296,6 +312,17 @@
 ;; Shiftf
 
 ;; Rotatef
+
+;; Assert
+
+(defmacro assert (test-form &optional places datum &rest arguments)
+  "Signals an error if the value of test-form is nil.  Continuing from this
+   error using the CONTINUE restart will allow the user to alter the value of
+   some locations known to SETF, starting over with test-form.  Returns nil."
+  (declare (system::%java-class-name "jcl.common.functions.Assert"))
+  `(let ((result (eval ,test-form)))
+    (unless result
+      (error "The assertion ~S failed." test-form))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

@@ -29,9 +29,10 @@
 (defun package-listify (thing)
   (cond ((listp thing)
          (dolist (s thing)
-           (unless (packagep s)
-             (error "~S is not a package." s))
-           (validate-package-usability s))
+           (let ((package (find-package s)))
+             (if (packagep package)
+                 (validate-package-usability package)
+               (error "~S is not a package." s))))
          thing)
         ((packagep thing)
          (validate-package-usability thing)
@@ -60,8 +61,8 @@
 ;;;
 (defun string-listify (thing)
   (if (listp thing)
-      (package-name-list thing))
-    (list (string thing)))
+      (package-name-list thing)
+    (list (string thing))))
 
 ;;; Package-Name-List  --  Internal
 ;;;
@@ -73,7 +74,7 @@
       (let ((names (reverse names))
             (new-names nil))
         (dolist (name names)
-          (cons (string name) new-names))
+          (setq new-names (cons (string name) new-names)))
         (nreverse new-names))
     names))
 
@@ -220,7 +221,12 @@
         (use (package-listify use)))
     (when (find-package package-name)
       (error "A package named ~S already exists." name))
-    ($makePackage package package-name nicknames use)))
+    (ext:jinvoke-static
+      (ext:jmethod "makePackage" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.ListStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package-name nicknames use)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -245,7 +251,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun shadow (symbol-names &optional package)
+(defun shadow (symbol-names &optional (package *package*))
   "Assures that symbols with names given by symbol-names are present in the package."
   (declare (system::%java-class-name "jcl.packages.functions.Shadow"))
   (let ((package (find-package package))

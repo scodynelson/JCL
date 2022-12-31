@@ -12,12 +12,12 @@
   "Returns the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.Pathname"))
   (ext:jinvoke-static
-    (ext:jmethod "toPathname" (ext:jclass "jcl.lang.PathnameStruct")
+    (ext:jmethod "fromDesignator" (ext:jclass "jcl.lang.PathnameStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     pathspec))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-#|
+
 (defun make-pathname (&key (host nil supplied-host-p)
                            (device nil supplied-device-p)
                            (directory nil supplied-directory-p)
@@ -36,7 +36,7 @@
         (type (if supplied-type-p type (pathname-type defaults)))
         (version (if supplied-version-p version (pathname-version defaults))))
     (ext:jinvoke-static
-      (ext:jmethod "makePathname" (ext:jclass "jcl.lang.PathnameStructs")
+      (ext:jmethod "toPathname" (ext:jclass "jcl.lang.PathnameStruct")
                    (ext:jclass "jcl.lang.LispStruct")
                    (ext:jclass "jcl.lang.LispStruct")
                    (ext:jclass "jcl.lang.LispStruct")
@@ -44,7 +44,7 @@
                    (ext:jclass "jcl.lang.LispStruct")
                    (ext:jclass "jcl.lang.LispStruct"))
       host device directory name type version)))
-|#
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: pathnamep
@@ -226,16 +226,28 @@
     ($pathnameMatchP pathname wildcard)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-#|
+
 (defun translate-logical-pathname (pathname &key)
   "Translates pathname to a physical pathname, which it returns."
   (declare (system::%java-class-name "jcl.pathnames.functions.TranslateLogicalPathname"))
-  (let ((pathname (pathname pathname)))
-    (ext:jinvoke-static
-      (ext:jmethod "translateLogicalPathname" (ext:jclass "jcl.lang.PathnameStructs")
-                   (ext:jclass "jcl.lang.PathnameStruct"))
-      source)))
-|#
+  (typecase pathname
+    (logical-pathname
+     (let* ((host (pathname-host pathname))
+            (translations (logical-pathname-translations host)))
+       (dolist (translation translations
+                            (error 'file-error
+                                   :pathname pathname
+                                   :format-control "No translation for ~S"
+                                   :format-arguments (list pathname)))
+         (let ((from-wildcard (car translation))
+               (to-wildcard (cadr translation)))
+           (when (pathname-match-p pathname from-wildcard)
+             (return (translate-logical-pathname
+                      (translate-pathname pathname from-wildcard to-wildcard))))))))
+    (pathname pathname)
+    (t
+     (translate-logical-pathname (pathname pathname)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
 (defun translate-pathname (source from-wildcard to-wildcard &key)
@@ -253,19 +265,54 @@
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
+(defun merge-directories (dir1 dir2)
+  (if (or (eq (car dir1) :absolute)
+          (null dir2))
+      dir1
+    (let ((results nil))
+      (flet ((add (dir)
+               (if (and (eq dir :back)
+                        (cdr results)
+                        (not (eq (car results) :back)))
+                   (pop results)
+                 (push dir results))))
+        (dolist (dir dir2)
+          (add dir))
+        (dolist (dir (cdr dir1))
+          (add dir)))
+     (reverse results))))
+|#
+
+;; TODO: should really use above when we fix push/pop
+(defun merge-directories (dir1 dir2)
+  (ext:jinvoke-static
+    (ext:jmethod "mergeDirectories" (ext:jclass "jcl.lang.PathnameStruct")
+                 (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.ListStruct"))
+    dir1 dir2))
+
 (defun merge-pathnames (pathname &optional (default-pathname *default-pathname-defaults*) (default-version :newest))
-  "Constructs a pathname from pathname by filling in any unsupplied components with the corresponding values from
-  default-pathname and default-version."
+  "Construct a filled in pathname by completing the unspecified components from the defaults."
   (declare (system::%java-class-name "jcl.pathnames.functions.MergePathnames"))
   (let ((pathname (pathname pathname))
         (default-pathname (pathname default-pathname)))
-    (ext:jinvoke-static
-      (ext:jmethod "mergePathnames" (ext:jclass "jcl.lang.PathnameStructs")
-                   (ext:jclass "jcl.lang.PathnameStruct")
-                   (ext:jclass "jcl.lang.PathnameStruct")
-                   (ext:jclass "jcl.lang.LispStruct"))
-      pathname default-pathname default-version)))
-|#
+    (make-pathname
+     :host (or (pathname-host pathname)
+               (pathname-host default-pathname))
+     :device (or (pathname-device pathname)
+                 (pathname-device default-pathname))
+     :directory (merge-directories (pathname-directory pathname)
+                                   (pathname-directory default-pathname))
+     :name (or (pathname-name pathname)
+               (pathname-name default-pathname))
+     :type (or (pathname-type pathname)
+               (pathname-type default-pathname))
+     :version (or (if (null (pathname-name pathname))
+                      (or (pathname-version pathname)
+                          (pathname-version default-pathname))
+                    (pathname-version pathname))
+                  default-version))))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (provide "pathnames")

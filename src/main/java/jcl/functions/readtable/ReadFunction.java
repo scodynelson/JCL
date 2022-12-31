@@ -43,7 +43,7 @@ public final class ReadFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 
-		final LispStruct inputStreamArg = arguments.getRequiredArgument(INPUT_STREAM_ARGUMENT);
+		final LispStruct inputStreamArg = arguments.getOptionalArgument(INPUT_STREAM_ARGUMENT);
 		final InputStreamStruct inputStreamStruct;
 		if (TStruct.INSTANCE.eq(inputStreamArg)) {
 			inputStreamStruct = (InputStreamStruct) CommonLispSymbols.TERMINAL_IO.symbolValue();

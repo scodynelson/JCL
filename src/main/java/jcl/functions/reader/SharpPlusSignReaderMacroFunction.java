@@ -23,7 +23,6 @@ public final class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionI
 	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.PLUS_SIGN;
 
-		FeaturesReaderMacroFunction.readFeatures(inputStreamStruct, false);
-		return null;
+		return FeaturesReaderMacroFunction.readFeatures(inputStreamStruct, false);
 	}
 }

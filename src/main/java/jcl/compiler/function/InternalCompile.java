@@ -280,9 +280,12 @@ public final class InternalCompile {
 			// CODE GENERATION FIRST - END
 			//
 
+			final LispStruct eofValue = new LispStruct() {
+			};
+
 			LispStruct form;
 			do {
-				form = InternalRead.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+				form = InternalRead.read(inputFileStream, NILStruct.INSTANCE, eofValue, NILStruct.INSTANCE);
 
 				if (form instanceof ListStruct) {
 					final LispStruct analyzedForm = FormAnalyzer.analyze(form, globalEnvironment);
@@ -296,15 +299,17 @@ public final class InternalCompile {
 							undefinedFunctions.clear();
 						}
 					}
-				} else if (form != null) {
+				} else if (form != eofValue) {
 					final LispStruct filePosition = inputFileStream.filePosition();
 					final IntegerStruct lineNumber = inputFileStream.lineNumber();
-					log.info("; Deleted a non-list form '{}' found at position {} on line {}.", form, filePosition, lineNumber);
+					if (form != null) { // 'null' forms are comments, or disabled feature code and should be ignored
+						log.info("; Deleted a non-list form '{}' found at position {} on line {}.", form, filePosition, lineNumber);
+					}
 					form = NILStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;
 				}
-			} while (form != null);
+			} while (form != eofValue);
 
 			//
 			// CODE GENERATION LAST - START
@@ -413,14 +418,13 @@ public final class InternalCompile {
 	}
 
 	public static PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
-//		final PathnameStruct defaults = CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.getVariableValue();
+		final PathnameStruct defaults = CommonLispSymbols.DEFAULT_PATHNAME_DEFAULTS_VAR.getVariableValue();
 
 		final PathnameStruct inputFilePathname = PathnameStruct.fromDesignator(inputFile);
 
 		final PathnameStruct outputFilePathname;
 		if (NILStruct.INSTANCE.eq(outputFile)) {
-//			final PathnameStruct outputDefaults = PathnameStructs.mergePathnames(inputFilePathname, defaults);
-			final PathnameStruct outputDefaults = inputFilePathname;
+			final PathnameStruct outputDefaults = mergePathnames(inputFilePathname, defaults);
 
 			outputFilePathname = PathnameStruct.toPathname(
 					outputDefaults.pathnameHost(),
@@ -434,8 +438,24 @@ public final class InternalCompile {
 			outputFilePathname = PathnameStruct.fromDesignator(outputFile);
 		}
 
-//		final PathnameStruct outputFilePathnameDefaults = PathnameStructs.mergePathnames(inputFilePathname, defaults);
-//		return PathnameStructs.mergePathnames(outputFilePathname, outputFilePathnameDefaults, NILStruct.INSTANCE);
-		return outputFilePathname;
+		final PathnameStruct outputFilePathnameDefaults = mergePathnames(inputFilePathname, defaults);
+		return mergePathnames(outputFilePathname, outputFilePathnameDefaults);
+	}
+
+	private static PathnameStruct mergePathnames(final PathnameStruct pathname, final PathnameStruct defaults) {
+		return PathnameStruct.toPathname(
+				pathname.pathnameHost().eq(NILStruct.INSTANCE)
+				? defaults.pathnameHost() : pathname.pathnameHost(),
+				pathname.pathnameDevice().eq(NILStruct.INSTANCE)
+				? defaults.pathnameDevice() : pathname.pathnameDevice(),
+				pathname.pathnameDirectory().eq(NILStruct.INSTANCE)
+				? defaults.pathnameDirectory() : pathname.pathnameDirectory(),
+				pathname.pathnameName().eq(NILStruct.INSTANCE)
+				? defaults.pathnameName() : pathname.pathnameName(),
+				pathname.pathnameType().eq(NILStruct.INSTANCE)
+				? defaults.pathnameType() : pathname.pathnameType(),
+				pathname.pathnameVersion().eq(NILStruct.INSTANCE)
+				? defaults.pathnameVersion() : pathname.pathnameVersion()
+		);
 	}
 }

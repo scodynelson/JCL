@@ -1681,7 +1681,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #|
-(defmacro push (&environment env item place)
+(defmacro push (item place &environment env)
+  (declare (system::%java-class-name "jcl.lists.functions.Push"))
   (if (and (symbolp place)
 	   (eq place (macroexpand place env)))
       `(setq ,place (cons ,item ,place))
@@ -1693,7 +1694,8 @@
                   (,(car newval) (cons ,g ,getter)))
              ,setter)))))
 
-(defmacro pushnew (&environment env item place &rest keys)
+(defmacro pushnew  item place &rest keys &environment env)
+  (declare (system::%java-class-name "jcl.lists.functions.PushNew"))
   (if (and (symbolp place)
 	   (eq place (macroexpand place env)))
       `(setq ,place (adjoin ,item ,place ,@keys))
@@ -1705,7 +1707,8 @@
                   (,(car newval) (adjoin ,g ,getter ,@keys)))
              ,setter)))))
 
-(defmacro pop (&environment env place)
+(defmacro pop (place &environment env)
+  (declare (system::%java-class-name "jcl.lists.functions.Pop"))
   (if (and (symbolp place)
 	   (eq place (macroexpand place env)))
       `(prog1 (car ,place)
@@ -1728,6 +1731,7 @@
    to hold a property list or (). This list is destructively altered to
    remove the property specified by the indicator. Returns T if such a
    property was present, NIL if not."
+  (declare (system::%java-class-name "jcl.lists.functions.Remf"))
   (multiple-value-bind (dummies vals newval setter getter)
       (get-setf-expansion place env)
     (do* ((d dummies (cdr d))
@@ -1765,6 +1769,7 @@
 (defmacro push (obj place &environment env)
   "Takes an object and a location holding a list.  Conses the object onto
   the list, returning the modified list.  OBJ is evaluated before PLACE."
+  (declare (system::%java-class-name "jcl.lists.functions.Push"))
 
   ;; This special case for place being a symbol isn't strictly needed.
   ;; It's so we can do push (and pushnew) with a kernel.core.
@@ -1800,6 +1805,7 @@
   "Takes an object and a location holding a list.  If the object is already
   in the list, does nothing.  Else, conses the object onto the list.  Returns
   NIL.  If there is a :TEST keyword, this is used for the comparison."
+  (declare (system::%java-class-name "jcl.lists.functions.PushNew"))
   (if (and (symbolp place)
 	   (eq place (macroexpand place env)))
       `(setq ,place (adjoin ,obj ,place ,@keys))
@@ -1831,6 +1837,7 @@
 (defmacro pop (place &environment env)
   "The argument is a location holding a list.  Pops one item off the front
   of the list and returns it."
+  (declare (system::%java-class-name "jcl.lists.functions.Pop"))
   (if (and (symbolp place)
 	   (eq place (macroexpand place env)))
       `(prog1 (car ,place)
@@ -1853,6 +1860,7 @@
   to hold a property list or ().  This list is destructively altered to
   remove the property specified by the indicator.  Returns T if such a
   property was present, NIL if not."
+  (declare (system::%java-class-name "jcl.lists.functions.Remf"))
   (multiple-value-bind (dummies vals newval setter getter)
 		       (get-setf-method place env)
     (do* ((d dummies (cdr d))

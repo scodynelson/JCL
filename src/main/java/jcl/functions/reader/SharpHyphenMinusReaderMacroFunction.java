@@ -23,7 +23,6 @@ public final class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFuncti
 	                            final IntegerStruct numberArgument) {
 		assert codePoint == CodePointConstants.HYPHEN_MINUS;
 
-		FeaturesReaderMacroFunction.readFeatures(inputStreamStruct, true);
-		return null;
+		return FeaturesReaderMacroFunction.readFeatures(inputStreamStruct, true);
 	}
 }

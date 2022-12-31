@@ -5,6 +5,7 @@
 package jcl.lang.internal;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,6 +17,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
 import jcl.lang.ConsStruct;
+import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
@@ -868,6 +870,97 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 		} else {
 			return NILStruct.INSTANCE;
 		}
+	}
+
+	@Override
+	public LispStruct truename() {
+		if (isWild()) {
+			throw new FileErrorException("Fundamentally unable to find a truename for any wild pathname.", null);
+		}
+
+		final String mergeNamestring = namestring();
+		if (mergeNamestring == null) {
+			throw new FileErrorException("The file " + this + " does not exist.", null);
+		}
+
+		final File file = new File(mergeNamestring);
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				return getDirectoryPathname(file);
+			}
+			try {
+				return PathnameStruct.toPathname(file.getCanonicalPath());
+			} catch (final IOException e) {
+				throw new FileErrorException(e.getMessage(), e, null);
+			}
+		}
+		throw new FileErrorException("The file " + this + " does not exist.", null);
+	}
+
+	private static PathnameStruct getDirectoryPathname(final File file) {
+		try {
+			String namestring = file.getCanonicalPath();
+			if (!namestring.isEmpty()) {
+				// ??? do we really want the platform dependent separatorChar?
+				if (namestring.charAt(namestring.length() - 1) != File.separatorChar) {
+					namestring += File.separator;
+				}
+			}
+			return PathnameStruct.toPathname(namestring);
+		} catch (final IOException e) {
+			throw new ErrorException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public LispStruct probeFile() {
+		try {
+			return truename();
+		} catch (final FileErrorException e) {
+			log.debug(e.getMessage(), e);
+			return NILStruct.INSTANCE;
+		}
+	}
+
+	@Override
+	public LispStruct deleteFile() {
+		if (isWild()) {
+			throw new FileErrorException("Fundamentally unable to delete file for any wild pathname.", null);
+		}
+
+		final String mergeNamestring = namestring();
+		if (mergeNamestring == null) {
+			throw new FileErrorException("The file " + this + " does not exist.", null);
+		}
+
+		final File file = new File(mergeNamestring);
+		if (file.exists()) {
+			final boolean result = file.delete();
+			return BooleanStruct.toLispBoolean(result);
+		}
+		throw new FileErrorException("The file " + this + " does not exist.", null);
+	}
+
+	@Override
+	public LispStruct fileWriteDate() {
+		if (isWild()) {
+			throw new FileErrorException("Bad place for a wild pathname.", null);
+		}
+
+		final String mergeNamestring = namestring();
+		if (mergeNamestring == null) {
+			throw new FileErrorException("The file " + this + " does not exist.", null);
+		}
+
+		final File file = new File(mergeNamestring);
+		if (file.exists()) {
+			final long lastModified = file.lastModified();
+			if (lastModified == 0L) {
+				return NILStruct.INSTANCE;
+			}
+			return IntegerStruct.toLispInteger((lastModified / 1000L) + 2208988800L);
+		}
+		throw new FileErrorException("The file " + this + " does not exist.", null);
 	}
 
 	private boolean isWild() {

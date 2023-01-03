@@ -35,7 +35,10 @@
 (defun copy-readtable (&optional (from-readtable *readtable*) to-readtable)
   "Copies from-readtable."
   (declare (system::%java-class-name "jcl.reader.functions.CopyReadtable"))
-  ($copyReadtable from-readtable to-readtable))
+  (ext:jinvoke-interface
+    (ext:jmethod "copyReadtable" (ext:jclass "jcl.lang.ReadtableStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    from-readtable to-readtable))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -43,7 +46,12 @@
 (defun make-dispatch-macro-character (char &optional non-terminating-p (readtable *readtable*))
   "Makes char be a dispatching macro character in readtable."
   (declare (system::%java-class-name "jcl.reader.functions.MakeDispatchMacroCharacter"))
-  ($makeDispatchMacroCharacter readtable (symbol-function 'system::read-dispatch-character) char non-terminating-p))
+  (ext:jinvoke-interface
+    (ext:jmethod "makeDispatchMacroCharacter" (ext:jclass "jcl.lang.ReadtableStruct")
+                 (ext:jclass "jcl.lang.FunctionStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.BooleanStruct"))
+    readtable (symbol-function 'system::read-dispatch-character) char non-terminating-p))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -71,7 +79,9 @@
 (defun readtable-case (readtable)
   "Gets the readtable case of the provided readtable."
   (declare (system::%java-class-name "jcl.reader.functions.ReadtableCase"))
-  ($readtableCase readtable))
+  (ext:jinvoke-interface
+    (ext:jmethod "readtableCase" (ext:jclass "jcl.lang.ReadtableStruct"))
+    readtable))
 
 ;; TODO: setf-readtable-case
 
@@ -80,24 +90,41 @@
 (defun get-dispatch-macro-character (disp-char sub-char &optional (readtable *readtable*))
   "Retrieves the dispatch function associated with disp-char and sub-char in readtable."
   (declare (system::%java-class-name "jcl.reader.functions.GetDispatchMacroCharacter"))
-  ($getDispatchMacroCharacter readtable disp-char sub-char))
+  (ext:jinvoke-interface
+    (ext:jmethod "getDispatchMacroCharacter" (ext:jclass "jcl.lang.ReadtableStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct"))
+    readtable disp-char sub-char))
 
 (defun set-dispatch-macro-character (disp-char sub-char new-function &optional (readtable *readtable*))
   "Causes new-function to be called when disp-char followed by sub-char is read."
   (declare (system::%java-class-name "jcl.reader.functions.SetDispatchMacroCharacter"))
-  ($setDispatchMacroCharacter readtable disp-char sub-char new-function))
+  (ext:jinvoke-interface
+    (ext:jmethod "setDispatchMacroCharacter" (ext:jclass "jcl.lang.ReadtableStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.FunctionStruct"))
+    readtable disp-char sub-char new-function))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get-macro-character (char &optional (readtable *readtable*))
   "Returns the reader macro function associated with char in readtable."
   (declare (system::%java-class-name "jcl.reader.functions.GetMacroCharacter"))
-  ($getMacroCharacter readtable char))
+  (ext:jinvoke-interface
+    (ext:jmethod "getMacroCharacter" (ext:jclass "jcl.lang.ReadtableStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct"))
+    readtable char))
 
 (defun set-macro-character (char new-function &optional non-terminating-p (readtable *readtable*))
   "Causes char to be a macro character associated with the reader macro function new-function in readtable."
   (declare (system::%java-class-name "jcl.reader.functions.SetMacroCharacter"))
-  ($setMacroCharacter readtable char new-function non-terminating-p))
+  (ext:jinvoke-interface
+    (ext:jmethod "setMacroCharacter" (ext:jclass "jcl.lang.ReadtableStruct")
+                 (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.FunctionStruct")
+                 (ext:jclass "jcl.lang.BooleanStruct"))
+    readtable char new-function non-terminating-p))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

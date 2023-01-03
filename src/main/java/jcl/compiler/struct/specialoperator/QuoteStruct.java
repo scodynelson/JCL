@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -42,6 +43,11 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 		builder.append(objectPrinted);
 
 		return builder.toString();
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		return object;
 	}
 
 	/**

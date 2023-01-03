@@ -29,6 +29,9 @@ import jcl.compiler.sa.analyzer.specialoperator.TagbodyExpander;
 import jcl.compiler.sa.analyzer.specialoperator.TheExpander;
 import jcl.compiler.sa.analyzer.specialoperator.ThrowExpander;
 import jcl.compiler.sa.analyzer.specialoperator.UnwindProtectExpander;
+import jcl.compiler.sa.analyzer.specialoperator.java.InvokeInterfaceExpander;
+import jcl.compiler.sa.analyzer.specialoperator.java.InvokeStaticExpander;
+import jcl.compiler.sa.analyzer.specialoperator.java.InvokeVirtualExpander;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
@@ -68,5 +71,9 @@ public final class BootstrapExpanders {
 		CommonLispSymbols.THE.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, TheExpander.INSTANCE);
 		CommonLispSymbols.THROW.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, ThrowExpander.INSTANCE);
 		CommonLispSymbols.UNWIND_PROTECT.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, UnwindProtectExpander.INSTANCE);
+
+		CommonLispSymbols.JINVOKE_INTERFACE.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, InvokeInterfaceExpander.INSTANCE);
+		CommonLispSymbols.JINVOKE_STATIC.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, InvokeStaticExpander.INSTANCE);
+		CommonLispSymbols.JINVOKE_VIRTUAL.setProp(CommonLispSymbols.MACRO_FUNCTION_DEFINITION, InvokeVirtualExpander.INSTANCE);
 	}
 }

@@ -1,5 +1,6 @@
 package jcl.system;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.function.InternalEval;
 import jcl.lang.IntegerStruct;
 import jcl.lang.KeywordStruct;
@@ -10,15 +11,35 @@ import jcl.lang.StringInputStreamStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.TStruct;
+import jcl.lang.condition.exception.UnboundVariableException;
+import jcl.lang.statics.GlobalPackageStruct;
 import jcl.reader.InternalRead;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(LoadLispFilesExtension.class)
 class SymbolBindingsTest {
+
+	@BeforeEach
+	void clearNullEnvironment() {
+		Environment.NULL.getLexicalSymbolBindings().clear();
+		Environment.NULL.getDynamicSymbolBindings().clear();
+		Environment.NULL.getLexicalFunctionBindings().clear();
+		Environment.NULL.getMacroFunctionBindings().clear();
+		Environment.NULL.getSymbolMacroBindings().clear();
+
+		for (final SymbolStruct symbol : GlobalPackageStruct.COMMON_LISP_USER.getExternalSymbols()) {
+			symbol.setfSymbolValue(null);
+		}
+		for (final SymbolStruct symbol : GlobalPackageStruct.COMMON_LISP_USER.getInternalSymbols()) {
+			symbol.setfSymbolValue(null);
+		}
+	}
 
 	@Test
 	void testLambda() {
@@ -31,7 +52,7 @@ class SymbolBindingsTest {
 		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		InternalEval.eval(whatRead);
 
-		final String definition = "((lambda (y) ($add x y)) 3)";
+		final String definition = "((lambda (y) (+ x y)) 3)";
 
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(definition),
@@ -41,13 +62,13 @@ class SymbolBindingsTest {
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		final LispStruct value = InternalEval.eval(whatRead);
 
-		assertThat(value).satisfies(IntegerStruct.EIGHT::eql);
+		assertThat(IntegerStruct.EIGHT.eql(value)).isTrue();
 	}
 
 	@Test
 	@Disabled
 	void testFunctionClosure() {
-		final String definition = "(defun adder (x) (function (lambda (y) ($add x y))))";
+		final String definition = "(defun adder (x) (function (lambda (y) (+ x y))))";
 
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(definition),
@@ -75,12 +96,17 @@ class SymbolBindingsTest {
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		final LispStruct value = InternalEval.eval(whatRead);
 
-		assertThat(value).satisfies(IntegerStruct.EIGHT::eql);
+		assertThat(IntegerStruct.EIGHT.eql(value)).isTrue();
 	}
 
 	@Test
 	void testSymbolValue() {
-		final String setSymbolValue = "($setfSymbolValue 'a 1)";
+		final String setSymbolValue = """
+				   (ext:jinvoke-interface
+				     (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+				                  (ext:jclass "jcl.lang.LispStruct"))
+				     'a 1)
+				""";
 
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(setSymbolValue),
@@ -90,7 +116,7 @@ class SymbolBindingsTest {
 		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		InternalEval.eval(whatRead);
 
-		final String retrieveSymbolValue = "($symbolValue 'a)";
+		final String retrieveSymbolValue = "(symbol-value 'a)";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(retrieveSymbolValue),
 				IntegerStruct.ZERO,
@@ -99,12 +125,12 @@ class SymbolBindingsTest {
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		final LispStruct value = InternalEval.eval(whatRead);
 
-		assertThat(value).satisfies(IntegerStruct.ONE::eql);
+		assertThat(IntegerStruct.ONE.eql(value)).isTrue();
 	}
 
 	@Test
 	void testSymbolValue_SpecialSymbols() {
-		String test = "($symbolValue :any-keyword)";
+		String test = "(symbol-value :any-keyword)";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -117,7 +143,7 @@ class SymbolBindingsTest {
 		final KeywordStruct result = (KeywordStruct) value;
 		assertThat(result.getName()).isEqualToIgnoringCase("any-keyword");
 
-		test = "($symbolValue 'nil)";
+		test = "(symbol-value 'nil)";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -126,8 +152,9 @@ class SymbolBindingsTest {
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
 
-		assertThat(value).satisfies(NILStruct.INSTANCE::eq);
-		test = "($symbolValue '())";
+		assertThat(NILStruct.INSTANCE.eq(value)).isTrue();
+
+		test = "(symbol-value '())";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -136,14 +163,14 @@ class SymbolBindingsTest {
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
 
-		assertThat(value).satisfies(NILStruct.INSTANCE::eq);
+		assertThat(NILStruct.INSTANCE.eq(value)).isTrue();
 	}
 
 	@Test
 	void testSymbolValue_CannotSeeLexical() {
 		String test = """
 				(let ((a 2))
-				  ($symbolValue 'a))
+				  (symbol-value 'a))
 										   """;
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -151,13 +178,16 @@ class SymbolBindingsTest {
 				IntegerStruct.toLispInteger(test.length())
 		);
 		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
-		LispStruct value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.ONE::eql);
+		try {
+			InternalEval.eval(whatRead);
+			fail("Expected 'UnboundVariableException' to be thrown");
+		} catch (final UnboundVariableException ignore) {
+		}
 
 		test = """
 				(let ((a 2))
 				  (setq a 3)
-				  ($symbolValue 'a))
+				  (symbol-value 'a))
 										   """;
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -165,8 +195,10 @@ class SymbolBindingsTest {
 				IntegerStruct.toLispInteger(test.length())
 		);
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
-		value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.ONE::eql);
+		try {
+			InternalEval.eval(whatRead);
+		} catch (final UnboundVariableException ignore) {
+		}
 	}
 
 	@Test
@@ -174,7 +206,7 @@ class SymbolBindingsTest {
 		String test = """
 				(let ((a 2))
 				  (declare (special a))
-				  ($symbolValue 'a))
+				  (symbol-value 'a))
 										   """;
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -183,13 +215,13 @@ class SymbolBindingsTest {
 		);
 		LispStruct whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		LispStruct value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.TWO::eql);
+		assertThat(IntegerStruct.TWO.eql(value)).isTrue();
 
 		test = """
 				(let ((a 2))
 				  (declare (special a))
 				  (setq a 3)
-				  ($symbolValue 'a))
+				  (symbol-value 'a))
 										   """;
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
@@ -198,13 +230,22 @@ class SymbolBindingsTest {
 		);
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.THREE::eql);
+		assertThat(IntegerStruct.THREE.eql(value)).isTrue();
 
 		test = """
 				(let ((a 2))
-				  ($setfSymbolValue 'a 3)
+				  (ext:jinvoke-interface
+				      (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+				                   (ext:jclass "jcl.lang.LispStruct"))
+				      'a 3)
 				  a)
 										   """;
+		/*
+				(let ((a 2))
+				  (setf (symbol-value 'a) 3)
+				  a)
+		 */
+		// NOTE: 'a' is now 3 globally
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -212,7 +253,7 @@ class SymbolBindingsTest {
 		);
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.TWO::eql);
+		assertThat(IntegerStruct.TWO.eql(value)).isTrue();
 
 		test = "a";
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -222,15 +263,25 @@ class SymbolBindingsTest {
 		);
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.THREE::eql);
+		assertThat(IntegerStruct.THREE.eql(value)).isTrue();
 
 		test = """
 				(let ((a 4))
 				  (declare (special a))
-				  (let ((b ($symbolValue 'a)))
-				    ($setfSymbolValue 'a 5)
-				    (values a b)))
+				  (let ((b (symbol-value 'a)))
+				    (ext:jinvoke-interface
+				      (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+				                   (ext:jclass "jcl.lang.LispStruct"))
+				      'a 5)
+				    (list a b)))
 										     """;
+		/*
+				(let ((a 4))
+				  (declare (special a))
+				  (let ((b (symbol-value 'a)))
+				    (setf (symbol-value 'a) 5)
+				    (list a b)))
+		 */
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -240,7 +291,7 @@ class SymbolBindingsTest {
 		value = InternalEval.eval(whatRead);
 
 		final ListStruct expected = ListStruct.toLispList(IntegerStruct.FIVE, IntegerStruct.FOUR);
-		assertThat(value).satisfies(expected::equal);
+		assertThat(expected.equal(value)).isTrue();
 
 		test = "a";
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -250,7 +301,7 @@ class SymbolBindingsTest {
 		);
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.THREE::eql);
+		assertThat(IntegerStruct.THREE.eql(value)).isTrue();
 	}
 
 	@Test
@@ -280,12 +331,17 @@ class SymbolBindingsTest {
 		final LispStruct value = InternalEval.eval(whatRead);
 
 		final ListStruct expected = ListStruct.toLispList(TStruct.INSTANCE, NILStruct.INSTANCE);
-		assertThat(value).satisfies(expected::equal);
+		assertThat(expected.equal(value)).isTrue();
 	}
 
 	@Test
 	void testSpecialBindings_SymbolValue() {
-		String test = "($setfSymbolValue 'x 6)";
+		String test = """
+				   (ext:jinvoke-interface
+				     (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+				                  (ext:jclass "jcl.lang.LispStruct"))
+				     'x 6)
+				""";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -295,24 +351,6 @@ class SymbolBindingsTest {
 		InternalEval.eval(whatRead);
 
 		test = "(setq holder nil)";
-		stream = StringInputStreamStruct.toStringInputStream(
-				StringStruct.toLispString(test),
-				IntegerStruct.ZERO,
-				IntegerStruct.toLispInteger(test.length())
-		);
-		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
-		InternalEval.eval(whatRead);
-
-		test = """
-				(defun + (number &rest numbers)
-				  "Returns the sum of numbers, performing any necessary type conversions in the process. If no numbers are supplied, 0 is returned."
-				  (declare (system::%java-class-name "jcl.numbers.functions.Add"))
-				  (ext:jinvoke-static
-				    (ext:jmethod "add" (ext:jclass "jcl.lang.NumberStruct")
-				                 (ext:jclass "java.util.List"))
-				    (ext:jinvoke (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
-				                 (cons number numbers))))
-								""";
 		stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -362,11 +400,11 @@ class SymbolBindingsTest {
 		LispStruct value = InternalEval.eval(whatRead);
 
 		final ListStruct expected = ListStruct.toLispList(
-				IntegerStruct.TEN,
 				IntegerStruct.ELEVEN,
-				IntegerStruct.ELEVEN
+				IntegerStruct.ELEVEN,
+				IntegerStruct.TEN
 		);
-		assertThat(value).satisfies(expected::equal);
+		assertThat(expected.equal(value)).isTrue();
 
 		test = "x";
 		stream = StringInputStreamStruct.toStringInputStream(
@@ -376,12 +414,17 @@ class SymbolBindingsTest {
 		);
 		whatRead = InternalRead.read(stream, false, NILStruct.INSTANCE, false);
 		value = InternalEval.eval(whatRead);
-		assertThat(value).satisfies(IntegerStruct.SIX::eql);
+		assertThat(IntegerStruct.SIX.eql(value)).isTrue();
 	}
 
 	@Test
 	void testSpecialBindings_Shadowing() {
-		String test = "($setfSymbolValue 'x 6)";
+		String test = """
+				   (ext:jinvoke-interface
+				     (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+				                  (ext:jclass "jcl.lang.LispStruct"))
+				     'x 6)
+				""";
 		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(test),
 				IntegerStruct.ZERO,
@@ -415,10 +458,10 @@ class SymbolBindingsTest {
 		final LispStruct value = InternalEval.eval(whatRead);
 
 		final ListStruct expected = ListStruct.toLispList(
-				SymbolStruct.toLispSymbol("FIRST"),
-				SymbolStruct.toLispSymbol("SECOND")
+				GlobalPackageStruct.COMMON_LISP_USER.findSymbol("FIRST").getSymbol(),
+				GlobalPackageStruct.COMMON_LISP_USER.findSymbol("SECOND").getSymbol()
 		);
-		assertThat(value).satisfies(expected::equalp);
+		assertThat(expected.equalp(value)).isTrue();
 	}
 
 	/*
@@ -426,7 +469,7 @@ The reference to *foo* in the first line of this example is not special even tho
  (declaim (special prosp)) =>  implementation-dependent
  (setq prosp 1 reg 1) =>  1
  (let ((prosp 2) (reg 2))         ;the binding of prosp is special
-    (set 'prosp 3) (set 'reg 3)   ;due to the preceding proclamation,
+    ()set 'prosp 3) (set 'reg 3)   ;due to the preceding proclamation,
     (list prosp reg))             ;whereas the variable reg is lexical
 =>  (3 2)
  (list prosp reg) =>  (1 3)

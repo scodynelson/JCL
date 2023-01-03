@@ -4,13 +4,17 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jcl.compiler.environment.Environment;
+import jcl.compiler.function.InternalEval;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import lombok.Getter;
@@ -53,6 +57,24 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 		builder.append(')');
 
 		return builder.toString();
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		final SymbolStruct functionSymbol = symbolCompilerFunction.getFunctionSymbol();
+
+		final FunctionStruct function = environment.getFunction(functionSymbol);
+
+		final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
+		for (final LispStruct argument : arguments) {
+			final LispStruct evaluatedArgument = InternalEval.eval(argument);
+			evaluatedArguments.add(evaluatedArgument);
+		}
+
+		final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
+		evaluatedArguments.toArray(args);
+
+		return function.apply(args);
 	}
 
 	/**

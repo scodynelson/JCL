@@ -4,13 +4,19 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jcl.compiler.environment.Environment;
+import jcl.compiler.function.CompileForm;
+import jcl.compiler.function.CompileResult;
+import jcl.compiler.function.InternalEval;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.lambda.LambdaStruct;
+import jcl.lang.FunctionStruct;
 import jcl.lang.LispStruct;
 import lombok.Getter;
 import org.objectweb.asm.MethodVisitor;
@@ -29,6 +35,27 @@ public class LambdaFunctionCallStruct extends CompilerSpecialOperatorStruct {
 		super("lambdaFunctionCall");
 		this.lambdaCompilerFunction = lambdaCompilerFunction;
 		this.arguments = arguments;
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
+
+		final CompileResult compileResult = CompileForm.compile(lambda);
+		final FunctionStruct function = compileResult.getFunction();
+
+		final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
+		for (final LispStruct argument : arguments) {
+			final LispStruct evaluatedArgument = InternalEval.eval(argument);
+			evaluatedArguments.add(evaluatedArgument);
+		}
+
+		final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
+		evaluatedArguments.toArray(args);
+
+		// NOTE: This cast should be safe since we're compiling a lambda form. If it doesn't cast, we have a bigger problem somewhere.
+		final FunctionStruct compiledLambda = (FunctionStruct) function.apply();
+		return compiledLambda.apply(args);
 	}
 
 	/**

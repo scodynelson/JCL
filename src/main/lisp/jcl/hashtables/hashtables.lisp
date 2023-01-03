@@ -27,27 +27,37 @@
 (defun hash-table-test (hash-table)
   "Returns the test used for comparing keys in hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableTest"))
-  ($test hash-table))
+  (ext:jinvoke-interface
+    (ext:jmethod "test" (ext:jclass "jcl.lang.HashTableStruct"))
+    hash-table))
 
 (defun hash-table-size (hash-table)
   "Returns the current size of hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableSize"))
-  ($size hash-table))
+  (ext:jinvoke-interface
+    (ext:jmethod "size" (ext:jclass "jcl.lang.HashTableStruct"))
+    hash-table))
 
 (defun hash-table-rehash-size (hash-table)
   "Returns the current rehash size of hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableRehashSize"))
-  ($rehashSize hash-table))
+  (ext:jinvoke-interface
+    (ext:jmethod "rehashSize" (ext:jclass "jcl.lang.HashTableStruct"))
+    hash-table))
 
 (defun hash-table-rehash-threshold (hash-table)
   "Returns the current rehash threshold of hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableRehashThreshold"))
-  ($rehashThreshold hash-table))
+  (ext:jinvoke-interface
+    (ext:jmethod "rehashThreshold" (ext:jclass "jcl.lang.HashTableStruct"))
+    hash-table))
 
 (defun hash-table-count (hash-table)
   "Returns the number of entries in the hash-table."
   (declare (system::%java-class-name "jcl.hashtables.functions.HashTableCount"))
-  ($count hash-table))
+  (ext:jinvoke-interface
+    (ext:jmethod "count" (ext:jclass "jcl.lang.HashTableStruct"))
+    hash-table))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -55,24 +65,39 @@
   "Retrieve the value in the hash-table whose key is the same as the key under the hash-table's equivalence test.
   If there is no such entry, the result is the default."
   (declare (system::%java-class-name "jcl.hashtables.functions.GetHash"))
-  ($toValues ($getHash hash-table key default)))
+  (ext:jinvoke-virtual
+    (ext:jmethod "toValues" (ext:jclass "jcl.lang.GetHashResult"))
+    (ext:jinvoke-interface
+      (ext:jmethod "getHash" (ext:jclass "jcl.lang.HashTableStruct")
+                   (ext:jclass "jcl.lang.LispStruct")
+                   (ext:jclass "jcl.lang.LispStruct"))
+      hash-table key default)))
 
 (defun (setf gethash) (new-value key hash-table &optional default)
   "Set the value (either by addition or modification) in the hash-table whose key is the same as the key under the
   hash-table's equivalence test. The optional default value is evaluated, but ignored."
   (declare (system::%java-class-name "jcl.hashtables.functions.SetfGetHash")
            (ignore default))
-  ($putHash hash-table key new-value))
+  (ext:jinvoke-interface
+    (ext:jmethod "putHash" (ext:jclass "jcl.lang.HashTableStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    hash-table key new-value))
 
 (defun remhash (key hash-table)
   "Removes the entry for key in hash-table, if any. Returns true if there was such an entry, or false otherwise."
   (declare (system::%java-class-name "jcl.hashtables.functions.RemHash"))
-  ($remHash hash-table key))
+  (ext:jinvoke-interface
+    (ext:jmethod "remHash" (ext:jclass "jcl.lang.HashTableStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    hash-table key))
 
 (defun clrhash (hash-table)
   "Removes all entries from hash-table, and then returns that empty hash table."
   (declare (system::%java-class-name "jcl.hashtables.functions.ClrHash"))
-  ($clrHash hash-table))
+  (ext:jinvoke-interface
+    (ext:jmethod "clrHash" (ext:jclass "jcl.lang.HashTableStruct"))
+    hash-table))
 
 (defun sxhash (object)
   "Returns a hash code for object."
@@ -86,7 +111,10 @@
   "Iterates over all entries in the hash-table. For each entry, the function is called with two arguments--the key and
   the value of that entry."
   (declare (system::%java-class-name "jcl.hashtables.functions.MapHash"))
-  ($mapHash hash-table function))
+  (ext:jinvoke-interface
+    (ext:jmethod "mapHash" (ext:jclass "jcl.lang.HashTableStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    hash-table function))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -96,7 +124,9 @@
    After all entries have been returned by successive invocations of (name), then only one value is returned, namely nil."
   (declare (system::%java-class-name "jcl.hashtables.functions.WithHashTableIterator"))
   (let ((the-function (gensym "WITH-HASH-TABLE-ITERATOR-")))
-    `(let ((,the-function (let ((entries ($entries ,hash-table)))
+    `(let ((,the-function (let ((entries (ext:jinvoke-interface
+                                             (ext:jmethod "entries" (ext:jclass "jcl.lang.HashTableStruct"))
+                                             ,hash-table)))
                             (labels ((,name ()
                                        (let ((entry (car entries)))
                                          (setq entries (cdr entries))

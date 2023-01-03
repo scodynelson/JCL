@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import jcl.compiler.environment.Environment;
 import jcl.compiler.sa.FormAnalyzer;
-import jcl.compiler.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -24,7 +23,6 @@ import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.java.JavaNameStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import lombok.experimental.UtilityClass;
 
@@ -38,8 +36,6 @@ public final class ConsAnalyzer {
 			throw new ProgramErrorException("CONS ANALYZER: First element must be a symbol, a Java method name, or a lambda. Got: " + input);
 		} else if (first instanceof SymbolStruct) {
 			return analyzeSymbolFunctionCall(input, environment);
-		} else if (first instanceof JavaNameStruct) {
-			return analyzeJavaMethodCall(input, environment);
 		} else if (first instanceof ListStruct) {
 			return analyzeLambdaFunctionCall(input, environment);
 		} else {
@@ -77,25 +73,6 @@ public final class ConsAnalyzer {
 		// TODO: work on how to determine tail recursive optimization here!!!
 		final SymbolCompilerFunctionStruct symbolCompilerFunction = new SymbolCompilerFunctionStruct(functionSymbol);
 		return new SymbolFunctionCallStruct(symbolCompilerFunction, functionArguments, false);
-	}
-
-	private static JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {
-		final Iterator<LispStruct> iterator = input.iterator();
-
-		final JavaNameStruct methodName = (JavaNameStruct) iterator.next();
-
-		if (!iterator.hasNext()) {
-			throw new ProgramErrorException("CONS ANALYZER: Incorrect number of arguments to Java method call: 0. Expected at least 1 argument.");
-		}
-		final LispStruct second = iterator.next();
-		final LispStruct javaObject = FormAnalyzer.analyze(second, environment);
-
-		final List<LispStruct> methodArguments = new ArrayList<>();
-		iterator.forEachRemaining(element -> {
-			final LispStruct analyzedElement = FormAnalyzer.analyze(element, environment);
-			methodArguments.add(analyzedElement);
-		});
-		return new JavaMethodCallStruct(methodName, javaObject, methodArguments);
 	}
 
 	private static LambdaFunctionCallStruct analyzeLambdaFunctionCall(final ListStruct input, final Environment environment) {

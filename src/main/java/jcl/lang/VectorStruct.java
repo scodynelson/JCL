@@ -14,6 +14,18 @@ import jcl.lang.internal.SimpleVectorStructImpl;
 public interface VectorStruct extends ArrayStruct, SequenceStruct {
 
 	/**
+	 * Accesses the element of vector specified by index. Vector must be a "simple-vector" type.
+	 *
+	 * @param index
+	 * 		the index of the element to access
+	 *
+	 * @return the element
+	 */
+	default LispStruct svref(final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
+
+	/**
 	 * Gets the vector's fill-pointer.
 	 *
 	 * @return vector's fill-pointer

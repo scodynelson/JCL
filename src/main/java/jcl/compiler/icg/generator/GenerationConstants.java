@@ -4,7 +4,6 @@
 
 package jcl.compiler.icg.generator;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,8 +48,6 @@ import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 import jcl.lang.function.expander.SymbolMacroExpanderInter;
-import jcl.lang.java.JavaMethodStruct;
-import jcl.lang.java.JavaNameStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.Opcodes;
@@ -73,18 +70,6 @@ public interface GenerationConstants {
 	String CLASS_INIT_METHOD_DESC = "()V";
 
 	String JAVA_OBJECT_NAME = Type.getInternalName(Object.class);
-
-	String JAVA_OBJECT_GET_CLASS_METHOD_NAME = "getClass";
-
-	String JAVA_OBJECT_GET_CLASS_METHOD_DESC = CodeGenerators.getMethodDescription(Object.class, JAVA_OBJECT_GET_CLASS_METHOD_NAME);
-
-	String JAVA_CLASS_NAME = Type.getInternalName(Class.class);
-
-	String JAVA_METHOD_NAME = Type.getInternalName(Method.class);
-
-	String JAVA_METHOD_INVOKE_METHOD_NAME = "invoke";
-
-	String JAVA_METHOD_INVOKE_METHOD_DESC = CodeGenerators.getMethodDescription(Method.class, JAVA_METHOD_INVOKE_METHOD_NAME, Object.class, Object[].class);
 
 	String JAVA_STREAM_NAME = Type.getInternalName(Stream.class);
 
@@ -235,18 +220,6 @@ public interface GenerationConstants {
 	String STRING_STRUCT_TO_COMPLEX_STRING_CONTENTS_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, String.class, BooleanStruct.class, IntegerStruct.class);
 
 	String STRING_STRUCT_TO_COMPLEX_STRING_DISPLACED_METHOD_DESC = CodeGenerators.getMethodDescription(StringStruct.class, STRING_STRUCT_TO_LISP_STRING_METHOD_NAME, IntegerStruct.class, SymbolStruct.class, ArrayStruct.class, IntegerStruct.class, BooleanStruct.class, IntegerStruct.class);
-
-	String JAVA_NAME_STRUCT_NAME = Type.getInternalName(JavaNameStruct.class);
-
-	String JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_NAME = "toJavaName";
-
-	String JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_DESC = CodeGenerators.getMethodDescription(JavaNameStruct.class, JAVA_NAME_STRUCT_TO_JAVA_NAME_METHOD_NAME, String.class);
-
-	String JAVA_METHOD_STRUCT_NAME = Type.getInternalName(JavaMethodStruct.class);
-
-	String JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_NAME = "toJavaReflectionMethod";
-
-	String JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_DESC = CodeGenerators.getMethodDescription(JavaMethodStruct.class, JAVA_METHOD_STRUCT_TO_JAVA_REFLECTION_METHOD_METHOD_NAME, String.class, Class.class, Class[].class);
 
 	String COMMON_LISP_SYMBOLS_NAME = Type.getInternalName(CommonLispSymbols.class);
 

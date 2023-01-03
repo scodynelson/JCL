@@ -21,7 +21,10 @@
 (defun copy-symbol (symbol &optional copy-properties)
   "Returns a fresh, uninterned symbol, the name of which is equal to and possibly the same as the name of the given symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.CopySymbol"))
-  ($copySymbol symbol copy-properties))
+  (ext:jinvoke-interface
+    (ext:jmethod "copySymbol" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.BooleanStruct"))
+    symbol copy-properties))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -39,74 +42,107 @@
 (defun symbol-name (symbol)
   "Gets the name of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolName"))
-  ($symbolName symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "symbolName" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun symbol-package (symbol)
   "Gets the package of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolPackage"))
-  ($symbolPackage symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "symbolPackage" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun symbol-function (symbol)
   "Gets the function value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolFunction"))
-  ($symbolFunction symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "symbolFunction" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun (setf symbol-function) (symbol new-contents)
   "Sets the contents of symbol's function cell the new-contents provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolFunction"))
-  ($setfSymbolFunction symbol new-contents))
+  (ext:jinvoke-interface
+    (ext:jmethod "setfSymbolFunction" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.FunctionStruct"))
+    symbol new-contents))
 
 (defun symbol-plist (symbol)
   "Gets the plist value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolPlist"))
-  ($symbolPlist symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "symbolPlist" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun (setf symbol-plist) (symbol new-plist)
   "Sets the contents of symbol's property-list cell the new-plist provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolPlist"))
-  ($setfSymbolPlist symbol new-plist))
+  (ext:jinvoke-interface
+    (ext:jmethod "setfSymbolPlist" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.ListStruct"))
+    symbol new-plist))
 
 (defun symbol-value (symbol)
   "Gets the value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolValue"))
-  ($symbolValue symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "symbolValue" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun (setf symbol-value) (symbol new-value)
   "Sets the contents of symbol's value cell the new-value provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolValue"))
-  ($setfSymbolValue symbol new-value))
+  (ext:jinvoke-interface
+    (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    symbol new-value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get (symbol indicator &optional default)
   "Finds a property on the property list of symbol whose property indicator is identical to indicator, and returns its corresponding property value."
   (declare (system::%java-class-name "jcl.symbols.functions.Get"))
-  ($getProp symbol indicator default))
+  (ext:jinvoke-interface
+    (ext:jmethod "getProp" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    symbol indicator default))
 
 (defun (setf get) (symbol indicator value &optional default)
   "Finds a property on the property list of symbol whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided."
   (declare (system::%java-class-name "jcl.symbols.functions.SetfGet")
            (ignore default))
-  ($setProp symbol indicator value)
-  value)
+  (ext:jinvoke-interface
+    (ext:jmethod "setProp" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    symbol indicator value))
 
 (defun remprop (symbol indicator)
   "Removes from the property list of symbol a property[1] with a property indicator identical to indicator."
   (declare (system::%java-class-name "jcl.symbols.functions.RemProp"))
-  ($remProp symbol indicator))
+  (ext:jinvoke-interface
+    (ext:jmethod "remProp" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    symbol indicator))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun boundp (symbol)
   "Returns true if symbol is bound; otherwise, returns false."
   (declare (system::%java-class-name "jcl.symbols.functions.BoundP"))
-  ($boundP symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "boundP" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun fboundp (name)
   "Returns true if name is fbound; otherwise, returns false."
   (declare (system::%java-class-name "jcl.symbols.functions.FBoundP"))
   (if (symbolp name)
-      ($fBoundP name)
+      (ext:jinvoke-interface
+        (ext:jmethod "fBoundP" (ext:jclass "jcl.lang.SymbolStruct"))
+        name)
     (if (consp name)
         (get (cadr name) 'SETF-DEFINITION)
       (error "Name must either be SYMBOL or CONS"))))
@@ -114,12 +150,17 @@
 (defun makunbound (symbol)
   "Makes the symbol be unbound, regardless of whether it was previously bound."
   (declare (system::%java-class-name "jcl.symbols.functions.MakUnbound"))
-  ($makunbound symbol))
+  (ext:jinvoke-interface
+    (ext:jmethod "makunbound" (ext:jclass "jcl.lang.SymbolStruct"))
+    symbol))
 
 (defun set (symbol value)
   "Sets the value of the provided symbol to the provided value."
   (declare (system::%java-class-name "jcl.symbols.functions.Set"))
-  ($setfSymbolValue symbol value))
+  (ext:jinvoke-interface
+    (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    symbol value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

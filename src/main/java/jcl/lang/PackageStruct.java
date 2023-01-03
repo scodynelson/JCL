@@ -32,6 +32,13 @@ public interface PackageStruct extends LispStruct {
 	List<PackageStruct> getUsedByList();
 
 	/**
+	 * Returns the {@link Collection} of internal symbols in the package.
+	 *
+	 * @return the {@link Collection} of internal symbols in the package
+	 */
+	Collection<SymbolStruct> getInternalSymbols();
+
+	/**
 	 * Returns a possible external symbol if one exists.
 	 *
 	 * @param symbolName

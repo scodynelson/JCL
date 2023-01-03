@@ -31,11 +31,11 @@ public class Environment extends StandardObjectStruct {
 
 	private final Environment parent;
 
-	private static final Map<SymbolStruct, Deque<LispStruct>> lexicalSymbolBindings = new LinkedHashMap<>();
+	private final Map<SymbolStruct, Deque<LispStruct>> lexicalSymbolBindings = new LinkedHashMap<>();
 
 	private static final Map<SymbolStruct, Deque<LispStruct>> dynamicSymbolBindings = new LinkedHashMap<>();
 
-	private static final Map<SymbolStruct, Deque<FunctionStruct>> lexicalFunctionBindings = new LinkedHashMap<>();
+	private final Map<SymbolStruct, Deque<FunctionStruct>> lexicalFunctionBindings = new LinkedHashMap<>();
 
 	private static final Map<SymbolStruct, Deque<MacroFunctionExpanderInter>> macroFunctionBindings = new LinkedHashMap<>();
 
@@ -388,18 +388,25 @@ public class Environment extends StandardObjectStruct {
 	}
 
 	public LispStruct getSymbolValue(final SymbolStruct var) {
-		final LispStruct value;
-		if (CollectionUtils.isEmpty(lexicalSymbolBindings.get(var))) {
-			value = getDynamicSymbolValue(var);
-		} else {
-			value = getLexicalSymbolValue(var);
+		LispStruct value = null;
+		if (CollectionUtils.isNotEmpty(lexicalSymbolBindings.get(var))) {
+			value = lexicalSymbolBindings.get(var).peek();
+		}
+		if (value != null) {
+			return value;
 		}
 
-		if (value == null) {
+		if (CollectionUtils.isNotEmpty(dynamicSymbolBindings.get(var))) {
+			value = dynamicSymbolBindings.get(var).peek();
+		}
+		if (value != null) {
+			return value;
+		}
+
+		if (parent == null) {
 			return var.symbolValue();
 		}
-
-		return value;
+		return parent.getSymbolValue(var);
 	}
 
 	public LispStruct getLexicalSymbolValue(final SymbolStruct var) {
@@ -444,6 +451,7 @@ public class Environment extends StandardObjectStruct {
 	public void setLexicalSymbolValue(final SymbolStruct var, final LispStruct value) {
 		// TODO: handle constants
 		if (CollectionUtils.isEmpty(lexicalSymbolBindings.get(var))) {
+			lexicalSymbolBindings.put(var, new ArrayDeque<>());
 			lexicalSymbolBindings.get(var).push(value);
 		} else {
 			lexicalSymbolBindings.get(var).pop();
@@ -454,6 +462,7 @@ public class Environment extends StandardObjectStruct {
 	public void setDynamicSymbolValue(final SymbolStruct var, final LispStruct value) {
 		// TODO: handle constants
 		if (CollectionUtils.isEmpty(dynamicSymbolBindings.get(var))) {
+			dynamicSymbolBindings.put(var, new ArrayDeque<>());
 			dynamicSymbolBindings.get(var).push(value);
 		} else {
 			dynamicSymbolBindings.get(var).pop();

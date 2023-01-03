@@ -6,18 +6,15 @@ package jcl.lang.java;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.LispStructImpl;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class JavaClassStruct extends LispStructImpl {
 
 	private final Class<?> javaClass;
-
-	private JavaClassStruct(final Class<?> javaClass) {
-		this.javaClass = javaClass;
-	}
-
-	public Class<?> getJavaClass() {
-		return javaClass;
-	}
 
 	public static JavaClassStruct toJavaClass(final Class<?> javaClass) {
 		return new JavaClassStruct(javaClass);
@@ -30,5 +27,10 @@ public class JavaClassStruct extends LispStructImpl {
 		} catch (final ClassNotFoundException ex) {
 			throw new ErrorException("Java Class not found for class name '" + className + "'.", ex);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "#<" + javaClass + '>';
 	}
 }

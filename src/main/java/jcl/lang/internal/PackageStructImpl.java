@@ -108,6 +108,11 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	}
 
 	@Override
+	public Collection<SymbolStruct> getInternalSymbols() {
+		return internalSymbols.values();
+	}
+
+	@Override
 	public Optional<SymbolStruct> findExternalSymbol(final String symbolName) {
 		return Optional.ofNullable(externalSymbols.get(symbolName));
 	}

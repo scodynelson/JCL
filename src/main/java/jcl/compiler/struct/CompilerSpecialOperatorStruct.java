@@ -6,10 +6,15 @@ package jcl.compiler.struct;
 
 import java.util.Deque;
 
+import jcl.compiler.environment.Environment;
+import jcl.compiler.function.CompileForm;
+import jcl.compiler.function.CompileResult;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
+import jcl.lang.FunctionStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.classes.StandardObjectStruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +91,12 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 		                           methodName,
 		                           SPECIAL_OPERATOR_METHOD_DESC,
 		                           false);
+	}
+
+	public LispStruct eval(final Environment environment) {
+		final CompileResult compileResult = CompileForm.compile(this);
+		final FunctionStruct function = compileResult.getFunction();
+		return function.apply();
 	}
 
 	/**

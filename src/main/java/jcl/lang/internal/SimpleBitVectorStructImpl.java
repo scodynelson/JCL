@@ -51,6 +51,11 @@ public final class SimpleBitVectorStructImpl extends AbstractBitVectorStructImpl
 	 */
 
 	@Override
+	public LispStruct svref(final FixnumStruct index) {
+		return aref(index);
+	}
+
+	@Override
 	public IntegerStruct fillPointer() {
 		throw new TypeErrorException("SIMPLE-BIT-VECTOR has no fill-pointer to retrieve.");
 	}
@@ -73,6 +78,20 @@ public final class SimpleBitVectorStructImpl extends AbstractBitVectorStructImpl
 	@Override
 	public IntegerStruct vectorPushExtend(final LispStruct newElement, final IntegerStruct extension) {
 		throw new TypeErrorException("Cannot push or extend a SIMPLE-BIT-VECTOR with no fill-pointer.");
+	}
+
+	/*
+	BIT-ARRAY-STRUCT
+	 */
+
+	@Override
+	public FixnumStruct bit(final IntegerStruct... subscripts) {
+		return aref(subscripts);
+	}
+
+	@Override
+	public FixnumStruct sbit(final IntegerStruct... subscripts) {
+		return aref(subscripts);
 	}
 
 	/*

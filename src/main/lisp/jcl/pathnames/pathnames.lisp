@@ -57,40 +57,52 @@
   "Returns the pathname-host component of the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameHost"))
   (let ((pathname (pathname pathname)))
-    ($pathnameHost pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameHost" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun pathname-device (pathname &key (case :local))
   "Returns the pathname-device component of the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameDevice"))
   (let ((pathname (pathname pathname)))
-    ($pathnameDevice pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameDevice" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun pathname-directory (pathname &key (case :local))
   "Returns the pathname-directory component of the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameDirectory"))
   (let ((pathname (pathname pathname)))
-    ($pathnameDirectory pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameDirectory" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun pathname-name (pathname &key (case :local))
   "Returns the pathname-name component of the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameName"))
   (let ((pathname (pathname pathname)))
-    ($pathnameName pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameName" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun pathname-type (pathname &key (case :local))
   "Returns the pathname-type component of the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameType"))
   (let ((pathname (pathname pathname)))
-    ($pathnameType pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameType" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun pathname-version (pathname)
   "Returns the pathname-version component of the pathname denoted by pathspec."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameVersion"))
   (let ((pathname (pathname pathname)))
-    ($pathnameVersion pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameVersion" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun load-logical-pathname-translations (host)
   "Searches for and loads the definition of a logical host named host, if it is not already defined.."
   (declare (system::%java-class-name "jcl.pathnames.functions.LoadLogicalPathnameTranslations"))
@@ -98,9 +110,9 @@
     (ext:jmethod "logicalPathnameTranslations" (ext:jclass "jcl.lang.LogicalPathnameStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     host))
-
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun logical-pathname-translations (host)
   "Returns the host's list of translations."
   (declare (system::%java-class-name "jcl.pathnames.functions.LogicalPathnameTranslations"))
@@ -108,7 +120,7 @@
     (ext:jmethod "logicalPathnameTranslations" (ext:jclass "jcl.lang.LogicalPathnameStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     host))
-#|
+
 (defun (setf logical-pathname-translations) (host new-translations)
   "Sets the host's list of translations to the new-value provided."
   (declare (system::%java-class-name "jcl.pathnames.functions.SetfLogicalPathnameTranslations"))
@@ -124,7 +136,7 @@
   "Converts pathspec to a logical pathname and returns the new logical pathname."
   (declare (system::%java-class-name "jcl.pathnames.functions.LogicalPathname"))
   (ext:jinvoke-static
-    (ext:jmethod "toLogicalPathname" (ext:jclass "jcl.lang.LogicalPathnameStruct")
+    (ext:jmethod "fromDesignator" (ext:jclass "jcl.lang.LogicalPathnameStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     pathspec))
 
@@ -134,19 +146,25 @@
   "Returns the full form of pathname."
   (declare (system::%java-class-name "jcl.pathnames.functions.Namestring"))
   (let ((pathname (pathname pathname)))
-    ($namestring pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "namestring" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun file-namestring (pathname)
   "Returns just the name, type, and version components of pathname."
   (declare (system::%java-class-name "jcl.pathnames.functions.FileNamestring"))
   (let ((pathname (pathname pathname)))
-    ($fileNamestring pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "fileNamestring" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun directory-namestring (pathname)
   "Returns the directory name portion."
   (declare (system::%java-class-name "jcl.pathnames.functions.DirectoryNamestring"))
   (let ((pathname (pathname pathname)))
-    ($directoryNamestring pathname)))
+    (ext:jinvoke-interface
+      (ext:jmethod "directoryNamestring" (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname)))
 
 (defun host-namestring (pathname)
   "Returns the host name."
@@ -214,17 +232,23 @@
   "Tests pathname for the presence of wildcard components."
   (declare (system::%java-class-name "jcl.pathnames.functions.WildPathnameP"))
   (let ((pathname (pathname pathname)))
-    ($wildPathnameP pathname field-key)))
+    (ext:jinvoke-interface
+      (ext:jmethod "wildPathnameP" (ext:jclass "jcl.lang.PathnameStruct")
+                   (ext:jclass "jcl.lang.LispStruct"))
+      pathname field-key)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-
+#|
 (defun pathname-match-p (pathname wildcard)
   "Returns true if pathname matches wildcard, otherwise nil. Missing components of wildcard default to :wild."
   (declare (system::%java-class-name "jcl.pathnames.functions.PathnameMatchP"))
   (let ((pathname (pathname pathname))
         (wildcard (pathname wildcard)))
-    ($pathnameMatchP pathname wildcard)))
-
+    (ext:jinvoke-interface
+      (ext:jmethod "pathnameMatchP" (ext:jclass "jcl.lang.PathnameStruct")
+                   (ext:jclass "jcl.lang.PathnameStruct"))
+      pathname wildcard)))
+|#
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun translate-logical-pathname (pathname &key)

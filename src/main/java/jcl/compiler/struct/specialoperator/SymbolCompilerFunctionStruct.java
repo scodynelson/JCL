@@ -4,11 +4,13 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.FunctionStruct;
+import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,5 +61,10 @@ public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 		                   GenerationConstants.ENVIRONMENT_GET_FUNCTION_METHOD_NAME,
 		                   GenerationConstants.ENVIRONMENT_GET_FUNCTION_METHOD_DESC,
 		                   false);
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		return environment.getFunction(functionSymbol);
 	}
 }

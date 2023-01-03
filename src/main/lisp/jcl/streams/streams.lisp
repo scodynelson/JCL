@@ -22,8 +22,8 @@
   (ext:jinvoke-static
     (ext:jmethod "toBroadcastStream" (ext:jclass "jcl.lang.BroadcastStreamStruct")
                  (ext:jclass "java.util.List"))
-    (ext:jinvoke (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
-                 output-streams)))
+    (ext:jinvoke-interface (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
+                           output-streams)))
 
 (defun make-concatenated-stream (&rest input-streams)
   "Returns a concatenated stream that has the indicated input-streams initially associated with it."
@@ -31,8 +31,8 @@
   (ext:jinvoke-static
     (ext:jmethod "toConcatenatedStream" (ext:jclass "jcl.lang.ConcatenatedStreamStruct")
                  (ext:jclass "java.util.List"))
-    (ext:jinvoke (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
-                 input-streams)))
+    (ext:jinvoke-interface (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
+                           input-streams)))
 
 (defun make-echo-stream (input-stream output-stream)
   "Returns a echo stream that gets its input from input-stream and sends its output to output-stream."
@@ -99,39 +99,56 @@
 (defun input-stream-p (stream)
   "Returns true if stream is an input stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.InputStreamP"))
-  ($inputStreamP stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "inputStreamP" (ext:jclass "jcl.lang.StreamStruct"))
+    stream))
 
 (defun output-stream-p (stream)
   "Returns true if stream is an output stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.OutputStreamP"))
-  ($outputStreamP stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "outputStreamP" (ext:jclass "jcl.lang.StreamStruct"))
+    stream))
 
 (defun interactive-stream-p (stream)
   "Returns true if stream is an interactive stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.InteractiveStreamP"))
-  ($interactiveStreamP stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "interactiveStreamP" (ext:jclass "jcl.lang.StreamStruct"))
+    stream))
 
 (defun open-stream-p (stream)
   "Returns true if stream is an open stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.OpenStreamP"))
-  ($openStreamP stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "openStreamP" (ext:jclass "jcl.lang.StreamStruct"))
+    stream))
 
 (defun stream-element-type (stream)
   "Returns a type specifier that indicates the types of objects that may be read from or written to stream."
   (declare (system::%java-class-name "jcl.streams.functions.StreamElementType"))
-  ($streamElementType stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "streamElementType" (ext:jclass "jcl.lang.StreamStruct"))
+    stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun read-byte (input-stream &optional (eof-error t) (eof-value nil))
   "Returns the next byte from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ReadByte"))
-  ($readByte input-stream eof-error eof-value))
+  (ext:jinvoke-interface
+    (ext:jmethod "readByte" (ext:jclass "jcl.lang.InputStreamStruct")
+                 (ext:jclass "jcl.lang.BooleanStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    input-stream eof-error eof-value))
 
 (defun write-byte (byte output-stream)
   "Outputs the byte to the output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.WriteByte"))
-  ($writeByte output-stream byte))
+  (ext:jinvoke-interface
+    (ext:jmethod "writeByte" (ext:jclass "jcl.lang.OutputStreamStruct")
+                 (ext:jclass "jcl.lang.IntegerStruct"))
+    output-stream byte))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
@@ -157,25 +174,41 @@
   "Returns the next character from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ReadChar"))
   (let ((input-stream (streamify-designator input-stream t)))
-    ($readChar input-stream eof-error eof-value recursive-p)))
+    (ext:jinvoke-interface
+      ;; TODO: not using recursive-p; Need to fix/research the correct approach
+      (ext:jmethod "readChar" (ext:jclass "jcl.lang.InputStreamStruct")
+                   (ext:jclass "jcl.lang.BooleanStruct")
+                   (ext:jclass "jcl.lang.LispStruct"))
+      input-stream eof-error eof-value)))
 
 (defun read-char-no-hang (&optional (input-stream *standard-input*) (eof-error t) (eof-value nil) (recursive-p nil))
   "Returns the next character from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ReadCharNoHang"))
   (let ((input-stream (streamify-designator input-stream t)))
-    ($readCharNoHang input-stream eof-error eof-value recursive-p)))
+    (ext:jinvoke-interface
+      ;; TODO: not using recursive-p; Need to fix/research the correct approach
+      (ext:jmethod "readCharNoHang" (ext:jclass "jcl.lang.InputStreamStruct")
+                   (ext:jclass "jcl.lang.BooleanStruct")
+                   (ext:jclass "jcl.lang.LispStruct"))
+      input-stream eof-error eof-value)))
 
 (defun unread-char (character &optional (input-stream *standard-input*))
   "Places character back onto the front of input-stream so that it will again be the next character in input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.UnreadChar"))
   (let ((input-stream (streamify-designator input-stream t)))
-    ($unreadChar input-stream character)))
+    (ext:jinvoke-interface
+      (ext:jmethod "unreadChar" (ext:jclass "jcl.lang.InputStreamStruct")
+                   (ext:jclass "jcl.lang.CharacterStruct"))
+      input-stream character)))
 
 (defun write-char (character &optional (output-stream *standard-output*))
   "Outputs character to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.WriteChar"))
   (let ((output-stream (streamify-designator output-stream nil)))
-    ($writeChar output-stream character)))
+    (ext:jinvoke-interface
+      (ext:jmethod "writeChar" (ext:jclass "jcl.lang.OutputStreamStruct")
+                   (ext:jclass "jcl.lang.CharacterStruct"))
+      output-stream character)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -183,21 +216,38 @@
   "Returns the next line of text that is terminated by a newline or end of file."
   (declare (system::%java-class-name "jcl.streams.functions.ReadLine"))
   (let ((input-stream (streamify-designator input-stream t)))
-    ($toValues ($readLine input-stream eof-error eof-value recursive-p))))
+    (ext:jinvoke-virtual
+      (ext:jmethod "toValues" (ext:jclass "jcl.lang.ReadLineResult"))
+      (ext:jinvoke-interface
+        ;; TODO: not using recursive-p; Need to fix/research the correct approach
+        (ext:jmethod "readLine" (ext:jclass "jcl.lang.InputStreamStruct")
+                     (ext:jclass "jcl.lang.BooleanStruct")
+                     (ext:jclass "jcl.lang.LispStruct"))
+        input-stream eof-error eof-value))))
 
 (defun write-line (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream followed by a newline."
   (declare (system::%java-class-name "jcl.streams.functions.WriteLine"))
   (let ((output-stream (streamify-designator output-stream nil))
         (end (or end (length string))))
-    ($writeLine output-stream string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "writeLine" (ext:jclass "jcl.lang.OutputStreamStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.FixnumStruct")
+                   (ext:jclass "jcl.lang.FixnumStruct"))
+      output-stream string start end)))
 
 (defun write-string (string &optional (output-stream *standard-output*) &key (start 0) end)
   "Writes the characters of the sub-sequence of string bounded by start and end to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.WriteString"))
   (let ((output-stream (streamify-designator output-stream nil))
         (end (or end (length string))))
-    ($writeString output-stream string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "writeString" (ext:jclass "jcl.lang.OutputStreamStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.FixnumStruct")
+                   (ext:jclass "jcl.lang.FixnumStruct"))
+      output-stream string start end)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -208,19 +258,32 @@
 (defun file-length (stream)
   "Returns the length of stream, or nil if the length cannot be determined."
   (declare (system::%java-class-name "jcl.streams.functions.FileLength"))
-  ($fileLength stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "fileLength" (ext:jclass "jcl.lang.StreamStruct"))
+    stream))
 
 (defun file-position (stream &optional position-spec)
   "Returns the length of stream, or nil if the length cannot be determined."
   (declare (system::%java-class-name "jcl.streams.functions.FilePosition"))
   (cond ((integerp position-spec)
-         ($filePosition stream position-spec))
+         (ext:jinvoke-interface
+           (ext:jmethod "filePosition" (ext:jclass "jcl.lang.StreamStruct")
+                        (ext:jclass "jcl.lang.IntegerStruct"))
+           stream position-spec))
         ((eq position-spec :start)
-         ($filePosition stream 0))
+         (ext:jinvoke-interface
+           (ext:jmethod "filePosition" (ext:jclass "jcl.lang.StreamStruct")
+                        (ext:jclass "jcl.lang.IntegerStruct"))
+           stream 0))
         ((eq position-spec :end)
-         ($filePosition stream (file-length stream)))
+         (ext:jinvoke-interface
+           (ext:jmethod "filePosition" (ext:jclass "jcl.lang.StreamStruct")
+                        (ext:jclass "jcl.lang.IntegerStruct"))
+           stream (file-length stream)))
         ((null position-spec)
-         ($filePosition stream))
+         (ext:jinvoke-interface
+           (ext:jmethod "filePosition" (ext:jclass "jcl.lang.StreamStruct"))
+           stream))
         (t
          (error "Invalid position-spec value. Must be: an integer, :start, :end, or nil."))))
 
@@ -253,7 +316,10 @@
 (defun close (stream &key (abort nil))
   "Closes Stream."
   (declare (system::%java-class-name "jcl.streams.functions.Close"))
-  ($close stream abort))
+  (ext:jinvoke-interface
+    (ext:jmethod "close" (ext:jclass "jcl.lang.StreamStruct")
+                 (ext:jclass "jcl.lang.BooleanStruct"))
+    stream abort))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -261,7 +327,9 @@
   "Returns true if there is a character immediately available from input-stream; otherwise, returns false."
   (declare (system::%java-class-name "jcl.streams.functions.Listen"))
   (let ((output-stream (streamify-designator input-stream t)))
-    ($listen input-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "listen" (ext:jclass "jcl.lang.InputStreamStruct"))
+      input-stream)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -269,20 +337,26 @@
   "Outputs a newline to output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.Terpri"))
   (let ((output-stream (streamify-designator output-stream nil)))
-    ($terpri output-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "terpri" (ext:jclass "jcl.lang.OutputStreamStruct"))
+      output-stream)))
 
 (defun fresh-line (&optional (output-stream *standard-output*))
   "Outputs a newline only if the output-stream is not already at the start of a line."
   (declare (system::%java-class-name "jcl.streams.functions.FreshLine"))
   (let ((output-stream (streamify-designator output-stream nil)))
-    ($freshLine output-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "freshLine" (ext:jclass "jcl.lang.OutputStreamStruct"))
+      output-stream)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun stream-external-format (file-stream)
   "Returns an external file format designator for the stream."
   (declare (system::%java-class-name "jcl.streams.functions.StreamExternalFormat"))
-  ($streamExternalFormat file-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "streamExternalFormat" (ext:jclass "jcl.lang.FileStreamStruct"))
+    file-stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -290,26 +364,34 @@
   "Clears any available input from input-stream."
   (declare (system::%java-class-name "jcl.streams.functions.ClearInput"))
   (let ((output-stream (streamify-designator input-stream t)))
-    ($clearInput input-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "clearInput" (ext:jclass "jcl.lang.InputStreamStruct"))
+      input-stream)))
 
 (defun clear-output (&optional (output-stream *standard-output*))
   "Attempts to abort any outstanding output operation in progress in order to allow as little output as possible to
   continue to the destination."
   (declare (system::%java-class-name "jcl.streams.functions.ClearOutput"))
   (let ((output-stream (streamify-designator output-stream nil)))
-    ($clearOutput output-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "clearOutput" (ext:jclass "jcl.lang.OutputStreamStruct"))
+      output-stream)))
 
 (defun finish-output (&optional (output-stream *standard-output*))
   "Attempts to ensure that any buffered output sent to output-stream has reached its destination, and then returns."
   (declare (system::%java-class-name "jcl.streams.functions.FinishOutput"))
   (let ((output-stream (streamify-designator output-stream nil)))
-    ($finishOutput output-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "finishOutput" (ext:jclass "jcl.lang.OutputStreamStruct"))
+      output-stream)))
 
 (defun force-output (&optional (output-stream *standard-output*))
   "Initiates the emptying of any internal buffers but does not wait for completion or acknowledgment to return."
   (declare (system::%java-class-name "jcl.streams.functions.ForceOutput"))
   (let ((output-stream (streamify-designator output-stream nil)))
-    ($forceOutput output-stream)))
+    (ext:jinvoke-interface
+      (ext:jmethod "forceOutput" (ext:jclass "jcl.lang.OutputStreamStruct"))
+      output-stream)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -320,47 +402,63 @@
 (defun broadcast-stream-streams (broadcast-stream)
   "Returns a list of output streams that constitute all the streams to which the broadcast-stream is broadcasting."
   (declare (system::%java-class-name "jcl.streams.functions.BroadcastStreamStreams"))
-  ($broadcastStreamStreams broadcast-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "broadcastStreamStreams" (ext:jclass "jcl.lang.BroadcastStreamStruct"))
+    broadcast-stream))
 
 (defun concatenated-stream-streams (concatenated-stream)
   "Returns a list of input streams that constitute the ordered set of streams the concatenated-stream still has to read
   from, starting with the current one it is reading from."
   (declare (system::%java-class-name "jcl.streams.functions.ConcatenatedStreamStreams"))
-  ($concatenatedStreamStreams concatenated-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "concatenatedStreamStreams" (ext:jclass "jcl.lang.ConcatenatedStreamStruct"))
+    concatenated-stream))
 
 (defun echo-stream-input-stream (echo-stream)
   "Returns the input stream from which echo-stream receives input."
   (declare (system::%java-class-name "jcl.streams.functions.EchoStreamInputStream"))
-  ($echoStreamInputStream echo-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "echoStreamInputStream" (ext:jclass "jcl.lang.EchoStreamStruct"))
+    echo-stream))
 
 (defun echo-stream-output-stream (echo-stream)
   "Returns the output stream to which echo-stream sends output."
   (declare (system::%java-class-name "jcl.streams.functions.EchoStreamOutputStream"))
-  ($echoStreamOutputStream echo-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "echoStreamOutputStream" (ext:jclass "jcl.lang.EchoStreamStruct"))
+    echo-stream))
 
 (defun two-way-stream-input-stream (two-way-stream)
   "Returns the input stream from which two-way-stream receives input."
   (declare (system::%java-class-name "jcl.streams.functions.TwoWayStreamInputStream"))
-  ($twoWayStreamInputStream echo-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "twoWayStreamInputStream" (ext:jclass "jcl.lang.TwoWayStreamStruct"))
+    two-way-stream))
 
-(defun two-way-stream-output-stream (echo-stream)
+(defun two-way-stream-output-stream (two-way-stream)
   "Returns the output stream to which two-way-stream sends output."
   (declare (system::%java-class-name "jcl.streams.functions.TwoWayStreamOutputStream"))
-  ($twoWayStreamOutputStream two-way-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "twoWayStreamOutputStream" (ext:jclass "jcl.lang.TwoWayStreamStruct"))
+    two-way-stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun synonym-stream-symbol (synonym-stream)
   "Returns the symbol whose symbol-value the synonym-stream is using."
   (declare (system::%java-class-name "jcl.streams.functions.SynonymStreamSymbol"))
-  ($synonymStreamSymbol synonym-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "synonymStreamSymbol" (ext:jclass "jcl.lang.SynonymStreamStruct"))
+    synonym-stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get-output-stream-string (string-output-stream)
   "Returns a string containing, in order, all the characters that have been output to string-output-stream."
   (declare (system::%java-class-name "jcl.streams.functions.GetOutputStreamString"))
-  ($getOutputStreamString string-output-stream))
+  (ext:jinvoke-interface
+    (ext:jmethod "getOutputStreamString" (ext:jclass "jcl.lang.StringOutputStreamStruct"))
+    string-output-stream))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

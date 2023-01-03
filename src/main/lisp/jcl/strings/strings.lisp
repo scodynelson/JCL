@@ -38,12 +38,18 @@
 (defun char (string index)
   "Char accesses the element of string specified by index."
   (declare (system::%java-class-name "jcl.strings.functions.Char"))
-  ($char_ string index))
+  (ext:jinvoke-interface
+    (ext:jmethod "char_" (ext:jclass "jcl.lang.StringStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct"))
+    string index))
 
 (defun schar (string index)
   "Schar accesses the element of string specified by index."
   (declare (system::%java-class-name "jcl.strings.functions.Schar"))
-  ($schar string index))
+  (ext:jinvoke-interface
+    (ext:jmethod "schar" (ext:jclass "jcl.lang.StringStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct"))
+    string index))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -51,19 +57,28 @@
   "Returns a substring of string, with all characters in character-bag stripped off the beginning and end."
   (declare (system::%java-class-name "jcl.strings.functions.StringTrim"))
   (let ((string (string string)))
-    ($stringTrim string character-bag)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringTrim" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.SequenceStruct"))
+      string character-bag)))
 
 (defun string-left-trim (character-bag string)
   "Returns a substring of string, with all characters in character-bag stripped off the beginning."
   (declare (system::%java-class-name "jcl.strings.functions.StringLeftTrim"))
   (let ((string (string string)))
-    ($stringLeftTrim string character-bag)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringLeftTrim" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.SequenceStruct"))
+      string character-bag)))
 
 (defun string-right-trim (character-bag string)
   "Returns a substring of string, with all characters in character-bag stripped off the end."
   (declare (system::%java-class-name "jcl.strings.functions.StringRightTrim"))
   (let ((string (string string)))
-    ($stringRightTrim string character-bag)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringRightTrim" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.SequenceStruct"))
+      string character-bag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -72,14 +87,22 @@
   (declare (system::%java-class-name "jcl.strings.functions.StringUpcase"))
   (let* ((string (string string))
          (end (or end (length string))))
-    ($stringUpcase string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringUpcase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string start end)))
 
 (defun string-downcase (string &key (start 0) end)
   "Returns a string just like string with all uppercase characters replaced by the corresponding lowercase characters."
   (declare (system::%java-class-name "jcl.strings.functions.StringDowncase"))
   (let* ((string (string string))
          (end (or end (length string))))
-    ($stringDowncase string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringDowncase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string start end)))
 
 (defun string-capitalize (string &key (start 0) end)
   "Produces a copy of string such that, for every word in the copy, the first character of the ``word,'' if it has case,
@@ -87,21 +110,33 @@
   (declare (system::%java-class-name "jcl.strings.functions.StringCapitalize"))
   (let* ((string (string string))
          (end (or end (length string))))
-    ($stringCapitalize string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringCapitalize" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string start end)))
 
 (defun nstring-upcase (string &key (start 0) end)
   "Returns the provided string modified with all lowercase characters replaced by the corresponding uppercase characters."
   (declare (system::%java-class-name "jcl.strings.functions.NStringUpcase"))
   (let* ((string (string string))
          (end (or end (length string))))
-    ($nStringUpcase string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "nStringUpcase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string start end)))
 
 (defun nstring-downcase (string &key (start 0) end)
   "Returns the provided string modified with all uppercase characters replaced by the corresponding lowercase characters."
   (declare (system::%java-class-name "jcl.strings.functions.NStringDowncase"))
   (let* ((string (string string))
          (end (or end (length string))))
-    ($nStringDowncase string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "nStringDowncase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string start end)))
 
 (defun nstring-capitalize (string &key (start 0) end)
   "Modifies the provided string such that, for every word in the copy, the first character of the ``word,'' if it has case,
@@ -109,7 +144,11 @@
   (declare (system::%java-class-name "jcl.strings.functions.NStringCapitalize"))
   (let* ((string (string string))
          (end (or end (length string))))
-    ($nStringCapitalize string start end)))
+    (ext:jinvoke-interface
+      (ext:jmethod "nStringCapitalize" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string start end)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -121,7 +160,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringEqual string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringEqual" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string/= (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String/= is true if the supplied substrings are different; otherwise it is false."
@@ -130,7 +176,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringNotEqual string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringNotEqual" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string< (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String< is true if substring1 is less than substring2; otherwise it is false."
@@ -139,7 +192,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringLessThan string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringLessThan" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string> (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String> is true if substring1 is greater than substring2; otherwise it is false."
@@ -148,7 +208,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringGreaterThan string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringGreaterThan" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string<= (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String<= is true if substring1 is less than or equal to substring2; otherwise it is false."
@@ -157,7 +224,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringLessThanOrEqualTo string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringLessThanOrEqualTo" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string>= (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String>= is true if substring1 is greater than or equal to substring2; otherwise it is false."
@@ -166,7 +240,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringGreaterThanOrEqualTo string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringGreaterThanOrEqualTo" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string-equal (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String-equal is just like string= except that differences in case are ignored; two characters are considered to be
@@ -176,7 +257,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringEqualIgnoreCase string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringEqualIgnoreCase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string-not-equal (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String-not-equal is just like string/= except that differences in case are ignored; two characters are considered to
@@ -186,7 +274,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringNotEqualIgnoreCase string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringNotEqualIgnoreCase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string-lessp (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String-lessp is exactly like string<, except that distinctions between uppercase and lowercase letters are ignored.
@@ -196,7 +291,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringLessThanIgnoreCase string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringLessThanIgnoreCase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string-greaterp (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String-greaterp are exactly like string>, except that distinctions between uppercase and lowercase letters are
@@ -206,7 +308,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringGreaterThanIgnoreCase string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringGreaterThanIgnoreCase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string-not-greaterp (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String-not-greaterp is exactly like string<=, except that distinctions between uppercase and lowercase letters are
@@ -216,7 +325,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringLessThanOrEqualToIgnoreCase string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringLessThanOrEqualToIgnoreCase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 (defun string-not-lessp (string1 string2 &key (start1 0) end1 (start2 0) end2)
   "String-not-lessp is exactly like string>=, except that distinctions between uppercase and lowercase letters are
@@ -226,7 +342,14 @@
          (string2 (string string2))
          (end1 (or end1 (length string1)))
          (end2 (or end2 (length string2))))
-    ($stringGreaterThanOrEqualToIgnoreCase string1 string2 start1 end1 start2 end2)))
+    (ext:jinvoke-interface
+      (ext:jmethod "stringGreaterThanOrEqualToIgnoreCase" (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct")
+                   (ext:jclass "jcl.lang.IntegerStruct"))
+      string1 string2 start1 end1 start2 end2)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jcl.compiler.environment.Environment;
+import jcl.compiler.function.InternalEval;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.JavaMethodBuilder;
@@ -34,6 +36,16 @@ public class PrognStruct extends CompilerSpecialOperatorStruct {
 		                                .map(Object::toString)
 		                                .collect(Collectors.joining(" "));
 		return "(PROGN " + formsString + ')';
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		LispStruct finalForm = NILStruct.INSTANCE;
+
+		for (final LispStruct form : forms) {
+			finalForm = InternalEval.eval(form);
+		}
+		return finalForm;
 	}
 
 	/**

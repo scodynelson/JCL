@@ -1,7 +1,10 @@
 package jcl.lang.internal;
 
+import java.util.Deque;
+import java.util.Map;
 import java.util.Optional;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
@@ -23,6 +26,7 @@ import jcl.lang.condition.exception.UnboundVariableException;
 import jcl.lang.condition.exception.UndefinedFunctionException;
 import jcl.lang.statics.CommonLispSymbols;
 import jcl.lang.statics.GlobalPackageStruct;
+import org.apache.commons.collections4.CollectionUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -117,10 +121,21 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 
 	@Override
 	public LispStruct symbolValue() {
-		if (value == null) {
-			throw new UnboundVariableException("Unbound variable: " + this);
+		// TODO: need to do the dynamic binding calls here for now, until we rework the compiler
+		final Map<SymbolStruct, Deque<LispStruct>> dynamicBindings = Environment.NULL.getDynamicSymbolBindings();
+
+		final Deque<LispStruct> symbolBindingList = dynamicBindings.get(this);
+		if (CollectionUtils.isNotEmpty(symbolBindingList)) {
+			final LispStruct value = symbolBindingList.peek();
+			if (value != null) {
+				return value;
+			}
 		}
-		return value;
+
+		if (value != null) {
+			return value;
+		}
+		throw new UnboundVariableException("Unbound variable: " + this);
 	}
 
 	@Override
@@ -128,7 +143,16 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		if (isConstant) {
 			throw new ProgramErrorException("Can't set value for constant " + name + '.');
 		}
-		value = newValue;
+
+		// TODO: need to do the dynamic binding calls here for now, until we rework the compiler
+		final Map<SymbolStruct, Deque<LispStruct>> dynamicBindings = Environment.NULL.getDynamicSymbolBindings();
+
+		final Deque<LispStruct> symbolBindingList = dynamicBindings.get(this);
+		if (CollectionUtils.isEmpty(symbolBindingList)) {
+			value = newValue;
+		} else {
+			Environment.NULL.setDynamicSymbolValue(this, newValue);
+		}
 		return newValue;
 	}
 
@@ -232,25 +256,28 @@ public class SymbolStructImpl extends LispStructImpl implements SymbolStruct {
 		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
-		if (generatorState.getLexicalSymbols().contains(this)) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-			                   GenerationConstants.ENVIRONMENT_NAME,
-			                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_NAME,
-			                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_DESC,
-			                   false);
-		} else if (generatorState.getDynamicSymbols().contains(this)) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-			                   GenerationConstants.ENVIRONMENT_NAME,
-			                   GenerationConstants.ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME,
-			                   GenerationConstants.ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_DESC,
-			                   false);
-		} else {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-			                   GenerationConstants.ENVIRONMENT_NAME,
-			                   GenerationConstants.ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_NAME,
-			                   GenerationConstants.ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_DESC,
-			                   false);
-		}
+		// TODO: not sure this is exactly correct, but fixes issues with dynamic and lexical values not being
+		//          found in the correct scope. Need to rework this and the compiler/environment to get values
+		//          in a cleaner way
+//		if (generatorState.getLexicalSymbols().contains(this)) {
+//			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+//			                   GenerationConstants.ENVIRONMENT_NAME,
+//			                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_NAME,
+//			                   GenerationConstants.ENVIRONMENT_GET_LEXICAL_SYMBOL_VALUE_METHOD_DESC,
+//			                   false);
+//		} else if (generatorState.getDynamicSymbols().contains(this)) {
+//			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+//			                   GenerationConstants.ENVIRONMENT_NAME,
+//			                   GenerationConstants.ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_NAME,
+//			                   GenerationConstants.ENVIRONMENT_GET_DYNAMIC_SYMBOL_VALUE_METHOD_DESC,
+//			                   false);
+//		} else {
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_GET_SYMBOL_VALUE_METHOD_DESC,
+		                   false);
+//		}
 	}
 
 	@Override

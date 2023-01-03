@@ -45,6 +45,7 @@ public final class BodyWithDeclaresAndDocStringAnalyzer {
 				next = iterator.next();
 			}
 
+			// TODO: scanning for declarations before and after docstring is wrong
 			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;
 				final Iterator<LispStruct> declareIterator = declareStatement.iterator();
@@ -59,6 +60,8 @@ public final class BodyWithDeclaresAndDocStringAnalyzer {
 				}
 			}
 
+			// TODO: this isn't all correct. Currently, 'defun' and 'defmacro' will add an extra NIL to the Progn
+			//          because we don't guarantee the order of the declare/docstring/body order
 			if (next != null) {
 				bodyForms.add(next);
 			}

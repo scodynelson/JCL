@@ -13,27 +13,40 @@
 (defun elt (sequence index)
   "Accesses the element of sequence specified by index."
   (declare (system::%java-class-name "jcl.sequences.functions.Elt"))
-  ($elt sequence index))
+  (ext:jinvoke-interface
+    (ext:jmethod "elt" (ext:jclass "jcl.lang.SequenceStruct")
+                 (ext:jclass "jcl.lang.IntegerStruct"))
+    sequence index))
 
 (defun (setf elt) (sequence index value)
   "Sets the element of sequence specified by index to the new-value provided."
   (declare (system::%java-class-name "jcl.sequences.functions.SetfElt"))
-  ($setfElt sequence value index))
+  (ext:jinvoke-interface
+    (ext:jmethod "setfElt" (ext:jclass "jcl.lang.SequenceStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.IntegerStruct"))
+    sequence value index))
 
 (defun length (sequence)
   "Returns the number of elements in sequence."
   (declare (system::%java-class-name "jcl.sequences.functions.Length"))
-  ($length sequence))
+  (ext:jinvoke-interface
+    (ext:jmethod "length" (ext:jclass "jcl.lang.SequenceStruct"))
+    sequence))
 
 (defun reverse (sequence)
   "Returns a new sequence of the same kind as sequence, containing the same elements, but in reverse order."
   (declare (system::%java-class-name "jcl.sequences.functions.Reverse"))
-  ($reverse sequence))
+  (ext:jinvoke-interface
+    (ext:jmethod "reverse" (ext:jclass "jcl.lang.SequenceStruct"))
+    sequence))
 
 (defun nreverse (sequence)
   "Returns a new sequence of the same kind as sequence, containing the same elements, but in reverse order; the original sequence may be modified."
   (declare (system::%java-class-name "jcl.sequences.functions.NReverse"))
-  ($nReverse sequence))
+  (ext:jinvoke-interface
+    (ext:jmethod "nReverse" (ext:jclass "jcl.lang.SequenceStruct"))
+    sequence))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

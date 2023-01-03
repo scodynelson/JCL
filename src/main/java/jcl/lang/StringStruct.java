@@ -20,6 +20,28 @@ public interface StringStruct extends VectorStruct {
 	);
 
 	/**
+	 * Accesses the character of string specified by index.
+	 *
+	 * @param index
+	 * 		the index of the character to access
+	 *
+	 * @return the character
+	 */
+	CharacterStruct char_(final FixnumStruct index);
+
+	/**
+	 * Accesses the character of string specified by index. String must be a "simple-string" type.
+	 *
+	 * @param index
+	 * 		the index of the character to access
+	 *
+	 * @return the character
+	 */
+	default CharacterStruct schar(final FixnumStruct index) {
+		throw new TypeErrorException("Invalid STRING type: " + this);
+	}
+
+	/**
 	 * Returns a new string with the contents upper-cased according to the provided start and end.
 	 *
 	 * @param start
@@ -513,7 +535,7 @@ public interface StringStruct extends VectorStruct {
 			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
 			return toLispString(characterStruct.toJavaCharacter().toString());
 		}
-		throw new TypeErrorException("Type cannot be converted to String.");
+		throw new TypeErrorException("Type cannot be converted to String: " + lispStruct);
 	}
 
 	/**

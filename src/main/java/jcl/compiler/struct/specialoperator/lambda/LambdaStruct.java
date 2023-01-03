@@ -64,7 +64,23 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	@Override
 	public String toString() {
-		return "(LAMBDA " + lambdaListBindings + ' ' + docString + ' ' + forms + ')';
+		final StringBuilder builder = new StringBuilder("(LAMBDA ");
+		if (lambdaListBindings != null) {
+			builder.append(lambdaListBindings)
+			       .append(' ');
+		}
+		if (docString != null) {
+			builder.append(docString)
+			       .append(' ');
+		}
+		if (forms != null) {
+			builder.append(forms)
+			       .append(' ');
+		}
+		if (builder.charAt(builder.length() - 1) == ' ') {
+			builder.deleteCharAt(builder.length() - 1);
+		}
+		return builder.append(')').toString();
 	}
 
 	@Override

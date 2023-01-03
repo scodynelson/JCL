@@ -4,8 +4,10 @@
 
 package jcl.compiler.struct.specialoperator;
 
+import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.struct.specialoperator.lambda.MacroLambdaStruct;
+import jcl.lang.LispStruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -39,5 +41,11 @@ public class MacroLambdaCompilerFunctionStruct implements CompilerFunctionStruct
 	@Override
 	public void generate(final GeneratorState generatorState) {
 		macroLambdaStruct.generate(generatorState);
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		// TODO: is this correct??
+		return this;
 	}
 }

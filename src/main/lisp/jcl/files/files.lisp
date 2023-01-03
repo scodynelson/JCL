@@ -7,6 +7,8 @@
 
 (in-package "COMMON-LISP")
 
+;; TODO: should do the 'merge-pathnames' functionality here? It's currently needed to work correctly, but feels a bit off
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun file-write-date (pathspec)
@@ -17,7 +19,9 @@
   (let ((pathname (pathname pathname)))
     (when (logical-pathname-p pathname)
       (setq pathname (translate-logical-pathname pathname)))
-    ($fileWriteDate (merge-pathnames pathname *default-pathname-defaults* nil))))
+    (ext:jinvoke-interface
+      (ext:jmethod "fileWriteDate" (ext:jclass "jcl.lang.PathnameStruct"))
+      (merge-pathnames pathname *default-pathname-defaults* nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -27,7 +31,9 @@
   (let ((pathname (merge-pathnames pathname)))
     (when (logical-pathname-p pathname)
       (setq pathname (translate-logical-pathname pathname)))
-    ($deleteFile (merge-pathnames pathname *default-pathname-defaults* nil))))
+    (ext:jinvoke-interface
+      (ext:jmethod "deleteFile" (ext:jclass "jcl.lang.PathnameStruct"))
+      (merge-pathnames pathname *default-pathname-defaults* nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -37,7 +43,9 @@
   (let ((pathname (pathname pathname)))
     (when (logical-pathname-p pathname)
       (setq pathname (translate-logical-pathname pathname)))
-    ($truename (merge-pathnames pathname *default-pathname-defaults* nil))))
+    (ext:jinvoke-interface
+      (ext:jmethod "truename" (ext:jclass "jcl.lang.PathnameStruct"))
+      (merge-pathnames pathname *default-pathname-defaults* nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -49,7 +57,9 @@
     (let ((pathname (pathname pathname)))
       (when (logical-pathname-p pathname)
         (setq pathname (translate-logical-pathname pathname)))
-      ($probeFile (merge-pathnames pathname *default-pathname-defaults* nil)))))
+      (ext:jinvoke-interface
+        (ext:jmethod "probeFile" (ext:jclass "jcl.lang.PathnameStruct"))
+        (merge-pathnames pathname *default-pathname-defaults* nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

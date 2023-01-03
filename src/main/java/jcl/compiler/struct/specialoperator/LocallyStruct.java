@@ -11,11 +11,14 @@ import java.util.Set;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
+import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.SymbolStruct;
 import lombok.Getter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 @Getter
 public class LocallyStruct extends CompilerSpecialOperatorStruct {
@@ -51,7 +54,21 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 	 * 		stateful object used to hold the current state of the code generation process
 	 */
 	@Override
-	public void generate(final GeneratorState generatorState) {
+	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
+
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+		final int environmentStore = methodBuilder.getEnvironmentStore();
+
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ENVIRONMENT_NAME);
+		mv.visitInsn(Opcodes.DUP);
+
+		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+		                   GenerationConstants.ENVIRONMENT_NAME,
+		                   GenerationConstants.INIT_METHOD_NAME,
+		                   GenerationConstants.ENVIRONMENT_INIT_ENVIRONMENT_DESC,
+		                   false);
+		mv.visitVarInsn(Opcodes.ASTORE, environmentStore);
 
 		final Set<SymbolStruct> existingDynamicSymbols = new HashSet<>(generatorState.getDynamicSymbols());
 
@@ -67,10 +84,7 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 				generatorState.getDynamicSymbols().remove(var);
 			}
 		}
-	}
 
-	@Override
-	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
-		// Do Nothing.
+		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

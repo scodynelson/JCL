@@ -1,10 +1,8 @@
 package jcl.system;
 
 import jcl.functions.reader.ApostropheReaderMacroFunction;
-import jcl.functions.reader.AtSignReaderMacroFunction;
 import jcl.functions.reader.BackquoteReaderMacroFunction;
 import jcl.functions.reader.CommaReaderMacroFunction;
-import jcl.functions.reader.DollarSignReaderMacroFunction;
 import jcl.functions.reader.LeftParenthesisReaderMacroFunction;
 import jcl.functions.reader.QuotationMarkReaderMacroFunction;
 import jcl.functions.reader.ReaderMacroFunctionImpl;
@@ -45,17 +43,11 @@ public final class BootstrapReaderMacroFunctions {
 		ReaderMacroFunctionImpl readerMacroFunction = new ApostropheReaderMacroFunction();
 		readtable.setMacroCharacter(CodePointConstants.APOSTROPHE, readerMacroFunction, false);
 
-		readerMacroFunction = new AtSignReaderMacroFunction();
-		readtable.setMacroCharacter(CodePointConstants.AT_SIGN, readerMacroFunction, false);
-
 		readerMacroFunction = new BackquoteReaderMacroFunction();
 		readtable.setMacroCharacter(CodePointConstants.GRAVE_ACCENT, readerMacroFunction, false);
 
 		readerMacroFunction = new CommaReaderMacroFunction();
 		readtable.setMacroCharacter(CodePointConstants.COMMA, readerMacroFunction, false);
-
-		readerMacroFunction = new DollarSignReaderMacroFunction();
-		readtable.setMacroCharacter(CodePointConstants.DOLLAR_SIGN, readerMacroFunction, false);
 
 		readerMacroFunction = new LeftParenthesisReaderMacroFunction();
 		readtable.setMacroCharacter(CodePointConstants.LEFT_PARENTHESIS, readerMacroFunction, false);

@@ -30,7 +30,9 @@
 (defun char-name (character)
   "Returns a string that is the name of the character, or nil if the character has no name."
   (declare (system::%java-class-name "jcl.characters.functions.CharName"))
-  ($charName character))
+  (ext:jinvoke-interface
+    (ext:jmethod "charName" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun name-char (name)
   "Returns the character object whose name is name. If such a character does not exist, nil is returned."
@@ -43,7 +45,9 @@
 (defun char-code (character)
   "Returns the code attribute of character."
   (declare (system::%java-class-name "jcl.characters.functions.CharCode"))
-  ($charCode character))
+  (ext:jinvoke-interface
+    (ext:jmethod "charCode" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun code-char (code)
   "Returns a character with the code attribute given by code. If no such character exists and one cannot be created,
@@ -57,7 +61,9 @@
 (defun char-int (character)
   "Returns a non-negative integer encoding the character object."
   (declare (system::%java-class-name "jcl.characters.functions.CharInt"))
-  ($charInt character))
+  (ext:jinvoke-interface
+    (ext:jmethod "charInt" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun digit-char (weight &optional (radix 10))
   "If weight is less than radix, digit-char returns a character which has that weight when considered as a digit in the
@@ -74,56 +80,77 @@
   "Tests whether character is a digit in the specified radix. If it is a digit in that radix, its weight is returned as
   an integer; otherwise nil is returned."
   (declare (system::%java-class-name "jcl.characters.functions.DigitCharP"))
-  ($charDigit character radix))
+  (ext:jinvoke-interface
+    (ext:jmethod "charDigit" (ext:jclass "jcl.lang.CharacterStruct")
+                 (ext:jclass "jcl.lang.IntegerStruct"))
+    character radix))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun char-upcase (character)
   "Returns the corresponding uppercase character."
   (declare (system::%java-class-name "jcl.characters.functions.CharUpcase"))
-  ($charUpcase character))
+  (ext:jinvoke-interface
+    (ext:jmethod "charUpcase" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun char-downcase (character)
   "Returns the corresponding lowercase character."
   (declare (system::%java-class-name "jcl.characters.functions.CharDowncase"))
-  ($charDowncase character))
+  (ext:jinvoke-interface
+    (ext:jmethod "charDowncase" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (defun alpha-char-p (character)
   "Returns true if character is an alphabetic character; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.AlphaCharP"))
-  ($isAlphaChar character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isAlphaChar" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun alphanumericp (character)
   "Returns true if character is an alphabetic character or a numeric character; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.AlphaNumericP"))
-  ($isAlphanumeric character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isAlphanumeric" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun graphic-char-p (character)
   "Returns true if character is a graphic character; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.GraphicCharP"))
-  ($isGraphicChar character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isGraphicChar" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun standard-char-p (character)
   "Returns true if character is a standard character; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.StandardCharP"))
-  ($isStandardChar character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isStandardChar" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun upper-case-p (character)
   "Returns true if character is an uppercase character; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.UpperCaseP"))
-  ($isUpperCase character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isUpperCase" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun lower-case-p (character)
   "Returns true if character is a lowercase character; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.LowerCaseP"))
-  ($isLowerCase character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isLowerCase" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 (defun both-case-p (character)
   "Returns true if character is a character with case; otherwise, returns false."
   (declare (system::%java-class-name "jcl.characters.functions.BothCaseP"))
-  ($isBothCase character))
+  (ext:jinvoke-interface
+    (ext:jmethod "isBothCase" (ext:jclass "jcl.lang.CharacterStruct"))
+    character))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -187,13 +214,12 @@
   (declare (system::%java-class-name "jcl.characters.functions.CharNotLessP"))
   (char-comparator-util "isGreaterThanOrEqualToIgnoreCase" character characters))
 
-;; TODO: Use Macro??
-(defun char-comparator-util (comparison-method-name character characters)
-  (ext:jinvoke-static
-    (ext:jmethod comparison-method-name (ext:jclass "jcl.lang.CharacterStruct")
+(defmacro char-comparator-util (comparison-method-name character characters)
+  `(ext:jinvoke-static
+    (ext:jmethod ,comparison-method-name (ext:jclass "jcl.lang.CharacterStruct")
                  (ext:jclass "java.util.List"))
-    (ext:jinvoke (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
-                 (cons character characters))))
+    (ext:jinvoke-interface (ext:jmethod "toJavaList" (ext:jclass "jcl.lang.ListStruct"))
+                           (cons ,character ,characters))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

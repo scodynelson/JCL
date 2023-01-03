@@ -4,7 +4,6 @@
 
 package testground;
 
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ import jcl.lang.TStruct;
 import jcl.lang.ValuesStruct;
 import jcl.lang.VectorStruct;
 import jcl.lang.condition.exception.ProgramErrorException;
-import jcl.lang.java.JavaMethodStruct;
 import jcl.lang.statics.CommonLispSymbols;
 import org.objectweb.asm.Label;
 
@@ -48,29 +46,14 @@ public class TestGround {
 
 	private SymbolStruct UNINTERNED_SYMBOL = SymbolStruct.toLispSymbol("FOO");
 
-	private Object javaMethodCall(final Environment currentEnvironment) throws Exception {
-		final String methodName = "ADD";
-		final int numOfArguments = 1;
+	private Object javaStaticMethodCall(final Environment currentEnvironment) throws Exception {
+		return CharacterStruct.toLispCharacter(97);
+	}
 
-		final LispStruct[] methodArgs = new LispStruct[numOfArguments];
-		final Class<?>[] methodArgTypes = new Class<?>[numOfArguments];
-		for (int i = 0; i < numOfArguments; i++) {
-			final LispStruct currentArgument = CharacterStruct.toLispCharacter(197);
-			methodArgs[i] = currentArgument;
-			methodArgTypes[i] = currentArgument.getClass();
-		}
-
-		final LispStruct javaObject = CharacterStruct.toLispCharacter(97);
-		final Method javaMethod
-				= JavaMethodStruct.toJavaReflectionMethod(methodName, javaObject.getClass(), methodArgTypes);
-		final Object methodResult = javaMethod.invoke(javaObject, (Object[]) methodArgs);
-
-//		if (methodResult instanceof LispStruct) {
-//			return (LispStruct) methodResult;
-//		}
-//		return JavaObjectStruct.valueOf(methodResult);
-
-		return methodResult;
+	private Object javaVirtualMethodCall(final Environment currentEnvironment) throws Exception {
+		final CharacterStruct struct1 = CharacterStruct.toLispCharacter(97);
+		final IntegerStruct struct2 = IntegerStruct.toLispInteger(50);
+		return struct1.eql(struct2);
 	}
 
 	private Object blockGen(final Environment currentEnvironment) {
@@ -451,6 +434,14 @@ public class TestGround {
 			currentEnvironment.unbindLexicalValue(symbol);
 		}
 		return result;
+	}
+
+	private Object locally(Environment currentEnvironment) {
+		currentEnvironment = new Environment(currentEnvironment);
+
+		PackageStruct var2 = PackageStruct.findPackage("COMMON-LISP-USER");
+		SymbolStruct var3 = var2.intern("Y").getSymbol();
+		return currentEnvironment.getSymbolValue(var3);
 	}
 
 	private Object symbolMacroletGen(final Environment currentEnvironment) {

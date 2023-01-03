@@ -9,33 +9,28 @@ import java.util.Arrays;
 
 import jcl.lang.condition.exception.ErrorException;
 import jcl.lang.internal.LispStructImpl;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class JavaMethodStruct extends LispStructImpl {
 
 	private final Method javaMethod;
-
-	private JavaMethodStruct(final Method javaMethod) {
-		this.javaMethod = javaMethod;
-	}
-
-	public Method getJavaMethod() {
-		return javaMethod;
-	}
 
 	public static JavaMethodStruct toJavaMethod(final Method javaMethod) {
 		return new JavaMethodStruct(javaMethod);
 	}
 
-	public static JavaMethodStruct toJavaMethod(final String methodName,
-	                                            final Class<?> javaClass,
+	public static JavaMethodStruct toJavaMethod(final String methodName, final Class<?> javaClass,
 	                                            final Class<?>... parameterTypes) {
-		final Method javaMethod = toJavaReflectionMethod(methodName, javaClass, parameterTypes);
+		final Method javaMethod = getMethod(methodName, javaClass, parameterTypes);
 		return new JavaMethodStruct(javaMethod);
 	}
 
-	public static Method toJavaReflectionMethod(final String methodName,
-	                                            final Class<?> javaClass,
-	                                            final Class<?>... parameterTypes) {
+	private static Method getMethod(final String methodName, final Class<?> javaClass,
+	                                final Class<?>... parameterTypes) {
 		final String javaClassName = javaClass.getName();
 		final Method[] methods = javaClass.getMethods();
 
@@ -73,5 +68,10 @@ public class JavaMethodStruct extends LispStructImpl {
 							"'.");
 		}
 		return matchingMethod;
+	}
+
+	@Override
+	public String toString() {
+		return "#<" + javaMethod + '>';
 	}
 }

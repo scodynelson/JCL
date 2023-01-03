@@ -155,6 +155,11 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
+	public CharacterStruct char_(final FixnumStruct index) {
+		return aref(index);
+	}
+
+	@Override
 	public BooleanStruct isSimpleString() {
 		return NILStruct.INSTANCE;
 	}

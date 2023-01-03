@@ -99,31 +99,41 @@
   "Returns the string that names package."
   (declare (system::%java-class-name "jcl.packages.functions.PackageName"))
   (let* ((package (find-package package)))
-    ($packageName package)))
+    (ext:jinvoke-interface
+      (ext:jmethod "packageName" (ext:jclass "jcl.lang.PackageStruct"))
+      package)))
 
 (defun package-nicknames (package)
   "Returns the list of nickname strings for package, not including the name of package."
   (declare (system::%java-class-name "jcl.packages.functions.PackageNicknames"))
   (let ((package (find-package package)))
-    ($packageNicknames package)))
+    (ext:jinvoke-interface
+      (ext:jmethod "packageNicknames" (ext:jclass "jcl.lang.PackageStruct"))
+      package)))
 
 (defun package-shadowing-symbols (package)
   "Returns a list of symbols that have been declared as shadowing symbols in package by shadow or shadowing-import."
   (declare (system::%java-class-name "jcl.packages.functions.PackageShadowingSymbols"))
   (let ((package (find-package package)))
-    ($packageShadowingSymbols package)))
+    (ext:jinvoke-interface
+      (ext:jmethod "packageShadowingSymbols" (ext:jclass "jcl.lang.PackageStruct"))
+      package)))
 
 (defun package-use-list (package)
   "Returns a list of other packages that use package."
   (declare (system::%java-class-name "jcl.packages.functions.PackageUseList"))
   (let ((package (find-package package)))
-    ($packageUseList package)))
+    (ext:jinvoke-interface
+      (ext:jmethod "packageUseList" (ext:jclass "jcl.lang.PackageStruct"))
+      package)))
 
 (defun package-used-by-list (package)
   "Returns a list of other packages used by package."
   (declare (system::%java-class-name "jcl.packages.functions.PackageUsedByList"))
   (let ((package (find-package package)))
-    ($packageUsedByList package)))
+    (ext:jinvoke-interface
+      (ext:jmethod "packageUsedByList" (ext:jclass "jcl.lang.PackageStruct"))
+      package)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -136,27 +146,43 @@
   (declare (system::%java-class-name "jcl.packages.functions.FindSymbol"))
   (let ((package (find-package package))
         (symbol-name (string symbol-name)))
-    ($toValues ($findSymbol package symbol-name))))
+  (ext:jinvoke-virtual
+    (ext:jmethod "toValues" (ext:jclass "jcl.lang.PackageSymbolStruct"))
+    (ext:jinvoke-interface
+      (ext:jmethod "findSymbol" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.StringStruct"))
+      package symbol-name))))
 
 (defun find-all-symbols (symbol-name)
   "Searches every registered package for symbols that have a name that is the same as string."
   (declare (system::%java-class-name "jcl.packages.functions.FindAllSymbols"))
   (let ((symbol-name (string symbol-name)))
-    ($findAllSymbols symbol-name)))
+    (ext:jinvoke-static
+      (ext:jmethod "findAllSymbols" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.StringStruct"))
+      symbol-name)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun intern (symbol &optional (package *package*))
+(defun intern (string &optional (package *package*))
   "Enters a symbol named string into package."
   (declare (system::%java-class-name "jcl.packages.functions.Intern"))
   (let ((package (find-package package)))
-    ($toValues ($intern package symbol))))
+    (ext:jinvoke-virtual
+      (ext:jmethod "toValues" (ext:jclass "jcl.lang.PackageSymbolStruct"))
+      (ext:jinvoke-interface
+        (ext:jmethod "intern" (ext:jclass "jcl.lang.PackageStruct")
+                     (ext:jclass "jcl.lang.StringStruct"))
+        package string))))
 
 (defun unintern (symbol &optional (package *package*))
   "Removes symbol from package."
   (declare (system::%java-class-name "jcl.packages.functions.Unintern"))
   (let ((package (find-package package)))
-    ($unintern package symbol)))
+    (ext:jinvoke-interface
+      (ext:jmethod "unintern" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.SymbolStruct"))
+      package symbol)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -165,14 +191,20 @@
   (declare (system::%java-class-name "jcl.packages.functions.UsePackage"))
   (let ((package (find-package package))
         (packages (package-listify symbols)))
-    ($usePackage package packages)))
+    (ext:jinvoke-interface
+      (ext:jmethod "usePackage" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package packages)))
 
 (defun unuse-package (packages &optional (package *package*))
   "Causes package to cease inheriting all the external symbols of packages-to-unuse."
   (declare (system::%java-class-name "jcl.packages.functions.UnusePackage"))
   (let ((package (find-package package))
         (packages (package-listify symbols)))
-    ($unusePackage package packages)))
+    (ext:jinvoke-interface
+      (ext:jmethod "unUsePackage" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package packages)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
@@ -182,7 +214,10 @@
   (declare (system::%java-class-name "jcl.packages.functions.Export"))
   (let ((package (find-package package))
         (symbols (symbol-listify symbols)))
-    ($export package symbols)))
+    (ext:jinvoke-interface
+      (ext:jmethod "export" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package symbols)))
 |#
 (defun import (symbols &optional (package *package*))
   "Adds symbol or symbols to the internals of package, checking for name conflicts with existing symbols either present
@@ -190,7 +225,10 @@
   (declare (system::%java-class-name "jcl.packages.functions.Import"))
   (let ((package (find-package package))
         (symbols (symbol-listify symbols)))
-    ($importSymbols package symbols)))
+    (ext:jinvoke-interface
+      (ext:jmethod "importSymbols" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package symbols)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -200,7 +238,10 @@
   (declare (system::%java-class-name "jcl.packages.functions.ShadowingImport"))
   (let ((package (find-package package))
         (symbols (symbol-listify symbols)))
-    ($shadowingImport package symbols)))
+    (ext:jinvoke-interface
+      (ext:jmethod "shadowingImport" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package symbols)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -209,7 +250,10 @@
   (declare (system::%java-class-name "jcl.packages.functions.Unexport"))
   (let ((package (find-package package))
         (symbols (symbol-listify symbols)))
-    ($unexport package symbols)))
+    (ext:jinvoke-interface
+      (ext:jmethod "unexport" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package symbols)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -239,7 +283,11 @@
         (new-nicknames (package-name-list new-nicknames)))
     (unless (or (not found) (eq found package))
       (error "A package named ~S already exists." name))
-    ($renamePackage package name new-nicknames)))
+    (ext:jinvoke-interface
+      (ext:jmethod "renamePackage" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.StringStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package name new-nicknames)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -247,7 +295,9 @@
   "Deletes package from all package system data structures. If the operation is successful, returns true, otherwise nil."
   (declare (system::%java-class-name "jcl.packages.functions.DeletePackage"))
   (let ((package (find-package package)))
-    ($deletePackage package)))
+    (ext:jinvoke-interface
+      (ext:jmethod "deletePackage" (ext:jclass "jcl.lang.PackageStruct"))
+      package)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -256,7 +306,10 @@
   (declare (system::%java-class-name "jcl.packages.functions.Shadow"))
   (let ((package (find-package package))
         (symbol-names (string-listify symbol-names)))
-    ($shadow package symbol-names)))
+    (ext:jinvoke-interface
+      (ext:jmethod "shadow" (ext:jclass "jcl.lang.PackageStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      package symbol-names)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

@@ -222,67 +222,102 @@
   (cons (cons key datum) alist))
 
 (defun last (list &optional (n 1))
-  "Returns the last n conses (not the last n elements) of list)."
+  "Returns the last n conses (not the last n elements) of list."
   (declare (system::%java-class-name "jcl.lists.functions.Last"))
-  ($last list n))
+  (ext:jinvoke-interface
+    (ext:jmethod "last" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct"))
+    list n))
 
 (defun butlast (list &optional (n 1))
   "Returns a copy of list from which the last n conses have been omitted."
   (declare (system::%java-class-name "jcl.lists.functions.ButLast"))
-  ($butLast list n))
+  (ext:jinvoke-interface
+    (ext:jmethod "butLast" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct"))
+    list n))
 
 (defun nbutlast (list &optional (n 1))
   "Returns a list from which the last n conses have been omitted. The provided list may be modified."
   (declare (system::%java-class-name "jcl.lists.functions.NButLast"))
-  ($nButLast list n))
+  (ext:jinvoke-interface
+    (ext:jmethod "nButLast" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct"))
+    list n))
 
 (defun copy-list (list)
   "Returns a copy of list."
   (declare (system::%java-class-name "jcl.lists.functions.CopyList"))
-  ($copyList list))
+  (ext:jinvoke-interface
+    (ext:jmethod "copyList" (ext:jclass "jcl.lang.ListStruct"))
+    list))
 
 (defun copy-alist (alist)
   "Returns a copy of alist."
   (declare (system::%java-class-name "jcl.lists.functions.CopyAList"))
-  ($copyAlist alist))
+  (ext:jinvoke-interface
+    (ext:jmethod "copyAlist" (ext:jclass "jcl.lang.ListStruct"))
+    alist))
 
 (defun copy-tree (list)
   "Creates a copy of a tree of conses."
   (declare (system::%java-class-name "jcl.lists.functions.CopyTree"))
-  ($copyTree list))
+  (ext:jinvoke-interface
+    (ext:jmethod "copyTree" (ext:jclass "jcl.lang.ListStruct"))
+    list))
 
 (defun endp (list)
   "Returns true if list is the empty list. Returns false if list is a cons."
   (declare (system::%java-class-name "jcl.lists.functions.EndP"))
-  ($endp list))
+  (ext:jinvoke-interface
+    (ext:jmethod "endp" (ext:jclass "jcl.lang.ListStruct"))
+    list))
 
 (defun tailp (object list)
   "If object is the same as some tail of list, returns true; otherwise, returns false."
   (declare (system::%java-class-name "jcl.lists.functions.TailP"))
-  ($tailp list object))
+  (ext:jinvoke-interface
+    (ext:jmethod "tailp" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    list object))
 
 (defun getf (plist indicator &optional default)
   "Finds a property on the property list whose property indicator is identical to indicator, and returns its corresponding
   property value."
   (declare (system::%java-class-name "jcl.lists.functions.Getf"))
-  ($getf plist indicator default))
+  (ext:jinvoke-interface
+    (ext:jmethod "getf" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    plist indicator default))
 
 (defun (setf getf) (plist indicator value &optional default)
   "Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding
   property value with the new-value provided."
   (declare (system::%java-class-name "jcl.lists.functions.SetfGetf")
            (ignore default))
-  ($putf plist indicator value))
+  (ext:jinvoke-interface
+    (ext:jmethod "putf" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.LispStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    plist indicator value))
 
 (defun get-properties (plist indicator-list)
   "Used to look up any of several property list entries all at once."
   (declare (system::%java-class-name "jcl.lists.functions.GetProperties"))
-  ($toValues ($getProperties plist indicator-list)))
+  (ext:jinvoke-virtual
+    (ext:jmethod "toValues" (ext:jclass "jcl.lang.GetPropertiesResult"))
+    (ext:jinvoke-interface
+      (ext:jmethod "getProperties" (ext:jclass "jcl.lang.ListStruct")
+                   (ext:jclass "jcl.lang.ListStruct"))
+      plist indicator-list)))
 
 (defun list-length (list)
   "Returns the length of list if list is a proper list. Returns nil if list is a circular list."
   (declare (system::%java-class-name "jcl.lists.functions.ListLength"))
-  ($listLength list))
+  (ext:jinvoke-interface
+    (ext:jmethod "listLength" (ext:jclass "jcl.lang.ListStruct"))
+    list))
 
 (defun nth (index list)
   "Locates the nth element of list, where the car of the list is the ``zeroth'' element."
@@ -298,7 +333,10 @@
 (defun nthcdr (n list)
   "Returns the tail of list that would be obtained by calling cdr n times in succession."
   (declare (system::%java-class-name "jcl.lists.functions.NthCdr"))
-  ($nthCdr list n))
+  (ext:jinvoke-interface
+    (ext:jmethod "nthCdr" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.FixnumStruct"))
+    list n))
 
 (defun make-list (size &key initial-element)
   "Returns a list of length given by size, each of the elements of which is initial-element."
@@ -313,7 +351,10 @@
   "If object is the same as some tail of list, returns a fresh list of the elements of list that precede object in the
   list structure of list; otherwise, it returns a copy of list."
   (declare (system::%java-class-name "jcl.lists.functions.Ldiff"))
-  ($ldiff list object))
+  (ext:jinvoke-interface
+    (ext:jmethod "ldiff" (ext:jclass "jcl.lang.ListStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    list object))
 
 (defun pairlis (keys datums &optional alist)
   "Returns an association list that associates elements of keys to corresponding elements of data."
@@ -328,12 +369,18 @@
 (defun rplaca (cons object)
   "Replaces the car of the cons with object."
   (declare (system::%java-class-name "jcl.lists.functions.Rplaca"))
-  ($rplaca cons object))
+  (ext:jinvoke-interface
+    (ext:jmethod "rplaca" (ext:jclass "jcl.lang.ConsStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    cons object))
 
 (defun rplacd (cons object)
   "Replaces the cdr of the cons with object."
   (declare (system::%java-class-name "jcl.lists.functions.Rplacd"))
-  ($rplacd cons object))
+  (ext:jinvoke-interface
+    (ext:jmethod "rplacd" (ext:jclass "jcl.lang.ConsStruct")
+                 (ext:jclass "jcl.lang.LispStruct"))
+    cons object))
 
 (defun revappend (list tail)
   "Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that

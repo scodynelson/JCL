@@ -1229,10 +1229,10 @@ public interface CommonLispSymbols {
 
 	// Extension
 	SymbolStruct JCLASS = internAndExportExtensionSymbol("JCLASS");
-	SymbolStruct JINVOKE = internAndExportExtensionSymbol("JINVOKE");
+	SymbolStruct JINVOKE_INTERFACE = internAndExportExtensionSymbol("JINVOKE-INTERFACE");
 	SymbolStruct JINVOKE_STATIC = internAndExportExtensionSymbol("JINVOKE-STATIC");
+	SymbolStruct JINVOKE_VIRTUAL = internAndExportExtensionSymbol("JINVOKE-VIRTUAL");
 	SymbolStruct JMETHOD = internAndExportExtensionSymbol("JMETHOD");
-	SymbolStruct JNEW = internAndExportExtensionSymbol("JNEW");
 
 	SymbolStruct NIL_VECTOR = internAndExportExtensionSymbol("NIL-VECTOR");
 

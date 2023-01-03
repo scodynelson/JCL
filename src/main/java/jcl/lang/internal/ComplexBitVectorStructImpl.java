@@ -209,6 +209,15 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 	}
 
 	/*
+	BIT-ARRAY-STRUCT
+	 */
+
+	@Override
+	public FixnumStruct bit(final IntegerStruct... subscripts) {
+		return aref(subscripts);
+	}
+
+	/*
 	ARRAY-STRUCT
 	 */
 

@@ -12,6 +12,7 @@ import jcl.compiler.icg.JavaMethodBuilder;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.lang.BooleanStruct;
 import jcl.lang.CharacterStruct;
+import jcl.lang.FixnumStruct;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
@@ -52,6 +53,16 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
+	public CharacterStruct char_(final FixnumStruct index) {
+		return aref(index);
+	}
+
+	@Override
+	public CharacterStruct schar(final FixnumStruct index) {
+		return aref(index);
+	}
+
+	@Override
 	public BooleanStruct isSimpleString() {
 		return TStruct.INSTANCE;
 	}
@@ -69,6 +80,11 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	/*
 	VECTOR-STRUCT
 	 */
+
+	@Override
+	public LispStruct svref(final FixnumStruct index) {
+		return aref(index);
+	}
 
 	@Override
 	public IntegerStruct fillPointer() {

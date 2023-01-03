@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import jcl.compiler.environment.Environment;
+import jcl.compiler.function.InternalEval;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
 import jcl.compiler.icg.generator.CodeGenerators;
 import jcl.compiler.icg.generator.GenerationConstants;
 import jcl.compiler.struct.CompilerSpecialOperatorStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.ValuesStruct;
 import lombok.AllArgsConstructor;
@@ -52,6 +54,22 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 		builder.append(')');
 
 		return builder.toString();
+	}
+
+	@Override
+	public LispStruct eval(final Environment environment) {
+		LispStruct finalForm = NILStruct.INSTANCE;
+
+		for (final SetqStruct.SetqPair setqPair : setqPairs) {
+			final SymbolStruct var = setqPair.getVar();
+			final LispStruct form = setqPair.getForm();
+			final LispStruct evaluatedForm = InternalEval.eval(form);
+
+			environment.setSymbolValue(var, evaluatedForm);
+
+			finalForm = evaluatedForm;
+		}
+		return finalForm;
 	}
 
 	/**

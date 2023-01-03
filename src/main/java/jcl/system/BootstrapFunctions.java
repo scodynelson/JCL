@@ -193,10 +193,7 @@ import jcl.functions.ValuesFunction;
 import jcl.functions.array.ListToVectorFunction;
 import jcl.functions.condition.ErrorFunction;
 import jcl.functions.java.JClass;
-import jcl.functions.java.JInvoke;
-import jcl.functions.java.JInvokeStatic;
 import jcl.functions.java.JMethod;
-import jcl.functions.java.JNew;
 import jcl.functions.lisppackage.ExportFunction;
 import jcl.functions.lisppackage.InPackageFunction;
 import jcl.functions.list.AppendFunction;
@@ -328,10 +325,7 @@ class BootstrapFunctions {
 	private static void bootstrapJavaFunctions() {
 		final List<FunctionStruct> functions = Arrays.asList(
 				new JClass(),
-				new JInvoke(),
-				new JInvokeStatic(),
-				new JMethod(),
-				new JNew()
+				new JMethod()
 		);
 		bootstrapExtensionPackageFunctions(functions);
 	}

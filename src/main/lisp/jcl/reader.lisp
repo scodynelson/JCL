@@ -16,7 +16,7 @@
 
 (defvar *read-default-float-format* 'single-float "Float format for 1.0E1")
 (declaim (type (member short-float single-float double-float long-float)
-	       *read-default-float-format*))
+               *read-default-float-format*))
 
 (defvar *read-suppress* nil
   "Suppresses most interpreting of the reader when T")

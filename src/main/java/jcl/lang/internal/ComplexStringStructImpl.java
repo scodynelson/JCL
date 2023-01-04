@@ -160,6 +160,21 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
+	public CharacterStruct setfChar(final CharacterStruct newCharacter, final FixnumStruct index) {
+		return setfAref(newCharacter, index);
+	}
+
+	@Override
+	public CharacterStruct schar(final FixnumStruct index) {
+		throw new TypeErrorException("Invalid STRING type: " + this);
+	}
+
+	@Override
+	public CharacterStruct setfSchar(final CharacterStruct newCharacter, final FixnumStruct index) {
+		throw new TypeErrorException("Invalid STRING type: " + this);
+	}
+
+	@Override
 	public BooleanStruct isSimpleString() {
 		return NILStruct.INSTANCE;
 	}
@@ -208,6 +223,16 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	/*
 	VECTOR-STRUCT
 	 */
+
+	@Override
+	public LispStruct svref(final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
+
+	@Override
+	public LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
 
 	@Override
 	public IntegerStruct fillPointer() {

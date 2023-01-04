@@ -19,6 +19,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class JavaMethodExpander {
 
+	// TODO: should make JavaMethod and JavaClass function calls into special operators??
+
 	static JavaMethodStruct expandJavaMethod(final ConsStruct methodForm, final Environment environment) {
 		final LispStruct first = methodForm.car();
 		if (!CommonLispSymbols.JMETHOD.eql(first)) {

@@ -73,17 +73,6 @@
                    (ext:jclass "jcl.lang.LispStruct"))
       hash-table key default)))
 
-(defun (setf gethash) (new-value key hash-table &optional default)
-  "Set the value (either by addition or modification) in the hash-table whose key is the same as the key under the
-  hash-table's equivalence test. The optional default value is evaluated, but ignored."
-  (declare (system::%java-class-name "jcl.hashtables.functions.SetfGetHash")
-           (ignore default))
-  (ext:jinvoke-interface
-    (ext:jmethod "putHash" (ext:jclass "jcl.lang.HashTableStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.LispStruct"))
-    hash-table key new-value))
-
 (defun remhash (key hash-table)
   "Removes the entry for key in hash-table, if any. Returns true if there was such an entry, or false otherwise."
   (declare (system::%java-class-name "jcl.hashtables.functions.RemHash"))
@@ -122,7 +111,7 @@
   "Has within the lexical scope of the body, a name which is defined via macrolet such that successive invocations
    of (name) return the items, one by one, from the hash table that is obtained by evaluating hash-table only once.
    After all entries have been returned by successive invocations of (name), then only one value is returned, namely nil."
-  (declare (system::%java-class-name "jcl.hashtables.functions.WithHashTableIterator"))
+  (declare (system::%java-class-name "jcl.hashtables.macros.WithHashTableIterator"))
   (let ((the-function (gensym "WITH-HASH-TABLE-ITERATOR-")))
     `(let ((,the-function (let ((entries (ext:jinvoke-interface
                                              (ext:jmethod "entries" (ext:jclass "jcl.lang.HashTableStruct"))

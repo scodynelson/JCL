@@ -25,6 +25,16 @@ public interface FileStreamStruct extends IOStreamStruct {
 	LispStruct streamExternalFormat();
 
 	/**
+	 * Setter for external-format for file-stream.
+	 *
+	 * @param newExternalFormat
+	 * 		new external-format value
+	 *
+	 * @return the new external-format
+	 */
+	LispStruct setfStreamExternalFormat(final LispStruct newExternalFormat);
+
+	/**
 	 * Returns the length of the Character or String object that would be read or written to the stream.
 	 *
 	 * @param object

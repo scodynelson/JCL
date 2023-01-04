@@ -7,6 +7,12 @@
 (in-package "COMMON-LISP")
 
 ;;;;;;;;;;;;;;;;;;;;;;
+#|
+(defun constantly (x)
+  (declare (system::%java-class-name "jcl.common.functions.Constantly"))
+  #'(lambda (&rest args) (declare (ignore args)) x))
+|#
+;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Not
 
@@ -30,7 +36,7 @@
 ;; Declaim
 #|
 (defmacro declaim (declaration-specifier)
-  (declare (system::%java-class-name "jcl.common.functions.Declaim"))
+  (declare (system::%java-class-name "jcl.common.macros.Declaim"))
   `(eval-when (:compile-toplevel :load-toplevel :execute)
      (proclaim ',declaration-specifier)))
 |#
@@ -40,19 +46,19 @@
 ;; Return
 
 (defmacro return (&optional result)
-  (declare (system::%java-class-name "jcl.common.functions.Return"))
+  (declare (system::%java-class-name "jcl.common.macros.Return"))
   `(return-from nil ,result))
 
 ;; When, Unless
 
 (defmacro when (test-form &rest body)
-  (declare (system::%java-class-name "jcl.common.functions.When"))
+  (declare (system::%java-class-name "jcl.common.macros.When"))
   (if (cdr body)
       `(if ,test-form (progn ,@body))
     `(if ,test-form ,(car body))))
 
 (defmacro unless (test-form &rest body)
-  (declare (system::%java-class-name "jcl.common.functions.Unless"))
+  (declare (system::%java-class-name "jcl.common.macros.Unless"))
   (if (cdr body)
       `(if (not ,test-form) (progn ,@body))
     `(if (not ,test-form) ,(car body))))
@@ -60,7 +66,7 @@
 ;; Defconstant, Defparameter, Devvar
 
 (defmacro defvar (var &optional (val nil valp) (doc nil docp))
-  (declare (system::%java-class-name "jcl.common.functions.Defvar"))
+  (declare (system::%java-class-name "jcl.common.macros.Defvar"))
   `(progn
      ;(declaim (special ,var))
      ;(system::%set-special ',var t)
@@ -73,7 +79,7 @@
      ',var))
 
 (defmacro defparameter (var val &optional (doc nil docp))
-  (declare (system::%java-class-name "jcl.common.functions.Defparameter"))
+  (declare (system::%java-class-name "jcl.common.macros.Defparameter"))
   `(progn
      ;(declaim (special ,var))
      ;(system::%set-special ',symbol t)
@@ -83,7 +89,7 @@
      ',var))
 
 (defmacro defconstant (var val &optional (doc nil docp))
-  (declare (system::%java-class-name "jcl.common.functions.Defconstant"))
+  (declare (system::%java-class-name "jcl.common.macros.Defconstant"))
   `(progn
      ;(declaim (special ,var))
      ;(system::%set-special ',symbol t)
@@ -97,23 +103,23 @@
 ;; Cond
 
 (defmacro cond (&rest clauses)
-  (declare (system::%java-class-name "jcl.common.functions.Cond"))
+  (declare (system::%java-class-name "jcl.common.macros.Cond"))
   (if (null clauses)
       nil
     (let ((clause (car clauses)))
-	  (when (atom clause)
-	    (error "COND clause is not a list: ~S" clause))
-	  (let ((test (car clause))
-	        (forms (cdr clause)))
-	    (if (null forms)
-	        (let ((result (gensym)))
-			  `(let ((,result ,test))
-			     (if ,result
-			         ,result
-			       (cond ,@(cdr clauses)))))
+      (when (atom clause)
+        (error "COND clause is not a list: ~S" clause))
+      (let ((test (car clause))
+            (forms (cdr clause)))
+        (if (null forms)
+            (let ((result (gensym)))
+              `(let ((,result ,test))
+                 (if ,result
+                     ,result
+                   (cond ,@(cdr clauses)))))
           `(if ,test
-	           (progn ,@forms)
-	         (cond ,@(cdr clauses))))))))
+               (progn ,@forms)
+             (cond ,@(cdr clauses))))))))
 
 ;; Psetq
 
@@ -129,7 +135,7 @@
                 (map-psetq-pairs (cdr (cdr pairs)) (cdr bindings))))))
 
 (defmacro psetq (&whole w &rest pairs)
-  (declare (system::%java-class-name "jcl.common.functions.Psetq"))
+  (declare (system::%java-class-name "jcl.common.macros.Psetq"))
   (when pairs
     (unless (evenp (length pairs))
       (error "Uneven number of args in the call: ~S" w))
@@ -142,24 +148,24 @@
 ;; And, Or
 
 (defmacro and (&rest forms)
-  (declare (system::%java-class-name "jcl.common.functions.And"))
+  (declare (system::%java-class-name "jcl.common.macros.And"))
   (cond ((null forms) t)
-		((null (cdr forms)) (car forms))
-		(t
-		 `(if ,(car forms)
-		      (and ,@(cdr forms))
-		    nil))))
+        ((null (cdr forms)) (car forms))
+        (t
+         `(if ,(car forms)
+              (and ,@(cdr forms))
+            nil))))
 
 (defmacro or (&rest forms)
-  (declare (system::%java-class-name "jcl.common.functions.Or"))
+  (declare (system::%java-class-name "jcl.common.macros.Or"))
   (cond ((null forms) nil)
-		((null (cdr forms)) (car forms))
-		(t
-		 (let ((result (gensym)))
-		   `(let ((,result ,(car forms)))
-		      (if ,result
-			      ,result
-			    (or ,@(cdr forms))))))))
+        ((null (cdr forms)) (car forms))
+        (t
+         (let ((result (gensym)))
+           `(let ((,result ,(car forms)))
+              (if ,result
+                  ,result
+                (or ,@(cdr forms))))))))
 
 ;; Case, Ccase, Ecase || Typecase, Ctypecase, Etypecase
 
@@ -212,25 +218,25 @@
                  (list `(error "There were no matches in the ECASE to value" ,key-test)))))))
 
 (defmacro case (keyform &rest clauses)
-  (declare (system::%java-class-name "jcl.common.functions.Case"))
+  (declare (system::%java-class-name "jcl.common.macros.Case"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
       ,(handle-normal-clauses clauses 'eql test-val))))
 
 (defmacro ecase (keyform &rest clauses)
-  (declare (system::%java-class-name "jcl.common.functions.Ecase"))
+  (declare (system::%java-class-name "jcl.common.macros.Ecase"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
       ,(handle-error-clauses clauses 'eql test-val nil))))
 
 (defmacro typecase (keyform &rest clauses)
-  (declare (system::%java-class-name "jcl.common.functions.Typecase"))
+  (declare (system::%java-class-name "jcl.common.macros.Typecase"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
        ,(handle-normal-clauses clauses 'typep test-val))))
 
 (defmacro etypecase (keyform &rest clauses)
-  (declare (system::%java-class-name "jcl.common.functions.Etypecase"))
+  (declare (system::%java-class-name "jcl.common.macros.Etypecase"))
   (let ((test-val (gensym)))
     `(let ((,test-val ,keyform))
        ,(handle-error-clauses clauses 'typep test-val t))))
@@ -238,7 +244,7 @@
 ;; Multiple-Value-Bind
 
 (defmacro multiple-value-bind ((&rest vars) value-form &body body)
-  (declare (system::%java-class-name "jcl.common.functions.MultipleValueBind"))
+  (declare (system::%java-class-name "jcl.common.macros.MultipleValueBind"))
   (let ((ignore (gensym)))
     `(multiple-value-call #'(lambda (&optional ,@vars &rest ,ignore)
                               (declare (ignore ,ignore))
@@ -248,13 +254,13 @@
 ;; Multiple-Value-List
 
 (defmacro multiple-value-list (form)
-  (declare (system::%java-class-name "jcl.common.functions.MultipleValueList"))
+  (declare (system::%java-class-name "jcl.common.macros.MultipleValueList"))
   `(multiple-value-call #'list ,form))
 
 ;; Multiple-Value-Setq
 #|
 (defmacro multiple-value-setq (varlist value-form)
-  (declare (system::%java-class-name "jcl.common.functions.MultipleValueSetq"))
+  (declare (system::%java-class-name "jcl.common.macros.MultipleValueSetq"))
   (unless (and (listp varlist) (every #'symbolp varlist))
     (error "~S is not a list of symbols." varlist))
   (if varlist
@@ -264,13 +270,13 @@
 ;; Nth-Value
 
 (defmacro nth-value (index form)
-  (declare (system::%java-class-name "jcl.common.functions.NthValue"))
+  (declare (system::%java-class-name "jcl.common.macros.NthValue"))
   `(nth ,index (multiple-value-list ,form)))
 
 ;; Prog,Prog*,Prog1,Prog2
 
 (defmacro prog (varlist &body decls-body)
-  (declare (system::%java-class-name "jcl.common.functions.Prog"))
+  (declare (system::%java-class-name "jcl.common.macros.Prog"))
   (multiple-value-bind (body decls)
                        (parse-body decls-body)
     `(block nil
@@ -279,7 +285,7 @@
          (tagbody ,@body)))))
 
 (defmacro prog* (varlist &body decls-body)
-  (declare (system::%java-class-name "jcl.common.functions.ProgStar"))
+  (declare (system::%java-class-name "jcl.common.macros.ProgStar"))
   (multiple-value-bind (body decls)
                        (parse-body decls-body)
     `(block nil
@@ -288,14 +294,14 @@
          (tagbody ,@body)))))
 
 (defmacro prog1 (first-form &rest forms)
-  (declare (system::%java-class-name "jcl.common.functions.Prog1"))
+  (declare (system::%java-class-name "jcl.common.macros.Prog1"))
   (let ((result (gensym)))
     `(let ((,result ,first-form))
        ,@forms
        ,result)))
 
 (defmacro prog2 (first-form second-form &rest forms)
-  (declare (system::%java-class-name "jcl.common.functions.Prog2"))
+  (declare (system::%java-class-name "jcl.common.macros.Prog2"))
   (let ((result (gensym)))
     `(let ((,result (progn ,first-form ,second-form)))
        ,@forms
@@ -319,7 +325,7 @@
   "Signals an error if the value of test-form is nil.  Continuing from this
    error using the CONTINUE restart will allow the user to alter the value of
    some locations known to SETF, starting over with test-form.  Returns nil."
-  (declare (system::%java-class-name "jcl.common.functions.Assert"))
+  (declare (system::%java-class-name "jcl.common.macros.Assert"))
   `(let ((result (eval ,test-form)))
     (unless result
       (error "The assertion ~S failed." test-form))))

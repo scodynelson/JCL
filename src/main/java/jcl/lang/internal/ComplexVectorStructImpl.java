@@ -110,6 +110,16 @@ public class ComplexVectorStructImpl extends AbstractVectorStructImpl {
 	 */
 
 	@Override
+	public LispStruct svref(final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
+
+	@Override
+	public LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
+
+	@Override
 	public IntegerStruct fillPointer() {
 		if (fillPointer == null) {
 			throw new TypeErrorException("VECTOR has no fill-pointer to retrieve.");

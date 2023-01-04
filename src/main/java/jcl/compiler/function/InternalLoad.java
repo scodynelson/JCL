@@ -60,6 +60,7 @@ public final class InternalLoad {
 					entry("lists", "jcl.Lists"),
 					entry("numbers", "jcl.Numbers"),
 					entry("hashtables", "jcl.Hashtables"),
+					entry("setf", "jcl.Setf"),
 					entry("files", "jcl.Files"),
 					entry("environment", "jcl.Environment"),
 					entry("structures", "jcl.Structures")
@@ -80,6 +81,7 @@ public final class InternalLoad {
 					"lists",
 					"numbers",
 					"hashtables",
+					"setf",
 					"files",
 					"environment",
 					"structures"

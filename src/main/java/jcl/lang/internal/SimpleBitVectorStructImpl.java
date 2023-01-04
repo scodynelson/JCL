@@ -56,6 +56,11 @@ public final class SimpleBitVectorStructImpl extends AbstractBitVectorStructImpl
 	}
 
 	@Override
+	public LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index) {
+		return setfAref(newElement, index);
+	}
+
+	@Override
 	public IntegerStruct fillPointer() {
 		throw new TypeErrorException("SIMPLE-BIT-VECTOR has no fill-pointer to retrieve.");
 	}
@@ -90,8 +95,18 @@ public final class SimpleBitVectorStructImpl extends AbstractBitVectorStructImpl
 	}
 
 	@Override
+	public FixnumStruct setfBit(final FixnumStruct newBit, final IntegerStruct... subscripts) {
+		return setfAref(newBit, subscripts);
+	}
+
+	@Override
 	public FixnumStruct sbit(final IntegerStruct... subscripts) {
 		return aref(subscripts);
+	}
+
+	@Override
+	public FixnumStruct setfSbit(final FixnumStruct newBit, final IntegerStruct... subscripts) {
+		return setfAref(newBit, subscripts);
 	}
 
 	/*

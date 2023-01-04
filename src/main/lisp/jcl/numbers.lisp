@@ -738,10 +738,6 @@
   (- number 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-
-;; TODO: incf, decf
-
-;;;;;;;;;;;;;;;;;;;;;;
 #|
 ;; TODO
 (defun byte (size position)
@@ -753,7 +749,6 @@
 (defun byte-position (bytespec)
   (cdr bytespec))
 
-;; TODO: setf-ldb
 (defun ldb (bytespec integer)
   (logand (ash integer (- (byte-position bytespec)))
           (1- (ash 1 (byte-size bytespec)))))
@@ -766,11 +761,14 @@
          (position (byte-position bytespec))
          (mask (1- (ash 1 size))))
     (logior (logand integer (lognot (ash mask position)))
-	        (ash (logand newbyte mask) position))))
+            (ash (logand newbyte mask) position))))
 
 ;; TODO: deposit-field
-;; TODO: mask-field
-;; TODO: setf-mask-field
+
+(defun mask-field (bytespec integer)
+  (let ((size (byte-size bytespec))
+        (pos (byte-position bytespec)))
+    (logand integer (ash (1- (ash 1 size)) pos))))
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 #|
@@ -832,7 +830,7 @@
   (error 'parse-error "not an integer string: ~S" string))
 
 (defun parse-integer (string &key (start 0)
-								  end
+                                  end
                                   (radix 10)
                                   junk-allowed)
   (when (null end)

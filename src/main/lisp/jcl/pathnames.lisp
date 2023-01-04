@@ -112,6 +112,17 @@
     host))
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
+
+(defun canonicalize-logical-pathname-translations (translations host)
+  (let (result)
+    (dolist (translation translations (nreverse result))
+      (let ((from (car translation))
+            (to (cadr translation)))
+        (push (list (if (typep from 'logical-pathname)
+                        from
+                      (parse-namestring from host))
+                    (pathname to))
+              result)))))
 #|
 (defun logical-pathname-translations (host)
   "Returns the host's list of translations."
@@ -120,15 +131,6 @@
     (ext:jmethod "logicalPathnameTranslations" (ext:jclass "jcl.lang.LogicalPathnameStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     host))
-
-(defun (setf logical-pathname-translations) (host new-translations)
-  "Sets the host's list of translations to the new-value provided."
-  (declare (system::%java-class-name "jcl.pathnames.functions.SetfLogicalPathnameTranslations"))
-  (ext:jinvoke-static
-    (ext:jmethod "setLogicalPathnameTranslations" (ext:jclass "jcl.lang.LogicalPathnameStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.ListStruct"))
-    host new-translations))
 |#
 ;;;;;;;;;;;;;;;;;;;;;;
 

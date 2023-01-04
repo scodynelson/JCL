@@ -104,6 +104,16 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 	 */
 
 	@Override
+	public LispStruct svref(final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
+
+	@Override
+	public LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index) {
+		throw new TypeErrorException("Invalid VECTOR type: " + this);
+	}
+
+	@Override
 	public IntegerStruct fillPointer() {
 		if (fillPointer == null) {
 			throw new TypeErrorException("BIT-VECTOR has no fill-pointer to retrieve.");
@@ -215,6 +225,21 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 	@Override
 	public FixnumStruct bit(final IntegerStruct... subscripts) {
 		return aref(subscripts);
+	}
+
+	@Override
+	public FixnumStruct setfBit(final FixnumStruct newBit, final IntegerStruct... subscripts) {
+		return setfAref(newBit, subscripts);
+	}
+
+	@Override
+	public FixnumStruct sbit(final IntegerStruct... subscripts) {
+		throw new TypeErrorException("Invalid BIT-ARRAY type: " + this);
+	}
+
+	@Override
+	public FixnumStruct setfSbit(final FixnumStruct newBit, final IntegerStruct... subscripts) {
+		throw new TypeErrorException("Invalid BIT-ARRAY type: " + this);
 	}
 
 	/*

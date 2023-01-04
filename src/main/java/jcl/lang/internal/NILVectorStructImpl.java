@@ -58,8 +58,18 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	}
 
 	@Override
+	public CharacterStruct setfChar(final CharacterStruct newCharacter, final FixnumStruct index) {
+		return setfAref(newCharacter, index);
+	}
+
+	@Override
 	public CharacterStruct schar(final FixnumStruct index) {
 		return aref(index);
+	}
+
+	@Override
+	public CharacterStruct setfSchar(final CharacterStruct newCharacter, final FixnumStruct index) {
+		return setfAref(newCharacter, index);
 	}
 
 	@Override
@@ -84,6 +94,11 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	@Override
 	public LispStruct svref(final FixnumStruct index) {
 		return aref(index);
+	}
+
+	@Override
+	public LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index) {
+		return setfAref(newElement, index);
 	}
 
 	@Override

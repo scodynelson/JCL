@@ -18,6 +18,18 @@ public interface BitArrayStruct extends ArrayStruct {
 	FixnumStruct bit(final IntegerStruct... subscripts);
 
 	/**
+	 * Sets the bit of bit-array specified by index to a new value.
+	 *
+	 * @param newBit
+	 * 		new bit value
+	 * @param subscripts
+	 * 		the position of the {@link FixnumStruct} to retrieve
+	 *
+	 * @return the new bit
+	 */
+	FixnumStruct setfBit(final FixnumStruct newBit, final IntegerStruct... subscripts);
+
+	/**
 	 * Retrieves the {@link FixnumStruct} at the provided position determined by the provided {@code subscripts}.
 	 *
 	 * @param subscripts
@@ -28,6 +40,18 @@ public interface BitArrayStruct extends ArrayStruct {
 	default FixnumStruct sbit(final IntegerStruct... subscripts) {
 		throw new TypeErrorException("Invalid BIT-ARRAY type: " + this);
 	}
+
+	/**
+	 * Sets the bit of bit-array specified by index to a new value. String must be a "simple-string" type.
+	 *
+	 * @param newBit
+	 * 		new bit value
+	 * @param subscripts
+	 * 		the position of the {@link FixnumStruct} to retrieve
+	 *
+	 * @return the new bit
+	 */
+	FixnumStruct setfSbit(final FixnumStruct newBit, final IntegerStruct... subscripts);
 
 	/*
 	ARRAY-STRUCT

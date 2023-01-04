@@ -18,15 +18,6 @@
                  (ext:jclass "jcl.lang.IntegerStruct"))
     sequence index))
 
-(defun (setf elt) (sequence index value)
-  "Sets the element of sequence specified by index to the new-value provided."
-  (declare (system::%java-class-name "jcl.sequences.functions.SetfElt"))
-  (ext:jinvoke-interface
-    (ext:jmethod "setfElt" (ext:jclass "jcl.lang.SequenceStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.IntegerStruct"))
-    sequence value index))
-
 (defun length (sequence)
   "Returns the number of elements in sequence."
   (declare (system::%java-class-name "jcl.sequences.functions.Length"))

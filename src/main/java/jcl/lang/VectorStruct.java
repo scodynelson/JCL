@@ -21,9 +21,19 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 *
 	 * @return the element
 	 */
-	default LispStruct svref(final FixnumStruct index) {
-		throw new TypeErrorException("Invalid VECTOR type: " + this);
-	}
+	LispStruct svref(final FixnumStruct index);
+
+	/**
+	 * Sets the element of vector specified by index to a new value. Vector must be a "simple-vector" type.
+	 *
+	 * @param newElement
+	 * 		new element value
+	 * @param index
+	 * 		the index of the element to set
+	 *
+	 * @return the new element
+	 */
+	LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index);
 
 	/**
 	 * Gets the vector's fill-pointer.

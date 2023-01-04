@@ -291,17 +291,6 @@
                  (ext:jclass "jcl.lang.LispStruct"))
     plist indicator default))
 
-(defun (setf getf) (plist indicator value &optional default)
-  "Finds a property on the property list whose property indicator is identical to indicator, and sets its corresponding
-  property value with the new-value provided."
-  (declare (system::%java-class-name "jcl.lists.functions.SetfGetf")
-           (ignore default))
-  (ext:jinvoke-interface
-    (ext:jmethod "putf" (ext:jclass "jcl.lang.ListStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.LispStruct"))
-    plist indicator value))
-
 (defun get-properties (plist indicator-list)
   "Used to look up any of several property list entries all at once."
   (declare (system::%java-class-name "jcl.lists.functions.GetProperties"))
@@ -323,12 +312,6 @@
   "Locates the nth element of list, where the car of the list is the ``zeroth'' element."
   (declare (system::%java-class-name "jcl.lists.functions.Nth"))
   (car (nthcdr index list)))
-
-(defun (setf nth) (index list new-object)
-  "Locates the nth element of list, where the car of the list is the ``zeroth'' element, and sets its corresponding
-  value with the new-value provided."
-  (declare (system::%java-class-name "jcl.lists.functions.SetfNth"))
-  (setf (car (nthcdr n list)) new-object))
 
 (defun nthcdr (n list)
   "Returns the tail of list that would be obtained by calling cdr n times in succession."
@@ -369,18 +352,12 @@
 (defun rplaca (cons object)
   "Replaces the car of the cons with object."
   (declare (system::%java-class-name "jcl.lists.functions.Rplaca"))
-  (ext:jinvoke-interface
-    (ext:jmethod "rplaca" (ext:jclass "jcl.lang.ConsStruct")
-                 (ext:jclass "jcl.lang.LispStruct"))
-    cons object))
+  (%set-car cons object))
 
 (defun rplacd (cons object)
   "Replaces the cdr of the cons with object."
   (declare (system::%java-class-name "jcl.lists.functions.Rplacd"))
-  (ext:jinvoke-interface
-    (ext:jmethod "rplacd" (ext:jclass "jcl.lang.ConsStruct")
-                 (ext:jclass "jcl.lang.LispStruct"))
-    cons object))
+  (%set-cdr cons object))
 
 (defun revappend (list tail)
   "Constructs a copy of list, but with the elements in reverse order. It then appends (as if by nconc) the tail to that
@@ -410,8 +387,8 @@
   (let ((key-tmp (gensym)))
     `(let ((,key-tmp (apply-key key ,elt)))
       (cond (test-p (funcall test ,item ,key-tmp))
-	        (test-not-p (not (funcall test-not ,item ,key-tmp)))
-	        (t (funcall test ,item ,key-tmp))))))
+            (test-not-p (not (funcall test-not ,item ,key-tmp)))
+            (t (funcall test ,item ,key-tmp))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; TREE-EQUAL FUNCTION ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -419,21 +396,21 @@
 
 (defun tree-equal-test-not (tree-1 tree-2 test-not)
   (cond ((consp tree-1)
-	     (and (consp tree-2)
-	          (tree-equal-test-not (car tree-1) (car tree-2) test-not)
-	          (tree-equal-test-not (cdr tree-1) (cdr tree-2) test-not)))
-	    ((consp tree-2) nil)
-	    ((not (funcall test-not tree-1 tree-2)) t)
-	    (t nil)))
+         (and (consp tree-2)
+              (tree-equal-test-not (car tree-1) (car tree-2) test-not)
+              (tree-equal-test-not (cdr tree-1) (cdr tree-2) test-not)))
+        ((consp tree-2) nil)
+        ((not (funcall test-not tree-1 tree-2)) t)
+        (t nil)))
 
 (defun tree-equal-test (tree-1 tree-2 test)
   (cond	((consp tree-1)
-	     (and (consp tree-2)
-	          (tree-equal-test (car tree-1) (car tree-2) test)
-	          (tree-equal-test (cdr tree-1) (cdr tree-2) test)))
-	    ((consp tree-2) nil)
-	    ((funcall test tree-1 tree-2) t)
-	    (t nil)))
+         (and (consp tree-2)
+              (tree-equal-test (car tree-1) (car tree-2) test)
+              (tree-equal-test (cdr tree-1) (cdr tree-2) test)))
+        ((consp tree-2) nil)
+        ((funcall test tree-1 tree-2) t)
+        (t nil)))
 
 ;;; TREE-EQUAL tests whether two trees are of the same shape and have the same leaves. It returns true if tree-1 and tree-2
 ;;; are both atoms and satisfy the test, or if they are both conses and the car of tree-1 is tree-equal to the car of tree-2
@@ -464,7 +441,7 @@
       ((null list))
     (let ((car (car list)))
       (when (satisfies-the-test item car)
-	    (return list)))))
+        (return list)))))
 |#
 ;;; MEMBER searches list for item or for a top-level element that satisfies the test. The argument
 ;;; to the test/test-not function is an element of list. If some element satisfies the test, the tail
@@ -494,7 +471,7 @@
   (do ((list list (cdr list)))
       ((null list))
     (when (funcall predicate (apply-key key (car list)))
-	  (return list))))
+      (return list))))
 |#
 ;;; MEMBER-IF searches list for item or for a top-level element that satisfies the test. The argument
 ;;; to the predicate function is an element of list. If some element satisfies the test, the tail
@@ -523,7 +500,7 @@
   (do ((list list (cdr list)))
       ((null list))
     (unless (funcall predicate (apply-key key (car list)))
-	  (return list))))
+      (return list))))
 |#
 ;;; MEMBER-IF-NOT searches list for item or for a top-level element that satisfies the test. The argument
 ;;; to the predicate function is an element of list. If some element satisfies the test, the tail
@@ -568,9 +545,9 @@
    otherwise, nothing is added and the original list is returned."
   (declare (system::%java-class-name "jcl.lists.functions.Adjoin"))
   (if (let ((key-val (apply-key key item)))
-	    (if test-not-p
-	        (member key-val list :test-not test-not :key key)
-	      (member key-val list :test test :key key)))
+        (if test-not-p
+            (member key-val list :test-not test-not :key key)
+          (member key-val list :test test :key key)))
       list
     (cons item list)))
 
@@ -612,9 +589,9 @@
              (assoc-guts (not (funcall test-not item (funcall key (caar alist)))))
            (assoc-guts (not (funcall test-not item (caar alist))))))
         (test-p
-	     (if key
-	         (assoc-guts (funcall test item (funcall key (caar alist))))
-	       (assoc-guts (funcall test item (caar alist)))))
+         (if key
+             (assoc-guts (funcall test item (funcall key (caar alist))))
+           (assoc-guts (funcall test item (caar alist)))))
         (t
          (if key
              (assoc-guts (eql item (funcall key (caar alist))))
@@ -672,11 +649,11 @@
          (if key
              (assoc-guts (not (funcall test-not item (funcall key (cdar alist)))))
            (assoc-guts (not (funcall test-not item (cdar alist))))))
-	    (test-p
-    	 (if key
-    	     (assoc-guts (funcall test item (funcall key (cdar alist))))
-    	   (assoc-guts (funcall test item (cdar alist)))))
-    	(t
+        (test-p
+         (if key
+             (assoc-guts (funcall test item (funcall key (cdar alist))))
+           (assoc-guts (funcall test item (cdar alist)))))
+        (t
          (if key
              (assoc-guts (eql item (funcall key (cdar alist))))
            (assoc-guts (eql item (cdar alist)))))))
@@ -725,28 +702,28 @@
   of the arglists runs out.  Until then, it CDRs down the arglists calling the
   function and accumulating results as desired."
   (let* ((arglists (copy-list original-arglists))
-	     (ret-list (list nil))
-	     (temp ret-list))
+         (ret-list (list nil))
+         (temp ret-list))
     (do ((res nil)
-	     (args nil nil))
-	    ((dolist (x arglists nil)
-	       (unless x
-	        (return t)))
+         (args nil nil))
+        ((dolist (x arglists nil)
+           (unless x
+            (return t)))
          (if accumulate
              (cdr ret-list)
            (car original-arglists)))
       (do ((l arglists (cdr l)))
-	      ((null l))
-	    (push (if take-car
-	              (caar l)
-	            (car l))
-	          args)
-	    (setf (car l) (cdar l)))
+          ((null l))
+        (push (if take-car
+                  (caar l)
+                (car l))
+              args)
+        (setf (car l) (cdar l)))
       (setq res (apply function (nreverse args)))
       (case accumulate
         (:nconc (setq temp (last (nconc temp res))))
         (:list (rplacd temp (list res))
-	           (setq temp (cdr temp)))))))
+               (setq temp (cdr temp)))))))
 
 (defun mapx-aux-helper (function original-arglists accumulate take-car)
   "This function is called by MAPC, MAPCAR, MAPCAN, MAPL, MAPLIST, and MAPCON.
@@ -941,19 +918,19 @@
 #|
 (defmacro with-set-keys (funcall)
   `(cond (test-not-p ,(append funcall '(:key key :test-not test-not)))
-	     (t ,(append funcall '(:key key :test test)))))
+         (t ,(append funcall '(:key key :test test)))))
 
 (defmacro steve-splice (source destination)
   `(let ((temp ,source))
     (setf ,source (cdr ,source)
-	      (cdr temp) ,destination
-	      ,destination temp)))
+          (cdr temp) ,destination
+          ,destination temp)))
 
 (defun intersection (list1 list2 &key key (test #'eql test-p) (test-not nil test-not-p))
   (let ((res nil))
     (dolist (elt list1)
       (when (with-set-keys (member (apply-key key elt) list2))
-	    (push elt res)))
+        (push elt res)))
     res))
 
 ;;; INTERSECTION returns a list that contains every element that occurs in both list-1 and list-2. For all possible
@@ -986,12 +963,12 @@
 
 (defun nintersection (list1 list2 &key key (test #'eql test-p) (test-not nil test-not-p))
   (let ((res nil)
-	    (list1 list1))
+        (list1 list1))
     (do ()
         ((null list1))
       (if (with-set-keys (member (apply-key key (car list1)) list2))
-	      (steve-splice list1 res)
-	    (setq list1 (cdr list1))))
+          (steve-splice list1 res)
+        (setq list1 (cdr list1))))
     res))
 
 ;;; NINTERSECTION returns a list that contains every element that occurs in both list-1 and list-2. It may
@@ -1027,7 +1004,7 @@
   (let ((res list2))
     (dolist (elt list1)
       (unless (with-set-keys (member (apply-key key elt) list2))
-	    (push elt res)))
+        (push elt res)))
     res))
 
 ;;; UNION returns a list that contains every element that occurs in either list-1 or list-2. For all possible
@@ -1061,12 +1038,12 @@
 
 (defun nunion (list1 list2 &key key (test #'eql test-p) (test-not nil test-not-p))
   (let ((res list2)
-	    (list1 list1))
+        (list1 list1))
     (do ()
         ((null list1))
       (if (not (with-set-keys (member (apply-key key (car list1)) list2)))
-	      (steve-splice list1 res)
-	    (setf list1 (cdr list1))))
+          (steve-splice list1 res)
+        (setf list1 (cdr list1))))
     res))
 
 ;;; NUNION returns a list that contains every element that occurs in either list-1 or list-2. It may
@@ -1103,10 +1080,10 @@
   (if (null list2)
       list1
     (let ((res nil))
-	  (dolist (elt list1)
-	    (unless (with-set-keys (member (apply-key key elt) list2))
-	      (push elt res)))
-	  res)))
+      (dolist (elt list1)
+        (unless (with-set-keys (member (apply-key key elt) list2))
+          (push elt res)))
+      res)))
 
 ;;; SET-DIFFERENCE returns a list of elements of list-1 that do not appear in list-2. For all possible
 ;;; ordered pairs consisting of one element from list-1 and one element from list-2, the :test or :test-not
@@ -1140,12 +1117,12 @@
 
 (defun nset-difference (list1 list2 &key key (test #'eql test-p) (test-not nil test-not-p))
   (let ((res nil)
-	    (list1 list1))
+        (list1 list1))
     (do ()
         ((null list1))
       (if (not (with-set-keys (member (apply-key key (car list1)) list2)))
-	      (steve-splice list1 res)
-	    (setq list1 (cdr list1))))
+          (steve-splice list1 res)
+        (setq list1 (cdr list1))))
     res))
 
 ;;; NSET-DIFFERENCE returns a list of elements of list-1 that do not appear in list-2. It is destructive and
@@ -1542,8 +1519,8 @@
   (let ((key-tmp (gensym)))
     `(let ((,key-tmp (apply-key key subtree)))
       (if test-not-p
-	      (assoc ,key-tmp alist :test-not test-not)
-	    (assoc ,key-tmp alist :test test)))))
+          (assoc ,key-tmp alist :test-not test-not)
+        (assoc ,key-tmp alist :test test)))))
 
 (defun nsublis (alist tree &key key (test #'eql) (test-not nil notp))
   "Substitutes new for subtrees matching old."
@@ -1595,345 +1572,6 @@
                     ((atom subtree) subtree)
                     (t (s-aux nil subtree) subtree))))
       (s tree))))
-|#
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#|
-(defmacro push (value place &environment env)
-  "Takes an object and a location holding a list.  Conses the object onto
-  the list, returning the modified list.  OBJ is evaluated before PLACE."
-  (declare (system::%java-class-name "jcl.lists.functions.Push"))
-  (multiple-value-bind (result ok)
-                       (macroexpand place env)
-    (if (symbolp result)
-      `(setq ,result (cons ,value ,result))
-      (let ((val-tmp (gensym "VAL-")))
-        (multiple-value-bind (temps vals stores store-form access-form)
-                             (get-setf-expansion result env)
-          (let ((tmps (cons val-tmp temps))
-                (vals (cons value vals))
-                (store (gensym "Store-")))
-            `(let* (,@(mapcar #'list tmps vals))
-               (let ((,(first stores) (cons ,val-tmp ,access-form)))
-                 ,store-form
-                 ,(first stores)))))))))
-
-(defmacro pushnew (value place &rest keys &environment env)
-  "Takes an object and a location holding a list.  If the object is already
-  in the list, does nothing.  Else, conses the object onto the list.  Returns
-  NIL.  If there is a :TEST keyword, this is used for the comparison."
-  (declare (system::%java-class-name "jcl.lists.functions.Pushnew"))
-
-  (multiple-value-bind (result ok)
-                       (macroexpand place env)
-    (if (symbolp place)
-      `(setq ,result (adjoin ,value ,result ,@keys))
-      (multiple-value-bind (temps vals stores store-form access-form)
-                           (get-setf-expansion result env)
-        (cond ((cdr stores)
-               (let ((g (mapcar #'(lambda (x) (declare (ignore x)) (gensym)) (cdr value))))
-                 `(multiple-value-bind ,g ,value
-                    (let* (,@(mapcar #'list temps vals))
-                      (multiple-value-bind ,stores
-                                           (values ,@(mapcar #'(lambda (a b) `(adjoin ,a ,b ,@keys))
-                                                             g (cdr access-form)))
-                        ,store-form)))))
-	      (t (let ((g (gensym)))
-                   `(let* ((,g ,value)
-                           ,@(mapcar #'list temps vals)
-                           (,@stores (adjoin ,g ,access-form ,@keys)))
-                      ,store-form
-                      ,(first stores)))))))))
-
-(defmacro pop (place &environment env)
-  "The argument is a location holding a list.  Pops one item off the front
-  of the list and returns it."
-  (declare (system::%java-class-name "jcl.lists.functions.Pop"))
-
-  (multiple-value-bind (result ok)
-                       (macroexpand place env)
-    (if (symbolp result)
-      `(prog1 (car ,result)
-  	      (setq ,result (cdr ,result)))
-      (multiple-value-bind (dummies vals newval setter getter)
-  	(get-setf-method result env)
-  	(do* ((d dummies (cdr d))
-	      (v vals (cdr v))
-	      (let-list nil))
-	     ((null d)
-	      (push (list (car newval) getter) let-list)
-	      `(let* ,(nreverse let-list)
-		(prog1 (car ,(car newval))
-		  (setq ,(car newval) (cdr ,(car newval)))
-		  ,setter)))
-	  (push (list (car d) (car v)) let-list))))))
-|#
-#|
-(defmacro pop (place &environment env)
-  "The argument is a location holding a list.  Pops one item off the front
-  of the list and returns it."
-  (declare (system::%java-class-name "jcl.lists.functions.Pop"))
-  (let ((val-tmp (gensym "VAL-")))
-    (multiple-value-bind (temps vals stores store-form access-form)
-                         (get-setf-expansion place env)
-      (let ((store (gensym "Store-")))
-        `(let* ,(mapcar #'list temps vals)
-           (let ((,(first stores) ,access-form))
-             (prog1
-               (car,(first stores))
-               (setq ,(first stores) (cdr ,(first stores)))
-               ,store-form)))))))
-|#
-#|
-(defmacro remf (place indicator &environment env)
-  "Place may be any place expression acceptable to SETF, and is expected
-  to hold a property list or ().  This list is destructively altered to
-  remove the property specified by the indicator.  Returns T if such a
-  property was present, NIL if not."
-  (declare (system::%java-class-name "jcl.lists.functions.Remf"))
-  (multiple-value-bind (dummies vals newval setter getter)
-		       (get-setf-expansion place env)
-    (do* ((d dummies (cdr d))
-	  (v vals (cdr v))
-	  (let-list nil)
-	  (ind-temp (gensym))
-	  (local1 (gensym))
-	  (local2 (gensym)))
-	 ((null d)
-	  (push (list ind-temp indicator) let-list)
-	  (push (list (car newval) getter) let-list)
-	  `(let* ,(system::%nreverse let-list)
-	     (do ((,local1 ,(car newval) (cddr ,local1))
-		  (,local2 nil ,local1))
-		 ((atom ,local1) nil)
-	       (cond ((atom (cdr ,local1))
-		      (error "Odd-length property list in REMF."))
-		     ((eq (car ,local1) ,ind-temp)
-		      (cond (,local2
-			     (rplacd (cdr ,local2) (cddr ,local1))
-			     (return t))
-			    (t (setq ,(car newval) (cddr ,(car newval)))
-			       ,setter
-			       (return t))))))))
-      (push (list (car d) (car v)) let-list))))
-|#
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#|
-(defmacro push (item place &environment env)
-  (declare (system::%java-class-name "jcl.lists.functions.Push"))
-  (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
-      `(setq ,place (cons ,item ,place))
-      (multiple-value-bind (dummies vals newval setter getter)
-        (get-setf-expansion place env)
-        (let ((g (gensym)))
-          `(let* ((,g ,item)
-                  ,@(mapcar #'list dummies vals)
-                  (,(car newval) (cons ,g ,getter)))
-             ,setter)))))
-
-(defmacro pushnew  item place &rest keys &environment env)
-  (declare (system::%java-class-name "jcl.lists.functions.PushNew"))
-  (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
-      `(setq ,place (adjoin ,item ,place ,@keys))
-      (multiple-value-bind (dummies vals newval setter getter)
-        (get-setf-expansion place env)
-        (let ((g (gensym)))
-          `(let* ((,g ,item)
-                  ,@(mapcar #'list dummies vals)
-                  (,(car newval) (adjoin ,g ,getter ,@keys)))
-             ,setter)))))
-
-(defmacro pop (place &environment env)
-  (declare (system::%java-class-name "jcl.lists.functions.Pop"))
-  (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
-      `(prog1 (car ,place)
-	      (setq ,place (cdr ,place)))
-      (multiple-value-bind (dummies vals newval setter getter)
-        (get-setf-expansion place env)
-        (do* ((d dummies (cdr d))
-              (v vals (cdr v))
-              (let-list nil))
-             ((null d)
-              (push (list (car newval) getter) let-list)
-              `(let* ,(nreverse let-list)
-                 (prog1 (car ,(car newval))
-                        (setq ,(car newval) (cdr ,(car newval)))
-                        ,setter)))
-          (push (list (car d) (car v)) let-list)))))
-
-(defmacro remf (place indicator &environment env)
-  "Place may be any place expression acceptable to SETF, and is expected
-   to hold a property list or (). This list is destructively altered to
-   remove the property specified by the indicator. Returns T if such a
-   property was present, NIL if not."
-  (declare (system::%java-class-name "jcl.lists.functions.Remf"))
-  (multiple-value-bind (dummies vals newval setter getter)
-      (get-setf-expansion place env)
-    (do* ((d dummies (cdr d))
-	  (v vals (cdr v))
-	  (let-list nil)
-	  (ind-temp (gensym))
-	  (local1 (gensym))
-	  (local2 (gensym)))
-	 ((null d)
-          ;; See ANSI 5.1.3 for why we do out-of-order evaluation
-	  (push (list ind-temp indicator) let-list)
-	  (push (list (car newval) getter) let-list)
-	  `(let* ,(nreverse let-list)
-	     (do ((,local1 ,(car newval) (cddr ,local1))
-		  (,local2 nil ,local1))
-		 ((atom ,local1) nil)
-	       (cond ((atom (cdr ,local1))
-		      (error "Odd-length property list in REMF."))
-		     ((eq (car ,local1) ,ind-temp)
-		      (cond (,local2
-			     (rplacd (cdr ,local2) (cddr ,local1))
-			     (return t))
-			    (t (setq ,(car newval) (cddr ,(car newval)))
-			       ,setter
-			       (return t))))))))
-      (push (list (car d) (car v)) let-list))))
-|#
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#|
-(defmacro push (obj place &environment env)
-  "Takes an object and a location holding a list.  Conses the object onto
-  the list, returning the modified list.  OBJ is evaluated before PLACE."
-  (declare (system::%java-class-name "jcl.lists.functions.Push"))
-
-  ;; This special case for place being a symbol isn't strictly needed.
-  ;; It's so we can do push (and pushnew) with a kernel.core.
-  (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
-      `(setq ,place (cons ,obj ,place))
-      (multiple-value-bind (dummies vals newval setter getter)
-	  (get-setf-expansion place env)
-	(cond
-	  ((cdr newval)
-	   ;; Handle multiple values
-	   (let ((g (mapcar #'(lambda (x)
-				(declare (ignore x))
-				(gensym))
-			    (cdr obj))))
-	     `(multiple-value-bind ,g
-		  ,obj
-		(let* (,@(mapcar #'list dummies vals))
-		  (multiple-value-bind ,newval
-		      (values ,@(mapcar #'(lambda (a b)
-					     (list 'cons a b))
-					 g (cdr getter)))
-		    ,setter)))))
-	  (t
-	   ;; A single value
-	   (let ((g (gensym)))
-	     `(let* ((,g ,obj)
-		     ,@(mapcar #'list dummies vals)
-		     (,@newval (cons ,g ,getter)))
-	       ,setter)))))))
-
-(defmacro pushnew (obj place &rest keys &environment env)
-  "Takes an object and a location holding a list.  If the object is already
-  in the list, does nothing.  Else, conses the object onto the list.  Returns
-  NIL.  If there is a :TEST keyword, this is used for the comparison."
-  (declare (system::%java-class-name "jcl.lists.functions.PushNew"))
-  (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
-      `(setq ,place (adjoin ,obj ,place ,@keys))
-      (multiple-value-bind (vars vals stores setter getter)
-	  (get-setf-expansion place env)
-	(cond
-	  ((cdr stores)
-	   ;; Multiple values
-	   (let ((g (mapcar #'(lambda (x)
-				(declare (ignore x))
-				(gensym))
-			    (cdr obj))))
-	     `(multiple-value-bind ,g
-		  ,obj
-		(let* (,@(mapcar #'list vars vals))
-		  (multiple-value-bind ,stores
-		      (values ,@(mapcar #'(lambda (a b)
-					    `(adjoin ,a ,b ,@keys))
-					g (cdr getter)))
-		  ,setter)))))
-	  (t
-	   ;; Single value
-	   (let ((g (gensym)))
-	     `(let* ((,g ,obj)
-		     ,@(mapcar #'list vars vals)
-		     (,@stores (adjoin ,g ,getter ,@keys)))
-		,setter)))))))
-
-(defmacro pop (place &environment env)
-  "The argument is a location holding a list.  Pops one item off the front
-  of the list and returns it."
-  (declare (system::%java-class-name "jcl.lists.functions.Pop"))
-  (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
-      `(prog1 (car ,place)
-	      (setq ,place (cdr ,place)))
-      (multiple-value-bind (dummies vals newval setter getter)
-	  (get-setf-method place env)
-	(do* ((d dummies (cdr d))
-	      (v vals (cdr v))
-	      (let-list nil))
-	     ((null d)
-	      (push (list (car newval) getter) let-list)
-	      `(let* ,(nreverse let-list)
-		(prog1 (car ,(car newval))
-		  (setq ,(car newval) (cdr ,(car newval)))
-		  ,setter)))
-	  (push (list (car d) (car v)) let-list)))))
-
-(defmacro remf (place indicator &environment env)
-  "Place may be any place expression acceptable to SETF, and is expected
-  to hold a property list or ().  This list is destructively altered to
-  remove the property specified by the indicator.  Returns T if such a
-  property was present, NIL if not."
-  (declare (system::%java-class-name "jcl.lists.functions.Remf"))
-  (multiple-value-bind (dummies vals newval setter getter)
-		       (get-setf-method place env)
-    (do* ((d dummies (cdr d))
-	  (v vals (cdr v))
-	  (let-list nil)
-	  (ind-temp (gensym))
-	  (local1 (gensym))
-	  (local2 (gensym)))
-	 ((null d)
-	  ;; See ANSI 5.1.3 for why we do out-of-order evaluation
-	  (push (list ind-temp indicator) let-list)
-	  (push (list (car newval) getter) let-list)
-	  `(let* ,(nreverse let-list)
-	     (do ((,local1 ,(car newval) (cddr ,local1))
-		  (,local2 nil ,local1))
-		 ((atom ,local1) nil)
-	       (cond ((atom (cdr ,local1))
-		      (error (intl:gettext "Odd-length property list in REMF.")))
-		     ((eq (car ,local1) ,ind-temp)
-		      (cond (,local2
-			     (rplacd (cdr ,local2) (cddr ,local1))
-			     (return t))
-			    (t (setq ,(car newval) (cddr ,(car newval)))
-			       ,setter
-			       (return t))))))))
-      (push (list (car d) (car v)) let-list))))
 |#
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

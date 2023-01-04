@@ -60,14 +60,6 @@
     (ext:jmethod "symbolFunction" (ext:jclass "jcl.lang.SymbolStruct"))
     symbol))
 
-(defun (setf symbol-function) (symbol new-contents)
-  "Sets the contents of symbol's function cell the new-contents provided."
-  (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolFunction"))
-  (ext:jinvoke-interface
-    (ext:jmethod "setfSymbolFunction" (ext:jclass "jcl.lang.SymbolStruct")
-                 (ext:jclass "jcl.lang.FunctionStruct"))
-    symbol new-contents))
-
 (defun symbol-plist (symbol)
   "Gets the plist value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolPlist"))
@@ -75,28 +67,12 @@
     (ext:jmethod "symbolPlist" (ext:jclass "jcl.lang.SymbolStruct"))
     symbol))
 
-(defun (setf symbol-plist) (symbol new-plist)
-  "Sets the contents of symbol's property-list cell the new-plist provided."
-  (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolPlist"))
-  (ext:jinvoke-interface
-    (ext:jmethod "setfSymbolPlist" (ext:jclass "jcl.lang.SymbolStruct")
-                 (ext:jclass "jcl.lang.ListStruct"))
-    symbol new-plist))
-
 (defun symbol-value (symbol)
   "Gets the value of the provided symbol."
   (declare (system::%java-class-name "jcl.symbols.functions.SymbolValue"))
   (ext:jinvoke-interface
     (ext:jmethod "symbolValue" (ext:jclass "jcl.lang.SymbolStruct"))
     symbol))
-
-(defun (setf symbol-value) (symbol new-value)
-  "Sets the contents of symbol's value cell the new-value provided."
-  (declare (system::%java-class-name "jcl.symbols.functions.SetfSymbolValue"))
-  (ext:jinvoke-interface
-    (ext:jmethod "setfSymbolValue" (ext:jclass "jcl.lang.SymbolStruct")
-                 (ext:jclass "jcl.lang.LispStruct"))
-    symbol new-value))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -108,16 +84,6 @@
                  (ext:jclass "jcl.lang.LispStruct")
                  (ext:jclass "jcl.lang.LispStruct"))
     symbol indicator default))
-
-(defun (setf get) (symbol indicator value &optional default)
-  "Finds a property on the property list of symbol whose property indicator is identical to indicator, and sets its corresponding property value with the new-value provided."
-  (declare (system::%java-class-name "jcl.symbols.functions.SetfGet")
-           (ignore default))
-  (ext:jinvoke-interface
-    (ext:jmethod "setProp" (ext:jclass "jcl.lang.SymbolStruct")
-                 (ext:jclass "jcl.lang.LispStruct")
-                 (ext:jclass "jcl.lang.LispStruct"))
-    symbol indicator value))
 
 (defun remprop (symbol indicator)
   "Removes from the property list of symbol a property[1] with a property indicator identical to indicator."
@@ -153,7 +119,12 @@
   (ext:jinvoke-interface
     (ext:jmethod "makunbound" (ext:jclass "jcl.lang.SymbolStruct"))
     symbol))
-
+#|
+(defun set (symbol value)
+  "Sets the value of the provided symbol to the provided value."
+  (declare (system::%java-class-name "jcl.symbols.functions.Set"))
+  (setf (symbol-value symbol) value))
+|#
 (defun set (symbol value)
   "Sets the value of the provided symbol to the provided value."
   (declare (system::%java-class-name "jcl.symbols.functions.Set"))

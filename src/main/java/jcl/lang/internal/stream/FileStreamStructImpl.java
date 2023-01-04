@@ -197,6 +197,11 @@ public final class FileStreamStructImpl extends StreamStructImpl implements File
 		return externalFormat;
 	}
 
+	@Override
+	public LispStruct setfStreamExternalFormat(final LispStruct newExternalFormat) {
+		return ExternalFormat.fromValue(newExternalFormat);
+	}
+
 	/*
 	INPUT-STREAM-STRUCT
 	 */

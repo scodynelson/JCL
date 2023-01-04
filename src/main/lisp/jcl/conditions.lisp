@@ -13,7 +13,7 @@
 (defvar *handler-clusters* nil)
 
 (defmacro handler-bind (bindings &body forms)
-  (declare (system::%java-class-name "jcl.conditions.functions.HandlerBind"))
+  (declare (system::%java-class-name "jcl.conditions.macros.HandlerBind"))
   (dolist (binding bindings)
     (unless (and (consp binding) (= (length binding) 2))
       (error "ill-formed handler binding ~S" binding)))
@@ -25,7 +25,7 @@
       (progn ,@forms))))
 
 (defmacro handler-case (form &rest cases)
-  (declare (system::%java-class-name "jcl.conditions.functions.HandlerCase"))
+  (declare (system::%java-class-name "jcl.conditions.macros.HandlerCase"))
   (let ((no-error-clause (assoc ':no-error cases)))
     (if no-error-clause
         (let ((normal-return (make-symbol "normal-return"))

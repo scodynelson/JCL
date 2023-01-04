@@ -59,6 +59,11 @@ public class SimpleVectorStructImpl extends AbstractVectorStructImpl {
 	}
 
 	@Override
+	public LispStruct setfSvref(final LispStruct newElement, final FixnumStruct index) {
+		return setfAref(newElement, index);
+	}
+
+	@Override
 	public IntegerStruct fillPointer() {
 		throw new TypeErrorException("SIMPLE-VECTOR has no fill-pointer to retrieve.");
 	}

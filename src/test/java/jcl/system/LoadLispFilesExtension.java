@@ -33,24 +33,25 @@ public class LoadLispFilesExtension implements BeforeAllCallback, ExtensionConte
 			BootstrapExpanders.bootstrap();
 
 			final List<String> sourceFiles = List.of(
-					"jcl/compiler/base-macro-lambdas.lisp",
-					"jcl/sequences/sequences.lisp",
-					"jcl/compiler/macros.lisp",
-					"jcl/iterators/iterators.lisp",
-					"jcl/conditions/conditions.lisp",
-					"jcl/characters/characters.lisp",
-					"jcl/pathnames/pathnames.lisp",
-					"jcl/symbols/symbols.lisp",
-					"jcl/strings/strings.lisp",
-					"jcl/streams/streams.lisp",
-					"jcl/reader/reader.lisp",
-					"jcl/packages/packages.lisp",
-					"jcl/lists/lists.lisp",
-					"jcl/numbers/numbers.lisp",
-					"jcl/hashtables/hashtables.lisp",
-					"jcl/files/files.lisp",
-					"jcl/environment/environment.lisp",
-					"jcl/structures/structures.lisp"
+					"jcl/base-macro-lambdas.lisp",
+					"jcl/sequences.lisp",
+					"jcl/macros.lisp",
+					"jcl/iterators.lisp",
+					"jcl/conditions.lisp",
+					"jcl/characters.lisp",
+					"jcl/pathnames.lisp",
+					"jcl/symbols.lisp",
+					"jcl/strings.lisp",
+					"jcl/streams.lisp",
+					"jcl/reader.lisp",
+					"jcl/packages.lisp",
+					"jcl/lists.lisp",
+					"jcl/numbers.lisp",
+					"jcl/hashtables.lisp",
+					"jcl/setf.lisp",
+					"jcl/files.lisp",
+					"jcl/environment.lisp",
+					"jcl/structures.lisp"
 			);
 
 			tmpDir = Files.createTempDirectory(Paths.get(System.getProperty("user.dir")), "tests_");

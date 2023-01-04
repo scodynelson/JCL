@@ -30,6 +30,18 @@ public interface StringStruct extends VectorStruct {
 	CharacterStruct char_(final FixnumStruct index);
 
 	/**
+	 * Sets the character of string specified by index to a new value.
+	 *
+	 * @param newCharacter
+	 * 		new character value
+	 * @param index
+	 * 		the index of the character to set
+	 *
+	 * @return the new character
+	 */
+	CharacterStruct setfChar(final CharacterStruct newCharacter, final FixnumStruct index);
+
+	/**
 	 * Accesses the character of string specified by index. String must be a "simple-string" type.
 	 *
 	 * @param index
@@ -37,9 +49,19 @@ public interface StringStruct extends VectorStruct {
 	 *
 	 * @return the character
 	 */
-	default CharacterStruct schar(final FixnumStruct index) {
-		throw new TypeErrorException("Invalid STRING type: " + this);
-	}
+	CharacterStruct schar(final FixnumStruct index);
+
+	/**
+	 * Sets the character of string specified by index to a new value. String must be a "simple-string" type.
+	 *
+	 * @param newCharacter
+	 * 		new character value
+	 * @param index
+	 * 		the index of the character to set
+	 *
+	 * @return the new character
+	 */
+	CharacterStruct setfSchar(final CharacterStruct newCharacter, final FixnumStruct index);
 
 	/**
 	 * Returns a new string with the contents upper-cased according to the provided start and end.

@@ -31,9 +31,8 @@ public interface ReadtableStruct extends LispStruct {
 	}
 
 	/**
-	 * Sets the {@link FunctionStruct} for the provided {@code codePoint} to the provided {@code
-	 * readerMacroFunction}, designating the {@link SyntaxType} as terminating if the provided {@code nonTerminatingP}
-	 * is false.
+	 * Sets the {@link FunctionStruct} for the provided {@code codePoint} to the provided {@code readerMacroFunction},
+	 * designating the {@link SyntaxType} as terminating if the provided {@code nonTerminatingP} is false.
 	 *
 	 * @param codePoint
 	 * 		the key for the {@link FunctionStruct} to set
@@ -108,8 +107,8 @@ public interface ReadtableStruct extends LispStruct {
 	}
 
 	/**
-	 * Gets the {@link FunctionStruct} for the provided {@code subCodePoint} within the provided {@code
-	 * dispatchCodePoint}'s dispatching table.
+	 * Gets the {@link FunctionStruct} for the provided {@code subCodePoint} within the provided
+	 * {@code dispatchCodePoint}'s dispatching table.
 	 *
 	 * @param dispatchCodePoint
 	 * 		the key for the dispatching table to search for the {@link FunctionStruct}
@@ -125,8 +124,8 @@ public interface ReadtableStruct extends LispStruct {
 	}
 
 	/**
-	 * Sets the {@link FunctionStruct} for the provided {@code subCodePoint} to the provided {@code
-	 * readerMacroFunction} within the provided {@code dispatchCodePoint}'s dispatching table.
+	 * Sets the {@link FunctionStruct} for the provided {@code subCodePoint} to the provided {@code readerMacroFunction}
+	 * within the provided {@code dispatchCodePoint}'s dispatching table.
 	 *
 	 * @param dispatchCodePoint
 	 * 		the key for the dispatching table to set the {@link FunctionStruct}
@@ -166,9 +165,8 @@ public interface ReadtableStruct extends LispStruct {
 	SyntaxType getSyntaxType(final int codePoint);
 
 	default ReadtableStruct copyReadtable(final LispStruct toReadtable) {
-		if (toReadtable instanceof ReadtableStruct) {
+		if (toReadtable instanceof final ReadtableStruct toReadtableCast) {
 			// TODO: This isn't correct. We can't fully copy the Readtable objects right now.
-			final ReadtableStruct toReadtableCast = (ReadtableStruct) toReadtable;
 			return new ReadtableStructImpl(toReadtableCast.getReadtableCase());
 		} else {
 			return new ReadtableStructImpl();

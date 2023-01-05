@@ -43,9 +43,9 @@ import org.objectweb.asm.Opcodes;
 
 /**
  * Class to generate {@link MacroLambdaStruct} object dynamically by creating a new Java class with the name of the
- * {@link MacroLambdaStruct#className} value, the supported parameter methods for the {@link
- * MacroLambdaStruct#lambdaListBindings} values, and the execution body containing the {@link MacroLambdaStruct#forms}
- * values.
+ * {@link MacroLambdaStruct#className} value, the supported parameter methods for the
+ * {@link MacroLambdaStruct#lambdaListBindings} values, and the execution body containing the
+ * {@link MacroLambdaStruct#forms} values.
  */
 public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 
@@ -74,14 +74,14 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#initLambdaListBindings()}
-	 * method.
+	 * Constant {@link String} containing the name for the
+	 * {@link CompiledMacroFunctionExpander#initLambdaListBindings()} method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#initLambdaListBindings()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#initLambdaListBindings()} method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)V";
 
@@ -92,14 +92,14 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_REQUIRED_BINDINGS_METHOD_NAME = "getRequiredBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#getRequiredBindings()} method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getRequiredBindings()}
-	 * method.
+	 * Constant {@link String} containing the signature for the
+	 * {@link CompiledMacroFunctionExpander#getRequiredBindings()} method.
 	 */
 	private static final String GET_REQUIRED_BINDINGS_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;)Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/RequiredParameter;>;";
 
@@ -110,14 +110,14 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_NAME = "getOptionalBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#getOptionalBindings()} method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljava/util/List;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getOptionalBindings()}
-	 * method.
+	 * Constant {@link String} containing the signature for the
+	 * {@link CompiledMacroFunctionExpander#getOptionalBindings()} method.
 	 */
 	private static final String GET_OPTIONAL_BINDINGS_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;)Ljava/util/List<Ljcl/compiler/environment/binding/lambdalist/OptionalParameter;>;";
 
@@ -158,8 +158,8 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_ALLOW_OTHER_KEYS_METHOD_NAME = "getAllowOtherKeys";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getAllowOtherKeys()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#getAllowOtherKeys()} method.
 	 */
 	private static final String GET_ALLOW_OTHER_KEYS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Z";
 
@@ -188,8 +188,8 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_WHOLE_BINDING_METHOD_NAME = "getWholeBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getWholeBinding()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#getWholeBinding()} method.
 	 */
 	private static final String GET_WHOLE_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/WholeParameter;";
 
@@ -200,8 +200,8 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_ENVIRONMENT_BINDING_METHOD_NAME = "getEnvironmentBinding";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getEnvironmentBinding()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#getEnvironmentBinding()} method.
 	 */
 	private static final String GET_ENVIRONMENT_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/EnvironmentParameter;";
 
@@ -218,38 +218,37 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String GET_BODY_BINDING_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/compiler/environment/binding/lambdalist/BodyParameter;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#internalApply(Environment)}
-	 * method.
+	 * Constant {@link String} containing the name for the
+	 * {@link CompiledMacroFunctionExpander#internalApply(Environment)} method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#internalApply(Environment)}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#internalApply(Environment)} method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CompiledMacroFunctionExpander#getInitForm(Environment,
-	 * SymbolStruct)} method.
+	 * Constant {@link String} containing the name for the
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Environment, SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledMacroFunctionExpander#getInitForm(Environment,
-	 * SymbolStruct)} method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Environment, SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/environment/Environment;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link CompiledMacroFunctionExpander#getInitForm(Environment,
-	 * SymbolStruct)} method.
+	 * Constant {@link String} containing the signature for the
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Environment, SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link MacroLambdaStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code MacroLambdaStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
@@ -671,7 +670,7 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
 	private void generateInternalApplyMethod(final GeneratorState generatorState,
-	                                                final ClassWriter cw) {
+	                                         final ClassWriter cw) {
 		if (forms.getForms().isEmpty()) {
 			// No need to generate this method, as there are no forms to generate
 			return;
@@ -793,25 +792,25 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method used for assisting the generation of the {@link CompiledMacroFunctionExpander#getInitForm(Environment,
-	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
-	 * value of the init-form.
+	 * Private method used for assisting the generation of the
+	 * {@link CompiledMacroFunctionExpander#getInitForm(Environment, SymbolStruct)} method, generating the
+	 * {@link SymbolStruct} equality check as well as the {@link LispStruct} value of the init-form.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		CompiledMacroFunctionExpander#getInitForm(Environment, SymbolStruct)} method
+	 *        {@link JavaMethodBuilder} used for building the Java method body for the
+	 *        {@link CompiledMacroFunctionExpander#getInitForm(Environment, SymbolStruct)} method
 	 * @param symbolArgStore
 	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore
-	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var} {@link
-	 * 		SymbolStruct} will exist
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var}
+	 *        {@link SymbolStruct} will exist
 	 * @param initFormVarSymbolStore
 	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStruct} will exist
 	 * @param var
-	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the {@link
-	 * 		SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
+	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the
+	 *        {@link SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
 	 * @param initForm
 	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStruct}
 	 * 		matching equality to the provided {@code var} {@link SymbolStruct} is encountered
@@ -1110,9 +1109,9 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledMacroFunctionExpander#getRestBinding()} method for the
-	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
-	 * perform the following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getRestBinding()} method for the generated
+	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link MacroLambdaList#restBinding} is
 	 * null</li>
@@ -1189,9 +1188,9 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledMacroFunctionExpander#getKeyBindings()} method for the
-	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
-	 * perform the following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getKeyBindings()} method for the generated
+	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * MacroLambdaList#keyBindings} is empty</li>
@@ -1331,18 +1330,18 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating a {@link SuppliedPParameter} to be used in the {@link
-	 * CompiledMacroFunctionExpander#getOptionalBindings()} and {@link CompiledMacroFunctionExpander#getKeyBindings()}
-	 * method generation code as the {@link OptionalParameter#suppliedPBinding} and {@link
-	 * KeyParameter#suppliedPBinding} values.
+	 * Private method for generating a {@link SuppliedPParameter} to be used in the
+	 * {@link CompiledMacroFunctionExpander#getOptionalBindings()} and
+	 * {@link CompiledMacroFunctionExpander#getKeyBindings()} method generation code as the
+	 * {@link OptionalParameter#suppliedPBinding} and {@link KeyParameter#suppliedPBinding} values.
 	 *
 	 * @param suppliedPBinding
 	 * 		the {@link SuppliedPParameter} to generate code for
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param suppliedPPackageStore
-	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
-	 * 		SuppliedPParameter#var} will exist
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided
+	 *        {@link SuppliedPParameter#var} will exist
 	 * @param suppliedPSymbolStore
 	 * 		the storage location index on the stack where the {@link SuppliedPParameter#var} will exist
 	 * @param suppliedPStore
@@ -1437,9 +1436,9 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledMacroFunctionExpander#getAuxBindings()} method for the
-	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
-	 * perform the following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getAuxBindings()} method for the generated
+	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * MacroLambdaList#auxBindings} is empty</li>
@@ -1701,9 +1700,9 @@ public class MacroLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledMacroFunctionExpander#getBodyBinding()} method for the
-	 * generated macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will
-	 * perform the following operations:
+	 * Private method for generating the {@link CompiledMacroFunctionExpander#getBodyBinding()} method for the generated
+	 * macro-lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link MacroLambdaList#bodyBinding} is
 	 * null</li>

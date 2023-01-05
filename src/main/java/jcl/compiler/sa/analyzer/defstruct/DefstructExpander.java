@@ -38,10 +38,9 @@ public final class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof final SymbolStruct structureSymbol)) {
 			throw new TypeErrorException("%DEFSTRUCT: STRUCTURE-NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStruct structureSymbol = (SymbolStruct) first;
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("%DEFSTRUCT: Incorrect number of arguments: 1. Expected at least 4 arguments.");
@@ -95,10 +94,9 @@ public final class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final List<SymbolStruct> slots = new ArrayList<>();
 		iterator.forEachRemaining(element -> {
-			if (!(element instanceof SymbolStruct)) {
+			if (!(element instanceof final SymbolStruct slotSymbol)) {
 				throw new TypeErrorException("%DEFSTRUCT: STRUCTURE-SLOT-NAME must be a Symbol. Got: " + element);
 			}
-			final SymbolStruct slotSymbol = (SymbolStruct) element;
 			slots.add(slotSymbol);
 		});
 

@@ -108,7 +108,8 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (real instanceof IntegerStruct) {
 			final BigFraction numberBF = ((IntegerStruct) real).toJavaBigFraction();
 			return value.compareTo(numberBF) < 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			return value.compareTo(((RatioStructImpl) real).value) < 0;
 		}
 		return isLessThan(real.rational());
@@ -119,7 +120,8 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (real instanceof IntegerStruct) {
 			final BigFraction numberBF = ((IntegerStruct) real).toJavaBigFraction();
 			return value.compareTo(numberBF) > 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			return value.compareTo(((RatioStructImpl) real).value) > 0;
 		}
 		return isGreaterThan(real.rational());
@@ -130,7 +132,8 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (real instanceof IntegerStruct) {
 			final BigFraction numberBF = ((IntegerStruct) real).toJavaBigFraction();
 			return value.compareTo(numberBF) <= 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			return value.compareTo(((RatioStructImpl) real).value) <= 0;
 		}
 		return isLessThanOrEqualTo(real.rational());
@@ -141,7 +144,8 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (real instanceof IntegerStruct) {
 			final BigFraction numberBF = ((IntegerStruct) real).toJavaBigFraction();
 			return value.compareTo(numberBF) >= 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			return value.compareTo(((RatioStructImpl) real).value) >= 0;
 		}
 		return isGreaterThanOrEqualTo(real.rational());
@@ -446,13 +450,16 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (number instanceof FixnumStructImpl) {
 			final BigFraction add = value.add(((FixnumStructImpl) number).value);
 			return new RatioStructImpl(add);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final BigFraction add = value.add(((LongnumStructImpl) number).value);
 			return new RatioStructImpl(add);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigFraction add = value.add(((BignumStructImpl) number).value);
 			return new RatioStructImpl(add);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction add = value.add(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(add);
 		}
@@ -464,20 +471,25 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (number instanceof FixnumStructImpl) {
 			final BigFraction subtract = value.subtract(((FixnumStructImpl) number).value);
 			return new RatioStructImpl(subtract);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final BigFraction subtract = value.subtract(((LongnumStructImpl) number).value);
 			return new RatioStructImpl(subtract);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigFraction subtract = value.subtract(((BignumStructImpl) number).value);
 			return new RatioStructImpl(subtract);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction subtract = value.subtract(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(subtract);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float subtract = f - ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double subtract = d - ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
@@ -493,13 +505,16 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (number instanceof FixnumStructImpl) {
 			final BigFraction multiply = value.multiply(((FixnumStructImpl) number).value);
 			return RationalStruct.toLispRational(multiply);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final BigFraction multiply = value.multiply(((LongnumStructImpl) number).value);
 			return RationalStruct.toLispRational(multiply);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigFraction multiply = value.multiply(((BignumStructImpl) number).value);
 			return RationalStruct.toLispRational(multiply);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction multiply = value.multiply(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(multiply);
 		}
@@ -511,20 +526,25 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (number instanceof FixnumStructImpl) {
 			final BigFraction divide = value.divide(((FixnumStructImpl) number).value);
 			return RationalStruct.toLispRational(divide);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final BigFraction divide = value.divide(((LongnumStructImpl) number).value);
 			return RationalStruct.toLispRational(divide);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigFraction divide = value.divide(((BignumStructImpl) number).value);
 			return RationalStruct.toLispRational(divide);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction divide = value.divide(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(divide);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float divide = f / ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double divide = d / ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
@@ -540,13 +560,16 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (number instanceof FixnumStructImpl) {
 			final BigFraction numberBF = new BigFraction(((FixnumStructImpl) number).value);
 			return value.compareTo(numberBF) == 0;
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final BigFraction numberBF = new BigFraction(((LongnumStructImpl) number).value);
 			return value.compareTo(numberBF) == 0;
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigFraction numberBF = new BigFraction(((BignumStructImpl) number).value);
 			return value.compareTo(numberBF) == 0;
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			return value.compareTo(((RatioStructImpl) number).value) == 0;
 		}
 		return number.isNotEqualTo(this);
@@ -557,13 +580,16 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 		if (number instanceof FixnumStructImpl) {
 			final BigFraction numberBF = new BigFraction(((FixnumStructImpl) number).value);
 			return value.compareTo(numberBF) != 0;
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final BigFraction numberBF = new BigFraction(((LongnumStructImpl) number).value);
 			return value.compareTo(numberBF) != 0;
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigFraction numberBF = new BigFraction(((BignumStructImpl) number).value);
 			return value.compareTo(numberBF) != 0;
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			return value.compareTo(((RatioStructImpl) number).value) != 0;
 		}
 		return number.isNotEqualTo(this);
@@ -731,22 +757,21 @@ public class RatioStructImpl extends LispStructImpl implements RatioStruct {
 	private static final String RATIONAL_NAME = Type.getInternalName(RationalStruct.class);
 
 	/**
-	 * Constant {@link String} containing the name for the {@link RationalStruct#toLispRational(IntegerStruct,
-	 * IntegerStruct)} method.
+	 * Constant {@link String} containing the name for the
+	 * {@link RationalStruct#toLispRational(IntegerStruct, IntegerStruct)} method.
 	 */
 	private static final String RATIONAL_TO_LISP_RATIONAL_METHOD_NAME = "toLispRational";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link RationalStruct#toLispRational(IntegerStruct,
-	 * IntegerStruct)} method.
+	 * Constant {@link String} containing the description for the
+	 * {@link RationalStruct#toLispRational(IntegerStruct, IntegerStruct)} method.
 	 */
 	private static final String RATIONAL_TO_LISP_RATIONAL_METHOD_DESC
 			= CodeGenerators.getMethodDescription(RationalStruct.class, RATIONAL_TO_LISP_RATIONAL_METHOD_NAME,
 			                                      IntegerStruct.class, IntegerStruct.class);
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link RatioStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link RatioStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Emitting the {@link RationalStruct#numerator()} value.</li>
 	 * <li>Emitting the {@link RationalStruct#denominator()} value.</li>

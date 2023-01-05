@@ -88,8 +88,7 @@ public final class InternalCompile {
 				function = (FunctionStruct) compiledDefinitionResult;
 			}
 
-			if (name instanceof SymbolStruct) {
-				final SymbolStruct nameSymbol = (SymbolStruct) name;
+			if (name instanceof final SymbolStruct nameSymbol) {
 				nameSymbol.setfSymbolFunction(function);
 			} else if (!NILStruct.INSTANCE.eq(name)) {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
@@ -106,10 +105,9 @@ public final class InternalCompile {
 			}
 		}
 
-		if (!(name instanceof SymbolStruct)) {
+		if (!(name instanceof final SymbolStruct nameSymbol)) {
 			throw new ErrorException("The value " + name + " is not an acceptable function name.");
 		}
-		final SymbolStruct nameSymbol = (SymbolStruct) name;
 
 		final MacroFunctionExpanderInter macroFunction = Environment.NULL.getMacroFunctionExpander(nameSymbol);
 		if (macroFunction != null) {
@@ -205,10 +203,10 @@ public final class InternalCompile {
 			final ClassWriter cw = currentClass.getClassWriter();
 
 			cw.visit(GenerationConstants.JAVA_VERSION, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
-			                  className,
-			                  null,
-			                  GenerationConstants.JAVA_OBJECT_NAME,
-			                  null);
+			         className,
+			         null,
+			         GenerationConstants.JAVA_OBJECT_NAME,
+			         null);
 
 			cw.visitSource(fileName + GenerationConstants.JAVA_EXTENSION, null);
 
@@ -242,7 +240,7 @@ public final class InternalCompile {
 				                   className,
 				                   GenerationConstants.INIT_METHOD_NAME,
 				                   GenerationConstants.INIT_METHOD_DESC,
-						 false);
+				                   false);
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
 				                   className,
 				                   INIT_METHOD_NAME,

@@ -33,8 +33,8 @@ public final class ReadtableStructImpl extends LispStructImpl implements Readtab
 	private final Map<Integer, FunctionStruct> macroTableMap = new ConcurrentHashMap<>();
 
 	/**
-	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link Map}s for
-	 * dispatching on specializing {@link FunctionStruct}s.
+	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link Map}s for dispatching on
+	 * specializing {@link FunctionStruct}s.
 	 */
 	private final Map<Integer, Map<Integer, FunctionStruct>> dispatchTableMap = new ConcurrentHashMap<>();
 

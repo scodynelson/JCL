@@ -120,12 +120,12 @@ public class JCL implements Runnable {
 			final ConsStruct jars = (ConsStruct) resultDevice;
 			final LispStruct jar = jars.car();
 			if (jar instanceof PathnameStruct) {
-				PathnameStruct o = mergePathnames((PathnameStruct)jar, pathnameName, pathnameType);
+				PathnameStruct o = mergePathnames((PathnameStruct) jar, pathnameName, pathnameType);
 				if ((o.pathnameDirectory() instanceof ConsStruct)
 						&& ((ConsStruct) o.pathnameDirectory()).length().eql(IntegerStruct.ONE)) { // i.e. (:ABSOLUTE) or (:RELATIVE)
 					o = PathnameStruct.toPathname(o.pathnameHost(), o.pathnameDevice(), NILStruct.INSTANCE, o.pathnameName(), o.pathnameType(), o.pathnameVersion());
 				}
-				((ConsStruct)resultDevice).rplaca(o);
+				((ConsStruct) resultDevice).rplaca(o);
 			}
 			resultDirectory = pathname.pathnameDirectory();
 		} else {

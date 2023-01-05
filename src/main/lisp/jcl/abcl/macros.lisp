@@ -50,10 +50,14 @@
   `(return-from nil ,result))
 
 (defmacro defconstant (name initial-value &optional docstring)
-  `(%defconstant ',name ,initial-value ,docstring))
+  `(progn
+     (record-source-information-for-type ',name :constant)
+     (%defconstant ',name ,initial-value ,docstring)))
 
 (defmacro defparameter (name initial-value &optional docstring)
-  `(%defparameter ',name ,initial-value ,docstring))
+  `(progn
+     (record-source-information-for-type ',name :variable)
+     (%defparameter ',name ,initial-value ,docstring)))
 
 (defmacro truly-the (type value)
   `(the ,type ,value))
@@ -82,7 +86,7 @@
 ;; Adapted from SBCL.
 (defmacro push (&environment env item place)
   (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
+           (eq place (macroexpand place env)))
       `(setq ,place (cons ,item ,place))
       (multiple-value-bind (dummies vals newval setter getter)
         (get-setf-expansion place env)
@@ -95,7 +99,7 @@
 ;; Adapted from SBCL.
 (defmacro pushnew (&environment env item place &rest keys)
   (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
+           (eq place (macroexpand place env)))
       `(setq ,place (adjoin ,item ,place ,@keys))
       (multiple-value-bind (dummies vals newval setter getter)
         (get-setf-expansion place env)
@@ -108,9 +112,9 @@
 ;; Adapted from SBCL.
 (defmacro pop (&environment env place)
   (if (and (symbolp place)
-	   (eq place (macroexpand place env)))
+           (eq place (macroexpand place env)))
       `(prog1 (car ,place)
-	      (setq ,place (cdr ,place)))
+              (setq ,place (cdr ,place)))
       (multiple-value-bind (dummies vals newval setter getter)
         (get-setf-expansion place env)
         (do* ((d dummies (cdr d))
@@ -154,7 +158,7 @@
         (forms (cdr args))
         (abortp (gensym)))
     `(let ((,var ,stream)
-	   (,abortp t))
+           (,abortp t))
        (unwind-protect
         (multiple-value-prog1
          (progn ,@forms)
@@ -177,6 +181,7 @@
 
 (defmacro defvar (var &optional (val nil valp) (doc nil docp))
   `(progn
+     (sys::record-source-information-for-type ',var :variable)
      (%defvar ',var)
      ,@(when valp
          `((unless (boundp ',var)

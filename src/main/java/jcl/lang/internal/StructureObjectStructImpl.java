@@ -97,8 +97,7 @@ public class StructureObjectStructImpl extends LispStructImpl implements Structu
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof StructureObjectStructImpl) {
-			final StructureObjectStructImpl o = (StructureObjectStructImpl) object;
+		if (object instanceof final StructureObjectStructImpl o) {
 			if (!structureClass.eq(o.structureClass)) {
 				return false;
 			}

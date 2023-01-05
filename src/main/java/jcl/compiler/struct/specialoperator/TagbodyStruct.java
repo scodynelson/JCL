@@ -68,8 +68,7 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link TagbodyStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code TagbodyStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Initializing a try-catch block</li>
 	 * <li>Generating each of the {@link TagbodyStruct#tagbodyForms} inside the try block, each separated by a custom
@@ -109,7 +108,7 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
@@ -195,16 +194,16 @@ public class TagbodyStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for creating a {@link Map} of {@link GeneratorState.TagbodyLabel}s to corresponding {@link
-	 * PrognStruct}s. The provided {@code tagbodyForms} is iterated over, grabbing each {@link GoStruct} tag, fetching
-	 * the next available tag index via {@link GeneratorState#getNextTagbodyTagIndex()}, and creating a new {@link
-	 * Label} to comprise each newly created {@link GeneratorState.TagbodyLabel}. From here, each {@link
-	 * GeneratorState.TagbodyLabel} is then added to a {@link LinkedHashMap} with the corresponding {@link PrognStruct}
-	 * as the entry.
+	 * Private method for creating a {@link Map} of {@link GeneratorState.TagbodyLabel}s to corresponding
+	 * {@link PrognStruct}s. The provided {@code tagbodyForms} is iterated over, grabbing each {@link GoStruct} tag,
+	 * fetching the next available tag index via {@link GeneratorState#getNextTagbodyTagIndex()}, and creating a new
+	 * {@link Label} to comprise each newly created {@link GeneratorState.TagbodyLabel}. From here, each
+	 * {@link GeneratorState.TagbodyLabel} is then added to a {@link LinkedHashMap} with the corresponding
+	 * {@link PrognStruct} as the entry.
 	 *
 	 * @param tagbodyForms
 	 * 		the original {@link Map} of {@link GoStruct} tags to {@link PrognStruct}s to convert to the {@link Map} of
-	 * 		{@link GeneratorState.TagbodyLabel}s to the same {@link PrognStruct}s
+	 *        {@link GeneratorState.TagbodyLabel}s to the same {@link PrognStruct}s
 	 * @param generatorState
 	 * 		the {@link GeneratorState} used to retrieve the next available tag index
 	 *

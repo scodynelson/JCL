@@ -48,11 +48,10 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link GoStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code GoStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the appropriate tag index by searching the {@link GeneratorState#tagbodyLabelDeque} for the
-	 * {@link GeneratorState.TagbodyLabel#tag} matching the provided {@link GoStruct}</li>
+	 * {@link GeneratorState.TagbodyLabel#tag} matching the provided {@code GoStruct}</li>
 	 * <li>Creating and throwing a new {@link GoException} with the {@code int} tag index value</li>
 	 * </ol>
 	 * As an example, it will transform {@code (go 1)} into the following Java code:
@@ -68,7 +67,7 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
@@ -97,19 +96,19 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 	}
 
 	/**
-	 * Private method to retrieve the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@link
-	 * GoStruct} tag within the current execution stack from the provided {@link GeneratorState}. This is accomplished
-	 * by iterating through each {@link Set} within the {@link GeneratorState#tagbodyLabelDeque} until the tag
-	 * equivalent to the provided {@link GoStruct} tag is located.
+	 * Private method to retrieve the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@code GoStruct}
+	 * tag within the current execution stack from the provided {@link GeneratorState}. This is accomplished by
+	 * iterating through each {@link Set} within the {@link GeneratorState#tagbodyLabelDeque} until the tag equivalent
+	 * to the provided {@code GoStruct} tag is located.
 	 *
 	 * @param generatorState
 	 * 		the {@link GeneratorState} used to retrieve the {@link GeneratorState.TagbodyLabel} corresponding to the
-	 * 		provided {@link GoStruct} tag
+	 * 		provided {@code GoStruct} tag
 	 * @param tagToFind
-	 * 		the {@link GoStruct} tag used to located the corresponding {@link GeneratorState.TagbodyLabel} within the
-	 * 		{@link GeneratorState#tagbodyLabelDeque}
+	 * 		the {@code GoStruct} tag used to located the corresponding {@link GeneratorState.TagbodyLabel} within the
+	 *        {@link GeneratorState#tagbodyLabelDeque}
 	 *
-	 * @return the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@link GoStruct} tag
+	 * @return the {@link GeneratorState.TagbodyLabel} corresponding to the provided {@code GoStruct} tag
 	 */
 	private static GeneratorState.TagbodyLabel getTagbodyLabel(final GeneratorState generatorState, final GoStruct<?> tagToFind) {
 

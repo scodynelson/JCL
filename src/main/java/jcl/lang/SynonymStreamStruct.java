@@ -15,8 +15,8 @@ public interface SynonymStreamStruct extends IOStreamStruct {
 	SymbolStruct synonymStreamSymbol();
 
 	/**
-	 * Returns a new Synonym-Stream instance that will delegate stream operations to the value of the provided {@link
-	 * SymbolStruct}.
+	 * Returns a new Synonym-Stream instance that will delegate stream operations to the value of the provided
+	 * {@link SymbolStruct}.
 	 *
 	 * @param symbol
 	 * 		the {@link SymbolStruct} containing a {@link StreamStruct} value

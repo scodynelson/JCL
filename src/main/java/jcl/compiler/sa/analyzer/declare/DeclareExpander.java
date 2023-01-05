@@ -43,10 +43,9 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 		final DeclareStruct declareElement = new DeclareStruct();
 
 		for (final LispStruct declSpec : declSpecs) {
-			if (!(declSpec instanceof ListStruct)) {
+			if (!(declSpec instanceof final ListStruct declSpecList)) {
 				throw new TypeErrorException("DECLARE: DECLARATION-SPECIFIER must be a List. Got: " + declSpec);
 			}
-			final ListStruct declSpecList = (ListStruct) declSpec;
 
 			final Iterator<LispStruct> declSpecIterator = declSpecList.iterator();
 			final LispStruct declIdentifier = declSpecIterator.next();
@@ -99,10 +98,9 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 		}
 
 		final LispStruct javaClassName = declSpecBody.get(0);
-		if (!(javaClassName instanceof StringStruct)) {
+		if (!(javaClassName instanceof final StringStruct javaClassNameString)) {
 			throw new TypeErrorException("DECLARE: JAVA-CLASS-NAME must be a String. Got: " + javaClassName);
 		}
-		final StringStruct javaClassNameString = (StringStruct) javaClassName;
 		return new JavaClassNameDeclarationStruct(javaClassNameString.toJavaString());
 	}
 
@@ -118,12 +116,10 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 		SymbolStruct functionSymbolName = null;
 
 		final String name;
-		if (lispName instanceof SymbolStruct) {
-			final SymbolStruct lispNameSymbol = (SymbolStruct) lispName;
+		if (lispName instanceof final SymbolStruct lispNameSymbol) {
 			name = lispNameSymbol.getName().replace('-', '_');
 			functionSymbolName = lispNameSymbol;
-		} else if (lispName instanceof ConsStruct) {
-			final ConsStruct lispNameCons = (ConsStruct) lispName;
+		} else if (lispName instanceof final ConsStruct lispNameCons) {
 
 			final StringBuilder builder = new StringBuilder();
 			for (final LispStruct current : lispNameCons) {
@@ -157,11 +153,9 @@ public final class DeclareExpander extends MacroFunctionExpander<DeclareStruct> 
 
 		// Special declaration can apply to multiple SymbolStructs
 		for (final LispStruct declSpecBodyElement : declSpecBody) {
-			if (!(declSpecBodyElement instanceof SymbolStruct)) {
+			if (!(declSpecBodyElement instanceof final SymbolStruct sym)) {
 				throw new ProgramErrorException("DECLARE: a non-symbol cannot be made SPECIAL: " + declSpecBodyElement);
 			}
-
-			final SymbolStruct sym = (SymbolStruct) declSpecBodyElement;
 
 			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

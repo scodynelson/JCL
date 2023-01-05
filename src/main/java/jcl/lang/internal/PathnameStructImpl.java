@@ -288,7 +288,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	private void initJarFile(String s) {
 		ListStruct jars = NILStruct.INSTANCE;
 		final int i = s.lastIndexOf(JAR_SEPARATOR, s.length() - JAR_SEPARATOR.length() - 1);
-		String jar;
+		final String jar;
 		if (i == -1) {
 			jar = s;
 		} else {
@@ -296,9 +296,9 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 			// inner one must be a file reference within the outer.
 			jar = "jar:file:" + s.substring(i + JAR_SEPARATOR.length());
 			s = s.substring(JAR_PREFIX.length(), i + JAR_SEPARATOR.length());
-			PathnameStructImpl p = new PathnameStructImpl(s);
+			final PathnameStructImpl p = new PathnameStructImpl(s);
 			// TODO: casting
-			jars = ConsStruct.toLispCons(((ListStruct)p.device).car(), jars);
+			jars = ConsStruct.toLispCons(((ListStruct) p.device).car(), jars);
 		}
 		if (jar.startsWith("jar:file:")) {
 			final String file = jar.substring("jar:file:".length(), jar.length() - JAR_SEPARATOR.length());
@@ -310,8 +310,8 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 					uri = url.toURI();
 				} catch (final MalformedURLException | URISyntaxException e) {
 					throw new SimpleErrorException("Failed to create URI from "
-							                      + '\'' + file + '\''
-							                      + ": " + e.getMessage());
+							                               + '\'' + file + '\''
+							                               + ": " + e.getMessage());
 				}
 				final String path = uri.getPath();
 				if (path == null) {
@@ -333,8 +333,8 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 				jars = ConsStruct.toLispCons(p, jars);
 			} catch (final MalformedURLException e) {
 				throw new ErrorException("Failed to parse URL "
-						                    + '\'' + url + '\''
-						                    + e.getMessage());
+						                         + '\'' + url + '\''
+						                         + e.getMessage());
 			}
 		}
 		jars = jars.nReverse();
@@ -563,7 +563,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 		// we manipulate the input and output correspondingly.
 		final String u;
 		if (s.startsWith("/")) {
-			u = new String(s);
+			u = s;
 		} else {
 			u = '/' + s;
 		}
@@ -632,14 +632,13 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 			for (int i = 0; i < jars.length; i++) {
 				prefix.append(JAR_PREFIX);
 				final LispStruct component = jars[i];
-				if (!(component instanceof PathnameStructImpl)) {
+				if (!(component instanceof final PathnameStructImpl jar)) {
 					return null; // If DEVICE is a CONS, it should only contain Pathname
 				}
 				if (!((PathnameStructImpl) component).isURL() && (i == 0)) {
 					sb.append(FILE_PREFIX);
 					uriEncoded = true;
 				}
-				final PathnameStructImpl jar = (PathnameStructImpl) component;
 				final String encodedNamestring;
 				if (uriEncoded) {
 					encodedNamestring = uriEncode(jar.namestring());
@@ -767,8 +766,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 		// is, both NIL and :UNSPECIFIC cause the component not to appear in
 		// the namestring." 19.2.2.2.3.1
 		if (directory != NILStruct.INSTANCE) {
-			if (directory instanceof ListStruct) {
-				ListStruct temp = (ListStruct) directory;
+			if (directory instanceof ListStruct temp) {
 				LispStruct part = temp.car();
 				temp = (ListStruct) temp.cdr();
 				final char separatorChar = '/';
@@ -810,8 +808,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	}
 
 	private void validateDirectory() {
-		if (directory instanceof ListStruct) {
-			ListStruct temp = (ListStruct) directory;
+		if (directory instanceof ListStruct temp) {
 			while (temp != NILStruct.INSTANCE) {
 				final LispStruct first = temp.car();
 				temp = (ListStruct) temp.cdr();
@@ -840,8 +837,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 			return isWild() ? TStruct.INSTANCE : NILStruct.INSTANCE;
 		}
 		if (fieldKey == CommonLispSymbols.DIRECTORY_KEYWORD) {
-			if (directory instanceof ConsStruct) {
-				final ConsStruct d = (ConsStruct) directory;
+			if (directory instanceof final ConsStruct d) {
 				if (d.stream().anyMatch(CommonLispSymbols.WILD_KEYWORD::eql)) {
 					return TStruct.INSTANCE;
 				}
@@ -970,8 +966,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 		if ((device == CommonLispSymbols.WILD_KEYWORD) || (device == CommonLispSymbols.WILD_INFERIORS_KEYWORD)) {
 			return true;
 		}
-		if (directory instanceof ConsStruct) {
-			final ConsStruct d = (ConsStruct) directory;
+		if (directory instanceof final ConsStruct d) {
 			if (d.stream().anyMatch(CommonLispSymbols.WILD_KEYWORD::eql)) {
 				return true;
 			}
@@ -1014,8 +1009,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link PathnameStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link PathnameStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Building the {@link PathnameStruct} value</li>
 	 * <li>Constructing a new {@link PathnameStruct} with the built {@link #namestring} value</li>

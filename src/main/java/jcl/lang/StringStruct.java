@@ -143,7 +143,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the bag of characters to trim from the string
 	 *
 	 * @return and new string with the characters in the provided character-bag trimmed from the beginning and end of
-	 * 		the string
+	 * the string
 	 */
 	StringStruct stringTrim(final SequenceStruct characterBag);
 
@@ -201,7 +201,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param end2
 	 * 		the ending index of the second string in the comparison
 	 *
-	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
+	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ
+	 * otherwise
 	 */
 	LispStruct stringNotEqual(final StringStruct string2,
 	                          final IntegerStruct start1, final IntegerStruct end1,
@@ -222,7 +223,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than the second; an {@link IntegerStruct} mismatch index where the
-	 * 		strings differ otherwise
+	 * strings differ otherwise
 	 */
 	LispStruct stringLessThan(final StringStruct string2,
 	                          final IntegerStruct start1, final IntegerStruct end1,
@@ -243,7 +244,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than the second; an {@link IntegerStruct} mismatch index where the
-	 * 		strings differ otherwise
+	 * strings differ otherwise
 	 */
 	LispStruct stringGreaterThan(final StringStruct string2,
 	                             final IntegerStruct start1, final IntegerStruct end1,
@@ -264,7 +265,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * 		where the strings differ otherwise
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringLessThanOrEqualTo(final StringStruct string2,
 	                                   final IntegerStruct start1, final IntegerStruct end1,
@@ -285,7 +286,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * 		where the strings differ otherwise
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringGreaterThanOrEqualTo(final StringStruct string2,
 	                                      final IntegerStruct start1, final IntegerStruct end1,
@@ -325,7 +326,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param end2
 	 * 		the ending index of the second string in the comparison
 	 *
-	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ otherwise
+	 * @return NIL if the strings are not equal; an {@link IntegerStruct} mismatch index where the strings differ
+	 * otherwise
 	 */
 	LispStruct stringNotEqualIgnoreCase(final StringStruct string2,
 	                                    final IntegerStruct start1, final IntegerStruct end1,
@@ -346,7 +348,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than the second; an {@link IntegerStruct} mismatch index where the
-	 * 		strings differ otherwise
+	 * strings differ otherwise
 	 */
 	LispStruct stringLessThanIgnoreCase(final StringStruct string2,
 	                                    final IntegerStruct start1, final IntegerStruct end1,
@@ -367,7 +369,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than the second; an {@link IntegerStruct} mismatch index where the
-	 * 		strings differ otherwise
+	 * strings differ otherwise
 	 */
 	LispStruct stringGreaterThanIgnoreCase(final StringStruct string2,
 	                                       final IntegerStruct start1, final IntegerStruct end1,
@@ -388,7 +390,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is less-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * 		where the strings differ otherwise
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringLessThanOrEqualToIgnoreCase(final StringStruct string2,
 	                                             final IntegerStruct start1, final IntegerStruct end1,
@@ -409,7 +411,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the ending index of the second string in the comparison
 	 *
 	 * @return NIL if the first string is greater-than-or-equal-to the second; an {@link IntegerStruct} mismatch index
-	 * 		where the strings differ otherwise
+	 * where the strings differ otherwise
 	 */
 	LispStruct stringGreaterThanOrEqualToIgnoreCase(final StringStruct string2,
 	                                                final IntegerStruct start1, final IntegerStruct end1,
@@ -495,7 +497,8 @@ public interface StringStruct extends VectorStruct {
 	 * @param fillPointer
 	 * 		the string fillPointer
 	 *
-	 * @return a new StringStruct representation of the provided size, element-type, contents, adjustable, and fillPointer
+	 * @return a new StringStruct representation of the provided size, element-type, contents, adjustable, and
+	 * fillPointer
 	 */
 	static StringStruct toLispString(final IntegerStruct size, final SymbolStruct elementType,
 	                                 final String contents, final BooleanStruct adjustable,
@@ -522,7 +525,7 @@ public interface StringStruct extends VectorStruct {
 	 * 		the string fillPointer
 	 *
 	 * @return a new StringStruct representation of the provided size, element-type, displacedTo, displacedIndexOffset,
-	 * 		adjustable, and fillPointer
+	 * adjustable, and fillPointer
 	 */
 	static VectorStruct toLispString(final IntegerStruct size, final SymbolStruct elementType,
 	                                 final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
@@ -548,13 +551,11 @@ public interface StringStruct extends VectorStruct {
 		if (lispStruct instanceof StringStruct) {
 			return (StringStruct) lispStruct;
 		}
-		if (lispStruct instanceof SymbolStruct) {
-			final SymbolStruct symbolStruct = (SymbolStruct) lispStruct;
+		if (lispStruct instanceof final SymbolStruct symbolStruct) {
 			final String name = symbolStruct.getName();
 			return toLispString(name);
 		}
-		if (lispStruct instanceof CharacterStruct) {
-			final CharacterStruct characterStruct = (CharacterStruct) lispStruct;
+		if (lispStruct instanceof final CharacterStruct characterStruct) {
 			return toLispString(characterStruct.toJavaCharacter().toString());
 		}
 		throw new TypeErrorException("Type cannot be converted to String: " + lispStruct);
@@ -613,8 +614,7 @@ public interface StringStruct extends VectorStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof StringStruct) {
-			final StringStruct string = (StringStruct) object;
+		if (object instanceof final StringStruct string) {
 
 			final IntegerStruct thisLength = length();
 			if (!thisLength.eql(string.length())) {
@@ -636,8 +636,7 @@ public interface StringStruct extends VectorStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof StringStruct) {
-			final StringStruct string = (StringStruct) object;
+		if (object instanceof final StringStruct string) {
 
 			final IntegerStruct thisLength = length();
 			if (!thisLength.eql(string.length())) {

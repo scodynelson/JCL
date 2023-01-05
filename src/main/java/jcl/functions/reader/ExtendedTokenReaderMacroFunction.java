@@ -118,9 +118,9 @@ final class ExtendedTokenReaderMacroFunction {
 
 	/**
 	 * Reads the next token character from the provided {@link InputStreamStruct}, using the provided {@code eofErrorP}
-	 * to determine how the token character should be read. Then it appends the resulting {@link
-	 * ReadCharResult} to the provided {@link StringBuilder} using the provided {@code isEscaped} value in determining
-	 * the appropriate case of the token character to append.
+	 * to determine how the token character should be read. Then it appends the resulting {@link ReadCharResult} to the
+	 * provided {@link StringBuilder} using the provided {@code isEscaped} value in determining the appropriate case of
+	 * the token character to append.
 	 *
 	 * @param inputStreamStruct
 	 * 		the {@link InputStreamStruct} to read the next token character from
@@ -192,14 +192,14 @@ final class ExtendedTokenReaderMacroFunction {
 	}
 
 	/**
-	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#CONSTITUENT} and a {@link
-	 * AttributeType#PACKAGEMARKER} based on the current readtable.
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#CONSTITUENT} and a
+	 * {@link AttributeType#PACKAGEMARKER} based on the current readtable.
 	 *
 	 * @param codePoint
 	 * 		the character code point to verify {@link SyntaxType} for
 	 *
-	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#CONSTITUENT} and a {@link
-	 * AttributeType#PACKAGEMARKER}; false otherwise
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#CONSTITUENT} and a
+	 * {@link AttributeType#PACKAGEMARKER}; false otherwise
 	 */
 	private static boolean isPackageMarker(final int codePoint) {
 		return ReaderMacroFunctionUtil.isSyntaxType(codePoint, SyntaxType.CONSTITUENT)

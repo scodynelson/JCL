@@ -51,8 +51,7 @@ public class QuoteStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link QuoteStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code QuoteStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link QuoteStruct#object} value</li>
 	 * </ol>

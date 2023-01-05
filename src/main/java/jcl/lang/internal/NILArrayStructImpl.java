@@ -23,7 +23,7 @@ public class NILArrayStructImpl extends AbstractArrayStructImpl {
 	 */
 	private LispStruct content;
 
-	private BooleanStruct adjustable;
+	private final BooleanStruct adjustable;
 
 	/**
 	 * Constructor for building the zero-ranked array structure.

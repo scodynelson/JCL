@@ -7,7 +7,6 @@ import jcl.lang.internal.SymbolStructImpl;
 import jcl.lang.statics.GlobalPackageStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 /**
  * The {@link TStruct} is the object representation of a Lisp 't' type.
@@ -48,8 +47,8 @@ public final class TStruct extends SymbolStructImpl implements BooleanStruct {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@code TStruct} objects, by retrieving the static singleton {@link TStruct#INSTANCE}.
+	 * {@inheritDoc} Generation method for {@code TStruct} objects, by retrieving the static singleton
+	 * {@link TStruct#INSTANCE}.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

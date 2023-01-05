@@ -35,7 +35,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	/**
 	 * {@link StringBuilder} containing the implementation contents of the {@link StringStruct}.
 	 */
-	private StringBuilder contents;
+	private final StringBuilder contents;
 
 	/**
 	 * Constructor for creating a new instance.
@@ -243,8 +243,7 @@ public final class SimpleStringStructImpl extends AbstractStringStructImpl {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link StringStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link StringStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Loading the {@link String} constant produced by performing {@link StringStruct#toJavaString()}</li>
 	 * <li>Constructing a new {@link StringStruct} with the loaded {@link String} value</li>

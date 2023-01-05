@@ -16,9 +16,9 @@ public interface FloatStruct extends RealStruct {
 
 	/**
 	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
-	 * difference between this method an {@link #decodeFloat()} is that the significand and sign will both be {@link
-	 * IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed for
-	 * the significand to produce an {@link IntegerStruct}.
+	 * difference between this method an {@link #decodeFloat()} is that the significand and sign will both be
+	 * {@link IntegerStruct}s with a special weighting between the significand and exponent based on the scaling needed
+	 * for the significand to produce an {@link IntegerStruct}.
 	 *
 	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */

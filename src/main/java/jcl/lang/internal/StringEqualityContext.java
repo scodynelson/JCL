@@ -4,8 +4,7 @@ import jcl.lang.IntegerStruct;
 import jcl.lang.StringStruct;
 
 /**
- * Context argument class for string functions that require equality checking arguments to produce the intended
- * result.
+ * Context argument class for string functions that require equality checking arguments to produce the intended result.
  */
 public final class StringEqualityContext {
 
@@ -20,14 +19,14 @@ public final class StringEqualityContext {
 		private final StringStruct struct;
 
 		/**
-		 * The {@link StringIntervalOpContext.Builder} to build the intervals for the first {@link StringStruct} in
-		 * the equality operation.
+		 * The {@link StringIntervalOpContext.Builder} to build the intervals for the first {@link StringStruct} in the
+		 * equality operation.
 		 */
 		private final StringIntervalOpContext.Builder intervalOpContext1 = StringIntervalOpContext.builder();
 
 		/**
-		 * The {@link StringIntervalOpContext.Builder} to build the intervals for the second {@link StringStruct} in
-		 * the equality operation.
+		 * The {@link StringIntervalOpContext.Builder} to build the intervals for the second {@link StringStruct} in the
+		 * equality operation.
 		 */
 		private final StringIntervalOpContext.Builder intervalOpContext2 = StringIntervalOpContext.builder();
 
@@ -42,8 +41,8 @@ public final class StringEqualityContext {
 		}
 
 		/**
-		 * Builder method for setting {@link StringIntervalOpContext.Builder#start} value for {@link
-		 * #intervalOpContext1}.
+		 * Builder method for setting {@link StringIntervalOpContext.Builder#start} value for
+		 * {@link #intervalOpContext1}.
 		 *
 		 * @param start1
 		 * 		new value for {@link StringIntervalOpContext.Builder#start} for {@link #intervalOpContext1}
@@ -56,8 +55,8 @@ public final class StringEqualityContext {
 		}
 
 		/**
-		 * Builder method for setting {@link StringIntervalOpContext.Builder#end} value for {@link
-		 * #intervalOpContext1}.
+		 * Builder method for setting {@link StringIntervalOpContext.Builder#end} value for
+		 * {@link #intervalOpContext1}.
 		 *
 		 * @param end1
 		 * 		new value for {@link StringIntervalOpContext.Builder#end} for {@link #intervalOpContext1}
@@ -70,8 +69,8 @@ public final class StringEqualityContext {
 		}
 
 		/**
-		 * Builder method for setting {@link StringIntervalOpContext.Builder#start} value for {@link
-		 * #intervalOpContext2}.
+		 * Builder method for setting {@link StringIntervalOpContext.Builder#start} value for
+		 * {@link #intervalOpContext2}.
 		 *
 		 * @param start2
 		 * 		new value for {@link StringIntervalOpContext.Builder#start} for {@link #intervalOpContext1}
@@ -84,8 +83,8 @@ public final class StringEqualityContext {
 		}
 
 		/**
-		 * Builder method for setting {@link StringIntervalOpContext.Builder#end} value for {@link
-		 * #intervalOpContext2}.
+		 * Builder method for setting {@link StringIntervalOpContext.Builder#end} value for
+		 * {@link #intervalOpContext2}.
 		 *
 		 * @param end2
 		 * 		new value for {@link StringIntervalOpContext.Builder#end} for {@link #intervalOpContext2}
@@ -101,8 +100,8 @@ public final class StringEqualityContext {
 		 * Builder method for constructing a new {@link StringEqualityContext} from the current {@link #struct},
 		 * {@link #intervalOpContext1}, and {@link #intervalOpContext2} values.
 		 *
-		 * @return a new {@link StringIntervalOpContext} from the current {@link #struct}, {@link
-		 * #intervalOpContext1}, and {@link #intervalOpContext2} values
+		 * @return a new {@link StringIntervalOpContext} from the current {@link #struct}, {@link #intervalOpContext1},
+		 * and {@link #intervalOpContext2} values
 		 */
 		public StringEqualityContext build() {
 			return new StringEqualityContext(struct,
@@ -117,14 +116,14 @@ public final class StringEqualityContext {
 	private final StringStruct struct;
 
 	/**
-	 * The {@link StringIntervalOpContext} containing the interval boundaries for the first {@link StringStruct} in
-	 * the equality operation.
+	 * The {@link StringIntervalOpContext} containing the interval boundaries for the first {@link StringStruct} in the
+	 * equality operation.
 	 */
 	private final StringIntervalOpContext context1;
 
 	/**
-	 * The {@link StringIntervalOpContext} containing the interval boundaries for the second {@link StringStruct} in
-	 * the equality operation.
+	 * The {@link StringIntervalOpContext} containing the interval boundaries for the second {@link StringStruct} in the
+	 * equality operation.
 	 */
 	private final StringIntervalOpContext context2;
 
@@ -134,11 +133,11 @@ public final class StringEqualityContext {
 	 * @param struct
 	 * 		the {@link StringStruct} to compare against
 	 * @param context1
-	 * 		{@link StringIntervalOpContext} containing the interval boundaries for the first {@link StringStruct} in
-	 * 		the equality operation
+	 *        {@link StringIntervalOpContext} containing the interval boundaries for the first {@link StringStruct} in the
+	 * 		equality operation
 	 * @param context2
-	 * 		{@link StringIntervalOpContext} containing the interval boundaries for the second {@link StringStruct}
-	 * 		in the equality operation
+	 *        {@link StringIntervalOpContext} containing the interval boundaries for the second {@link StringStruct} in the
+	 * 		equality operation
 	 */
 	private StringEqualityContext(final StringStruct struct,
 	                              final StringIntervalOpContext context1,

@@ -42,7 +42,7 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 	/**
 	 * Whether or not the bit-vector is adjustable.
 	 */
-	private BooleanStruct adjustable;
+	private final BooleanStruct adjustable;
 
 	/**
 	 * The {@link ArrayStruct} structure that this bit-vector is displaced to. If {@code null}, this structure is not
@@ -415,8 +415,8 @@ public final class ComplexBitVectorStructImpl extends AbstractBitVectorStructImp
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for ComplexBitVectorStructImpl} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code ComplexBitVectorStructImpl} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link #contents}, ensuring that each content {@link IntegerStruct} value is generated properly</li>
 	 * <li>Constructing a new ComplexBitVectorStructImpl with the built content {@link List}</li>

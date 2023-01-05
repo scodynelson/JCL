@@ -92,10 +92,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 			final DestructuringLambdaList destructuringForm = requiredBinding.getDestructuringForm();
 			if (destructuringForm != null) {
-				if (!(requiredInitForm instanceof ListStruct)) {
+				if (!(requiredInitForm instanceof final ListStruct requiredInitFormList)) {
 					throw new ProgramErrorException("Improper destructuring in call to '" + functionClassName + "'.");
 				}
-				final ListStruct requiredInitFormList = (ListStruct) requiredInitForm;
 				final List<FunctionParameterBinding> destructuringFunctionBindings =
 						getDestructuringFunctionBindings(destructuringForm, requiredInitFormList);
 				functionParametersToBind.addAll(destructuringFunctionBindings);
@@ -115,10 +114,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 				final DestructuringLambdaList destructuringForm = optionalBinding.getDestructuringForm();
 				if (destructuringForm != null) {
-					if (!(optionalInitForm instanceof ListStruct)) {
+					if (!(optionalInitForm instanceof final ListStruct optionalInitFormList)) {
 						throw new ProgramErrorException("Improper destructuring in call to '" + functionClassName + "'.");
 					}
-					final ListStruct optionalInitFormList = (ListStruct) optionalInitForm;
 					final List<FunctionParameterBinding> destructuringFunctionBindings =
 							getDestructuringFunctionBindings(destructuringForm, optionalInitFormList);
 					functionParametersToBind.addAll(destructuringFunctionBindings);
@@ -179,8 +177,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
 			final LispStruct nextArgument = iterator.next();
 
-			if (nextArgument instanceof SymbolStruct) {
-				final SymbolStruct keywordArgument = (SymbolStruct) nextArgument;
+			if (nextArgument instanceof final SymbolStruct keywordArgument) {
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyParameter keyBinding = keysToBindings.remove(keywordArgument);
 
@@ -195,10 +192,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 						final DestructuringLambdaList destructuringForm = keyBinding.getDestructuringForm();
 						if (destructuringForm != null) {
-							if (!(keyInitForm instanceof ListStruct)) {
+							if (!(keyInitForm instanceof final ListStruct keyInitFormList)) {
 								throw new ProgramErrorException("Improper destructuring in call to '" + functionClassName + "'.");
 							}
-							final ListStruct keyInitFormList = (ListStruct) keyInitForm;
 							final List<FunctionParameterBinding> destructuringFunctionBindings =
 									getDestructuringFunctionBindings(destructuringForm, keyInitFormList);
 							functionParametersToBind.addAll(destructuringFunctionBindings);
@@ -313,10 +309,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 			final DestructuringLambdaList destructuringForm = requiredBinding.getDestructuringForm();
 			if (destructuringForm != null) {
-				if (!(requiredInitForm instanceof ListStruct)) {
+				if (!(requiredInitForm instanceof final ListStruct requiredInitFormList)) {
 					throw new ProgramErrorException("Improper destructuring in call to '" + functionClassName + "'.");
 				}
-				final ListStruct requiredInitFormList = (ListStruct) requiredInitForm;
 				final List<FunctionParameterBinding> destructuringFunctionBindings =
 						getDestructuringFunctionBindings(destructuringForm, requiredInitFormList);
 				functionParametersToBind.addAll(destructuringFunctionBindings);
@@ -336,10 +331,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 				final DestructuringLambdaList destructuringForm = optionalBinding.getDestructuringForm();
 				if (destructuringForm != null) {
-					if (!(optionalInitForm instanceof ListStruct)) {
+					if (!(optionalInitForm instanceof final ListStruct optionalInitFormList)) {
 						throw new ProgramErrorException("Improper destructuring in call to '" + functionClassName + "'.");
 					}
-					final ListStruct optionalInitFormList = (ListStruct) optionalInitForm;
 					final List<FunctionParameterBinding> destructuringFunctionBindings =
 							getDestructuringFunctionBindings(destructuringForm, optionalInitFormList);
 					functionParametersToBind.addAll(destructuringFunctionBindings);
@@ -400,8 +394,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
 			final LispStruct nextArgument = iterator.next();
 
-			if (nextArgument instanceof SymbolStruct) {
-				final SymbolStruct keywordArgument = (SymbolStruct) nextArgument;
+			if (nextArgument instanceof final SymbolStruct keywordArgument) {
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyParameter keyBinding = keysToBindings.remove(keywordArgument);
 
@@ -416,10 +409,9 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 
 						final DestructuringLambdaList destructuringForm = keyBinding.getDestructuringForm();
 						if (destructuringForm != null) {
-							if (!(keyInitForm instanceof ListStruct)) {
+							if (!(keyInitForm instanceof final ListStruct keyInitFormList)) {
 								throw new ProgramErrorException("Improper destructuring in call to '" + functionClassName + "'.");
 							}
-							final ListStruct keyInitFormList = (ListStruct) keyInitForm;
 							final List<FunctionParameterBinding> destructuringFunctionBindings =
 									getDestructuringFunctionBindings(destructuringForm, keyInitFormList);
 							functionParametersToBind.addAll(destructuringFunctionBindings);
@@ -518,8 +510,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
 			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
 			LispStruct value = parameterSymbolToBind.getParameterValue();
-			if (value instanceof ValuesStruct) {
-				final ValuesStruct valuesStruct = (ValuesStruct) value;
+			if (value instanceof final ValuesStruct valuesStruct) {
 				value = valuesStruct.getPrimaryValue();
 			} else if (INIT_FORM_PLACEHOLDER.eq(value)) {
 				value = getInitForm(environment, symbol);

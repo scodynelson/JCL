@@ -59,10 +59,9 @@ public final class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof ListStruct)) {
+		if (!(first instanceof final ListStruct situationList)) {
 			throw new TypeErrorException("EVAL-WHEN: SITUATION-LIST must be a List. Got: " + first);
 		}
-		final ListStruct situationList = (ListStruct) first;
 
 		final boolean nonSituationsFound = !situationList.stream().allMatch(SITUATION_KEYWORDS::contains);
 		if (nonSituationsFound) {

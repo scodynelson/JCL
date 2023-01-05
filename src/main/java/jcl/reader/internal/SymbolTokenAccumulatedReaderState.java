@@ -23,9 +23,10 @@ import lombok.experimental.UtilityClass;
  * Step 10.2 of the Reader Algorithm.
  * <p>
  * This state is reached when we have accumulated a token, and it needs to be processed into either
- * 1) Symbol
- * 2) Package with a Symbol
- * </p>
+ * <ol>
+ *     <li>Symbol</li>
+ *     <li>Package with a Symbol</li>
+ * </ol>
  * <p>
  * First we attempt to see if it contains any Package Markers, if it does, then we attempt to get the package for it
  * based on 3 formats.  The formats are as follows:
@@ -45,8 +46,7 @@ import lombok.experimental.UtilityClass;
  * 4) Any other combinations of Package Markers will result in an error.
  * </p>
  * <p>
- * After the token has been made into an object, that object is set as the return object for the read function.  We
- * then
+ * After the token has been made into an object, that object is set as the return object for the read function.  We then
  * return the EndState.
  * </p>
  */
@@ -54,8 +54,8 @@ import lombok.experimental.UtilityClass;
 final class SymbolTokenAccumulatedReaderState {
 
 	/**
-	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's list of {@link
-	 * TokenAttribute} objects.
+	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's list of
+	 * {@link TokenAttribute} objects.
 	 *
 	 * @param tokenBuilder
 	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link SymbolStruct}
@@ -154,9 +154,9 @@ final class SymbolTokenAccumulatedReaderState {
 	}
 
 	/**
-	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using {@link
-	 * PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
-	 * to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStruct} will be returned instead.
+	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using
+	 * {@link PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is
+	 * equal to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStruct} will be returned instead.
 	 *
 	 * @param symbolName
 	 * 		the name of the {@link SymbolStruct} to find or create

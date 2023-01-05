@@ -150,8 +150,7 @@ public final class HashTableStructImpl extends LispStructImpl implements HashTab
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof HashTableStructImpl) {
-			final HashTableStructImpl ht = (HashTableStructImpl) object;
+		if (object instanceof final HashTableStructImpl ht) {
 			if (map.size() != ht.map.size()) {
 				return false;
 			}
@@ -247,11 +246,10 @@ public final class HashTableStructImpl extends LispStructImpl implements HashTab
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (!(obj instanceof KeyWrapper)) {
+			if (!(obj instanceof final KeyWrapper lispStruct)) {
 				return false;
 			}
 
-			final KeyWrapper lispStruct = (KeyWrapper) obj;
 			return ((BooleanStruct) equivalenceFn.apply(key, lispStruct.key)).toJavaPBoolean();
 		}
 

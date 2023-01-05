@@ -37,10 +37,9 @@ public final class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof final SymbolStruct name)) {
 			throw new TypeErrorException("BLOCK: NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStruct name = (SymbolStruct) first;
 		environment.getBlockStack().push(name);
 
 		try {

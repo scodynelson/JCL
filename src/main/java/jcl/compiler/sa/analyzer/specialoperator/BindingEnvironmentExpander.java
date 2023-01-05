@@ -44,10 +44,9 @@ abstract class BindingEnvironmentExpander extends MacroFunctionExpander<BindingE
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof ListStruct)) {
+		if (!(first instanceof final ListStruct parameters)) {
 			throw new TypeErrorException(expanderName + ": PARAMETER-LIST must be a List. Got: " + first);
 		}
-		final ListStruct parameters = (ListStruct) first;
 
 		final Environment bindingEnvironment = new Environment(environment);
 
@@ -83,8 +82,7 @@ abstract class BindingEnvironmentExpander extends MacroFunctionExpander<BindingE
 		final SymbolStruct var;
 		final LispStruct initForm;
 
-		if (parameter instanceof ListStruct) {
-			final ListStruct listParameter = (ListStruct) parameter;
+		if (parameter instanceof final ListStruct listParameter) {
 			final Iterator<LispStruct> iterator = listParameter.iterator();
 
 			if (!iterator.hasNext()) {

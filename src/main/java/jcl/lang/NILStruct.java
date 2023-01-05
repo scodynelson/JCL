@@ -218,8 +218,8 @@ public final class NILStruct extends SymbolStructImpl implements BooleanStruct, 
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@code NILStruct} objects, by retrieving the static singleton {@link NILStruct#INSTANCE}.
+	 * {@inheritDoc} Generation method for {@code NILStruct} objects, by retrieving the static singleton
+	 * {@link NILStruct#INSTANCE}.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

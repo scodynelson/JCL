@@ -78,8 +78,8 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link SymbolFunctionCallStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code SymbolFunctionCallStruct} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Generating the {@link SymbolFunctionCallStruct#symbolCompilerFunction} value, if the {@link
 	 * SymbolFunctionCallStruct#isRecursiveCall} is false</li>
@@ -106,12 +106,12 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 	 * </pre>
 	 * NOTE: If the value of {@link SymbolFunctionCallStruct#isRecursiveCall} is true, the current lambda will be used
 	 * via 'this' reference to invoke a recursive call, rather than re-retrieving the {@link
-	 * jcl.compiler.environment.Environment#getFunction(SymbolStruct)} value
+	 * Environment#getFunction(SymbolStruct)} value
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

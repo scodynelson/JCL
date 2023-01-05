@@ -168,14 +168,15 @@ public class ReaderProcessor {
 	 * following the macro character. The Lisp reader may be invoked recursively from the reader macro function.
 	 * </p>
 	 * <p>
-	 * The reader macro function must not have any side effects other than on the input stream; because of backtracking and
-	 * restarting of the read operation, front ends to the Lisp reader (e.g., ``editors'' and ``rubout handlers'') may
-	 * cause the reader macro function to be called repeatedly during the reading of a single expression in which x only
-	 * appears once.
+	 * The reader macro function must not have any side effects other than on the input stream; because of backtracking
+	 * and restarting of the read operation, front ends to the Lisp reader (e.g., ``editors'' and ``rubout handlers'')
+	 * may cause the reader macro function to be called repeatedly during the reading of a single expression in which x
+	 * only appears once.
 	 * </p>
 	 * <p>
-	 * The reader macro function may return zero values or one value. If one value is returned, then that value is returned
-	 * as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is re-entered.
+	 * The reader macro function may return zero values or one value. If one value is returned, then that value is
+	 * returned as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is
+	 * re-entered.
 	 * </p>
 	 *
 	 * @param tokenBuilder
@@ -217,9 +218,9 @@ public class ReaderProcessor {
 	/**
 	 * Step 5 of the Reader Algorithm.
 	 * <p>
-	 * If x is a single escape character then the next character, y, is read, or an error of type end-of-file is signaled
-	 * if at the end of file. y is treated as if it is a constituent whose only constituent trait is alphabetic[2]. y is
-	 * used to begin a token, and step 8 is entered.
+	 * If x is a single escape character then the next character, y, is read, or an error of type end-of-file is
+	 * signaled if at the end of file. y is treated as if it is a constituent whose only constituent trait is
+	 * alphabetic[2]. y is used to begin a token, and step 8 is entered.
 	 * </p>
 	 *
 	 * @param tokenBuilder
@@ -266,11 +267,11 @@ public class ReaderProcessor {
 	/**
 	 * Step 7 of the Reader Algorithm.
 	 * <p>
-	 * If x is a constituent character, then it begins a token. After the token is read in, it will be interpreted either
-	 * as a Lisp object or as being of invalid syntax. If the token represents an object, that object is returned as the
-	 * result of the read operation. If the token is of invalid syntax, an error is signaled. If x is a character with
-	 * case, it might be replaced with the corresponding character of the opposite case, depending on the readtable case of
-	 * the current readtable. X is used to begin a token, and step 8 is entered.
+	 * If x is a constituent character, then it begins a token. After the token is read in, it will be interpreted
+	 * either as a Lisp object or as being of invalid syntax. If the token represents an object, that object is returned
+	 * as the result of the read operation. If the token is of invalid syntax, an error is signaled. If x is a character
+	 * with case, it might be replaced with the corresponding character of the opposite case, depending on the readtable
+	 * case of the current readtable. X is used to begin a token, and step 8 is entered.
 	 * </p>
 	 *
 	 * @param tokenBuilder
@@ -299,9 +300,9 @@ public class ReaderProcessor {
 	/**
 	 * Step 8 of the Reader Algorithm.
 	 * <p>
-	 * At this point a token is being accumulated, and an even number of multiple escape characters have been encountered.
-	 * If at end of file, step 10 is entered. Otherwise, a character, y, is read, and one of the following actions is
-	 * performed according to its syntax type:
+	 * At this point a token is being accumulated, and an even number of multiple escape characters have been
+	 * encountered. If at end of file, step 10 is entered. Otherwise, a character, y, is read, and one of the following
+	 * actions is performed according to its syntax type:
 	 * <p>
 	 * If y is a constituent or non-terminating macro character:
 	 * <p>
@@ -315,9 +316,9 @@ public class ReaderProcessor {
 	 * -- Step 8 is repeated.
 	 * </p>
 	 * <p>
-	 * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is signaled
-	 * if at end of file. Z is treated as if it is a constituent whose only constituent trait is alphabetic. Z is appended
-	 * to the token being built, and step 8 is repeated.
+	 * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is
+	 * signaled if at end of file. Z is treated as if it is a constituent whose only constituent trait is alphabetic. Z
+	 * is appended to the token being built, and step 8 is repeated.
 	 * </p>
 	 * <p>
 	 * If y is a multiple escape character, then step 9 is entered.
@@ -326,8 +327,8 @@ public class ReaderProcessor {
 	 * If y is an invalid character, an error of type reader-error is signaled.
 	 * </p>
 	 * <p>
-	 * If y is a terminating macro character, then it terminates the token. First the character y is unread, and then step
-	 * 10 is entered.
+	 * If y is a terminating macro character, then it terminates the token. First the character y is unread, and then
+	 * step 10 is entered.
 	 * </p>
 	 * <p>
 	 * If y is a whitespace character, then it terminates the token. First the character y is unread if appropriate, and
@@ -404,17 +405,17 @@ public class ReaderProcessor {
 	/**
 	 * Step 9 of the Reader Algorithm.
 	 * <p>
-	 * At this point a token is being accumulated, and an odd number of multiple escape characters have been encountered.
-	 * If at end of file, an error of type end-of-file is signaled. Otherwise, a character, y, is read, and one of the
-	 * following actions is performed according to its syntax type:
+	 * At this point a token is being accumulated, and an odd number of multiple escape characters have been
+	 * encountered. If at end of file, an error of type end-of-file is signaled. Otherwise, a character, y, is read, and
+	 * one of the following actions is performed according to its syntax type:
 	 * <p>
-	 * If y is a constituent, macro, or whitespace character, y is treated as a constituent whose only constituent trait is
-	 * alphabetic. Y is appended to the token being built, and step 9 is repeated.
+	 * If y is a constituent, macro, or whitespace character, y is treated as a constituent whose only constituent trait
+	 * is alphabetic. Y is appended to the token being built, and step 9 is repeated.
 	 * </p>
 	 * <p>
-	 * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is signaled
-	 * if at end of file. Z is treated as a constituent whose only constituent trait is alphabetic. Z is appended to the
-	 * token being built, and step 9 is repeated.
+	 * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is
+	 * signaled if at end of file. Z is treated as a constituent whose only constituent trait is alphabetic. Z is
+	 * appended to the token being built, and step 9 is repeated.
 	 * </p>
 	 * <p>
 	 * If y is a multiple escape character, then step 8 is entered.
@@ -484,10 +485,11 @@ public class ReaderProcessor {
 	 * </p>
 	 * <p>
 	 * This state is reached when we have accumulated a token, and it needs to be processed into either
-	 * 1) Number/PotentialNumber
-	 * 2) Symbol
-	 * 3) Package with a Symbol
-	 * </p>
+	 * <ol>
+	 *     <li>Number/PotentialNumber</li>
+	 *     <li>Symbol</li>
+	 *     <li>Package with a Symbol</li>
+	 * </ol>
 	 *
 	 * @param tokenBuilder
 	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the token
@@ -595,8 +597,8 @@ public class ReaderProcessor {
 	}
 
 	/**
-	 * Determines if the provided list of {@link TokenAttribute}s contains at least one token with an {@link
-	 * AttributeType} equal to the provided {@code attributeType} value.
+	 * Determines if the provided list of {@link TokenAttribute}s contains at least one token with an
+	 * {@link AttributeType} equal to the provided {@code attributeType} value.
 	 *
 	 * @param tokenAttributes
 	 * 		the list of {@link TokenAttribute}s containing the current tokens
@@ -614,8 +616,8 @@ public class ReaderProcessor {
 	}
 
 	/**
-	 * Determines if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType}
-	 * equal to the provided {@code attributeType} value.
+	 * Determines if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType} equal
+	 * to the provided {@code attributeType} value.
 	 *
 	 * @param tokenAttributes
 	 * 		the list of {@link TokenAttribute}s containing the current tokens
@@ -633,19 +635,19 @@ public class ReaderProcessor {
 	}
 
 	/**
-	 * Gets the first occurrence of a token code point with an {@link AttributeType} equal to the provided {@code
-	 * attributeType} value in the provided list of {@link TokenAttribute}s. If no token code points have an {@link
-	 * AttributeType} that matches the provided {@code attributeType} value, null will be returned.
+	 * Gets the first occurrence of a token code point with an {@link AttributeType} equal to the provided
+	 * {@code attributeType} value in the provided list of {@link TokenAttribute}s. If no token code points have an
+	 * {@link AttributeType} that matches the provided {@code attributeType} value, null will be returned.
 	 *
 	 * @param tokenAttributes
 	 * 		the list of {@link TokenAttribute}s containing the current tokens
 	 * @param attributeType
-	 * 		the {@link AttributeType} value used to locate the first matching token code point in the {@code
-	 * 		tokenAttributes} list
+	 * 		the {@link AttributeType} value used to locate the first matching token code point in the
+	 *        {@code tokenAttributes} list
 	 *
-	 * @return the first occurrence of a token code point with an {@link AttributeType} equal to the provided {@code
-	 * attributeType} value in the provided list of {@link TokenAttribute}s or null if no such token code point can be
-	 * found
+	 * @return the first occurrence of a token code point with an {@link AttributeType} equal to the provided
+	 * {@code attributeType} value in the provided list of {@link TokenAttribute}s or null if no such token code point
+	 * can be found
 	 */
 	static Integer getTokenCodePointByAttribute(final List<TokenAttribute> tokenAttributes,
 	                                            final AttributeType attributeType) {

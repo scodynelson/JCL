@@ -56,20 +56,18 @@ public final class MacroLambdaExpander extends MacroFunctionExpander<MacroLambda
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof final SymbolStruct macroName)) {
 			throw new TypeErrorException("MACRO-LAMBDA: MACRO-NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStruct macroName = (SymbolStruct) first;
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("MACRO-LAMBDA: Incorrect number of arguments: 1. Expected at least 2 arguments.");
 		}
 		final LispStruct second = iterator.next();
 
-		if (!(second instanceof ListStruct)) {
+		if (!(second instanceof final ListStruct parameters)) {
 			throw new TypeErrorException("MACRO-LAMBDA: PARAMETER-LIST must be a List. Got: " + second);
 		}
-		final ListStruct parameters = (ListStruct) second;
 
 		final Environment macroLambdaEnvironment = new Environment(environment);
 

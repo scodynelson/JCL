@@ -189,7 +189,8 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	public boolean isLessThan(final RealStruct real) {
 		if (real instanceof SingleFloatStructImpl) {
 			return Double.compare(value, ((SingleFloatStructImpl) real).value) < 0;
-		} else if (real instanceof DoubleFloatStructImpl) {
+		}
+		if (real instanceof DoubleFloatStructImpl) {
 			return Double.compare(value, ((DoubleFloatStructImpl) real).value) < 0;
 		}
 		return rational().isLessThan(real);
@@ -199,7 +200,8 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	public boolean isGreaterThan(final RealStruct real) {
 		if (real instanceof SingleFloatStructImpl) {
 			return Double.compare(value, ((SingleFloatStructImpl) real).value) > 0;
-		} else if (real instanceof DoubleFloatStructImpl) {
+		}
+		if (real instanceof DoubleFloatStructImpl) {
 			return Double.compare(value, ((DoubleFloatStructImpl) real).value) > 0;
 		}
 		return rational().isLessThan(real);
@@ -209,7 +211,8 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	public boolean isLessThanOrEqualTo(final RealStruct real) {
 		if (real instanceof SingleFloatStructImpl) {
 			return Double.compare(value, ((SingleFloatStructImpl) real).value) <= 0;
-		} else if (real instanceof DoubleFloatStructImpl) {
+		}
+		if (real instanceof DoubleFloatStructImpl) {
 			return Double.compare(value, ((DoubleFloatStructImpl) real).value) <= 0;
 		}
 		return rational().isLessThan(real);
@@ -219,7 +222,8 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		if (real instanceof SingleFloatStructImpl) {
 			return Double.compare(value, ((SingleFloatStructImpl) real).value) >= 0;
-		} else if (real instanceof DoubleFloatStructImpl) {
+		}
+		if (real instanceof DoubleFloatStructImpl) {
 			return Double.compare(value, ((DoubleFloatStructImpl) real).value) >= 0;
 		}
 		return rational().isLessThan(real);
@@ -487,13 +491,16 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		if (real instanceof FixnumStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((FixnumStructImpl) real).value);
 			return DoubleFloatStruct.toLispFloat(atan2);
-		} else if (real instanceof LongnumStructImpl) {
+		}
+		if (real instanceof LongnumStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((LongnumStructImpl) real).value);
 			return DoubleFloatStruct.toLispFloat(atan2);
-		} else if (real instanceof SingleFloatStructImpl) {
+		}
+		if (real instanceof SingleFloatStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((SingleFloatStructImpl) real).value);
 			return DoubleFloatStruct.toLispFloat(atan2);
-		} else if (real instanceof DoubleFloatStructImpl) {
+		}
+		if (real instanceof DoubleFloatStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((DoubleFloatStructImpl) real).value);
 			return DoubleFloatStruct.toLispFloat(atan2);
 		}
@@ -527,21 +534,26 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		if (number instanceof FixnumStructImpl) {
 			final double add = value + ((FixnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(add);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final double add = value + ((LongnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(add);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
 			return DoubleFloatStruct.toLispFloat(add.floatValue());
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final double add = value + ((RatioStructImpl) number).value.floatValue();
 			return DoubleFloatStruct.toLispFloat(add);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final double add = value + ((SingleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(add);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double add = value + ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(add);
 		}
@@ -553,21 +565,26 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		if (number instanceof FixnumStructImpl) {
 			final double subtract = value - ((FixnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final double subtract = value - ((LongnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
 			return DoubleFloatStruct.toLispFloat(subtract.floatValue());
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final double subtract = value - ((RatioStructImpl) number).value.floatValue();
 			return DoubleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final double subtract = value - ((SingleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double subtract = value - ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
 		}
@@ -582,21 +599,26 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		if (number instanceof FixnumStructImpl) {
 			final double multiply = value * ((FixnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(multiply);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final double multiply = value * ((LongnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(multiply);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
 			return DoubleFloatStruct.toLispFloat(multiply.floatValue());
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final double multiply = value * ((RatioStructImpl) number).value.floatValue();
 			return DoubleFloatStruct.toLispFloat(multiply);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final double multiply = value * ((SingleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(multiply);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double multiply = value * ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(multiply);
 		}
@@ -608,21 +630,26 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 		if (number instanceof FixnumStructImpl) {
 			final double divide = value / ((FixnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			final double divide = value / ((LongnumStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigDecimal bigDecimal1 = BigDecimal.valueOf(value);
 			final BigDecimal bigDecimal2 = new BigDecimal(((BignumStructImpl) number).value);
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL64);
 			return DoubleFloatStruct.toLispFloat(divide.floatValue());
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final double divide = value / ((RatioStructImpl) number).value.floatValue();
 			return DoubleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final double divide = value / ((SingleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double divide = value / ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
 		}
@@ -636,9 +663,11 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	public boolean isEqualTo(final NumberStruct number) {
 		if (number instanceof SingleFloatStructImpl) {
 			return Double.compare(value, ((SingleFloatStructImpl) number).value) == 0;
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			return Double.compare(value, ((DoubleFloatStructImpl) number).value) == 0;
-		} else if (number instanceof RationalStruct) {
+		}
+		if (number instanceof RationalStruct) {
 			return rational().isEqualTo(number);
 		}
 		return number.isEqualTo(this);
@@ -648,9 +677,11 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 	public boolean isNotEqualTo(final NumberStruct number) {
 		if (number instanceof SingleFloatStructImpl) {
 			return Double.compare(value, ((SingleFloatStructImpl) number).value) != 0;
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			return Double.compare(value, ((DoubleFloatStructImpl) number).value) != 0;
-		} else if (number instanceof RationalStruct) {
+		}
+		if (number instanceof RationalStruct) {
 			return rational().isNotEqualTo(number);
 		}
 		return number.isNotEqualTo(this);
@@ -821,8 +852,7 @@ public class DoubleFloatStructImpl extends LispStructImpl implements DoubleFloat
 			= CodeGenerators.getMethodDescription(DoubleFloatStruct.class, DOUBLE_FLOAT_TO_LISP_FLOAT_METHOD_NAME, double.class);
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link DoubleFloatStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link DoubleFloatStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Emitting the {@link DoubleFloatStruct#toJavaPDouble()} value.</li>
 	 * <li>Retrieving a {@link DoubleFloatStruct} via {@link DoubleFloatStruct#toLispFloat(double)} with the emitted

@@ -199,8 +199,7 @@ public final class CharacterStructImpl extends LispStructImpl implements Charact
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link CharacterStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link CharacterStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Loading the {@link CharacterStruct#toUnicodeCodePoint()} constant</li>
 	 * <li>Retrieving a {@link CharacterStruct} with the loaded code point value</li>

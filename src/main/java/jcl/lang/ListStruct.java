@@ -263,8 +263,8 @@ public interface ListStruct extends SequenceStruct {
 
 	/**
 	 * Returns a new dotted ListStruct containing the provided {@link LispStruct} arguments as the elements. This is a
-	 * helper method used by {@link #toLispDottedList(LispStruct, LispStruct...)} and {@link
-	 * #toLispDottedList(LispStruct, List)} methods for building a new ListStruct.
+	 * helper method used by {@link #toLispDottedList(LispStruct, LispStruct...)} and
+	 * {@link #toLispDottedList(LispStruct, List)} methods for building a new ListStruct.
 	 *
 	 * @param args
 	 * 		the elements of the resulting ListStruct

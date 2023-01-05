@@ -73,8 +73,7 @@ public class SetqStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link SetqStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code SetqStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the {@link List} of symbol bindings from the {@link Environment} parameter if the parameter is not
 	 * null</li>

@@ -243,7 +243,8 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (real instanceof IntegerStruct) {
 			final BigInteger bigInteger = ((IntegerStruct) real).toJavaBigInteger();
 			return value.compareTo(bigInteger) < 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigFraction bigFraction1 = new BigFraction(value);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) < 0;
@@ -256,7 +257,8 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (real instanceof IntegerStruct) {
 			final BigInteger bigInteger = ((IntegerStruct) real).toJavaBigInteger();
 			return value.compareTo(bigInteger) > 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigFraction bigFraction1 = new BigFraction(value);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) > 0;
@@ -269,7 +271,8 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (real instanceof IntegerStruct) {
 			final BigInteger bigInteger = ((IntegerStruct) real).toJavaBigInteger();
 			return value.compareTo(bigInteger) <= 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigFraction bigFraction1 = new BigFraction(value);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) <= 0;
@@ -282,7 +285,8 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (real instanceof IntegerStruct) {
 			final BigInteger bigInteger = ((IntegerStruct) real).toJavaBigInteger();
 			return value.compareTo(bigInteger) >= 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigFraction bigFraction1 = new BigFraction(value);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
 			return bigFraction1.compareTo(bigFraction2) >= 0;
@@ -570,14 +574,17 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (number instanceof IntegerStruct) {
 			final BigInteger add = value.add(((IntegerStruct) number).toJavaBigInteger());
 			return new BignumStructImpl(add);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction add = ((RatioStructImpl) number).value.add(value);
 			return RationalStruct.toLispRational(add);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float add = f + ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(add);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double add = d + ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(add);
@@ -593,14 +600,17 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (number instanceof IntegerStruct) {
 			final BigInteger subtract = value.subtract(((IntegerStruct) number).toJavaBigInteger());
 			return new BignumStructImpl(subtract);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction subtract = new BigFraction(value).subtract(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(subtract);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float subtract = f - ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double subtract = d - ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
@@ -616,14 +626,17 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 		if (number instanceof IntegerStruct) {
 			final BigInteger multiply = value.multiply(((IntegerStruct) number).toJavaBigInteger());
 			return new BignumStructImpl(multiply);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction multiply = ((RatioStructImpl) number).value.multiply(value);
 			return RationalStruct.toLispRational(multiply);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float multiply = f * ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(multiply);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double multiply = d * ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(multiply);
@@ -638,14 +651,17 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	public NumberStruct divide(final NumberStruct number) {
 		if (number instanceof IntegerStruct) {
 			return RationalStruct.toLispRational(this, (IntegerStruct) number);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction divide = new BigFraction(value).divide(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(divide);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float f = value.floatValue();
 			final float divide = f / ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double d = value.doubleValue();
 			final double divide = d / ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
@@ -859,8 +875,7 @@ public final class BignumStructImpl extends IntegerStructImpl implements BignumS
 	                                                                                                  String.class);
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link BignumStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link BignumStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Emitting the {@link IntegerStruct#toJavaBigInteger()} value.</li>
 	 * <li>Retrieving a {@link BignumStruct} via {@link IntegerStruct#toLispInteger(BigInteger)} with the emitted

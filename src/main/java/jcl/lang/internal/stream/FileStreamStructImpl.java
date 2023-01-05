@@ -60,8 +60,8 @@ public final class FileStreamStructImpl extends StreamStructImpl implements File
 	private final RandomAccessFile randomAccessFile;
 
 	/**
-	 * The number of bytes per positional unit of the binary stream. For character-type files, this value will be {@code
-	 * 1}.
+	 * The number of bytes per positional unit of the binary stream. For character-type files, this value will be
+	 * {@code 1}.
 	 */
 	private final int bytesPerUnit;
 

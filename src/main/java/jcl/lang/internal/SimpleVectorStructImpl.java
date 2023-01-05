@@ -154,8 +154,8 @@ public class SimpleVectorStructImpl extends AbstractVectorStructImpl {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for SimpleVectorStructImpl objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code SimpleVectorStructImpl} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link #contents}, ensuring that each content value is treated as being 'quoted'</li>
 	 * <li>Constructing a new SimpleVectorStructImpl with the built content {@link List}</li>

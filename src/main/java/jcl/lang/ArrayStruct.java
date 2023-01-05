@@ -150,8 +150,8 @@ public interface ArrayStruct extends LispStruct {
 	LispStruct rowMajorAref(final IntegerStruct index);
 
 	/**
-	 * Considers array as a vector by viewing its elements in row-major order, and sets the element of that vector
-	 * which is referred to by the given index to the new element value provided.
+	 * Considers array as a vector by viewing its elements in row-major order, and sets the element of that vector which
+	 * is referred to by the given index to the new element value provided.
 	 *
 	 * @param newElement
 	 * 		the element to be set
@@ -261,7 +261,7 @@ public interface ArrayStruct extends LispStruct {
 	 * 		whether or not the array is adjustable
 	 *
 	 * @return a new ArrayStruct representation of the provided dimensions, element-type, displacedTo,
-	 * 		displacedIndexOffset, and adjustable
+	 * displacedIndexOffset, and adjustable
 	 */
 	static ArrayStruct toLispArray(final List<IntegerStruct> dimensions, final SymbolStruct elementType,
 	                               final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
@@ -279,8 +279,7 @@ public interface ArrayStruct extends LispStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof ArrayStruct) {
-			final ArrayStruct a = (ArrayStruct) object;
+		if (object instanceof final ArrayStruct a) {
 			if (!arrayRank().eql(a.arrayRank())) {
 				return false;
 			}

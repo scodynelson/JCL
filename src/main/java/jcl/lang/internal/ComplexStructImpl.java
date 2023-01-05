@@ -300,16 +300,15 @@ public class ComplexStructImpl extends LispStructImpl implements ComplexStruct {
 	private static final String COMPLEX_TO_LISP_COMPLEX_METHOD_NAME = "toLispComplex";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link ComplexStruct#toLispComplex(RealStruct,
-	 * RealStruct)} method.
+	 * Constant {@link String} containing the description for the
+	 * {@link ComplexStruct#toLispComplex(RealStruct, RealStruct)} method.
 	 */
 	private static final String COMPLEX_TO_LISP_COMPLEX_METHOD_DESC
 			= CodeGenerators.getMethodDescription(ComplexStruct.class, COMPLEX_TO_LISP_COMPLEX_METHOD_NAME,
 			                                      RealStruct.class, RealStruct.class);
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link ComplexStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link ComplexStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Emitting the {@link NumberStruct#realPart()} value.</li>
 	 * <li>Emitting the {@link NumberStruct#imagPart()} value.</li>

@@ -54,8 +54,8 @@ final class TokenBuilder {
 	private boolean isMultiEscapedToken;
 
 	/**
-	 * Creates a new {@link TokenAttribute} with the provided {@code token} and {@link AttributeType} and adds it to
-	 * the {@link #tokenAttributes} list.
+	 * Creates a new {@link TokenAttribute} with the provided {@code token} and {@link AttributeType} and adds it to the
+	 * {@link #tokenAttributes} list.
 	 *
 	 * @param token
 	 * 		the token to add

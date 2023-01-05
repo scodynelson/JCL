@@ -61,7 +61,7 @@ public final class FunctionExpander extends MacroFunctionExpander<CompilerFuncti
 		if (CommonLispSymbols.LAMBDA.eq(functionListFirst)) {
 			final LambdaStruct analyzedLambda = LambdaExpander.INSTANCE.expand(functionList, environment);
 			return new LambdaCompilerFunctionStruct(analyzedLambda);
-		} else if(!CommonLispSymbols.LAMBDA.eq(functionListFirst)) {
+		} else if (!CommonLispSymbols.LAMBDA.eq(functionListFirst)) {
 			final MacroLambdaStruct analyzedMacroLambda = MacroLambdaExpander.INSTANCE.expand(functionList, environment);
 			return new MacroLambdaCompilerFunctionStruct(analyzedMacroLambda);
 		} else {

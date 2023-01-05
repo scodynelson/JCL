@@ -31,8 +31,7 @@ public class IfStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link IfStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code IfStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link IfStruct#testForm}</li>
 	 * <li>Retrieving the primary value via {@link ValuesStruct#getPrimaryValue()} if the generated test form is a
@@ -66,7 +65,7 @@ public class IfStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

@@ -77,8 +77,8 @@ public class SimpleArrayStructImpl extends AbstractMultiDimensionArrayStructImpl
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for SimpleArrayStructImpl objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code SimpleArrayStructImpl} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link #dimensions} values</li>
 	 * <li>Building the {@link #elementType} values</li>

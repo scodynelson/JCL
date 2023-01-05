@@ -26,7 +26,7 @@ class AnsiTests {
 				Paths.get("src/test/ansi-tests").toAbsolutePath().toString() + '/'
 		));
 		final String setVariable = "(load (merge-pathnames \"doit.lsp\"))";
-		StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
+		final StringInputStreamStruct stream = StringInputStreamStruct.toStringInputStream(
 				StringStruct.toLispString(setVariable),
 				IntegerStruct.ZERO,
 				IntegerStruct.toLispInteger(setVariable.length())

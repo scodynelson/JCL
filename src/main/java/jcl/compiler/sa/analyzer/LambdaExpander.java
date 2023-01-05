@@ -53,10 +53,9 @@ public final class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof ListStruct)) {
+		if (!(first instanceof final ListStruct parameters)) {
 			throw new TypeErrorException("LAMBDA: PARAMETER-LIST must be a List. Got: " + first);
 		}
-		final ListStruct parameters = (ListStruct) first;
 
 		final Environment lambdaEnvironment = new Environment(environment);
 

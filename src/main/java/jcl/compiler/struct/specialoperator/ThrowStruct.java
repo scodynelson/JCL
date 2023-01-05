@@ -27,8 +27,7 @@ public class ThrowStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link ThrowStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code ThrowStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link ThrowStruct#catchTag} value</li>
 	 * <li>Generating the {@link ThrowStruct#resultForm} value</li>
@@ -51,7 +50,7 @@ public class ThrowStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

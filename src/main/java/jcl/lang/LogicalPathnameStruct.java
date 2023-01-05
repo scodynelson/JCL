@@ -22,13 +22,11 @@ public interface LogicalPathnameStruct extends PathnameStruct {
 		if (struct instanceof LogicalPathnameStruct) {
 			return (LogicalPathnameStruct) struct;
 		}
-		if (struct instanceof StringStruct) {
-			final StringStruct namestringStruct = (StringStruct) struct;
+		if (struct instanceof final StringStruct namestringStruct) {
 			final String namestring = namestringStruct.toJavaString();
 			return toLogicalPathname(namestring);
 		}
-		if (struct instanceof FileStreamStruct) {
-			final FileStreamStruct fileStream = (FileStreamStruct) struct;
+		if (struct instanceof final FileStreamStruct fileStream) {
 			final PathnameStruct pathnameStruct = fileStream.toPathname();
 			if (pathnameStruct instanceof LogicalPathnameStruct) {
 				return (LogicalPathnameStruct) pathnameStruct;

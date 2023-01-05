@@ -177,8 +177,8 @@ public final class SimpleBitVectorStructImpl extends AbstractBitVectorStructImpl
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for SimpleBitVectorStructImpl objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code SimpleBitVectorStructImpl} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link #contents}, ensuring that each content {@link FixnumStruct} value is generated properly</li>
 	 * <li>Constructing a new SimpleBitVectorStructImpl with the built content {@link List}</li>

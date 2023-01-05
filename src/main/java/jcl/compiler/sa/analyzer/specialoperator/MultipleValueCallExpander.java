@@ -42,8 +42,7 @@ public final class MultipleValueCallExpander extends MacroFunctionExpander<Multi
 		final CompilerFunctionStruct functionFormAsCompilerFunction;
 		if (functionForm instanceof CompilerFunctionStruct) {
 			functionFormAsCompilerFunction = (CompilerFunctionStruct) functionForm;
-		} else if (functionForm instanceof QuoteStruct) {
-			final QuoteStruct quotedFunction = (QuoteStruct) functionForm;
+		} else if (functionForm instanceof final QuoteStruct quotedFunction) {
 			final ListStruct functionListStruct = ListStruct.toLispList(CommonLispSymbols.FUNCTION, quotedFunction.getObject());
 			functionFormAsCompilerFunction = FunctionExpander.INSTANCE.expand(functionListStruct, environment);
 		} else {

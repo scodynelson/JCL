@@ -115,11 +115,10 @@ final class FeaturesReaderMacroFunction {
 		final Iterator<LispStruct> iterator = consToken.iterator();
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof final SymbolStruct featureOperator)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final SymbolStruct featureOperator = (SymbolStruct) first;
 		if (featureOperator.eq(CommonLispSymbols.NOT_KEYWORD)) {
 			final LispStruct firstOfRest = iterator.next();
 			return !isFeature(firstOfRest);

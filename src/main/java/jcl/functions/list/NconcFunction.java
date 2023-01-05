@@ -82,10 +82,9 @@ public final class NconcFunction extends BuiltInFunctionStructImpl {
 			}
 
 			final LispStruct last = result.last();
-			if (!(last instanceof ConsStruct)) {
+			if (!(last instanceof final ConsStruct lastOfResult)) {
 				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
 			}
-			final ConsStruct lastOfResult = (ConsStruct) last;
 			lastOfResult.rplacd(list);
 		}
 
@@ -94,10 +93,9 @@ public final class NconcFunction extends BuiltInFunctionStructImpl {
 		}
 
 		final LispStruct last = result.last();
-		if (!(last instanceof ConsStruct)) {
+		if (!(last instanceof final ConsStruct lastOfResult)) {
 			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
 		}
-		final ConsStruct lastOfResult = (ConsStruct) last;
 		lastOfResult.rplacd(object);
 
 		return result;

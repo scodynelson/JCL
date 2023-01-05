@@ -329,13 +329,16 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public boolean isLessThan(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
 			return value < ((FixnumStructImpl) real).value;
-		} else if (real instanceof LongnumStructImpl) {
+		}
+		if (real instanceof LongnumStructImpl) {
 			return value < ((LongnumStructImpl) real).value;
-		} else if (real instanceof BignumStructImpl) {
+		}
+		if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
 			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) < 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
@@ -348,13 +351,16 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public boolean isGreaterThan(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
 			return value > ((FixnumStructImpl) real).value;
-		} else if (real instanceof LongnumStructImpl) {
+		}
+		if (real instanceof LongnumStructImpl) {
 			return value > ((LongnumStructImpl) real).value;
-		} else if (real instanceof BignumStructImpl) {
+		}
+		if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
 			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) > 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
@@ -367,13 +373,16 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public boolean isLessThanOrEqualTo(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
 			return value <= ((FixnumStructImpl) real).value;
-		} else if (real instanceof LongnumStructImpl) {
+		}
+		if (real instanceof LongnumStructImpl) {
 			return value <= ((LongnumStructImpl) real).value;
-		} else if (real instanceof BignumStructImpl) {
+		}
+		if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
 			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) <= 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
@@ -386,13 +395,16 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		if (real instanceof FixnumStructImpl) {
 			return value >= ((FixnumStructImpl) real).value;
-		} else if (real instanceof LongnumStructImpl) {
+		}
+		if (real instanceof LongnumStructImpl) {
 			return value >= ((LongnumStructImpl) real).value;
-		} else if (real instanceof BignumStructImpl) {
+		}
+		if (real instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
 			final BigInteger bigInteger2 = ((BignumStructImpl) real).value;
 			return bigInteger1.compareTo(bigInteger2) >= 0;
-		} else if (real instanceof RatioStructImpl) {
+		}
+		if (real instanceof RatioStructImpl) {
 			final BigInteger bigInteger = BigInteger.valueOf(value);
 			final BigFraction bigFraction1 = new BigFraction(bigInteger);
 			final BigFraction bigFraction2 = ((RatioStructImpl) real).value;
@@ -431,7 +443,8 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 		if (divisor instanceof FixnumStructImpl) {
 			final long mod = value % ((FixnumStructImpl) divisor).value;
 			return IntegerStruct.toLispInteger(mod);
-		} else if (divisor instanceof LongnumStructImpl) {
+		}
+		if (divisor instanceof LongnumStructImpl) {
 			final long mod = value % ((LongnumStructImpl) divisor).value;
 			return IntegerStruct.toLispInteger(mod);
 		}
@@ -654,13 +667,16 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 		if (real instanceof FixnumStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((FixnumStructImpl) real).value);
 			return SingleFloatStruct.toLispFloat(atan2);
-		} else if (real instanceof LongnumStructImpl) {
+		}
+		if (real instanceof LongnumStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((LongnumStructImpl) real).value);
 			return SingleFloatStruct.toLispFloat(atan2);
-		} else if (real instanceof SingleFloatStructImpl) {
+		}
+		if (real instanceof SingleFloatStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((SingleFloatStructImpl) real).value);
 			return SingleFloatStruct.toLispFloat(atan2);
-		} else if (real instanceof DoubleFloatStructImpl) {
+		}
+		if (real instanceof DoubleFloatStructImpl) {
 			final double atan2 = StrictMath.atan2(value, ((DoubleFloatStructImpl) real).value);
 			return SingleFloatStruct.toLispFloat(atan2);
 		}
@@ -693,18 +709,23 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public NumberStruct add(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			return addExact(value, ((FixnumStructImpl) number).value);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			return addExact(value, ((LongnumStructImpl) number).value);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigInteger add = BigInteger.valueOf(value).add(((BignumStructImpl) number).value);
 			return new BignumStructImpl(add);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction add = ((RatioStructImpl) number).value.add(value);
 			return new RatioStructImpl(add);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float add = value + ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(add);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double add = value + ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(add);
 		}
@@ -718,18 +739,23 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public NumberStruct subtract(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			return subtractExact(value, ((FixnumStructImpl) number).value);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			return subtractExact(value, ((LongnumStructImpl) number).value);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigInteger subtract = BigInteger.valueOf(value).subtract(((BignumStructImpl) number).value);
 			return new BignumStructImpl(subtract);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction subtract = new BigFraction(value).subtract(((RatioStructImpl) number).value);
 			return new RatioStructImpl(subtract);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float subtract = value - ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(subtract);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double subtract = value - ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(subtract);
 		}
@@ -743,18 +769,23 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public NumberStruct multiply(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			return multiplyExact(value, ((FixnumStructImpl) number).value);
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			return multiplyExact(value, ((LongnumStructImpl) number).value);
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigInteger multiply = BigInteger.valueOf(value).multiply(((BignumStructImpl) number).value);
 			return new BignumStructImpl(multiply);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction multiply = ((RatioStructImpl) number).value.multiply(value);
 			return RationalStruct.toLispRational(multiply);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float multiply = value * ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(multiply);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double multiply = value * ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(multiply);
 		}
@@ -768,13 +799,16 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public NumberStruct divide(final NumberStruct number) {
 		if (number instanceof IntegerStruct) {
 			return RationalStruct.toLispRational(this, (IntegerStruct) number);
-		} else if (number instanceof RatioStructImpl) {
+		}
+		if (number instanceof RatioStructImpl) {
 			final BigFraction divide = new BigFraction(value).divide(((RatioStructImpl) number).value);
 			return RationalStruct.toLispRational(divide);
-		} else if (number instanceof SingleFloatStructImpl) {
+		}
+		if (number instanceof SingleFloatStructImpl) {
 			final float divide = value / ((SingleFloatStructImpl) number).value;
 			return SingleFloatStruct.toLispFloat(divide);
-		} else if (number instanceof DoubleFloatStructImpl) {
+		}
+		if (number instanceof DoubleFloatStructImpl) {
 			final double divide = value / ((DoubleFloatStructImpl) number).value;
 			return DoubleFloatStruct.toLispFloat(divide);
 		}
@@ -788,9 +822,11 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public boolean isEqualTo(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			return value == ((FixnumStructImpl) number).value;
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			return value == ((LongnumStructImpl) number).value;
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
 			final BigInteger bigInteger2 = ((BignumStructImpl) number).value;
 			return bigInteger1.compareTo(bigInteger2) == 0;
@@ -802,9 +838,11 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 	public boolean isNotEqualTo(final NumberStruct number) {
 		if (number instanceof FixnumStructImpl) {
 			return value != ((FixnumStructImpl) number).value;
-		} else if (number instanceof LongnumStructImpl) {
+		}
+		if (number instanceof LongnumStructImpl) {
 			return value != ((LongnumStructImpl) number).value;
-		} else if (number instanceof BignumStructImpl) {
+		}
+		if (number instanceof BignumStructImpl) {
 			final BigInteger bigInteger1 = BigInteger.valueOf(value);
 			final BigInteger bigInteger2 = ((BignumStructImpl) number).value;
 			return bigInteger1.compareTo(bigInteger2) != 0;
@@ -975,8 +1013,7 @@ public final class LongnumStructImpl extends IntegerStructImpl implements Longnu
 			= CodeGenerators.getMethodDescription(IntegerStruct.class, INTEGER_TO_LISP_INTEGER_METHOD_NAME, long.class);
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link LongnumStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link LongnumStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Emitting the {@link IntegerStruct#toJavaPLong()} value.</li>
 	 * <li>Retrieving a {@link LongnumStruct} via {@link IntegerStruct#toLispInteger(long)} with the emitted

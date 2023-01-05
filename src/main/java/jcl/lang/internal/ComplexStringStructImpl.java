@@ -49,7 +49,7 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	/**
 	 * Whether or not the {@link StringStruct} is adjustable.
 	 */
-	private BooleanStruct adjustable;
+	private final BooleanStruct adjustable;
 
 	/**
 	 * The {@link ArrayStruct} structure that this {@link StringStruct} is displaced to. If {@code null}, this structure
@@ -511,8 +511,8 @@ public final class ComplexStringStructImpl extends AbstractStringStructImpl {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for ComplexStringStructImpl} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code ComplexStringStructImpl} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link #contents}, ensuring that each content {@link CharacterStruct} value is generated properly</li>
 	 * <li>Constructing a new ComplexStringStructImpl with the built content {@link List}</li>

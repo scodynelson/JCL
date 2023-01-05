@@ -60,7 +60,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 	 * 		the bit-vector fillPointer
 	 *
 	 * @return a new BitVectorStruct representation of the provided size, displacedTo, displacedIndexOffset, adjustable,
-	 * 		and fillPointer
+	 * and fillPointer
 	 */
 	static BitVectorStruct toLispBitVector(final IntegerStruct size,
 	                                       final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
@@ -94,8 +94,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof BitVectorStruct) {
-			final BitVectorStruct v = (BitVectorStruct) object;
+		if (object instanceof final BitVectorStruct v) {
 
 			final IntegerStruct thisLength = length();
 			if (!thisLength.eql(v.length())) {
@@ -117,8 +116,7 @@ public interface BitVectorStruct extends VectorStruct, BitArrayStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof BitVectorStruct) {
-			final BitVectorStruct v = (BitVectorStruct) object;
+		if (object instanceof final BitVectorStruct v) {
 
 			final IntegerStruct thisLength = length();
 			if (!thisLength.eql(v.length())) {

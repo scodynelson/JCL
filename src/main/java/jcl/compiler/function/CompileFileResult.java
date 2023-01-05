@@ -22,7 +22,8 @@ public final class CompileFileResult {
 	 * Returns a {@link ValuesStruct} containing the {@link #outputTruename}, {@link #warningsP}, and {@link #failureP}
 	 * values.
 	 *
-	 * @return a {@link ValuesStruct} containing the {@link #outputTruename}, {@link #warningsP}, and {@link #failureP} values
+	 * @return a {@link ValuesStruct} containing the {@link #outputTruename}, {@link #warningsP}, and {@link #failureP}
+	 * values
 	 */
 	public ValuesStruct toValues() {
 		return ValuesStruct.valueOf(outputTruename, warningsP, failureP);

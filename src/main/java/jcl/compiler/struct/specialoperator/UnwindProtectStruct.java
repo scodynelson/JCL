@@ -28,8 +28,7 @@ public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link UnwindProtectStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code UnwindProtectStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Initializing a try-catch block</li>
 	 * <li>Generating the {@link UnwindProtectStruct#protectedForm} inside the try block, ensuring to store the final
@@ -56,7 +55,7 @@ public class UnwindProtectStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

@@ -302,8 +302,7 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 		// is, both NIL and :UNSPECIFIC cause the component not to appear in
 		// the namestring." 19.2.2.2.3.1
 		if (directory != NILStruct.INSTANCE) {
-			if (directory instanceof ListStruct) {
-				ListStruct temp = (ListStruct) directory;
+			if (directory instanceof ListStruct temp) {
 				LispStruct part = temp.car();
 				if (part == CommonLispSymbols.ABSOLUTE_KEYWORD) {
 				} else if (part == CommonLispSymbols.RELATIVE_KEYWORD) {
@@ -385,8 +384,8 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link LogicalPathnameStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link LogicalPathnameStruct} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link LogicalPathnameStruct} value</li>
 	 * <li>Constructing a new {@link LogicalPathnameStruct} with the built {@link #namestring} value</li>

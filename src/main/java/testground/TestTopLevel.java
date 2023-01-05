@@ -10,6 +10,6 @@ public class TestTopLevel {
 	}
 
 	private void init() {
-		LispStruct temp = NILStruct.INSTANCE;
+		final LispStruct temp = NILStruct.INSTANCE;
 	}
 }

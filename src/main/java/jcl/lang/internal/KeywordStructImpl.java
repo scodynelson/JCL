@@ -46,8 +46,7 @@ public final class KeywordStructImpl extends SymbolStructImpl implements Keyword
 	private static final String KEYWORD_PACKAGE_NAME = "KEYWORD";
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link KeywordStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link KeywordStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the {@link GlobalPackageStruct#KEYWORD} singleton instance</li>
 	 * <li>Retrieving the {@link PackageSymbolStruct} via the {@link PackageStruct#findSymbol(String)} method with the

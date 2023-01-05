@@ -46,8 +46,8 @@ public interface NumberStruct extends LispStruct {
 	NumberStruct add(final NumberStruct number);
 
 	/**
-	 * Performs the addition operation on the {@link List} of NumberStruct objects in order. {@link
-	 * IntegerStruct#ZERO} is returned if the list is empty.
+	 * Performs the addition operation on the {@link List} of NumberStruct objects in order. {@link IntegerStruct#ZERO}
+	 * is returned if the list is empty.
 	 *
 	 * @param numbers
 	 * 		the {@link List} of NumberStruct objects to performs the addition operation on
@@ -75,7 +75,7 @@ public interface NumberStruct extends LispStruct {
 	 *
 	 * @param number
 	 * 		the single NumberStruct to use as the starting point of the subtraction operation, or as the base of the
-	 * 		{@link #negation()} result if the {@link List} of NumberStruct objects is empty
+	 *        {@link #negation()} result if the {@link List} of NumberStruct objects is empty
 	 * @param numbers
 	 * 		the {@link List} of NumberStruct objects to performs the subtraction operation on
 	 *
@@ -99,8 +99,8 @@ public interface NumberStruct extends LispStruct {
 	NumberStruct multiply(final NumberStruct number);
 
 	/**
-	 * Performs the multiplication operation on the {@link List} of NumberStruct objects in order. {@link
-	 * IntegerStruct#ONE} is returned if the list is empty.
+	 * Performs the multiplication operation on the {@link List} of NumberStruct objects in order.
+	 * {@link IntegerStruct#ONE} is returned if the list is empty.
 	 *
 	 * @param numbers
 	 * 		the {@link List} of NumberStruct objects to performs the multiplication operation on
@@ -122,13 +122,13 @@ public interface NumberStruct extends LispStruct {
 	NumberStruct divide(final NumberStruct number);
 
 	/**
-	 * Performs the division operation on the {@link List} of NumberStruct objects in order, using the single
-	 * provided NumberStruct as the starting point. The {@link #reciprocal()} of the single provided NumberStruct is
-	 * returned if the list is empty.
+	 * Performs the division operation on the {@link List} of NumberStruct objects in order, using the single provided
+	 * NumberStruct as the starting point. The {@link #reciprocal()} of the single provided NumberStruct is returned if
+	 * the list is empty.
 	 *
 	 * @param number
 	 * 		the single NumberStruct to use as the starting point of the division operation, or as the base of the
-	 * 		{@link #reciprocal()} result if the {@link List} of NumberStruct objects is empty
+	 *        {@link #reciprocal()} result if the {@link List} of NumberStruct objects is empty
 	 * @param numbers
 	 * 		the {@link List} of NumberStruct objects to performs the division operation on
 	 *

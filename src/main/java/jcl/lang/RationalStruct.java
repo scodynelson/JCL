@@ -55,8 +55,8 @@ public interface RationalStruct extends RealStruct {
 
 	/**
 	 * Returns a RationalStruct object with the provided numerator and denominator {@link BigInteger} values. If the
-	 * denominator is equal to {@link BigInteger#ONE}, an {@link IntegerStruct} is returned; otherwise a {@link
-	 * RatioStruct} is returned.
+	 * denominator is equal to {@link BigInteger#ONE}, an {@link IntegerStruct} is returned; otherwise a
+	 * {@link RatioStruct} is returned.
 	 *
 	 * @param numerator
 	 * 		the {@link BigInteger} value of the numerator of the resulting RationalStruct
@@ -74,8 +74,8 @@ public interface RationalStruct extends RealStruct {
 
 	/**
 	 * Returns a RationalStruct object with the provided numerator and denominator {@link IntegerStruct} values. If the
-	 * denominator is equal to {@link IntegerStruct#ONE}, an {@link IntegerStruct} is returned; otherwise a {@link
-	 * RatioStruct} is returned.
+	 * denominator is equal to {@link IntegerStruct#ONE}, an {@link IntegerStruct} is returned; otherwise a
+	 * {@link RatioStruct} is returned.
 	 *
 	 * @param numerator
 	 * 		the {@link IntegerStruct} value of the numerator of the resulting RationalStruct

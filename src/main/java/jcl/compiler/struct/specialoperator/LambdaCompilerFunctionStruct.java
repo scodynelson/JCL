@@ -24,8 +24,8 @@ public class LambdaCompilerFunctionStruct implements CompilerFunctionStruct {
 	private final LambdaStruct lambdaStruct;
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link LambdaCompilerFunctionStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code LambdaCompilerFunctionStruct} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Generating the {@link LambdaCompilerFunctionStruct#lambdaStruct} value, creating the anonymous {@link
 	 * LambdaStruct} class</li>

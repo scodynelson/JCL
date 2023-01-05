@@ -38,8 +38,8 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link BindingEnvironmentStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code BindingEnvironmentStruct} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Generating the code to create a new {@link Environment}</li>
 	 * <li>Calling the implementation of {@link #generateBindings(List, GeneratorState, JavaMethodBuilder, int, int,
@@ -57,7 +57,7 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
@@ -144,13 +144,13 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 *        {@link JavaMethodBuilder} used for building a Java method body
 	 * @param lexicalSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical
-	 * 		values to unbind exists
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical values to
+	 * 		unbind exists
 	 * @param dynamicSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
-	 * 		values to unbind exists
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic values to
+	 * 		unbind exists
 	 */
 	protected abstract void generateBindings(GeneratorState generatorState, JavaEnvironmentMethodBuilder methodBuilder,
 	                                         Set<Integer> lexicalSymbolStoresToUnbind,
@@ -158,17 +158,17 @@ public abstract class BindingEnvironmentStruct extends CompilerSpecialOperatorSt
 
 	/**
 	 * Private method for generating the 'finally' block code for unbinding the lexical and dynamic values from each
-	 * {@link SymbolStruct} at the storage location of each of the {@code lexicalSymbolStoresToUnbind} and {@code
-	 * dynamicSymbolStoresToUnbind}.
+	 * {@link SymbolStruct} at the storage location of each of the {@code lexicalSymbolStoresToUnbind} and
+	 * {@code dynamicSymbolStoresToUnbind}.
 	 *
 	 * @param mv
 	 * 		the current {@link MethodVisitor} to generate the code inside
 	 * @param lexicalSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical
-	 * 		values to unbind exists
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with lexical values to
+	 * 		unbind exists
 	 * @param dynamicSymbolStoresToUnbind
-	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic
-	 * 		values to unbind exists
+	 * 		the {@link Set} of storage location indexes on the stack where the {@link SymbolStruct}s with dynamic values to
+	 * 		unbind exists
 	 */
 	private static void generateFinallyCode(final MethodVisitor mv, final int environmentStore,
 	                                        final Set<Integer> lexicalSymbolStoresToUnbind,

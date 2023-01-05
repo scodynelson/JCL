@@ -101,7 +101,7 @@ final class ListReaderMacroFunction {
 		final int nextCodePoint = readResult.getResult();
 
 		if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(nextCodePoint)) {
-			if (currentTokenList.isEmpty()  && errorOnRead()) {
+			if (currentTokenList.isEmpty() && errorOnRead()) {
 				throw new ReaderErrorException("Nothing appears before . in list.");
 			}
 
@@ -114,8 +114,8 @@ final class ListReaderMacroFunction {
 	}
 
 	/**
-	 * Processes the token(s) following '.' in the list. Determines how many items follow the '.' and throws a {@link
-	 * ReaderErrorException} if either no items or more than one item are there.
+	 * Processes the token(s) following '.' in the list. Determines how many items follow the '.' and throws a
+	 * {@link ReaderErrorException} if either no items or more than one item are there.
 	 *
 	 * @param inputStreamStruct
 	 * 		the {@link InputStreamStruct} to read in for the token(s) following the '.' in the list

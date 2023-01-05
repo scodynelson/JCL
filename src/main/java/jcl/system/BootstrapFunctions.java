@@ -309,14 +309,14 @@ class BootstrapFunctions {
 	}
 
 	private static void bootstrapArrayFunctions() {
-		final List<FunctionStruct> functions = Arrays.asList(
+		final List<FunctionStruct> functions = List.of(
 				new ListToVectorFunction()
 		);
 		bootstrapSystemPackageFunctions(functions);
 	}
 
 	private static void bootstrapConditionFunctions() {
-		final List<FunctionStruct> functions = Arrays.asList(
+		final List<FunctionStruct> functions = List.of(
 				new ErrorFunction()
 		);
 		bootstrapCommonLispPackageFunctions(functions);
@@ -406,7 +406,7 @@ class BootstrapFunctions {
 	}
 
 	private static void bootstrapPrinterFunctions() {
-		final List<FunctionStruct> functions = Arrays.asList(
+		final List<FunctionStruct> functions = List.of(
 				new PrintObjectFunction()
 		);
 		bootstrapCommonLispPackageFunctions(functions);

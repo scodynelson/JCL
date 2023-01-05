@@ -68,8 +68,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
 			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
 			LispStruct value = parameterSymbolToBind.getParameterValue();
-			if (value instanceof ValuesStruct) {
-				final ValuesStruct valuesStruct = (ValuesStruct) value;
+			if (value instanceof final ValuesStruct valuesStruct) {
 				value = valuesStruct.getPrimaryValue();
 			} else if (INIT_FORM_PLACEHOLDER.eq(value)) {
 				value = getInitForm(environment, symbol);
@@ -198,8 +197,7 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
 			final LispStruct nextArgument = iterator.next();
 
-			if (nextArgument instanceof SymbolStruct) {
-				final SymbolStruct keywordArgument = (SymbolStruct) nextArgument;
+			if (nextArgument instanceof final SymbolStruct keywordArgument) {
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyParameter keyBinding = keysToBindings.remove(keywordArgument);
 

@@ -234,8 +234,8 @@ public interface IntegerStruct extends RationalStruct {
 	IntegerStruct logAnd(final IntegerStruct integer);
 
 	/**
-	 * Returns the bit-wise logical 'and' of the provided IntegerStructs. If the number of IntegerStructs provided is
-	 * 0, {@link #MINUS_ONE} is returned.
+	 * Returns the bit-wise logical 'and' of the provided IntegerStructs. If the number of IntegerStructs provided is 0,
+	 * {@link #MINUS_ONE} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used in performing the bit-wise logical operation
@@ -267,8 +267,8 @@ public interface IntegerStruct extends RationalStruct {
 	IntegerStruct logAndC2(final IntegerStruct integer);
 
 	/**
-	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs. If the number
-	 * of IntegerStructs provided is 0, {@link #MINUS_ONE} is returned.
+	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs. If the number of
+	 * IntegerStructs provided is 0, {@link #MINUS_ONE} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used in performing the bit-wise logical operation
@@ -407,14 +407,14 @@ public interface IntegerStruct extends RationalStruct {
 	IntegerStruct logCount();
 
 	/**
-	 * Returns true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided
-	 * IntegerStruct; otherwise, returns false.
+	 * Returns true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
+	 * otherwise, returns false.
 	 *
 	 * @param integer
 	 * 		the IntegerStruct used in the test comparison to this IntegerStruct
 	 *
-	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided
-	 * IntegerStruct; otherwise, false.
+	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
+	 * otherwise, false.
 	 */
 	BooleanStruct logTest(final IntegerStruct integer);
 

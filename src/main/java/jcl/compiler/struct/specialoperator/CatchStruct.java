@@ -30,8 +30,7 @@ public class CatchStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link CatchStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code CatchStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link CatchStruct#catchTag} value</li>
 	 * <li>Initializing a try-catch block</li>
@@ -68,7 +67,7 @@ public class CatchStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

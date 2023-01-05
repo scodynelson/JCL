@@ -42,7 +42,7 @@ public class ComplexVectorStructImpl extends AbstractVectorStructImpl {
 	/**
 	 * Whether or not the vector is adjustable.
 	 */
-	private BooleanStruct adjustable;
+	private final BooleanStruct adjustable;
 
 	/**
 	 * The {@link ArrayStruct} structure that this vector is displaced to. If {@code null}, this structure is not
@@ -390,8 +390,8 @@ public class ComplexVectorStructImpl extends AbstractVectorStructImpl {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for ComplexVectorStructImpl objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code ComplexVectorStructImpl} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Building the {@link #contents}, ensuring that each content value is treated as being 'quoted'</li>
 	 * <li>Constructing a new ComplexVectorStructImpl with the built content {@link List}</li>

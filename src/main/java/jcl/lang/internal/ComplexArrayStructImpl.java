@@ -28,7 +28,7 @@ public class ComplexArrayStructImpl extends AbstractMultiDimensionArrayStructImp
 	/**
 	 * Whether or not the array is adjustable.
 	 */
-	private BooleanStruct adjustable;
+	private final BooleanStruct adjustable;
 
 	/**
 	 * The {@link ArrayStruct} structure that this array is displaced to. If {@code null}, this structure is not
@@ -152,8 +152,7 @@ public class ComplexArrayStructImpl extends AbstractMultiDimensionArrayStructImp
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link ArrayStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@link ArrayStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Building the {@link ComplexArrayStructImpl#dimensions} values</li>
 	 * <li>Building the {@link ComplexArrayStructImpl#contents} values, ensuring that each content value is treated as being

@@ -27,8 +27,8 @@ public class MultipleValueProg1Struct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link MultipleValueProg1Struct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code MultipleValueProg1Struct} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Generating the {@link MultipleValueProg1Struct#firstForm} value</li>
 	 * <li>Generating the {@link MultipleValueProg1Struct#forms} values</li>
@@ -50,7 +50,7 @@ public class MultipleValueProg1Struct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

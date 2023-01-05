@@ -62,7 +62,7 @@ public final class CodeGenerators {
 	}
 
 	public static void generateSymbol(final SymbolStruct input, final GeneratorState generatorState,
-	                           final int packageStore, final int symbolStore) {
+	                                  final int packageStore, final int symbolStore) {
 
 		final JavaMethodBuilder methodBuilder = generatorState.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
@@ -172,7 +172,7 @@ public final class CodeGenerators {
 	}
 
 	public static String getFileNameFromClassName(final String className) {
-		return className.substring(className.lastIndexOf('/') + 1, className.length());
+		return className.substring(className.lastIndexOf('/') + 1);
 	}
 
 	public static void generateSingletonInstanceField(final ClassWriter cw, final String classDesc) {

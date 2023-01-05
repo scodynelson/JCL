@@ -46,9 +46,8 @@ public class ValuesStruct extends LispStructImpl {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link ValuesStruct} objects, by generating the {@link ValuesStruct#getPrimaryValue()}
-	 * value.
+	 * {@inheritDoc} Generation method for {@code ValuesStruct} objects, by generating the
+	 * {@link ValuesStruct#getPrimaryValue()} value.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

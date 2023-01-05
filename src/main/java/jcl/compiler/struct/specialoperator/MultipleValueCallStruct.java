@@ -37,8 +37,8 @@ public class MultipleValueCallStruct extends CompilerSpecialOperatorStruct {
 	private static final String NOT_FUNCTION_ERROR_STRING = "MULTIPLE-VALUE-CALL: Invalid function form: ";
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link MultipleValueCallStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code MultipleValueCallStruct} objects, by performing the following
+	 * operations:
 	 * <ol>
 	 * <li>Generating the {@link MultipleValueCallStruct#functionForm} value</li>
 	 * <li>Verifying if the generated function value is an instance of type {@link FunctionStruct}, throwing a
@@ -84,7 +84,7 @@ public class MultipleValueCallStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

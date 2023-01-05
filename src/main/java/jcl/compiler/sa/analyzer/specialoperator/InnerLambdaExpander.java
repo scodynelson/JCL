@@ -51,10 +51,9 @@ abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStru
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof ListStruct)) {
+		if (!(first instanceof final ListStruct innerLambdas)) {
 			throw new TypeErrorException(expanderName + ": FUNCTION-LIST must be a List. Got: " + first);
 		}
-		final ListStruct innerLambdas = (ListStruct) first;
 
 		final Environment innerLambdaEnvironment = new Environment(environment);
 
@@ -113,16 +112,14 @@ abstract class InnerLambdaExpander extends MacroFunctionExpander<InnerLambdaStru
 
 		for (final LispStruct functionDefinition : innerLambdas) {
 
-			if (!(functionDefinition instanceof ListStruct)) {
+			if (!(functionDefinition instanceof final ListStruct functionList)) {
 				throw new TypeErrorException(expanderName + ": FUNCTION PARAMETER must be a List. Got: " + functionDefinition);
 			}
-			final ListStruct functionList = (ListStruct) functionDefinition;
 
 			final LispStruct functionListFirst = functionList.car();
-			if (!(functionListFirst instanceof SymbolStruct)) {
+			if (!(functionListFirst instanceof final SymbolStruct functionName)) {
 				throw new TypeErrorException(expanderName + ": First element of function parameter must be a Symbol. Got: " + functionListFirst);
 			}
-			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
 				log.warn("{}: Multiple bindings of {} in {} form.", expanderName, functionName.getName(), expanderName);

@@ -65,8 +65,8 @@ public final class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionI
 	}
 
 	/**
-	 * Handles the processing of the number argument when parsing the provided {@code token} string into a {@link
-	 * BitVectorStruct}.
+	 * Handles the processing of the number argument when parsing the provided {@code token} string into a
+	 * {@link BitVectorStruct}.
 	 *
 	 * @param tokenString
 	 * 		the bit-vector contents

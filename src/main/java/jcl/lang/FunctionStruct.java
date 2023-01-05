@@ -16,8 +16,7 @@ public interface FunctionStruct extends LispStruct {
 		if (functionDesignator instanceof FunctionStruct) {
 			return (FunctionStruct) functionDesignator;
 		}
-		if (functionDesignator instanceof SymbolStruct) {
-			final SymbolStruct functionSymbol = (SymbolStruct) functionDesignator;
+		if (functionDesignator instanceof final SymbolStruct functionSymbol) {
 
 			// TODO: using global environment here???
 

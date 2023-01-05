@@ -73,10 +73,10 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 	}
 
 	/**
-	 * Replaces the {@link SymbolStruct} tags located within the provided {@link LispStruct} token with the mapped
-	 * token values located within the provided {@code sharpEqualReplTable} {@link Map}. Circularities are also
-	 * accounted for by using the provided {@code sharpEqualCircleSet} {@link Set} to keep track of the {@link
-	 * ConsStruct} tokens throughout the replacement process.
+	 * Replaces the {@link SymbolStruct} tags located within the provided {@link LispStruct} token with the mapped token
+	 * values located within the provided {@code sharpEqualReplTable} {@link Map}. Circularities are also accounted for
+	 * by using the provided {@code sharpEqualCircleSet} {@link Set} to keep track of the {@link ConsStruct} tokens
+	 * throughout the replacement process.
 	 * <p>
 	 * NOTE: This method destructively modified the provided {@link LispStruct} token if it is a {@link ConsStruct}
 	 *
@@ -88,8 +88,8 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 	 * 		the {@link Set} of {@link ConsStruct} tokens within the provided {@link LispStruct} token used to track
 	 * 		circularities.
 	 *
-	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding {@link
-	 * LispStruct} tokens
+	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding
+	 * {@link LispStruct} tokens
 	 */
 	private static LispStruct replaceTagsWithTokens(final LispStruct token,
 	                                                final Map<SymbolStruct, LispStruct> sharpEqualReplTable,

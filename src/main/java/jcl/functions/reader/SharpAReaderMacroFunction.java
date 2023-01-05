@@ -43,12 +43,11 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		if (numberArgument.minusp().toJavaPBoolean()) {
-			if (!(token instanceof SequenceStruct)) {
+			if (!(token instanceof final SequenceStruct contents)) {
 				final String message = "The form following a #" + numberArgument + "A reader macro should have been a sequence, but it was: " + token;
 				throw new ReaderErrorException(message);
 			}
 
-			final SequenceStruct contents = (SequenceStruct) token;
 			final List<IntegerStruct> dimensions = getDimensions(numberArgument, contents);
 			final List<LispStruct> initialContents = contents.stream().collect(Collectors.toList());
 			return ArrayStruct.toLispArray(dimensions, CommonLispSymbols.T, initialContents);

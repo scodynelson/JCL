@@ -34,21 +34,19 @@ public final class InternalApply {
 		}
 
 		if (args.isEmpty()) {
-			if (!(arg instanceof ListStruct)) {
+			if (!(arg instanceof final ListStruct argAsList)) {
 				throw new ErrorException("Can't construct argument list from " + arg + '.');
 			}
 
-			final ListStruct argAsList = (ListStruct) arg;
 			final LispStruct[] lispStructs = argAsList.toArray();
 			return functionStruct.apply(lispStructs);
 		}
 		final int argsSize = args.size();
 
 		final LispStruct lastElement = args.get(argsSize - 1);
-		if (!(lastElement instanceof ListStruct)) {
+		if (!(lastElement instanceof final ListStruct lastElementList)) {
 			throw new ErrorException("Can't construct argument list from " + lastElement + '.');
 		}
-		final ListStruct lastElementList = (ListStruct) lastElement;
 		final LispStruct[] lastElementArray = lastElementList.toArray();
 		final int lastElementSize = lastElementArray.length;
 

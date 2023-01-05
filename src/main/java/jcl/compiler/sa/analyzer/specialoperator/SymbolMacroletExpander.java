@@ -44,10 +44,9 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof ListStruct)) {
+		if (!(first instanceof final ListStruct parameters)) {
 			throw new TypeErrorException("SYMBOL-MACROLET: PARAMETER-LIST must be a List. Got: " + first);
 		}
-		final ListStruct parameters = (ListStruct) first;
 
 		final Environment symbolMacroletEnvironment = new Environment(environment);
 
@@ -87,11 +86,10 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 			final LispStruct parameter, final Environment symbolMacroletEnvironment
 	) {
 
-		if (!(parameter instanceof ListStruct)) {
+		if (!(parameter instanceof final ListStruct listParameter)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: PARAMETER must be a List. Got: " + parameter);
 		}
 
-		final ListStruct listParameter = (ListStruct) parameter;
 		final Iterator<LispStruct> iterator = listParameter.iterator();
 
 		if (!iterator.hasNext()) {
@@ -99,10 +97,9 @@ public final class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMa
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof final SymbolStruct var)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + first);
 		}
-		final SymbolStruct var = (SymbolStruct) first;
 
 		// TODO: should do this in the ICG instead??
 //		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(var);

@@ -46,8 +46,7 @@ public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link ReturnFromStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code ReturnFromStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Fetching the global 'COMMON-LISP-USER' package</li>
 	 * <li>Finding the {@link SymbolStruct} with the {@link ReturnFromStruct#name} value in the fetched

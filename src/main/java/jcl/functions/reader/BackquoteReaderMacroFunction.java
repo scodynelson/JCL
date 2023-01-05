@@ -76,9 +76,8 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 			return new BackquoteReturn(NILStruct.INSTANCE, code);
 		}
 
-		if (code instanceof SymbolStruct) {
+		if (code instanceof final SymbolStruct codeSymbol) {
 			// Need to check the constant symbols here
-			final SymbolStruct codeSymbol = (SymbolStruct) code;
 			if (TStruct.INSTANCE.eq(codeSymbol)) {
 				return new BackquoteReturn(TStruct.INSTANCE, code);
 			}
@@ -88,8 +87,7 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 			return new BackquoteReturn(CommonLispSymbols.QUOTE, code);
 		}
 
-		if (code instanceof ConsStruct) {
-			final ConsStruct consCode = (ConsStruct) code;
+		if (code instanceof final ConsStruct consCode) {
 
 			final LispStruct carConsCode = consCode.car();
 			final LispStruct cdrConsCode = consCode.cdr();
@@ -250,9 +248,8 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 			return new BackquoteReturn(TStruct.INSTANCE, code);
 		}
 
-		if (code instanceof SymbolStruct) {
+		if (code instanceof final SymbolStruct codeSymbol) {
 			// Need to check the constant symbols here
-			final SymbolStruct codeSymbol = (SymbolStruct) code;
 			if (TStruct.INSTANCE.eq(codeSymbol)) {
 				return new BackquoteReturn(TStruct.INSTANCE, code);
 			} else if (NILStruct.INSTANCE.eq(codeSymbol)) {
@@ -260,8 +257,7 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 			}
 		}
 
-		if (code instanceof ConsStruct) {
-			final ConsStruct consCode = (ConsStruct) code;
+		if (code instanceof final ConsStruct consCode) {
 
 			final LispStruct carConsCode = consCode.car();
 			final LispStruct cdrConsCode = consCode.cdr();
@@ -294,8 +290,7 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	private static boolean expandableBackqExpressionP(final LispStruct o) {
-		if (o instanceof ConsStruct) {
-			final ConsStruct consStruct = (ConsStruct) o;
+		if (o instanceof final ConsStruct consStruct) {
 			final LispStruct flag = consStruct.car();
 			return BQ_AT_FLAG.eq(flag) || BQ_DOT_FLAG.eq(flag);
 		}
@@ -314,8 +309,7 @@ public final class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl 
 
 		if (LIST_STAR.eq(flag)) {
 			// NOTE: The following check is not in CMU-CL. Actually a semi-bug found when handling improperly created lists.
-			if (thing instanceof ConsStruct) {
-				final ConsStruct consThing = (ConsStruct) thing;
+			if (thing instanceof final ConsStruct consThing) {
 
 				final LispStruct cdrThing = consThing.cdr();
 

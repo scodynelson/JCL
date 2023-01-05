@@ -14,13 +14,14 @@ public interface BroadcastStreamStruct extends OutputStreamStruct {
 	 * Returns the {@link ListStruct} of {@link OutputStreamStruct} objects that output will be broadcast to by this
 	 * stream.
 	 *
-	 * @return the {@link ListStruct} of {@link OutputStreamStruct} objects that output will be broadcast to by this stream
+	 * @return the {@link ListStruct} of {@link OutputStreamStruct} objects that output will be broadcast to by this
+	 * stream
 	 */
 	ListStruct broadcastStreamStreams();
 
 	/**
-	 * Returns a new Broadcast-Stream instance that will broadcast output to the provided {@link List} of {@link
-	 * OutputStreamStruct} objects.
+	 * Returns a new Broadcast-Stream instance that will broadcast output to the provided {@link List} of
+	 * {@link OutputStreamStruct} objects.
 	 *
 	 * @param outputStreamStructs
 	 * 		the {@link List} of {@link OutputStreamStruct} objects to broadcast output to

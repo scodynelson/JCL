@@ -34,8 +34,8 @@ final class ReaderMacroFunctionUtil {
 	}
 
 	/**
-	 * Determines if the provided {@code codePoint} matches one of the provided {@link SyntaxType}s based on the
-	 * current readtable.
+	 * Determines if the provided {@code codePoint} matches one of the provided {@link SyntaxType}s based on the current
+	 * readtable.
 	 *
 	 * @param codePoint
 	 * 		the character code point to verify {@link SyntaxType} for
@@ -54,26 +54,28 @@ final class ReaderMacroFunctionUtil {
 	}
 
 	/**
-	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR} value.
+	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR}
+	 * value.
 	 *
 	 * @param codePoint
 	 * 		the value to get the {@link SyntaxType} for from the {@link CommonLispSymbols#READTABLE_VAR} value
 	 *
-	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link CommonLispSymbols#READTABLE_VAR} value
+	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link CommonLispSymbols#READTABLE_VAR}
+	 * value
 	 */
 	private static SyntaxType getSyntaxType(final int codePoint) {
 		return CommonLispSymbols.READTABLE_VAR.getVariableValue().getSyntaxType(codePoint);
 	}
 
 	/**
-	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
-	 * SyntaxType#TERMINATING} based on the current readtable.
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link SyntaxType#TERMINATING}
+	 * based on the current readtable.
 	 *
 	 * @param codePoint
 	 * 		the character code point to verify {@link SyntaxType} for
 	 *
-	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
-	 * SyntaxType#TERMINATING}; false otherwise
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or
+	 * {@link SyntaxType#TERMINATING}; false otherwise
 	 */
 	static boolean isWhitespaceOrTerminating(final int codePoint) {
 		return isSyntaxType(codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
@@ -101,14 +103,14 @@ final class ReaderMacroFunctionUtil {
 	}
 
 	/**
-	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR}
-	 * value.
+	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the
+	 * {@link CommonLispSymbols#READTABLE_VAR} value.
 	 *
 	 * @param codePoint
 	 * 		the value to get the {@link AttributeType} for from the {@link CommonLispSymbols#READTABLE_VAR} value
 	 *
-	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link CommonLispSymbols#READTABLE_VAR}
-	 * value
+	 * @return the {@link AttributeType} for the provided {@code codePoint} from the
+	 * {@link CommonLispSymbols#READTABLE_VAR} value
 	 */
 	private static AttributeType getAttributeType(final int codePoint) {
 		final IntegerStruct readBase = CommonLispSymbols.READ_BASE_VAR.getVariableValue();

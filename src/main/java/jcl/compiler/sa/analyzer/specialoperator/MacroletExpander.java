@@ -52,10 +52,9 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof ListStruct)) {
+		if (!(first instanceof final ListStruct innerMacroLambdas)) {
 			throw new TypeErrorException("MACROLET: MACRO-LIST must be a List. Got: " + first);
 		}
-		final ListStruct innerMacroLambdas = (ListStruct) first;
 
 		final Environment macroletEnvironment = new Environment(environment);
 
@@ -99,16 +98,14 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 
 		for (final LispStruct functionDefinition : innerMacroLambdas) {
 
-			if (!(functionDefinition instanceof ListStruct)) {
+			if (!(functionDefinition instanceof final ListStruct functionList)) {
 				throw new ProgramErrorException("MACROLET: FUNCTION PARAMETER must be a List. Got: " + functionDefinition);
 			}
-			final ListStruct functionList = (ListStruct) functionDefinition;
 
 			final LispStruct functionListFirst = functionList.car();
-			if (!(functionListFirst instanceof SymbolStruct)) {
+			if (!(functionListFirst instanceof final SymbolStruct functionName)) {
 				throw new ProgramErrorException("MACROLET: First element of function parameter must be a Symbol. Got: " + functionListFirst);
 			}
-			final SymbolStruct functionName = (SymbolStruct) functionListFirst;
 
 			if (functionNames.contains(functionName)) {
 				log.warn("MACROLET: Multiple bindings of {} in MACROLET form.", functionName.getName());

@@ -344,8 +344,8 @@ public interface CharacterStruct extends LispStruct {
 	boolean isEqualToIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the '=' comparison of the provided CharacterStructs. If at any point a value does not follow
-	 * the expected comparison, the comparison loop with short-circuit.
+	 * Returns the '=' comparison of the provided CharacterStructs. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '=' operation
@@ -359,8 +359,8 @@ public interface CharacterStruct extends LispStruct {
 	}
 
 	/**
-	 * Returns the '=' comparison of the provided CharacterStructs. If at any point a value does not follow
-	 * the expected comparison, the comparison loop with short-circuit.
+	 * Returns the '=' comparison of the provided CharacterStructs. If at any point a value does not follow the expected
+	 * comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '=' operation
@@ -397,8 +397,8 @@ public interface CharacterStruct extends LispStruct {
 	boolean isNotEqualToIgnoreCase(final CharacterStruct character);
 
 	/**
-	 * Returns the '!=' comparison of the provided CharacterStructs. If at any point a value does not follow
-	 * the expected comparison, the comparison loop with short-circuit.
+	 * Returns the '!=' comparison of the provided CharacterStructs. If at any point a value does not follow the
+	 * expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '!=' operation
@@ -412,8 +412,8 @@ public interface CharacterStruct extends LispStruct {
 	}
 
 	/**
-	 * Returns the '!=' comparison of the provided CharacterStructs. If at any point a value does not follow
-	 * the expected comparison, the comparison loop with short-circuit.
+	 * Returns the '!=' comparison of the provided CharacterStructs. If at any point a value does not follow the
+	 * expected comparison, the comparison loop with short-circuit.
 	 *
 	 * @param characters
 	 * 		the CharacterStructs to be used in the '!=' operation
@@ -821,8 +821,8 @@ public interface CharacterStruct extends LispStruct {
 	}
 
 	/**
-	 * Returns the CharacterStruct whose name is the provided {@code name}. If no such character exists, {@link
-	 * NILStruct#INSTANCE} is returned.
+	 * Returns the CharacterStruct whose name is the provided {@code name}. If no such character exists,
+	 * {@link NILStruct#INSTANCE} is returned.
 	 *
 	 * @param name
 	 * 		the name of the CharacterStruct to return
@@ -839,8 +839,7 @@ public interface CharacterStruct extends LispStruct {
 		if (name instanceof CharacterStruct) {
 			return name;
 		}
-		if (name instanceof SymbolStruct) {
-			final SymbolStruct symbol = (SymbolStruct) name;
+		if (name instanceof final SymbolStruct symbol) {
 			final String symbolName = symbol.getName();
 			if (CharacterConstants.CL_GRAPHIC_CHAR_NAME_MAP.containsKey(symbolName)) {
 				return CharacterConstants.CL_GRAPHIC_CHAR_NAME_MAP.get(symbolName);
@@ -852,8 +851,7 @@ public interface CharacterStruct extends LispStruct {
 			}
 			return toLispCharacter(unicodeCodePoint);
 		}
-		if (name instanceof StringStruct) {
-			final StringStruct string = (StringStruct) name;
+		if (name instanceof final StringStruct string) {
 			final String javaString = string.toJavaString();
 			if (CharacterConstants.CL_GRAPHIC_CHAR_NAME_MAP.containsKey(javaString)) {
 				return CharacterConstants.CL_GRAPHIC_CHAR_NAME_MAP.get(javaString);
@@ -954,16 +952,14 @@ public interface CharacterStruct extends LispStruct {
 		if (struct instanceof CharacterStruct) {
 			return (CharacterStruct) struct;
 		}
-		if (struct instanceof SymbolStruct) {
-			final SymbolStruct symbol = (SymbolStruct) struct;
+		if (struct instanceof final SymbolStruct symbol) {
 			final String name = symbol.getName();
 			if (name.length() != 1) {
 				throw new SimpleErrorException("Symbol name is not of length one: " + name);
 			}
 			return toLispCharacter(name.charAt(0));
 		}
-		if (struct instanceof StringStruct) {
-			final StringStruct string = (StringStruct) struct;
+		if (struct instanceof final StringStruct string) {
 			final String javaString = string.toJavaString();
 			if (javaString.length() != 1) {
 				throw new SimpleErrorException("String is not of length one: " + javaString);

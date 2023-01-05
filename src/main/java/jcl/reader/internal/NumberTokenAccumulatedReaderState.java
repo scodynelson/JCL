@@ -32,12 +32,11 @@ import lombok.experimental.UtilityClass;
 /**
  * Step 10.1 of the Reader Algorithm.
  * <p>
- * This state is reached when we have accumulated a token, and it needs to be processed into a
- * 1) Number/PotentialNumber
+ * This state is reached when we have accumulated a token, and it needs to be processed into a Number/PotentialNumber
  * </p>
  * <p>
- * First we check to see if the token is a number, if it is, then we attempt to format it.  If it cannot
- * be formatted, then we progress to the SymbolTokenAccumulatedState.
+ * First we check to see if the token is a number, if it is, then we attempt to format it.  If it cannot be formatted,
+ * then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
 @UtilityClass
@@ -61,8 +60,8 @@ final class NumberTokenAccumulatedReaderState {
 	);
 
 	/**
-	 * This method gets a {@link NumberStruct} from the provided {@link TokenBuilder} and it's list of {@link
-	 * TokenAttribute} objects.
+	 * This method gets a {@link NumberStruct} from the provided {@link TokenBuilder} and it's list of
+	 * {@link TokenAttribute} objects.
 	 *
 	 * @param tokenBuilder
 	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}
@@ -162,9 +161,9 @@ final class NumberTokenAccumulatedReaderState {
 	}
 
 	/**
-	 * Determines if the provided {@code tokenAttributes} are valid parts of a numeric token, using the {@link
-	 * CommonLispSymbols#READ_BASE_VAR} value and ensuring they are in the same Unicode block as the provided first token
-	 * attribute.
+	 * Determines if the provided {@code tokenAttributes} are valid parts of a numeric token, using the
+	 * {@link CommonLispSymbols#READ_BASE_VAR} value and ensuring they are in the same Unicode block as the provided
+	 * first token attribute.
 	 *
 	 * @param tokenAttributes
 	 * 		the current token attributes to verify are valid parts of a numeric token
@@ -183,9 +182,9 @@ final class NumberTokenAccumulatedReaderState {
 	}
 
 	/**
-	 * Determines if provided {@code currentToken} is a valid part of a numeric token, using the {@link
-	 * CommonLispSymbols#READ_BASE_VAR} value and ensuring it is in the same Unicode block as the provided {@code
-	 * firstToken}.
+	 * Determines if provided {@code currentToken} is a valid part of a numeric token, using the
+	 * {@link CommonLispSymbols#READ_BASE_VAR} value and ensuring it is in the same Unicode block as the provided
+	 * {@code firstToken}.
 	 *
 	 * @param firstTokenCodePoint
 	 * 		the first token code point in the item to process
@@ -256,7 +255,8 @@ final class NumberTokenAccumulatedReaderState {
 
 	/**
 	 * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is
-	 * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
+	 * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float
+	 * result.
 	 *
 	 * @param tokenBuilder
 	 * 		the reader state containing the list of {@link TokenAttribute} objects to derive the {@link NumberStruct}

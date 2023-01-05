@@ -58,11 +58,10 @@ public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final Iterator<LispStruct> iterator = listToken.iterator();
 
 		final LispStruct structureType = iterator.next();
-		if (!(structureType instanceof SymbolStruct)) {
+		if (!(structureType instanceof final SymbolStruct structureSymbol)) {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}
 
-		final SymbolStruct structureSymbol = (SymbolStruct) structureType;
 		final StructureClassStruct structureClass = StructureClassStruct.getStructureClass(structureSymbol, false);
 		if (structureClass == null) {
 			final String message = structureType + " is not a defined structure type for symbol: " + structureSymbol;

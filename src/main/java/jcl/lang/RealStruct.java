@@ -198,8 +198,8 @@ public interface RealStruct extends NumberStruct {
 	 * single RealStruct as the starting point in the comparison.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStruct
-	 * 		objects is empty
+	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStruct objects
+	 * 		is empty
 	 * @param reals
 	 * 		the {@link List} of RealStruct objects used in the comparison in determining the greatest value
 	 *
@@ -226,17 +226,17 @@ public interface RealStruct extends NumberStruct {
 	}
 
 	/**
-	 * Returns the least positive value when comparing the values of the provided RealStruct objects in order, using
-	 * the single RealStruct as the starting point in the comparison.
+	 * Returns the least positive value when comparing the values of the provided RealStruct objects in order, using the
+	 * single RealStruct as the starting point in the comparison.
 	 *
 	 * @param real
-	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStruct
-	 * 		objects is empty
+	 * 		the initial RealStruct used in the comparison, and possibly returned if the {@link List} of RealStruct objects
+	 * 		is empty
 	 * @param reals
 	 * 		the {@link List} of RealStruct objects used in the comparison in determining the least value
 	 *
-	 * @return the least positive value when comparing the value of the initial RealStruct and the provided {@link
-	 * List} of RealStruct objects
+	 * @return the least positive value when comparing the value of the initial RealStruct and the provided {@link List}
+	 * of RealStruct objects
 	 */
 	static RealStruct min(final RealStruct real, final List<RealStruct> reals) {
 		if (reals.isEmpty()) {
@@ -327,8 +327,8 @@ public interface RealStruct extends NumberStruct {
 	QuotientRemainder floor(final RealStruct divisor);
 
 	/**
-	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct. The resulting
-	 * 'quotient' will be a {@link FloatStruct}.
+	 * Calculates the 'quotient' and 'remainder' for the 'FLOOR' operation for this RealStruct. The resulting 'quotient'
+	 * will be a {@link FloatStruct}.
 	 *
 	 * @return the {@link QuotientRemainder} for the 'FLOOR' operation with the provided RealStruct divisor
 	 */
@@ -438,8 +438,8 @@ public interface RealStruct extends NumberStruct {
 	QuotientRemainder round(final RealStruct divisor);
 
 	/**
-	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct. The resulting
-	 * 'quotient' will be a {@link FloatStruct}.
+	 * Calculates the 'quotient' and 'remainder' for the 'ROUND' operation for this RealStruct. The resulting 'quotient'
+	 * will be a {@link FloatStruct}.
 	 *
 	 * @return the {@link QuotientRemainder} for the 'ROUND' operation with the provided RealStruct divisor
 	 */

@@ -38,9 +38,8 @@ public final class InPackageFunction extends BuiltInFunctionStructImpl {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Application method for {@code in-package} package function that gets the package name to set the global {@code
-	 * *package*} variable to. An {@link ErrorException} is thrown when the package cannot be found.
+	 * {@inheritDoc} Application method for {@code in-package} package function that gets the package name to set the
+	 * global {@code *package*} variable to. An {@link ErrorException} is thrown when the package cannot be found.
 	 *
 	 * @param arguments
 	 * 		the function parameters

@@ -60,8 +60,7 @@ public final class InternalModuleHandler {
 		final ListStruct currentModulesList = CommonLispSymbols.MODULES_VAR.getVariableValue();
 
 		for (final LispStruct module : currentModulesList) {
-			if (module instanceof StringStruct) {
-				final StringStruct currentModule = (StringStruct) module;
+			if (module instanceof final StringStruct currentModule) {
 				if (currentModule.stringEqual(moduleName, null, null, null, null).toJavaPBoolean()) {
 					return true;
 				}

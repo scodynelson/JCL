@@ -211,19 +211,19 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param structureClassClassName
-	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this
+	 *        {@link StructureObjectStruct}
 	 * @param structureClassClassDesc
-	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this
+	 *        {@link StructureObjectStruct}
 	 * @param structureObjectClassName
 	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
 	 * 		for
 	 */
 	private void generateStructureClass(final GeneratorState generatorState,
-	                                           final String structureClassClassName,
-	                                           final String structureClassClassDesc,
-	                                           final String structureObjectClassName) {
+	                                    final String structureClassClassName,
+	                                    final String structureClassClassDesc,
+	                                    final String structureObjectClassName) {
 
 		final String fileName = CodeGenerators.getFileNameFromClassName(structureClassClassName);
 
@@ -264,9 +264,10 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link StructureClassStruct#StructureClassStruct(SymbolStruct, SymbolStruct,
-	 * SymbolStruct)} constructor for the generated {@link StructureClassStruct} being written to via the
-	 * provided {@link ClassWriter}. The generation will perform the following operations:
+	 * Private method for generating the
+	 * {@link StructureClassStruct#StructureClassStruct(SymbolStruct, SymbolStruct, SymbolStruct)} constructor for the
+	 * generated {@link StructureClassStruct} being written to via the provided {@link ClassWriter}. The generation will
+	 * perform the following operations:
 	 * <ol>
 	 * <li>Generating the call to the super class {@link StructureClassStruct#StructureClassStruct(SymbolStruct,
 	 * SymbolStruct, SymbolStruct)}</li>
@@ -286,13 +287,13 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 * @param includeStructureClassFileName
-	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureClassStruct} super class, whether {@link StructureClassStruct} itself or another subclass {@link
-	 * 		StructureClassStruct} implementation
+	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this
+	 *        {@link StructureClassStruct} super class, whether {@link StructureClassStruct} itself or another subclass
+	 *        {@link StructureClassStruct} implementation
 	 */
 	private static void generateStructureClassConstructor(final GeneratorState generatorState,
-	                                                             final ClassWriter cw,
-	                                                             final String includeStructureClassFileName) {
+	                                                      final ClassWriter cw,
+	                                                      final String includeStructureClassFileName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED,
 		                                        GenerationConstants.INIT_METHOD_NAME,
 		                                        STRUCTURE_CLASS_INIT_METHOD_DESC,
@@ -333,9 +334,9 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link StructureClassStruct#newInstance()} method for the generated {@link
-	 * StructureClassStruct} being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link StructureClassStruct#newInstance()} method for the generated
+	 * {@link StructureClassStruct} being written to via the provided {@link ClassWriter}. The generation will perform
+	 * the following operations:
 	 * <ol>
 	 * <li>Generating the code to create and return a new instance of the {@link StructureObjectStruct} with the
 	 * provided {@code structureObjectClassName} class name</li>
@@ -355,8 +356,8 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to be created and returned from
-	 * 		the {@link StructureClassStruct#newInstance()} method
+	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to be created and returned from the
+	 *        {@link StructureClassStruct#newInstance()} method
 	 */
 	private static void generateStructureClassNewInstanceMethod(final GeneratorState generatorState,
 	                                                            final ClassWriter cw,
@@ -392,9 +393,9 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link StructureClassStruct} class level initialization method ({@code
-	 * clinit}) for the generated {@link StructureClassStruct} being written to via the provided {@link ClassWriter}.
-	 * The generation will perform the following operations:
+	 * Private method for generating the {@link StructureClassStruct} class level initialization method ({@code clinit})
+	 * for the generated {@link StructureClassStruct} being written to via the provided {@link ClassWriter}. The
+	 * generation will perform the following operations:
 	 * <ol>
 	 * <li>Generating the code to fetch the {@link SymbolStruct} for the {@link DefstructStruct#defaultConstructorSymbol}
 	 * if it is not {@code null}, or generating {@code null}</li>
@@ -431,9 +432,9 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * 		initialization method
 	 */
 	private void generateStructureClassClassInitMethod(final GeneratorState generatorState,
-	                                                          final ClassWriter cw,
-	                                                          final String structureClassClassName,
-	                                                          final String structureClassClassDesc) {
+	                                                   final ClassWriter cw,
+	                                                   final String structureClassClassName,
+	                                                   final String structureClassClassDesc) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC,
 		                                        GenerationConstants.CLASS_INIT_METHOD_NAME,
 		                                        GenerationConstants.CLASS_INIT_METHOD_DESC,
@@ -551,11 +552,11 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param structureClassClassName
-	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this
+	 *        {@link StructureObjectStruct}
 	 * @param structureClassClassDesc
-	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this
+	 *        {@link StructureObjectStruct}
 	 * @param structureObjectClassName
 	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
 	 * 		for
@@ -644,20 +645,20 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the constructor code for
 	 * @param structureClassClassName
-	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		the {@link String} containing the name of the {@link StructureClassStruct} for this
+	 *        {@link StructureObjectStruct}
 	 * @param structureClassClassDesc
-	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this {@link
-	 * 		StructureObjectStruct}
+	 * 		the {@link String} containing the type descriptor of the {@link StructureClassStruct} for this
+	 *        {@link StructureObjectStruct}
 	 * @param structureObjectClassName
 	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the constructor code
 	 * 		for
 	 */
 	private void generateStructureObjectConstructor(final GeneratorState generatorState,
-	                                                       final ClassWriter cw,
-	                                                       final String structureClassClassName,
-	                                                       final String structureClassClassDesc,
-	                                                       final String structureObjectClassName) {
+	                                                final ClassWriter cw,
+	                                                final String structureClassClassName,
+	                                                final String structureClassClassDesc,
+	                                                final String structureObjectClassName) {
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC,
 		                                        GenerationConstants.INIT_METHOD_NAME,
 		                                        GenerationConstants.INIT_METHOD_DESC,
@@ -723,9 +724,9 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@code initSlotsMap} initializing method for the generated {@link
-	 * StructureObjectStruct} being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@code initSlotsMap} initializing method for the generated
+	 * {@link StructureObjectStruct} being written to via the provided {@link ClassWriter}. The generation will perform
+	 * the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * DefstructStruct#slots} is empty</li>
@@ -751,8 +752,8 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 * @param structureObjectClassName
-	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the {@code
-	 * 		initSlotsMap} method code for
+	 * 		the {@link String} containing the name of the {@link StructureObjectStruct} to generate the
+	 *        {@code initSlotsMap} method code for
 	 */
 	private void generateStructureObjectInitSlotsMap(final GeneratorState generatorState,
 	                                                 final ClassWriter cw,

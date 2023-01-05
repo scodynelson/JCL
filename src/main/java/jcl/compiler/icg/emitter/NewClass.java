@@ -9,7 +9,6 @@ import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
 
 public final class NewClass extends BuiltInFunctionStructImpl {
 

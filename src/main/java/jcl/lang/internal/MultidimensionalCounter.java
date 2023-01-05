@@ -7,13 +7,10 @@ import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
 /**
- * Converter between unidimensional storage structure and multidimensional
- * conceptual structure.
- * This utility will convert from indices in a multidimensional structure
- * to the corresponding index in a one-dimensional array. For example,
- * assuming that the ranges (in 3 dimensions) of indices are 2, 4 and 3,
- * the following correspondences, between 3-tuples indices and unidimensional
- * indices, will hold:
+ * Converter between unidimensional storage structure and multidimensional conceptual structure. This utility will
+ * convert from indices in a multidimensional structure to the corresponding index in a one-dimensional array. For
+ * example, assuming that the ranges (in 3 dimensions) of indices are 2, 4 and 3, the following correspondences, between
+ * 3-tuples indices and unidimensional indices, will hold:
  * <ul>
  * <li>(0, 0, 0) corresponds to 0</li>
  * <li>(0, 0, 1) corresponds to 1</li>
@@ -61,8 +58,7 @@ public class MultidimensionalCounter {
 	 * 		Counter sizes (number of slots in each dimension).
 	 *
 	 * @throws NotStrictlyPositiveException
-	 * 		if one of the sizes is
-	 * 		negative or zero.
+	 * 		if one of the sizes is negative or zero.
 	 */
 	public MultidimensionalCounter(int... size) throws NotStrictlyPositiveException {
 		dimension = size.length;
@@ -107,8 +103,7 @@ public class MultidimensionalCounter {
 	 * @return the multidimensional counts.
 	 *
 	 * @throws OutOfRangeException
-	 * 		if {@code index} is not between
-	 * 		{@code 0} and the value returned by {@link #getSize()} (excluded).
+	 * 		if {@code index} is not between {@code 0} and the value returned by {@link #getSize()} (excluded).
 	 */
 	public int[] getCounts(int index) throws OutOfRangeException {
 		if (index < 0 ||
@@ -146,12 +141,10 @@ public class MultidimensionalCounter {
 	 * @return the index within the unidimensionl counter.
 	 *
 	 * @throws DimensionMismatchException
-	 * 		if the size of {@code c}
-	 * 		does not match the size of the array given in the constructor.
+	 * 		if the size of {@code c} does not match the size of the array given in the constructor.
 	 * @throws OutOfRangeException
-	 * 		if a value of {@code c} is not in
-	 * 		the range of the corresponding dimension, as defined in the
-	 * 		{@link org.apache.commons.math3.util.MultidimensionalCounter#MultidimensionalCounter(int...) constructor}.
+	 * 		if a value of {@code c} is not in the range of the corresponding dimension, as defined in the
+	 *        {@link org.apache.commons.math3.util.MultidimensionalCounter#MultidimensionalCounter(int...) constructor}.
 	 */
 	public int getCount(int... c)
 			throws OutOfRangeException, DimensionMismatchException {

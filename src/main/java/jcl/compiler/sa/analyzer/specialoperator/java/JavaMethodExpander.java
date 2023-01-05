@@ -33,11 +33,10 @@ class JavaMethodExpander {
 		}
 
 		final LispStruct second = FormAnalyzer.analyze(((ConsStruct) cdr).car(), environment);
-		if (!(second instanceof StringStruct)) {
+		if (!(second instanceof final StringStruct methodName)) {
 			throw new SimpleErrorException("Method name is not of expected type STRING. Got: " + second);
 		}
 
-		final StringStruct methodName = (StringStruct) second;
 		final String methodNameString = methodName.toJavaString();
 
 		cdr = ((ConsStruct) cdr).cdr();
@@ -87,11 +86,10 @@ class JavaMethodExpander {
 		}
 
 		final LispStruct second = FormAnalyzer.analyze(((ConsStruct) cdr).car(), environment);
-		if (!(second instanceof StringStruct)) {
+		if (!(second instanceof final StringStruct className)) {
 			throw new SimpleErrorException("Class name is not of expected type STRING. Got: " + second);
 		}
 
-		final StringStruct className = (StringStruct) second;
 		final String classNameString = className.toJavaString();
 
 		cdr = ((ConsStruct) cdr).cdr();

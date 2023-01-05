@@ -32,8 +32,7 @@ public class BlockStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link BlockStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code BlockStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Fetching the global 'COMMON-LISP-USER' package</li>
 	 * <li>Finding the {@link SymbolStruct} with the {@link BlockStruct#name} value in the fetched 'COMMON-LISP-USER'
@@ -72,7 +71,7 @@ public class BlockStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {

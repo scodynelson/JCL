@@ -11,10 +11,15 @@ import org.apache.commons.lang3.SystemUtils;
 public interface PathnameStruct extends LispStruct {
 
 	LispStruct pathnameHost();
+
 	LispStruct pathnameDevice();
+
 	LispStruct pathnameDirectory();
+
 	LispStruct pathnameName();
+
 	LispStruct pathnameType();
+
 	LispStruct pathnameVersion();
 
 	String namestring();
@@ -38,8 +43,7 @@ public interface PathnameStruct extends LispStruct {
 		if (this == object) {
 			return true;
 		}
-		if (object instanceof PathnameStruct) {
-			final PathnameStruct p = (PathnameStruct) object;
+		if (object instanceof final PathnameStruct p) {
 			if (SystemUtils.IS_OS_WINDOWS) {
 				if (!pathnameHost().equalp(p.pathnameHost())) {
 					return false;
@@ -98,13 +102,11 @@ public interface PathnameStruct extends LispStruct {
 		if (struct instanceof PathnameStruct) {
 			return (PathnameStruct) struct;
 		}
-		if (struct instanceof StringStruct) {
-			final StringStruct namestringStruct = (StringStruct) struct;
+		if (struct instanceof final StringStruct namestringStruct) {
 			final String namestring = namestringStruct.toJavaString();
 			return toPathname(namestring);
 		}
-		if (struct instanceof FileStreamStruct) {
-			final FileStreamStruct fileStream = (FileStreamStruct) struct;
+		if (struct instanceof final FileStreamStruct fileStream) {
 			return fileStream.toPathname();
 		}
 		throw new TypeErrorException("Type cannot be converted to PATHNAME.");

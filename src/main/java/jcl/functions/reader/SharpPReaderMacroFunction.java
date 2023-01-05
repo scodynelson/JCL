@@ -34,8 +34,7 @@ public final class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return NILStruct.INSTANCE;
 		}
 
-		if (token instanceof StringStruct) {
-			final StringStruct pathnameString = (StringStruct) token;
+		if (token instanceof final StringStruct pathnameString) {
 			final String namestring = pathnameString.toJavaString();
 			return PathnameStruct.toPathname(namestring);
 		} else {

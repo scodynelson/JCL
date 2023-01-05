@@ -21,8 +21,8 @@ public class MacroLambdaCompilerFunctionStruct implements CompilerFunctionStruct
 	private final MacroLambdaStruct macroLambdaStruct;
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link MacroLambdaCompilerFunctionStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code MacroLambdaCompilerFunctionStruct} objects, by performing the
+	 * following operations:
 	 * <ol>
 	 * <li>Generating the {@link MacroLambdaCompilerFunctionStruct#macroLambdaStruct} value, creating the anonymous {@link
 	 * MacroLambdaStruct} class</li>

@@ -5,7 +5,6 @@ import jcl.compiler.icg.emitter.MethodDef;
 import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.IntegerStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;

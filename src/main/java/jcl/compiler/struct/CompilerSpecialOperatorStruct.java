@@ -32,19 +32,19 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 	private static final String SPECIAL_OPERATOR_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * {@link String} to be used as the method name prefix when creating the new method via {@link
-	 * ClassWriter#visitMethod(int, String, String, String, String[])}.
+	 * {@link String} to be used as the method name prefix when creating the new method via
+	 * {@link ClassWriter#visitMethod(int, String, String, String, String[])}.
 	 */
 	private final String methodNamePrefix;
 
 	/**
-	 * Generation method for {@link CompilerSpecialOperatorStruct}s that create a new method to consolidate their
-	 * logic, by performing the following operations:
+	 * Generation method for {@code CompilerSpecialOperatorStruct}s that create a new method to consolidate their logic,
+	 * by performing the following operations:
 	 * <ol>
 	 * <li>Visiting a new method via {@link ClassWriter#visitMethod(int, String, String, String, String[])} of the
 	 * current {@link JavaClassBuilder#classWriter} from the {@link GeneratorState#classBuilderDeque}</li>
 	 * <li>Generating the special operation method content via {@link #generateSpecialOperator(
-	 * GeneratorState, JavaEnvironmentMethodBuilder)}</li>
+	 *GeneratorState, JavaEnvironmentMethodBuilder)}</li>
 	 * <li>Generating the code to end the new method visitation</li>
 	 * <li>Generating the code to invoke the newly created method in place in the previous method execution stack</li>
 	 * </ol>
@@ -105,7 +105,7 @@ public abstract class CompilerSpecialOperatorStruct extends StandardObjectStruct
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	protected abstract void generateSpecialOperator(GeneratorState generatorState, JavaEnvironmentMethodBuilder methodBuilder);
 }

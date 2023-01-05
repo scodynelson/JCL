@@ -30,8 +30,7 @@ public class LetStarStruct extends BindingEnvironmentStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link LetStarStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code LetStarStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating each of the {@link BindingVar#var} and {@link BindingVar#initForm}
 	 * values</li>
@@ -78,7 +77,7 @@ public class LetStarStruct extends BindingEnvironmentStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 * @param lexicalSymbolStoresToUnbind
 	 * 		the {@link Set} of lexical {@link SymbolStruct} binding locations to unbind after the 'let' body executes
 	 * @param dynamicSymbolStoresToUnbind

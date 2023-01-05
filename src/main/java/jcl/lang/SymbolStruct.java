@@ -81,8 +81,8 @@ public interface SymbolStruct extends LispStruct {
 	SymbolStruct makunbound();
 
 	/**
-	 * Returns the value of the symbol. If there is no value, an {@link jcl.lang.condition.exception.UnboundVariableException}
-	 * is thrown.
+	 * Returns the value of the symbol. If there is no value, an
+	 * {@link jcl.lang.condition.exception.UnboundVariableException} is thrown.
 	 *
 	 * @return the value of the symbol
 	 */
@@ -113,8 +113,8 @@ public interface SymbolStruct extends LispStruct {
 	SymbolStruct fMakunbound();
 
 	/**
-	 * Returns the value of the symbol function. If there is no value, an {@link jcl.lang.condition.exception.UndefinedFunctionException}
-	 * is thrown.
+	 * Returns the value of the symbol function. If there is no value, an
+	 * {@link jcl.lang.condition.exception.UndefinedFunctionException} is thrown.
 	 *
 	 * @return the value of the symbol function
 	 */
@@ -148,8 +148,8 @@ public interface SymbolStruct extends LispStruct {
 	ListStruct setfSymbolPlist(final ListStruct newPlist);
 
 	/**
-	 * Retrieves the property from the symbol {@link ListStruct} properties associated with the provided {@code
-	 * indicator}. If the property is not found, {@code null} is returned.
+	 * Retrieves the property from the symbol {@link ListStruct} properties associated with the provided
+	 * {@code indicator}. If the property is not found, {@code null} is returned.
 	 *
 	 * @param indicator
 	 * 		the key for the property to retrieve
@@ -175,8 +175,8 @@ public interface SymbolStruct extends LispStruct {
 	LispStruct setProp(final LispStruct indicator, final LispStruct newValue);
 
 	/**
-	 * Removes the first property in the symbol {@link ListStruct} properties associated with the provided {@code
-	 * indicator}.
+	 * Removes the first property in the symbol {@link ListStruct} properties associated with the provided
+	 * {@code indicator}.
 	 *
 	 * @param indicator
 	 * 		the key for the property to remove

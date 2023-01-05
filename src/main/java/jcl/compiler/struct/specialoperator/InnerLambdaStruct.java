@@ -25,9 +25,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * Class to perform 'flet' and 'labels' special operator code generation. Both special operators generate the same
- * code, but will act differently due to differences in the structure of the generated lambda forms as altered in the
- * Semantic Analyzer.
+ * Class to perform 'flet' and 'labels' special operator code generation. Both special operators generate the same code,
+ * but will act differently due to differences in the structure of the generated lambda forms as altered in the Semantic
+ * Analyzer.
  */
 @Getter
 public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
@@ -44,8 +44,7 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link InnerLambdaStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code InnerLambdaStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Retrieving the {@link List} of function bindings from the {@link Environment} parameter if the parameter is not
 	 * null</li>
@@ -90,7 +89,7 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
@@ -188,8 +187,8 @@ public class InnerLambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the 'finally' block code for unbinding the function values from each {@link
-	 * SymbolStruct} at the storage location of each of the {@code functionSymbolStores}.
+	 * Private method for generating the 'finally' block code for unbinding the function values from each
+	 * {@link SymbolStruct} at the storage location of each of the {@code functionSymbolStores}.
 	 *
 	 * @param mv
 	 * 		the current {@link MethodVisitor} to generate the code inside

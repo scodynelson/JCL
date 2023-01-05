@@ -39,8 +39,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 /**
- * Class to generate {@link LambdaStruct} object dynamically by creating a new Java class with the name of the {@link
- * LambdaStruct#className} value, the supported parameter methods for the {@link LambdaStruct#lambdaListBindings}
+ * Class to generate {@link LambdaStruct} object dynamically by creating a new Java class with the name of the
+ * {@link LambdaStruct#className} value, the supported parameter methods for the {@link LambdaStruct#lambdaListBindings}
  * values, and the execution body containing the {@link LambdaStruct#forms} values.
  */
 @Getter
@@ -95,8 +95,8 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_NAME = "initLambdaListBindings";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#initLambdaListBindings()}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledFunctionStruct#initLambdaListBindings()} method.
 	 */
 	private static final String INIT_LAMBDA_LIST_BINDINGS_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)V";
 
@@ -195,32 +195,31 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	private static final String INTERNAL_APPLY_METHOD_NAME = "internalApply";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#internalApply(Environment)}
-	 * method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledFunctionStruct#internalApply(Environment)} method.
 	 */
 	private static final String INTERNAL_APPLY_METHOD_DESC = "(Ljcl/compiler/environment/Environment;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the name for the {@link CompiledFunctionStruct#getInitForm(Environment,
-	 * SymbolStruct)} method.
+	 * Constant {@link String} containing the name for the
+	 * {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_NAME = "getInitForm";
 
 	/**
-	 * Constant {@link String} containing the description for the {@link CompiledFunctionStruct#getInitForm(Environment,
-	 * SymbolStruct)} method.
+	 * Constant {@link String} containing the description for the
+	 * {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_DESC = "(Ljcl/compiler/environment/Environment;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * Constant {@link String} containing the signature for the {@link CompiledFunctionStruct#getInitForm(Environment,
-	 * SymbolStruct)} method.
+	 * Constant {@link String} containing the signature for the
+	 * {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method.
 	 */
 	private static final String GET_INIT_FORM_METHOD_SIGNATURE = "(Ljcl/compiler/environment/Environment;Ljcl/lang/SymbolStruct;)Ljcl/lang/LispStruct;";
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link LambdaStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code LambdaStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Creating a new {@link JavaClassBuilder}, which internally creates a new {@link ClassWriter}</li>
 	 * <li>Visiting a new class via {@link ClassWriter#visit(int, int, String, String, String, String[])} of the new
@@ -550,9 +549,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#internalApply(Environment)} method for the generated
-	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#internalApply(Environment)} method for the
+	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
+	 * the following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link LambdaStruct#forms} are
 	 * empty</li>
@@ -604,8 +603,8 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method for
-	 * the generated lambda class object being written to via the provided {@link ClassWriter}. The generation will
+	 * Private method for generating the {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method
+	 * for the generated lambda class object being written to via the provided {@link ClassWriter}. The generation will
 	 * perform the following operations:
 	 * <ol>
 	 * <li>Generating a condition check using {@link SymbolStruct#eq(LispStruct)} to determine if the provided {@link
@@ -698,25 +697,25 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method used for assisting the generation of the {@link CompiledFunctionStruct#getInitForm(Environment,
-	 * SymbolStruct)} method, generating the {@link SymbolStruct} equality check as well as the {@link LispStruct}
-	 * value of the init-form.
+	 * Private method used for assisting the generation of the
+	 * {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method, generating the {@link SymbolStruct}
+	 * equality check as well as the {@link LispStruct} value of the init-form.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building the Java method body for the {@link
-	 * 		CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method
+	 *        {@link JavaMethodBuilder} used for building the Java method body for the
+	 *        {@link CompiledFunctionStruct#getInitForm(Environment, SymbolStruct)} method
 	 * @param symbolArgStore
 	 * 		the storage location index on the stack where the {@link SymbolStruct} parameter value is located
 	 * @param initFormVarPackageStore
-	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var} {@link
-	 * 		SymbolStruct} will exist
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@code var}
+	 *        {@link SymbolStruct} will exist
 	 * @param initFormVarSymbolStore
 	 * 		the storage location index on the stack where the provided {@code var} {@link SymbolStruct} will exist
 	 * @param var
-	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the {@link
-	 * 		SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
+	 * 		the {@link SymbolStruct} variable to be used as the source of the equality check against the
+	 *        {@link SymbolStruct} value at the provided {@code symbolArgStore} storage location index on the stack
 	 * @param initForm
 	 * 		the {@link LispStruct} init-form value to be generated as the value to be used when the {@link SymbolStruct}
 	 * 		matching equality to the provided {@code var} {@link SymbolStruct} is encountered
@@ -799,8 +798,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link RequiredParameter}s to generate
-	 * 		code for
+	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link RequiredParameter}s to generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
@@ -915,8 +913,7 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link OptionalParameter}s to generate
-	 * 		code for
+	 * 		the {@link OrdinaryLambdaList} containing the {@link List} of {@link OptionalParameter}s to generate code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
@@ -1010,9 +1007,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getRestBinding()} method for the generated
-	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getRestBinding()} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link
 	 * OrdinaryLambdaList#restBinding} is null</li>
@@ -1086,9 +1083,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getKeyBindings()} method for the generated
-	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getKeyBindings()} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#keyBindings} is empty</li>
@@ -1224,8 +1221,8 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating a {@link SuppliedPParameter} to be used in the {@link
-	 * CompiledFunctionStruct#getOptionalBindings()} and {@link CompiledFunctionStruct#getKeyBindings()} method
+	 * Private method for generating a {@link SuppliedPParameter} to be used in the
+	 * {@link CompiledFunctionStruct#getOptionalBindings()} and {@link CompiledFunctionStruct#getKeyBindings()} method
 	 * generation code as the {@link OptionalParameter#suppliedPBinding} and {@link KeyParameter#suppliedPBinding}
 	 * values.
 	 *
@@ -1234,8 +1231,8 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param suppliedPPackageStore
-	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided {@link
-	 * 		SuppliedPParameter#var} will exist
+	 * 		the storage location index on the stack where the {@link PackageStruct} for the provided
+	 *        {@link SuppliedPParameter#var} will exist
 	 * @param suppliedPSymbolStore
 	 * 		the storage location index on the stack where the {@link SuppliedPParameter#var} will exist
 	 * @param suppliedPStore
@@ -1274,9 +1271,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getAllowOtherKeys()} ()} method for the
-	 * generated lambda class object being written to via the provided {@link ClassWriter}. The generation will perform
-	 * the following operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getAllowOtherKeys()} ()} method for the generated
+	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
+	 * following operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the value of {@link
 	 * OrdinaryLambdaList#allowOtherKeys} is false, as this is the default return value of the overridden
@@ -1296,8 +1293,8 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param lambdaListBindings
-	 * 		the {@link OrdinaryLambdaList} containing the {@literal &allow-other-keys} {@code boolean} value to
-	 * 		generate code for
+	 * 		the {@link OrdinaryLambdaList} containing the {@literal &allow-other-keys} {@code boolean} value to generate
+	 * 		code for
 	 * @param cw
 	 * 		the current {@link ClassWriter} to generate the method code for
 	 */
@@ -1331,9 +1328,9 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method for generating the {@link CompiledFunctionStruct#getAuxBindings()} method for the generated
-	 * lambda class object being written to via the provided {@link ClassWriter}. The generation will perform the
-	 * following operations:
+	 * Private method for generating the {@link CompiledFunctionStruct#getAuxBindings()} method for the generated lambda
+	 * class object being written to via the provided {@link ClassWriter}. The generation will perform the following
+	 * operations:
 	 * <ol>
 	 * <li>Returning early and avoid generating the method unnecessarily if the {@link List} of {@link
 	 * OrdinaryLambdaList#auxBindings} is empty</li>

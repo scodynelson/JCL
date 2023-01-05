@@ -23,8 +23,8 @@ public class TheStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link TheStruct} objects. The {@link TheStruct#form} value is generated directly.
+	 * {@inheritDoc} Generation method for {@code TheStruct} objects. The {@link TheStruct#form} value is generated
+	 * directly.
 	 *
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process

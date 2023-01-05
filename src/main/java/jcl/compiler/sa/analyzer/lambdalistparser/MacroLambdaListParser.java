@@ -31,7 +31,7 @@ import lombok.experimental.UtilityClass;
 public final class MacroLambdaListParser {
 
 	public static MacroLambdaList parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                            final DeclareStruct declareElement) {
+	                                                   final DeclareStruct declareElement) {
 
 		final LispStruct last = lambdaList.last(IntegerStruct.ZERO);
 		if (NILStruct.INSTANCE.eq(last)) {

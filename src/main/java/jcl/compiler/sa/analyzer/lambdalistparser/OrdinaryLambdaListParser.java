@@ -26,7 +26,7 @@ import lombok.experimental.UtilityClass;
 public final class OrdinaryLambdaListParser {
 
 	public static OrdinaryLambdaList parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                                  final DeclareStruct declareElement) {
+	                                                         final DeclareStruct declareElement) {
 
 		final Iterator<LispStruct> iterator = lambdaList.iterator();
 

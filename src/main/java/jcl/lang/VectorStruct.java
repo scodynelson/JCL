@@ -76,8 +76,8 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	LispStruct vectorPush(final LispStruct newElement);
 
 	/**
-	 * Pushes the provided {@code element} into the current fill-pointer index and extends the vector to the
-	 * current size of the contents plus the provided {@code extensionAmount}.
+	 * Pushes the provided {@code element} into the current fill-pointer index and extends the vector to the current
+	 * size of the contents plus the provided {@code extensionAmount}.
 	 *
 	 * @param newElement
 	 * 		the element to push into the vector
@@ -135,7 +135,8 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 *
-	 * @return a new VectorStruct representation of the provided size, element-type, contents, adjustable, and fillPointer
+	 * @return a new VectorStruct representation of the provided size, element-type, contents, adjustable, and
+	 * fillPointer
 	 */
 	static VectorStruct toLispVector(final IntegerStruct size, final SymbolStruct elementType,
 	                                 final List<LispStruct> contents, final BooleanStruct adjustable,
@@ -162,7 +163,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 	 * 		the vector fillPointer
 	 *
 	 * @return a new VectorStruct representation of the provided size, element-type, displacedTo, displacedIndexOffset,
-	 * 		adjustable, and fillPointer
+	 * adjustable, and fillPointer
 	 */
 	static VectorStruct toLispVector(final IntegerStruct size, final SymbolStruct elementType,
 	                                 final ArrayStruct displacedTo, final IntegerStruct displacedIndexOffset,
@@ -192,8 +193,7 @@ public interface VectorStruct extends ArrayStruct, SequenceStruct {
 		if (eq(object)) {
 			return true;
 		}
-		if (object instanceof VectorStruct) {
-			final VectorStruct v = (VectorStruct) object;
+		if (object instanceof final VectorStruct v) {
 
 			final IntegerStruct thisLength = length();
 			if (!thisLength.eql(v.length())) {

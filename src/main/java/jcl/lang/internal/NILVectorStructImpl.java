@@ -198,8 +198,7 @@ public class NILVectorStructImpl extends AbstractStringStructImpl {
 	 */
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for NILVectorStructImpl objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code NILVectorStructImpl} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Constructing a new NILVectorStructImpl</li>
 	 * </ol>

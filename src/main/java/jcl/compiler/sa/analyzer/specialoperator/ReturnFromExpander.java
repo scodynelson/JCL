@@ -36,10 +36,9 @@ public final class ReturnFromExpander extends MacroFunctionExpander<ReturnFromSt
 		}
 		final LispStruct first = iterator.next();
 
-		if (!(first instanceof SymbolStruct)) {
+		if (!(first instanceof final SymbolStruct name)) {
 			throw new TypeErrorException("RETURN-FROM: NAME must be a Symbol. Got: " + first);
 		}
-		final SymbolStruct name = (SymbolStruct) first;
 
 		if (environment.getBlockStack().search(name) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + name + " is visible.");

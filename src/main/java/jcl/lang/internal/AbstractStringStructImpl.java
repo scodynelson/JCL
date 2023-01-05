@@ -151,8 +151,8 @@ public abstract class AbstractStringStructImpl extends AbstractVectorStructImpl 
 
 	/**
 	 * Destructively modifies the current contents or possible displaced contents by utilizing the provided
-	 * case-altering operation function and the provided {@link StringIntervalOpContext} for the start and end values
-	 * in determining casing boundaries.
+	 * case-altering operation function and the provided {@link StringIntervalOpContext} for the start and end values in
+	 * determining casing boundaries.
 	 *
 	 * @param context
 	 * 		the {@link StringIntervalOpContext} containing the start and end values

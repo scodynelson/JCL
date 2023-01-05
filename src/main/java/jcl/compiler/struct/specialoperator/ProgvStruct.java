@@ -59,8 +59,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	private static final String VALUES_LIST_MUST_BE_A_LIST = "PROGV: Values list must be a list. Got: ";
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link ProgvStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code ProgvStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Generating the {@link ProgvStruct#vars} value, checking that the var result is a {@link ListStruct} and that
 	 * each of the vars are {@link SymbolStruct}s</li>
@@ -140,7 +139,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaEnvironmentMethodBuilder} used for building a Java method body
+	 *        {@link JavaEnvironmentMethodBuilder} used for building a Java method body
 	 */
 	@Override
 	protected void generateSpecialOperator(final GeneratorState generatorState, final JavaEnvironmentMethodBuilder methodBuilder) {
@@ -194,15 +193,16 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	/**
 	 * Private method to handle the generation of a {@link LispStruct} that could possibly be a {@link ListStruct}. If
 	 * it does evaluate to a {@link ListStruct} at runtime, the code to generate the return of a {@link List} via
-	 * {@link ListStruct#stream()} to produce a {@link Stream}, which is then collected into a list via {@link
-	 * Collectors#toList}. Otherwise, the code to generate a {@link ProgramErrorException} and throw is executed.
+	 * {@link ListStruct#stream()} to produce a {@link Stream}, which is then collected into a list via
+	 * {@link Collectors#toList}. Otherwise, the code to generate a {@link ProgramErrorException} and throw is
+	 * executed.
 	 *
 	 * @param possibleList
 	 * 		the {@link LispStruct} to be generated that might be a possible {@link ListStruct}
 	 * @param generatorState
 	 * 		stateful object used to hold the current state of the code generation process
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 *        {@link JavaMethodBuilder} used for building a Java method body
 	 * @param mustBeListErrorString
 	 * 		the {@link String} to use as the error message when creating the {@link ProgramErrorException} when the
 	 * 		provided {@code possibleList} does not produce a {@link ListStruct}
@@ -264,7 +264,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * not, the generated {@link ProgramErrorException} response is thrown.
 	 *
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 *        {@link JavaMethodBuilder} used for building a Java method body
 	 * @param varsJavaListStore
 	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct} vars exist
 	 */
@@ -319,14 +319,14 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * Private method to handle the generation of dynamic binding of the {@link List} of vars at the {@code
-	 * varsJavaListStore} location and the {@link List} of vals at the {@code valsJavaListStore} location. The var
-	 * {@link SymbolStruct}s are bound via {@link SymbolStruct#bindDynamicValue(LispStruct)} by looping through the
+	 * Private method to handle the generation of dynamic binding of the {@link List} of vars at the
+	 * {@code varsJavaListStore} location and the {@link List} of vals at the {@code valsJavaListStore} location. The
+	 * var {@link SymbolStruct}s are bound via {@link SymbolStruct#bindDynamicValue(LispStruct)} by looping through the
 	 * lists binding the vars to the matching vals sequentially and to 'null' (unbound) if the {@link List} of vals is
 	 * greater than the list of vars.
 	 *
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 *        {@link JavaMethodBuilder} used for building a Java method body
 	 * @param varsJavaListStore
 	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct} vars exist
 	 * @param valsJavaListStore
@@ -428,7 +428,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	 * each {@link SymbolStruct} within the {@link List} at the storage location of the {@code varJavaListStore}.
 	 *
 	 * @param methodBuilder
-	 * 		{@link JavaMethodBuilder} used for building a Java method body
+	 *        {@link JavaMethodBuilder} used for building a Java method body
 	 * @param varsJavaListStore
 	 * 		the storage location index on the stack where the {@link List} of {@link SymbolStruct}s to unbind dynamic
 	 * 		values from exists

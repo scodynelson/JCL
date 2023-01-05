@@ -137,8 +137,7 @@ public final class Parameters {
 		for (final Iterator<LispStruct> restIterator = restList.iterator(); restIterator.hasNext(); ) {
 			final LispStruct argument = restIterator.next();
 
-			if (argument instanceof KeywordStruct) {
-				final KeywordStruct keywordArgument = (KeywordStruct) argument;
+			if (argument instanceof final KeywordStruct keywordArgument) {
 
 				if (keywordsToKeys.containsKey(keywordArgument)) {
 					final KeyParameter keyParameter = keywordsToKeys.remove(keywordArgument);

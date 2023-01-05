@@ -45,10 +45,9 @@ public final class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 		for (int index = 0; index < numberOfForms; index += 2) {
 
 			final LispStruct setqVar = forms.get(index);
-			if (!(setqVar instanceof SymbolStruct)) {
+			if (!(setqVar instanceof final SymbolStruct setqVarSymbol)) {
 				throw new TypeErrorException("SETQ: VARIABLE must be a Symbol. Got: " + setqVar);
 			}
-			final SymbolStruct setqVarSymbol = (SymbolStruct) setqVar;
 
 			final LispStruct setqForm = forms.get(index + 1);
 			final LispStruct setqFormAnalyzed = FormAnalyzer.analyze(setqForm, environment);

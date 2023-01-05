@@ -585,8 +585,8 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 	}
 
 	/**
-	 * Checks the provided structure is a {@link SymbolStruct} and returns it. If the value is not a {@link
-	 * SymbolStruct} a {@link TypeErrorException} is thrown.
+	 * Checks the provided structure is a {@link SymbolStruct} and returns it. If the value is not a
+	 * {@link SymbolStruct} a {@link TypeErrorException} is thrown.
 	 *
 	 * @param struct
 	 * 		the structure to check
@@ -603,8 +603,8 @@ public class PackageStructImpl extends LispStructImpl implements PackageStruct {
 
 	/**
 	 * Verifies a {@link SymbolStruct} is present in this package with the provided {@code symbolName} and is the same
-	 * instance as the provided {@link SymbolStruct} in the package. If this is the case, a {@link
-	 * PackageErrorException} will be thrown.
+	 * instance as the provided {@link SymbolStruct} in the package. If this is the case, a
+	 * {@link PackageErrorException} will be thrown.
 	 *
 	 * @param symbol
 	 * 		the {@link SymbolStruct} to verify matches an existing accessible symbol

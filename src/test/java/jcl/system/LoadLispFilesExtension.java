@@ -63,7 +63,7 @@ public class LoadLispFilesExtension implements BeforeAllCallback, ExtensionConte
 				final LispStruct pathnameType = StringStruct.toLispString("jar");
 
 				// TODO: Can we fix Pathnames needing to have a trailing "/" for determining directory or file???
-				final PathnameStruct destDirectory = PathnameStruct.toPathname(tmpDir.toFile().getAbsolutePath() + "/");
+				final PathnameStruct destDirectory = PathnameStruct.toPathname(tmpDir.toFile().getAbsolutePath() + '/');
 				final PathnameStruct newSourceFile = PathnameStruct.toPathname(
 						destDirectory.pathnameHost(),
 						destDirectory.pathnameDevice(),

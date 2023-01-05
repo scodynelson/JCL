@@ -36,8 +36,7 @@ public class LocallyStruct extends CompilerSpecialOperatorStruct {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Generation method for {@link LocallyStruct} objects, by performing the following operations:
+	 * {@inheritDoc} Generation method for {@code LocallyStruct} objects, by performing the following operations:
 	 * <ol>
 	 * <li>Temporarily pushing the {@link LocallyStruct#locallyEnvironment} onto the {@link
 	 * GeneratorState#environmentDeque} while generating the code for the {@link LocallyStruct#forms} values</li>

@@ -43,8 +43,8 @@ abstract class AbstractDualStreamStructImpl extends StreamStructImpl implements 
 	}
 
 	/**
-	 * Retrieves the element type for this dual-stream based on the provided {@link InputStreamStruct} and {@link
-	 * OutputStreamStruct}.
+	 * Retrieves the element type for this dual-stream based on the provided {@link InputStreamStruct} and
+	 * {@link OutputStreamStruct}.
 	 *
 	 * @param inputStreamStruct
 	 * 		the {@link InputStreamStruct} used to find the stream element-type

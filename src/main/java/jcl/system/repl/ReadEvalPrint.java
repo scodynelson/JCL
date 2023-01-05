@@ -62,8 +62,7 @@ public class ReadEvalPrint {
 					CommonLispSymbols.SLASH_SLASH.setfSymbolValue(CommonLispSymbols.SLASH.symbolValue());
 
 					// bind '*' and '/' values to the form just evaluated
-					if (value instanceof ValuesStruct) {
-						final ValuesStruct values = (ValuesStruct) value;
+					if (value instanceof final ValuesStruct values) {
 						CommonLispSymbols.STAR.setfSymbolValue(values.getPrimaryValue());
 						CommonLispSymbols.SLASH.setfSymbolValue(ListStruct.toLispList(values.getValuesList()));
 					} else {

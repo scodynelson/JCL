@@ -46,8 +46,8 @@ public final class ReadCharResult {
 	}
 
 	/**
-	 * Returns true if either an End-of-File was hit (aka. the ReadCharResult eofValue constructor was called) or if
-	 * the result object was null. The result object will always be null if the ReadCharResult eofValue constructor is
+	 * Returns true if either an End-of-File was hit (aka. the ReadCharResult eofValue constructor was called) or if the
+	 * result object was null. The result object will always be null if the ReadCharResult eofValue constructor is
 	 * called but can also be null if the value passed to the ReadCharResult result constructor is null.
 	 *
 	 * @return true if the ReadCharResult was an End-of-File read; false otherwise

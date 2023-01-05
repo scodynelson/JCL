@@ -278,10 +278,10 @@ public interface PackageStruct extends LispStruct {
 	BooleanStruct unexport(final ListStruct symbols);
 
 	/**
-	 * Assures that the symbol with the name given by {@code symbolName} is present in the package. If the symbol is
-	 * not present in package (directly, not by inheritance), then a corresponding symbol is created with that name,
-	 * and inserted into package as an internal symbol. The corresponding symbol, whether pre-existing or newly created,
-	 * is then added, if not already present, to the shadowing symbols list of package.
+	 * Assures that the symbol with the name given by {@code symbolName} is present in the package. If the symbol is not
+	 * present in package (directly, not by inheritance), then a corresponding symbol is created with that name, and
+	 * inserted into package as an internal symbol. The corresponding symbol, whether pre-existing or newly created, is
+	 * then added, if not already present, to the shadowing symbols list of package.
 	 *
 	 * @param symbolName
 	 * 		the name of the symbols to shadow
@@ -338,8 +338,8 @@ public interface PackageStruct extends LispStruct {
 	BooleanStruct unintern(final SymbolStruct symbol);
 
 	/**
-	 * Finds the matching package in the {@link GlobalPackageStruct#ALL_PACKAGES} map by the provided {@code
-	 * packageName}.
+	 * Finds the matching package in the {@link GlobalPackageStruct#ALL_PACKAGES} map by the provided
+	 * {@code packageName}.
 	 *
 	 * @param packageName
 	 * 		the name of the package to location within the {@link GlobalPackageStruct#ALL_PACKAGES} map
@@ -355,8 +355,8 @@ public interface PackageStruct extends LispStruct {
 	}
 
 	/**
-	 * Finds the matching package in the {@link GlobalPackageStruct#ALL_PACKAGES} map by the provided {@code
-	 * packageName}.
+	 * Finds the matching package in the {@link GlobalPackageStruct#ALL_PACKAGES} map by the provided
+	 * {@code packageName}.
 	 *
 	 * @param packageDesignator
 	 * 		the name of the package to location within the {@link GlobalPackageStruct#ALL_PACKAGES} map
@@ -393,8 +393,8 @@ public interface PackageStruct extends LispStruct {
 	}
 
 	/**
-	 * Creates a new PackageStruct with the name {@code name} and adds it to the {@link
-	 * GlobalPackageStruct#ALL_PACKAGES} map.
+	 * Creates a new PackageStruct with the name {@code name} and adds it to the
+	 * {@link GlobalPackageStruct#ALL_PACKAGES} map.
 	 *
 	 * @param name
 	 * 		the name of the new package
@@ -406,8 +406,8 @@ public interface PackageStruct extends LispStruct {
 	}
 
 	/**
-	 * Creates a new PackageStruct with the name {@code name} and nicknames {@code nicknames}, and adds it to the {@link
-	 * GlobalPackageStruct#ALL_PACKAGES} map.
+	 * Creates a new PackageStruct with the name {@code name} and nicknames {@code nicknames}, and adds it to the
+	 * {@link GlobalPackageStruct#ALL_PACKAGES} map.
 	 *
 	 * @param name
 	 * 		the name of the new package
@@ -451,16 +451,13 @@ public interface PackageStruct extends LispStruct {
 	static PackageStruct fromDesignator(final LispStruct struct) {
 		if (struct instanceof PackageStruct) {
 			return (PackageStruct) struct;
-		} else if (struct instanceof SymbolStruct) {
-			final SymbolStruct symbolStruct = (SymbolStruct) struct;
+		} else if (struct instanceof final SymbolStruct symbolStruct) {
 			final String name = symbolStruct.getName();
 			return findPackage(name);
-		} else if (struct instanceof CharacterStruct) {
-			final CharacterStruct characterStruct = (CharacterStruct) struct;
+		} else if (struct instanceof final CharacterStruct characterStruct) {
 			final String packageName = characterStruct.toJavaCharacter().toString();
 			return findPackage(packageName);
-		} else if (struct instanceof StringStruct) {
-			final StringStruct stringStruct = (StringStruct) struct;
+		} else if (struct instanceof final StringStruct stringStruct) {
 			final String packageName = stringStruct.toJavaString();
 			return findPackage(packageName);
 		} else {
@@ -470,8 +467,8 @@ public interface PackageStruct extends LispStruct {
 
 	/**
 	 * Creates a new PackageStruct with the name {@code name} and nicknames {@code nicknames}, and adds it to the
-	 * {@link GlobalPackageStruct#ALL_PACKAGES} map. The resulting PackageStruct will also use the packages in {@code
-	 * usePackages}.
+	 * {@link GlobalPackageStruct#ALL_PACKAGES} map. The resulting PackageStruct will also use the packages in
+	 * {@code usePackages}.
 	 *
 	 * @param packageName
 	 * 		the name of the new package

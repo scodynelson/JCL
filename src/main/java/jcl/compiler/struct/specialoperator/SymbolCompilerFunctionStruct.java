@@ -67,4 +67,9 @@ public class SymbolCompilerFunctionStruct implements CompilerFunctionStruct {
 	public LispStruct eval(final Environment environment) {
 		return environment.getFunction(functionSymbol);
 	}
+
+	@Override
+	public String toString() {
+		return "(FUNCTION " + functionSymbol.toString() + ')';
+	}
 }

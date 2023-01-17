@@ -35,6 +35,19 @@ public interface LispStruct {
 		throw new GenerationUnsupportedException();
 	}
 
+	default LispStruct documentation() {
+		return NILStruct.INSTANCE;
+	}
+
+	default LispStruct setDocumentation(final StringStruct docString) {
+		return NILStruct.INSTANCE;
+	}
+
+	@Deprecated
+	default LispStruct setDocumentation(final String docString) {
+		return NILStruct.INSTANCE;
+	}
+
 	default LispStruct typeOf() {
 		return CommonLispSymbols.T;
 	}

@@ -49,8 +49,8 @@ public abstract class CompiledFunctionStruct extends FunctionStructImpl {
 	}
 
 	protected CompiledFunctionStruct(final String documentation, final Environment environment) {
-		super(documentation);
 		this.environment = environment;
+		setDocumentation(documentation);
 	}
 
 	private static final SymbolStruct DUMMY_SYMBOL = SymbolStruct.toLispSymbol("dummySymbol");

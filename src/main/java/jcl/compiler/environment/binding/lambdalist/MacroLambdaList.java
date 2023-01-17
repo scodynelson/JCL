@@ -6,6 +6,7 @@ package jcl.compiler.environment.binding.lambdalist;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -111,5 +112,84 @@ public class MacroLambdaList {
 		public MacroLambdaList build() {
 			return new MacroLambdaList(this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append('(');
+
+		boolean wasBuilderUpdated = false;
+		if (!requiredBindings.isEmpty()) {
+			final String requiredString = requiredBindings.stream()
+			                                              .map(Object::toString)
+			                                              .collect(Collectors.joining(" "));
+			builder.append(requiredString);
+
+			wasBuilderUpdated = true;
+		}
+		if (!optionalBindings.isEmpty()) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String optionalString = optionalBindings.stream()
+			                                              .map(Object::toString)
+			                                              .collect(Collectors.joining(" "));
+			builder.append("&optional ")
+			       .append(optionalString);
+
+			wasBuilderUpdated = true;
+		}
+
+		if (restBinding != null) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String restString = restBinding.toString();
+			builder.append("&rest ")
+			       .append(restString);
+
+			wasBuilderUpdated = true;
+		}
+
+		if (!keyBindings.isEmpty()) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String keyString = keyBindings.stream()
+			                                    .map(Object::toString)
+			                                    .collect(Collectors.joining(" "));
+			builder.append("&key ")
+			       .append(keyString);
+
+			wasBuilderUpdated = true;
+		}
+
+		if (allowOtherKeys) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			builder.append("&allow-other-keys");
+
+			wasBuilderUpdated = true;
+		}
+
+		if (!auxBindings.isEmpty()) {
+			if (wasBuilderUpdated) {
+				builder.append(' ');
+			}
+
+			final String auxString = auxBindings.stream()
+			                                    .map(Object::toString)
+			                                    .collect(Collectors.joining(" "));
+			builder.append(auxString);
+		}
+
+		builder.append(')');
+		return builder.toString();
 	}
 }

@@ -48,4 +48,9 @@ public class MacroLambdaCompilerFunctionStruct implements CompilerFunctionStruct
 		// TODO: is this correct??
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "(MACRO-FUNCTION " + macroLambdaStruct.toString() + ')';
+	}
 }

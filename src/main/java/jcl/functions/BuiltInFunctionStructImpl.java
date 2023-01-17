@@ -11,9 +11,9 @@ public abstract class BuiltInFunctionStructImpl extends FunctionStructImpl {
 	private final Parameters parameters;
 
 	protected BuiltInFunctionStructImpl(final String documentation, final String functionName, final Parameters parameters) {
-		super(documentation);
 		this.functionName = functionName;
 		this.parameters = parameters;
+		setDocumentation(documentation);
 	}
 
 	@Override

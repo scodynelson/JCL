@@ -14,33 +14,6 @@ import jcl.lang.statics.CommonLispSymbols;
  */
 public abstract class FunctionStructImpl extends LispStructImpl implements FunctionStruct {
 
-	protected String documentation;
-
-	/**
-	 * Protected constructor.
-	 */
-	protected FunctionStructImpl() {
-		documentation = null;
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param documentation
-	 * 		instance documentation string
-	 */
-	protected FunctionStructImpl(final String documentation) {
-		this.documentation = documentation;
-	}
-
-	public String getDocumentation() {
-		return documentation;
-	}
-
-	public void setDocumentation(final String documentation) {
-		this.documentation = documentation;
-	}
-
 	@Override
 	public LispStruct typeOf() {
 		return CommonLispSymbols.FUNCTION;

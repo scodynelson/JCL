@@ -520,17 +520,23 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
-		String documentation = "";
-		if (docString != null) {
-			documentation = docString.toJavaString();
+		if (docString == null) {
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.COMPILED_FUNCTION_STRUCT_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
+			                   false);
+		} else {
+			final String documentation = docString.toJavaString();
+			mv.visitLdcInsn(documentation);
+			mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                   GenerationConstants.COMPILED_FUNCTION_STRUCT_NAME,
+			                   GenerationConstants.INIT_METHOD_NAME,
+			                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_STRING_ENVIRONMENT_DESC,
+			                   false);
 		}
-		mv.visitLdcInsn(documentation);
-		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_NAME,
-		                   GenerationConstants.INIT_METHOD_NAME,
-		                   GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_STRING_ENVIRONMENT_DESC,
-		                   false);
 
 		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitVarInsn(Opcodes.ALOAD, environmentStore);

@@ -55,6 +55,7 @@ repositories {
 dependencies {
     implementation(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
     implementation(platform("org.ow2.asm:asm-bom:9.4"))
+    implementation(platform("org.junit:junit-bom:5.9.2"))
 
     implementation("com.google.guava:guava:31.1-jre")
     implementation("com.ibm.icu:icu4j:72.1")
@@ -72,8 +73,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-    testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.assertj:assertj-core:3.24.2")
 
     implementation("org.apache.logging.log4j:log4j-api")
     runtimeOnly("org.apache.logging.log4j:log4j-core")

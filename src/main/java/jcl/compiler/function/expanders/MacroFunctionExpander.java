@@ -19,7 +19,9 @@ import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.WholeParameter;
 import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
+import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.expander.MacroFunctionExpanderInter;
 
 public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroExpander<O, ListStruct> implements MacroFunctionExpanderInter {
@@ -98,7 +100,15 @@ public abstract class MacroFunctionExpander<O extends LispStruct> extends MacroE
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
 		final ListStruct listStruct = (ListStruct) lispStructs[0];
-		final Environment environment = (Environment) lispStructs[1];
+
+		final Environment environment;
+		if (NILStruct.INSTANCE.eq(lispStructs[1])) {
+			environment = Environment.NULL;
+		} else if (lispStructs[1] instanceof Environment) {
+			environment = (Environment) lispStructs[1];
+		} else {
+			throw new TypeErrorException("Invalid ENVIRONMENT argument. Must be a valid ENVIRONMENT or NIL.");
+		}
 		return expand(listStruct, environment);
 	}
 }

@@ -15,7 +15,7 @@ public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> 
 	}
 
 	protected MacroExpander(final String documentation) {
-		super(documentation);
+		setDocumentation(documentation);
 	}
 
 	public abstract O expand(I form, Environment environment);

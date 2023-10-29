@@ -29,6 +29,7 @@ jobs:
       - name: Upload CodeCov
         uses: codecov/codecov-action@v3
   sonarcloud:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project sources

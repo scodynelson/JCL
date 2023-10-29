@@ -235,8 +235,8 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 		}
 
 		try {
-			final URL url = new URL(s);
-		} catch (final MalformedURLException e) {
+			final URL url = URI.create(s).toURL();
+		} catch (final IllegalArgumentException | MalformedURLException e) {
 			// Generating an exception is a heavy operation,
 			// we want to try hard not to get into this branch, without
 			// implementing the URL class ourselves
@@ -306,7 +306,7 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 			if (!file.isEmpty()) {
 				URI uri = null;
 				try {
-					final URL url = new URL(FILE_PREFIX + file);
+					final URL url = URI.create(FILE_PREFIX + file).toURL();
 					uri = url.toURI();
 				} catch (final MalformedURLException | URISyntaxException e) {
 					throw new SimpleErrorException("Failed to create URI from "
@@ -328,10 +328,10 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 		} else {
 			URL url = null;
 			try {
-				url = new URL(jar.substring(JAR_PREFIX.length(), jar.length() - 2));
+				url = URI.create(jar.substring(JAR_PREFIX.length(), jar.length() - 2)).toURL();
 				final PathnameStructImpl p = new PathnameStructImpl(url.toString());
 				jars = ConsStruct.toLispCons(p, jars);
-			} catch (final MalformedURLException e) {
+			} catch (final IllegalArgumentException | MalformedURLException e) {
 				throw new ErrorException("Failed to parse URL "
 						                         + '\'' + url + '\''
 						                         + e.getMessage());
@@ -347,8 +347,8 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 
 		final URL url;
 		try {
-			url = new URL(jarURL);
-		} catch (final MalformedURLException e) {
+			url = URI.create(jarURL).toURL();
+		} catch (final IllegalArgumentException | MalformedURLException e) {
 			throw new ErrorException("Failed to parse URL " + '\'' + jarURL + '\'' + e.getMessage(), e);
 		}
 
@@ -369,8 +369,8 @@ public class PathnameStructImpl extends LispStructImpl implements PathnameStruct
 	private void initURL(final String s) {
 		final URL url;
 		try {
-			url = new URL(s);
-		} catch (final MalformedURLException e) {
+			url = URI.create(s).toURL();
+		} catch (final IllegalArgumentException | MalformedURLException e) {
 			throw new ErrorException("Why?", e); // TODO
 		}
 

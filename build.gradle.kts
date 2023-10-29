@@ -1,9 +1,9 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.44.0"
+    id("com.github.ben-manes.versions") version "0.49.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "3.5.0.2730"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.sonarqube") version "4.4.1.3373"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 // ************************************************
@@ -15,9 +15,6 @@ configurations.all {
         // fail eagerly on version conflict (includes transitive dependencies)
         // e.g. multiple different versions of the same dependency (group and name are equal)
         failOnVersionConflict()
-
-        force("org.checkerframework:checker-qual:3.9.1")
-        force("org.apache.commons:commons-lang3:3.12.0")
     }
 }
 
@@ -26,14 +23,14 @@ configurations.all {
 // ************************************************
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_19
-    targetCompatibility = JavaVersion.VERSION_19
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
     withSourcesJar()
 //		withJavadocJar()
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.11"
 }
 
 // ************************************************
@@ -53,27 +50,29 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
-    implementation(platform("org.ow2.asm:asm-bom:9.4"))
-    implementation(platform("org.junit:junit-bom:5.9.2"))
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.21.1"))
+    implementation(platform("org.ow2.asm:asm-bom:9.6"))
+    implementation(platform("org.junit:junit-bom:5.10.0"))
 
-    implementation("com.google.guava:guava:31.1-jre")
-    implementation("com.ibm.icu:icu4j:72.1")
-    implementation("commons-io:commons-io:2.11.0")
+    implementation("com.google.guava:guava:32.1.3-jre")
+    implementation("com.ibm.icu:icu4j:73.2")
+    implementation("commons-io:commons-io:2.15.0")
     implementation("org.apache.commons:commons-collections4:4.4")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.apache.commons:commons-text:1.10.0")
-    implementation("org.apfloat:apfloat:1.10.1")
+    implementation("org.apache.commons:commons-text:1.11.0")
+    implementation("org.apfloat:apfloat:1.12.0")
     implementation("org.benf:cfr:0.152")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
-    implementation("info.picocli:picocli:4.7.0")
+    implementation("info.picocli:picocli:4.7.5")
 
-    compileOnly("org.projectlombok:lombok:1.18.24")
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
     testImplementation("org.assertj:assertj-core:3.24.2")
 
     implementation("org.apache.logging.log4j:log4j-api")
@@ -264,10 +263,7 @@ tasks.javadoc {
 // ************************************************
 
 tasks.test {
-    systemProperty("java.awt.headless", "true")
-
     useJUnitPlatform()
-
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
@@ -276,11 +272,11 @@ tasks.test {
 // ************************************************
 
 tasks.jacocoTestReport {
-    dependsOn("test") // tests are required to run before generating the report
+    dependsOn(tasks.test) // tests are required to run before generating the report
     reports {
-        xml.required.set(true)
-        csv.required.set(false)
-        html.required.set(true)
+        xml.required = true
+        csv.required = false
+        html.required = true
     }
 }
 
@@ -291,6 +287,7 @@ tasks.jacocoTestReport {
 sonarqube {
     properties {
         property("sonar.projectKey", "scodynelson_JCL")
+        property("sonar.skipCompile", true)
     }
 }
 
@@ -317,6 +314,6 @@ tasks.shadowJar {
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "7.6"
+    gradleVersion = "8.4"
     distributionType = Wrapper.DistributionType.ALL
 }

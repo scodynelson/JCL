@@ -1,5 +1,5 @@
 language: java
-jdk: openjdk19
+jdk: openjdk21
 
 # Need to ensure full depth clone for SonarCloud blame
 git:
@@ -19,7 +19,7 @@ script:
 # Run Build
   - ./gradlew build
 # Run SonarQube Report
-  - ./gradlew sonarqube
+  - ./gradlew assemble sonar
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

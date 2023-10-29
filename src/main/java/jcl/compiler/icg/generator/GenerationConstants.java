@@ -55,7 +55,7 @@ import org.objectweb.asm.Type;
 
 public interface GenerationConstants {
 
-	int JAVA_VERSION = Opcodes.V19;
+	int JAVA_VERSION = Opcodes.V21;
 
 	String JAVA_EXTENSION = ".java";
 

@@ -26,5 +26,5 @@ jobs:
         run: ./gradlew --version
       - name: Run build with Gradle Wrapper
         run: ./gradlew build
-#      - name: Upload CodeCov
-#        uses: codecov/codecov-action@v3
+      - name: Upload CodeCov
+        uses: codecov/codecov-action@v3

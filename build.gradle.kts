@@ -287,6 +287,7 @@ tasks.jacocoTestReport {
 sonarqube {
     properties {
         property("sonar.projectKey", "scodynelson_JCL")
+        property("sonar.organization", "scodynelson")
         property("sonar.skipCompile", true)
     }
 }

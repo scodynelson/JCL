@@ -288,6 +288,7 @@ sonarqube {
     properties {
         property("sonar.projectKey", "scodynelson_JCL")
         property("sonar.organization", "scodynelson")
+        property("sonar.host-url", "https://sonarcloud.io")
         property("sonar.skipCompile", true)
     }
 }

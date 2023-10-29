@@ -20,6 +20,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Display Gradle, JVM, and other versions
@@ -41,10 +42,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-      - name: Display Gradle, JVM, and other versions
-        run: ./gradlew --version
+          cache: gradle
       - name: Run SonarCloud Scan with Gradle Wrapper
         run: ./gradlew assemble sonar
         env:

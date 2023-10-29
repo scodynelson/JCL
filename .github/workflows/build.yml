@@ -24,7 +24,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Display Gradle, JVM, and other versions
         run: ./gradlew --version
-      - name: Run build with Gradle Wrapper
+      - name: Run Build with Gradle Wrapper
         run: ./gradlew build
       - name: Upload CodeCov
         uses: codecov/codecov-action@v3
@@ -36,7 +36,16 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: SonarCloud Scan
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Display Gradle, JVM, and other versions
+        run: ./gradlew --version
+      - name: Run SonarCloud Scan with Gradle Wrapper
         run: ./gradlew assemble sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information

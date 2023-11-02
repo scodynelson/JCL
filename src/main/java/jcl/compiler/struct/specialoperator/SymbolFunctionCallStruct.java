@@ -155,6 +155,17 @@ public class SymbolFunctionCallStruct extends CompilerSpecialOperatorStruct {
 		                   GenerationConstants.FUNCTION_STRUCT_APPLY_METHOD_DESC,
 		                   true);
 
+		// TODO: Should we be extracting values here?? I "think" we should, but it breaks special bindings somehow
+//		final int applyResultStore = methodBuilder.getNextAvailableStore();
+//		mv.visitVarInsn(Opcodes.ASTORE, applyResultStore);
+//
+//		mv.visitVarInsn(Opcodes.ALOAD, applyResultStore);
+//		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+//		                   GenerationConstants.VALUES_STRUCT_NAME,
+//		                   GenerationConstants.VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_NAME,
+//		                   GenerationConstants.VALUES_STRUCT_EXTRACT_PRIMARY_VALUE_METHOD_DESC,
+//		                   false);
+
 		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

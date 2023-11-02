@@ -391,7 +391,6 @@ public final class InternalCompile {
 				final ClassWriter cw = javaClassBuilder.getClassWriter();
 
 				final byte[] byteArray = cw.toByteArray();
-				CompileForm.outputCompiledClassFile(javaClassBuilder, byteArray);
 
 				final ClassReader cr = new ClassReader(byteArray);
 

@@ -76,6 +76,10 @@ public class GoStruct<T extends LispStruct> extends CompilerSpecialOperatorStruc
 
 		// Generate the Tag Index
 		final GeneratorState.TagbodyLabel tagbodyLabel = getTagbodyLabel(generatorState, this);
+		if (tagbodyLabel == null) {
+			throw new IllegalStateException("Missing Tagbody Label");
+		}
+
 		final int tagIndex = tagbodyLabel.getIndex();
 		mv.visitLdcInsn(tagIndex);
 

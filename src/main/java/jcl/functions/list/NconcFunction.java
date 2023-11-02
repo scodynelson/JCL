@@ -4,21 +4,17 @@
 
 package jcl.functions.list;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import jcl.functions.BuiltInFunctionStructImpl;
 import jcl.lang.ConsStruct;
 import jcl.lang.LispStruct;
-import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.SymbolStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 import jcl.lang.statics.CommonLispSymbols;
-import org.apache.commons.collections4.iterators.ReverseListIterator;
 
 public final class NconcFunction extends BuiltInFunctionStructImpl {
 
@@ -38,66 +34,41 @@ public final class NconcFunction extends BuiltInFunctionStructImpl {
 	@Override
 	public LispStruct apply(final Arguments arguments) {
 		final List<LispStruct> restArgument = arguments.getRestArgument();
-		return nConc(restArgument);
+		return apply(restArgument);
 	}
 
-	static LispStruct nConc(final List<LispStruct> listArg) {
-		final int size = listArg.size();
-		if (size == 0) {
-			return NILStruct.INSTANCE;
-		}
-		if (size == 1) {
-			return listArg.get(0);
-		}
-
-		final ReverseListIterator<LispStruct> reverseListIterator = new ReverseListIterator<>(listArg);
-		final LispStruct object = reverseListIterator.next();
-
-		final List<ListStruct> lists = new ArrayList<>();
-		reverseListIterator.forEachRemaining(argument -> {
-			if (argument instanceof ListStruct) {
-				lists.add((ListStruct) argument);
+	public static LispStruct apply(final List<LispStruct> listArg) {
+		LispStruct result = null;
+		ConsStruct splice = null;
+		final int limit = listArg.size() - 1;
+		int i;
+		for (i = 0; i < limit; i++) {
+			LispStruct list = listArg.get(i);
+			if (list == NILStruct.INSTANCE) {
+				continue;
+			}
+			if (list instanceof ConsStruct) {
+				if (splice != null) {
+					splice.rplacd(list);
+					splice = (ConsStruct) list;
+				}
+				while (list instanceof ConsStruct) {
+					if (result == null) {
+						result = list;
+						splice = (ConsStruct) result;
+					} else {
+						splice = (ConsStruct) list;
+					}
+					list = splice.cdr();
+				}
 			} else {
-				throw new TypeErrorException("Cannot convert value '" + argument + "' to type 'LIST'");
+				throw new TypeErrorException("Cannot convert value '" + list + "' to type 'LIST'");
 			}
-		});
-		return nConc(lists, object);
-	}
-
-	static LispStruct nConc(final List<ListStruct> lists, final LispStruct object) {
-		final Iterator<ListStruct> iterator = lists.iterator();
-
-		ListStruct result = NILStruct.INSTANCE;
-
-		while (iterator.hasNext()) {
-			final ListStruct list = iterator.next();
-
-			if (NILStruct.INSTANCE.eq(list)) {
-				continue;
-			}
-
-			if (NILStruct.INSTANCE.eq(result)) {
-				result = list;
-				continue;
-			}
-
-			final LispStruct last = result.last();
-			if (!(last instanceof final ConsStruct lastOfResult)) {
-				throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
-			}
-			lastOfResult.rplacd(list);
 		}
-
-		if (NILStruct.INSTANCE.eq(result)) {
-			return object;
+		if (result == null) {
+			return listArg.get(i);
 		}
-
-		final LispStruct last = result.last();
-		if (!(last instanceof final ConsStruct lastOfResult)) {
-			throw new TypeErrorException("Arguments contain a non-proper list -- " + result);
-		}
-		lastOfResult.rplacd(object);
-
+		splice.rplacd(listArg.get(i));
 		return result;
 	}
 }

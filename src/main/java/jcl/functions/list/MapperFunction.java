@@ -1,6 +1,5 @@
 package jcl.functions.list;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jcl.functions.BuiltInFunctionStructImpl;
@@ -10,6 +9,7 @@ import jcl.lang.LispStruct;
 import jcl.lang.ListStruct;
 import jcl.lang.NILStruct;
 import jcl.lang.ValuesStruct;
+import jcl.lang.condition.exception.TypeErrorException;
 import jcl.lang.function.parameterdsl.Arguments;
 import jcl.lang.function.parameterdsl.Parameters;
 
@@ -46,7 +46,7 @@ abstract class MapperFunction extends BuiltInFunctionStructImpl {
 	private LispStruct listMapper(final FunctionStruct function, final ListStruct originalArglists) {
 		final ListStruct arglists = originalArglists.copyList();
 		final ConsStruct retList = ConsStruct.toLispCons(NILStruct.INSTANCE, NILStruct.INSTANCE);
-		ConsStruct temp = retList;
+		ListStruct temp = retList;
 
 		// Outer 'DO' vars
 		ListStruct args = NILStruct.INSTANCE;
@@ -77,8 +77,8 @@ abstract class MapperFunction extends BuiltInFunctionStructImpl {
 				args = ConsStruct.toLispCons(carToPush, args);
 
 				// SETF
-				final LispStruct cdarL = ((ListStruct) remainingLists.car()).cdr();
-				((ConsStruct) remainingLists).rplaca(cdarL);
+				final LispStruct cdar = ((ListStruct) remainingLists.car()).cdr();
+				((ConsStruct) remainingLists).rplaca(cdar);
 
 				// Update remainingLists Inner 'DO' var
 				remainingLists = (ListStruct) remainingLists.cdr();
@@ -93,15 +93,14 @@ abstract class MapperFunction extends BuiltInFunctionStructImpl {
 			// CASE
 			switch (accumulate()) {
 				case NCONC:
-					final List<ListStruct> lists = new ArrayList<>();
-					for (final LispStruct curr : temp) {
-						lists.add((ListStruct) curr);
-					}
-					final ListStruct nconc = (ListStruct) NconcFunction.nConc(lists, res);
-					temp = (ConsStruct) nconc.last();
+					final ListStruct nconc = (ListStruct) NconcFunction.apply(List.of(temp, res));
+					temp = (ListStruct) nconc.last();
 					break;
 				case LIST:
-					temp.rplacd(ListStruct.toLispList(res));
+					if (temp == NILStruct.INSTANCE) {
+						throw new TypeErrorException("Cannot convert value '" + temp + "' to type 'CONS'");
+					}
+					((ConsStruct) temp).rplacd(ListStruct.toLispList(res));
 					temp = (ConsStruct) temp.cdr();
 					break;
 				case NONE:

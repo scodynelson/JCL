@@ -332,6 +332,16 @@
 
 ;; TODO: defpackage
 
+(defmacro defpackage (package &rest options)
+  (let ((use nil))
+    (dolist (option options)
+      (case (car option)
+        (:use
+         (setq use (cdr option)))
+        (t
+         (error "bad DEFPACKAGE option: ~S" option))))
+    `(make-package ,package :use ,use)))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: do-symbols, do-external-symbols, do-all-symbols

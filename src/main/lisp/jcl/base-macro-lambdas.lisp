@@ -101,7 +101,10 @@
 (compiler::macro-lambda in-package (name)
   (declare (system::%java-class-name "jcl.packages.functions.InPackage"))
   `(eval-when (:compile-toplevel :load-toplevel :execute)
-     (system::%in-package ,name)))
+     (system::%in-package ,(ext:jinvoke-static
+                             (ext:jmethod "fromDesignator" (ext:jclass "jcl.lang.StringStruct")
+                                          (ext:jclass "jcl.lang.LispStruct"))
+                             name))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 

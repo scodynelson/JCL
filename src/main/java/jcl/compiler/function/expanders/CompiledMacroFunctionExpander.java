@@ -80,7 +80,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		final int numberOfArguments = destructuredForm.length().toJavaInt();
 		final Iterator<LispStruct> functionArgumentsIterator = destructuredForm.iterator();
 
-		final String functionClassName = getClass().getSimpleName();
+		final String functionClassName = getClass().getName();
 		final int numberOfRequired = requiredBindings.size();
 		for (final RequiredParameter requiredBinding : requiredBindings) {
 			if (!functionArgumentsIterator.hasNext()) {
@@ -297,7 +297,7 @@ public abstract class CompiledMacroFunctionExpander<O extends LispStruct> extend
 		final int numberOfArguments = functionArguments.size();
 		final Iterator<LispStruct> functionArgumentsIterator = functionArguments.iterator();
 
-		final String functionClassName = getClass().getSimpleName();
+		final String functionClassName = getClass().getName();
 		final int numberOfRequired = requiredBindings.size();
 		for (final RequiredParameter requiredBinding : requiredBindings) {
 			if (!functionArgumentsIterator.hasNext()) {

@@ -42,6 +42,9 @@ public final class GlobalPackageStruct {
 		COMMON_LISP.usePackage(COMPILER);
 		COMMON_LISP.usePackage(BACKQUOTE);
 
+		COMPILER.usePackage(COMMON_LISP);
+		COMPILER.usePackage(COMMON_LISP);
+
 		SYSTEM.usePackage(COMPILER);
 		SYSTEM.usePackage(BACKQUOTE);
 		SYSTEM.usePackage(COMMON_LISP);

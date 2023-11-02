@@ -4,6 +4,7 @@
 
 package jcl.compiler.icg;
 
+import jcl.compiler.classloaders.CompilerClassLoader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -23,7 +24,12 @@ public class JCLClassWriter extends ClassVisitor {
 	private JCLMethodWriter currentMv;
 
 	public JCLClassWriter(final GeneratorState generatorState, final String className, final String fileName) {
-		super(Opcodes.ASM9, new ClassWriter(ClassWriter.COMPUTE_FRAMES));
+		super(Opcodes.ASM9, new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
+			@Override
+			protected ClassLoader getClassLoader() {
+				return CompilerClassLoader.INSTANCE;
+			}
+		});
 		this.generatorState = generatorState;
 		this.className = className;
 		this.fileName = fileName;

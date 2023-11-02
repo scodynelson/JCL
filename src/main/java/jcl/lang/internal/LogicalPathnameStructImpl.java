@@ -212,9 +212,6 @@ public final class LogicalPathnameStructImpl extends PathnameStructImpl implemen
 			return namestring;
 		}
 		if ((name == NILStruct.INSTANCE) && (type != NILStruct.INSTANCE)) {
-			if (namestring != null) {
-				throw new ErrorException("not null namestring??"); // TODO
-			}
 			return null;
 		}
 		if (directory instanceof StringStruct) {

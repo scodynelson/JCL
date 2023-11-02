@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import jcl.compiler.classloaders.CompilerClassLoader;
 import jcl.compiler.environment.Environment;
 import jcl.compiler.environment.binding.lambdalist.AuxParameter;
 import jcl.compiler.environment.binding.lambdalist.KeyParameter;
@@ -19,6 +20,7 @@ import jcl.compiler.environment.binding.lambdalist.RequiredParameter;
 import jcl.compiler.environment.binding.lambdalist.RestParameter;
 import jcl.compiler.environment.binding.lambdalist.SuppliedPParameter;
 import jcl.compiler.function.CompiledFunctionStruct;
+import jcl.compiler.icg.ClassPrinter;
 import jcl.compiler.icg.GeneratorState;
 import jcl.compiler.icg.JavaClassBuilder;
 import jcl.compiler.icg.JavaEnvironmentMethodBuilder;
@@ -33,10 +35,12 @@ import jcl.lang.PackageStruct;
 import jcl.lang.StringStruct;
 import jcl.lang.SymbolStruct;
 import lombok.Getter;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.util.CheckClassAdapter;
 
 /**
  * Class to generate {@link LambdaStruct} object dynamically by creating a new Java class with the name of the
@@ -281,6 +285,40 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
+		generateInner(generatorState, cw, fileName);
+
+		final byte[] byteArray = cw.toByteArray();
+		ClassPrinter.outputCompiledClassFile(currentClass, byteArray);
+
+		final ClassReader cr = new ClassReader(byteArray);
+
+		final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
+		cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
+
+		final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
+
+		final String classNameToLoad = className.replace('/', '.');
+		cl.loadClass(classNameToLoad, byteArray);
+
+		classBuilderDeque.removeFirst();
+		if (!classBuilderDeque.isEmpty()) {
+			final JavaMethodBuilder previousMethodBuilder = generatorState.getCurrentMethodBuilder();
+			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
+
+			previousMv.visitTypeInsn(Opcodes.NEW, className);
+			previousMv.visitInsn(Opcodes.DUP);
+
+			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Environment Argument. NOTE: This should ALWAYS be 1 on the Store Stack
+			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+			                           className,
+			                           GenerationConstants.INIT_METHOD_NAME,
+			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
+			                           false);
+		}
+	}
+
+	private void generateInner(final GeneratorState generatorState, final ClassWriter cw,
+	                           final String fileName) {
 		cw.visit(GenerationConstants.JAVA_VERSION, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 		         className,
 		         null,
@@ -309,22 +347,6 @@ public class LambdaStruct extends CompilerSpecialOperatorStruct {
 		removeGeneratorSymbolEntries(generatorState, existingLexicalSymbols, existingDynamicSymbols);
 
 		cw.visitEnd();
-
-		classBuilderDeque.removeFirst();
-		if (!classBuilderDeque.isEmpty()) {
-			final JavaMethodBuilder previousMethodBuilder = generatorState.getCurrentMethodBuilder();
-			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
-
-			previousMv.visitTypeInsn(Opcodes.NEW, className);
-			previousMv.visitInsn(Opcodes.DUP);
-
-			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Environment Argument. NOTE: This should ALWAYS be 1 on the Store Stack
-			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-			                           className,
-			                           GenerationConstants.INIT_METHOD_NAME,
-			                           GenerationConstants.COMPILED_FUNCTION_STRUCT_INIT_ENVIRONMENT_DESC,
-			                           false);
-		}
 	}
 
 	private void removeGeneratorSymbolEntries(final GeneratorState generatorState,

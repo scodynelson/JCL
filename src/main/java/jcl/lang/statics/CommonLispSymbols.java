@@ -1102,6 +1102,8 @@ public interface CommonLispSymbols {
 	SymbolStruct TAIL_CALL = internAndExportCompilerSymbol("%TAIL-CALL");
 	SymbolStruct TAIL_RECURSION = internAndExportCompilerSymbol("%TAIL-RECURSION");
 
+	SymbolStruct FUNCTION_MARKER = internAndExportCompilerSymbol("%FUNCTION-MARKER%");
+
 	// System
 	SymbolStruct SYSTEM_IN_PACKAGE = internAndExportSystemSymbol("%IN-PACKAGE");
 	SymbolStruct SET_SYMBOL_FUNCTION = internAndExportSystemSymbol("SET-SYMBOL-FUNCTION");
@@ -1118,6 +1120,8 @@ public interface CommonLispSymbols {
 	SymbolStruct MACRO_FUNCTION_DEFINITION = GlobalPackageStruct.SYSTEM.intern("MACRO-FUNCTION-DEFINITION").getSymbol();
 	SymbolStruct SYMBOL_MACRO_DEFINITION = GlobalPackageStruct.SYSTEM.intern("SYMBOL-MACRO-DEFINITION").getSymbol();
 	SymbolStruct SETF_DEFINITION = GlobalPackageStruct.SYSTEM.intern("SETF-DEFINITION").getSymbol();
+
+	SymbolStruct JAVA_NULL = internAndExportSystemSymbol("%JAVA-NULL");
 
 	// Backquote
 	SymbolStruct BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();

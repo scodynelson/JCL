@@ -1,8 +1,8 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.49.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "4.4.1.3373"
+    id("org.sonarqube") version "5.0.0.4638"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -30,7 +30,7 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.11"
+    toolVersion = "0.8.12"
 }
 
 // ************************************************
@@ -50,30 +50,30 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.apache.logging.log4j:log4j-bom:2.21.1"))
-    implementation(platform("org.ow2.asm:asm-bom:9.6"))
-    implementation(platform("org.junit:junit-bom:5.10.0"))
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.23.1"))
+    implementation(platform("org.ow2.asm:asm-bom:9.7"))
+    implementation(platform("org.junit:junit-bom:5.10.2"))
 
-    implementation("com.google.guava:guava:32.1.3-jre")
-    implementation("com.ibm.icu:icu4j:73.2")
-    implementation("commons-io:commons-io:2.15.0")
+    implementation("com.google.guava:guava:33.2.1-jre")
+    implementation("com.ibm.icu:icu4j:75.1")
+    implementation("commons-io:commons-io:2.16.1")
     implementation("org.apache.commons:commons-collections4:4.4")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.apache.commons:commons-text:1.11.0")
-    implementation("org.apfloat:apfloat:1.12.0")
+    implementation("org.apache.commons:commons-text:1.12.0")
+    implementation("org.apfloat:apfloat:1.14.0")
     implementation("org.benf:cfr:0.152")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
-    implementation("info.picocli:picocli:4.7.5")
+    implementation("info.picocli:picocli:4.7.6")
 
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    compileOnly("org.projectlombok:lombok:1.18.32")
+    annotationProcessor("org.projectlombok:lombok:1.18.32")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.assertj:assertj-core:3.26.0")
 
     implementation("org.apache.logging.log4j:log4j-api")
     runtimeOnly("org.apache.logging.log4j:log4j-core")
@@ -316,6 +316,6 @@ tasks.shadowJar {
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "8.4"
+    gradleVersion = "8.8"
     distributionType = Wrapper.DistributionType.ALL
 }

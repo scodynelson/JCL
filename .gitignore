@@ -1,8 +1,7 @@
 ### Each directory and file, which starts with dot
 .*
-### But not Git ignore and Travis file
+### But not Git ignore file
 !.gitignore
-!.travis.yml
 
 ### IntelliJ Idea
 #.idea/

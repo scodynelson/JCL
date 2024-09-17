@@ -2,7 +2,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.51.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "5.0.0.4638"
+    id("org.sonarqube") version "5.1.0.4882"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -50,30 +50,33 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.apache.logging.log4j:log4j-bom:2.23.1"))
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.24.0"))
     implementation(platform("org.ow2.asm:asm-bom:9.7"))
-    implementation(platform("org.junit:junit-bom:5.10.2"))
+    implementation(platform("org.junit:junit-bom:5.11.0"))
 
-    implementation("com.google.guava:guava:33.2.1-jre")
+    implementation("com.google.guava:guava:33.3.0-jre")
     implementation("com.ibm.icu:icu4j:75.1")
     implementation("commons-io:commons-io:2.16.1")
     implementation("org.apache.commons:commons-collections4:4.4")
-    implementation("org.apache.commons:commons-lang3:3.14.0")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.apache.commons:commons-text:1.12.0")
+    implementation("org.apache.commons:commons-text:1.12.0") {
+        // Incompatible versions for current commons-text
+        exclude(group = "org.apache.commons", module = "commons-lang3")
+    }
     implementation("org.apfloat:apfloat:1.14.0")
     implementation("org.benf:cfr:0.152")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
     implementation("info.picocli:picocli:4.7.6")
 
-    compileOnly("org.projectlombok:lombok:1.18.32")
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("org.assertj:assertj-core:3.26.0")
+    testImplementation("org.assertj:assertj-core:3.26.3")
 
     implementation("org.apache.logging.log4j:log4j-api")
     runtimeOnly("org.apache.logging.log4j:log4j-core")
@@ -316,6 +319,6 @@ tasks.shadowJar {
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "8.8"
+    gradleVersion = "8.10.1"
     distributionType = Wrapper.DistributionType.ALL
 }

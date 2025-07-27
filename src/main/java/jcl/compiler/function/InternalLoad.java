@@ -26,6 +26,7 @@ import jcl.reader.InternalRead;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import static java.util.Map.entry;
 
@@ -266,9 +267,9 @@ public final class InternalLoad {
 
 		try {
 			final String filespecNamestring = pathnameFile.toString();
-			if (StringUtils.endsWithIgnoreCase(filespecNamestring, ".lar") || StringUtils.endsWithIgnoreCase(filespecNamestring, ".jar")) {
+			if (Strings.CI.endsWith(filespecNamestring, ".lar") || Strings.CI.endsWith(filespecNamestring, ".jar")) {
 				return loadCompiledCode(pathnameFile, verbose, print);
-			} else if (StringUtils.endsWithIgnoreCase(filespecNamestring, ".lsp") || StringUtils.endsWithIgnoreCase(filespecNamestring, ".lisp")) {
+			} else if (Strings.CI.endsWith(filespecNamestring, ".lsp") || Strings.CI.endsWith(filespecNamestring, ".lisp")) {
 				if (filespecFileStream == null) {
 					filespecFileStream = FileStreamStruct.toFileStream(
 							filespecPathname, CommonLispSymbols.INPUT_KEYWORD, CommonLispSymbols.CHARACTER,

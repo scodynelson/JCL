@@ -3,6 +3,7 @@ package jcl.compiler.sa.analyzer.specialoperator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,6 @@ import jcl.lang.statics.CommonLispSymbols;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.ObjectUtils;
 
 @Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -154,7 +154,7 @@ public final class MacroletExpander extends MacroFunctionExpander<InnerLambdaStr
 		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
 
 		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
-		final StringStruct docString = ObjectUtils.defaultIfNull(bodyProcessingResult.getDocString(), StringStruct.EMPTY_STRING);
+		final StringStruct docString = Objects.requireNonNullElse(bodyProcessingResult.getDocString(), StringStruct.EMPTY_STRING);
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block

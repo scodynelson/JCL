@@ -3,6 +3,7 @@ package jcl.system;
 import java.io.OutputStream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.Logger;
 
 public class LoggerOutputStream extends OutputStream {
@@ -65,7 +66,7 @@ public class LoggerOutputStream extends OutputStream {
 		bytes[0] = (byte) (b & 0xff);
 		mem += new String(bytes);
 
-		if (StringUtils.endsWith(mem, "\n")) {
+		if (Strings.CI.endsWith(mem, "\n")) {
 			mem = mem.substring(0, mem.length() - 1);
 			flush();
 		}

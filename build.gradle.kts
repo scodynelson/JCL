@@ -1,8 +1,10 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "5.1.0.4882"
+    id("org.sonarqube") version "6.2.0.5505"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -30,7 +32,7 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.12"
+    toolVersion = "0.8.13"
 }
 
 // ************************************************
@@ -50,17 +52,20 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.apache.logging.log4j:log4j-bom:2.24.0"))
-    implementation(platform("org.ow2.asm:asm-bom:9.7"))
-    implementation(platform("org.junit:junit-bom:5.11.0"))
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.25.1"))
+    implementation(platform("org.ow2.asm:asm-bom:9.8"))
+    implementation(platform("org.junit:junit-bom:5.13.4"))
 
-    implementation("com.google.guava:guava:33.3.0-jre")
-    implementation("com.ibm.icu:icu4j:75.1")
-    implementation("commons-io:commons-io:2.16.1")
-    implementation("org.apache.commons:commons-collections4:4.4")
-    implementation("org.apache.commons:commons-lang3:3.17.0")
+    implementation("com.google.guava:guava:33.4.8-jre") {
+        // Incompatible versions for current commons-text
+        exclude(group = "com.google.errorprone", module = "error_prone_annotations")
+    }
+    implementation("com.ibm.icu:icu4j:77.1")
+    implementation("commons-io:commons-io:2.20.0")
+    implementation("org.apache.commons:commons-collections4:4.5.0")
+    implementation("org.apache.commons:commons-lang3:3.18.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.apache.commons:commons-text:1.12.0") {
+    implementation("org.apache.commons:commons-text:1.14.0") {
         // Incompatible versions for current commons-text
         exclude(group = "org.apache.commons", module = "commons-lang3")
     }
@@ -68,15 +73,15 @@ dependencies {
     implementation("org.benf:cfr:0.152")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
-    implementation("info.picocli:picocli:4.7.6")
+    implementation("info.picocli:picocli:4.7.7")
 
-    compileOnly("org.projectlombok:lombok:1.18.34")
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("org.assertj:assertj-core:3.26.3")
+    testImplementation("org.assertj:assertj-core:3.27.3")
 
     implementation("org.apache.logging.log4j:log4j-api")
     runtimeOnly("org.apache.logging.log4j:log4j-core")
@@ -160,7 +165,7 @@ sourceSets {
 //val lispSourceTree = fileTree(mapOf("dir" to "src/main/lisp", "include" to "**/*.lisp"))
 val lispCompiledTree = fileTree(mapOf("dir" to "compiled-lisp", "include" to "**/*.jar"))
 
-tasks.create("cleanLispJars") {
+tasks.register("cleanLispJars") {
     val compiledLispDirectory = "$projectDir/compiled-lisp"
     File(compiledLispDirectory).mkdirs()
 
@@ -199,8 +204,8 @@ val lispSourceFiles = listOf(
     "jcl/structures.lisp"
 )
 
-fun createLispGenerationTask(taskName: String, lispSourceFile: String): Task {
-    return tasks.create(taskName, JavaExec::class) {
+fun createLispGenerationTask(taskName: String, lispSourceFile: String): TaskProvider<JavaExec> {
+    return tasks.register(taskName, JavaExec::class) {
         mainClass.set("jcl.system.JCL")
         classpath = sourceSets["main"].runtimeClasspath
         args(
@@ -211,8 +216,8 @@ fun createLispGenerationTask(taskName: String, lispSourceFile: String): Task {
     }
 }
 
-fun createJarUnpackingTask(taskName: String, lispSourceFileName: String): Task {
-    return tasks.create(taskName, Copy::class) {
+fun createJarUnpackingTask(taskName: String, lispSourceFileName: String): TaskProvider<Copy> {
+    return tasks.register(taskName, Copy::class) {
 //        group = "unzip"
         from(zipTree("$projectDir/compiled-lisp/${lispSourceFileName}.jar"))
         include("**/*.class")
@@ -220,8 +225,8 @@ fun createJarUnpackingTask(taskName: String, lispSourceFileName: String): Task {
     }
 }
 
-tasks.create("generateLispSource") {
-    dependsOn("classes")
+generateLispSource()
+fun generateLispSource() {
     var lastGeneratedTask = "classes"
 
     lispSourceFiles.forEach { lispSourceFile ->
@@ -231,13 +236,13 @@ tasks.create("generateLispSource") {
         )
 
         val generationTaskName = "generate-${lispSourceFileName}-jar"
-        val generatedTask: Task = createLispGenerationTask(generationTaskName, lispSourceFile)
+        val generatedTask: Task = createLispGenerationTask(generationTaskName, lispSourceFile).get()
 
         generatedTask.dependsOn(lastGeneratedTask)
 
-        // TODO: eventaully enable unpacking
+        // TODO: eventually enable unpacking
 //        val unpackTaskName = "unpack-${lispSourceFileName}-jar"
-//        val unpackTask: Task = createJarUnpackingTask(unpackTaskName, lispSourceFileName.replace(".lisp", ".jar"))
+//        val unpackTask: Task = createJarUnpackingTask(unpackTaskName, lispSourceFileName.replace(".lisp", ".jar")).get()
 
 //        unpackTask.dependsOn(generatedTask)
 
@@ -284,6 +289,21 @@ tasks.jacocoTestReport {
 }
 
 // ************************************************
+// Dependency Updates
+// ************************************************
+
+// https://github.com/ben-manes/gradle-versions-plugin
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        isCandidateVersion(candidate.version)
+    }
+}
+fun isCandidateVersion(version: String): Boolean {
+    return version.contains("-RC") || version.contains("-M")
+            || version.contains("-beta") || version.contains("-alpha")
+}
+
+// ************************************************
 // SonarQube
 // ************************************************
 
@@ -319,6 +339,6 @@ tasks.shadowJar {
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "8.10.1"
+    gradleVersion = "8.14.2"
     distributionType = Wrapper.DistributionType.ALL
 }

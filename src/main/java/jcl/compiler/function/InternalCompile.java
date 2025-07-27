@@ -49,6 +49,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -140,7 +141,7 @@ public final class InternalCompile {
 		}
 
 		final String inputFileNamestring = inputFilePath.toString();
-		if (!StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lsp") && !StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lisp")) {
+		if (!Strings.CI.endsWith(inputFileNamestring, ".lsp") && !Strings.CI.endsWith(inputFileNamestring, ".lisp")) {
 			// TODO: This should take a stream!!!
 			throw new FileErrorException("Input file provided to COMPILE-FILE must have an extension of '.lsp' or '.lisp'", null);
 		}

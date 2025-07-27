@@ -7,6 +7,7 @@ import java.util.Map;
 
 import jcl.lang.KeywordStruct;
 import jcl.lang.LispStruct;
+import jcl.lang.ValuesStruct;
 import jcl.lang.condition.exception.TypeErrorException;
 
 import static java.util.stream.Collectors.toList;
@@ -105,8 +106,14 @@ public final class Arguments {
 		if (value == null) {
 			return null;
 		}
-		if (type.isAssignableFrom(value.getClass())) {
-			return (T) value;
+		final Object realValue;
+		if (value instanceof ValuesStruct) {
+			realValue = ((ValuesStruct) value).getPrimaryValue();
+		} else {
+			realValue = value;
+		}
+		if (type.isAssignableFrom(realValue.getClass())) {
+			return (T) realValue;
 		}
 		throw new TypeErrorException("Cannot convert value '" + value + "' to type '" + type.getSimpleName() + '\'');
 	}

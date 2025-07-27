@@ -19,7 +19,7 @@
   <component name="PDMPlugin">
     <option name="skipTestSources" value="false" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="temurin-21" project-jdk-type="JavaSDK" />
   <component name="SltLispProjectSdk">
     <option name="currentSDK" value="0913d607-9b2a-4740-b172-774778aa1ad8" />
   </component>

@@ -19,7 +19,7 @@ import jcl.lang.statics.CommonLispSymbols;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-public class LoadLispFilesExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+public class LoadLispFilesExtension implements BeforeAllCallback, AutoCloseable {
 
 	private static boolean started;
 

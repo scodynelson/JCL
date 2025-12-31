@@ -24,9 +24,7 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
-        with:
-          cache-disabled: true
+        uses: gradle/actions/setup-gradle@v5
       - name: Display Gradle, JVM, and other versions
         run: ./gradlew --version
       - name: Run Build with Gradle Wrapper

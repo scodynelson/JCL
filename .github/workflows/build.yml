@@ -12,13 +12,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Allows the job to write to the repository
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v6
         with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
+          # Disabling shallow clone is recommended for improving the relevancy of reporting
           fetch-depth: 0
       - name: Set up JDK 25
         uses: actions/setup-java@v5
@@ -27,6 +25,8 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
+        with:
+          cache-disabled: true
       - name: Display Gradle, JVM, and other versions
         run: ./gradlew --version
       - name: Run Build with Gradle Wrapper

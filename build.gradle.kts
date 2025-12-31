@@ -1,11 +1,11 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.52.0"
+    id("com.github.ben-manes.versions") version "0.53.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "6.2.0.5505"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("org.sonarqube") version "7.2.2.6593"
+    id("com.gradleup.shadow") version "9.3.0"
 }
 
 // ************************************************
@@ -25,8 +25,8 @@ configurations.all {
 // ************************************************
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
     withSourcesJar()
 //		withJavadocJar()
 }
@@ -52,36 +52,33 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.apache.logging.log4j:log4j-bom:2.25.1"))
-    implementation(platform("org.ow2.asm:asm-bom:9.8"))
-    implementation(platform("org.junit:junit-bom:5.13.4"))
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.25.3"))
+    implementation(platform("org.ow2.asm:asm-bom:9.9.1"))
+    implementation(platform("org.junit:junit-bom:6.0.1"))
 
-    implementation("com.google.guava:guava:33.4.8-jre") {
+    implementation("com.google.guava:guava:33.5.0-jre") {
         // Incompatible versions for current commons-text
         exclude(group = "com.google.errorprone", module = "error_prone_annotations")
     }
-    implementation("com.ibm.icu:icu4j:77.1")
-    implementation("commons-io:commons-io:2.20.0")
+    implementation("com.ibm.icu:icu4j:78.1")
+    implementation("commons-io:commons-io:2.21.0")
     implementation("org.apache.commons:commons-collections4:4.5.0")
-    implementation("org.apache.commons:commons-lang3:3.18.0")
+    implementation("org.apache.commons:commons-lang3:3.20.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.apache.commons:commons-text:1.14.0") {
-        // Incompatible versions for current commons-text
-        exclude(group = "org.apache.commons", module = "commons-lang3")
-    }
-    implementation("org.apfloat:apfloat:1.14.0")
+    implementation("org.apache.commons:commons-text:1.15.0")
+    implementation("org.apfloat:apfloat:1.15.0")
     implementation("org.benf:cfr:0.152")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
     implementation("info.picocli:picocli:4.7.7")
 
-    compileOnly("org.projectlombok:lombok:1.18.38")
-    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("org.assertj:assertj-core:3.27.3")
+    testImplementation("org.assertj:assertj-core:3.27.6")
 
     implementation("org.apache.logging.log4j:log4j-api")
     runtimeOnly("org.apache.logging.log4j:log4j-core")
@@ -330,15 +327,15 @@ tasks.jar {
 // Shadow Jar
 // ************************************************
 
-tasks.shadowJar {
-    dependsOn("assemble")
-}
+//tasks.shadowJar {
+//    dependsOn("assemble")
+//}
 
 // ************************************************
 // Gradle Wrapper
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "8.14.2"
+    gradleVersion = "9.2.1"
     distributionType = Wrapper.DistributionType.ALL
 }

@@ -21,7 +21,7 @@
         <module name="JCL.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="21" />
+    <bytecodeTargetLevel target="25" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-Xlint:serial -Xlint:varargs -Xlint:cast -Xlint:classfile -Xlint:dep-ann -Xlint:divzero -Xlint:empty -Xlint:finally -Xlint:overrides -Xlint:path -Xlint:static -Xlint:try -Xlint:fallthrough -Xlint:rawtypes -Xlint:deprecation -Xlint:unchecked -Xlint:-options" />

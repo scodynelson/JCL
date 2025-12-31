@@ -12,6 +12,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows the job to write to the repository
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v3

@@ -162,10 +162,13 @@ sourceSets {
 //val lispSourceTree = fileTree(mapOf("dir" to "src/main/lisp", "include" to "**/*.lisp"))
 val lispCompiledTree = fileTree(mapOf("dir" to "compiled-lisp", "include" to "**/*.jar"))
 
-tasks.register("cleanLispJars") {
+tasks.register("createCompiledLispDirectory") {
     val compiledLispDirectory = "$projectDir/compiled-lisp"
     File(compiledLispDirectory).mkdirs()
+}
 
+tasks.register("cleanLispJars") {
+    dependsOn("createCompiledLispDirectory")
     lispCompiledTree.forEach { file ->
         doLast {
             println("Removing Lisp Jar")
@@ -203,6 +206,7 @@ val lispSourceFiles = listOf(
 
 fun createLispGenerationTask(taskName: String, lispSourceFile: String): TaskProvider<JavaExec> {
     return tasks.register(taskName, JavaExec::class) {
+        dependsOn("createCompiledLispDirectory")
         mainClass.set("jcl.system.JCL")
         classpath = sourceSets["main"].runtimeClasspath
         args(

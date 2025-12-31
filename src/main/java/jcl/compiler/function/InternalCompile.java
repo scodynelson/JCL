@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -411,6 +412,7 @@ public final class InternalCompile {
 				jar.closeEntry();
 			}
 		}
+		log.info("Was the Jar written: {}", Files.exists(tempOutputFilePath));
 
 		Files.move(tempOutputFilePath, outputFilePath, StandardCopyOption.REPLACE_EXISTING);
 	}

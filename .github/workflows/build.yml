@@ -33,8 +33,5 @@ jobs:
         run: ./gradlew build
       - name: Upload CodeCov
         uses: codecov/codecov-action@v5
-      - name: Run SonarCloud Scan with Gradle Wrapper
-        run: ./gradlew assemble sonar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }} # Generate a token on Codecov.io, add it to the secrets of this repo with the name CODECOV_TOKEN (Settings > Secrets > Actions > add new repository secret)

@@ -1,1 +1,0 @@
-System.setProperty("sonar.gradle.skipCompile", "true")

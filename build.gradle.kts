@@ -4,7 +4,6 @@ plugins {
     id("com.github.ben-manes.versions") version "0.53.0"
     id("java")
     id("jacoco")
-    id("org.sonarqube") version "7.2.2.6593"
     id("com.gradleup.shadow") version "9.3.0"
 }
 
@@ -302,19 +301,6 @@ tasks.withType<DependencyUpdatesTask> {
 fun isCandidateVersion(version: String): Boolean {
     return version.contains("-RC") || version.contains("-M")
             || version.contains("-beta") || version.contains("-alpha")
-}
-
-// ************************************************
-// SonarQube
-// ************************************************
-
-sonar {
-    properties {
-        property("sonar.projectKey", "scodynelson_JCL")
-        property("sonar.organization", "scodynelson")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.skipCompile", true)
-    }
 }
 
 // ************************************************

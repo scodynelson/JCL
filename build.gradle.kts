@@ -1,10 +1,10 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.53.0"
+    id("com.github.ben-manes.versions") version "0.54.0"
     id("java")
     id("jacoco")
-    id("com.gradleup.shadow") version "9.3.0"
+    id("com.gradleup.shadow") version "9.4.3"
 }
 
 // ************************************************
@@ -51,33 +51,33 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.apache.logging.log4j:log4j-bom:2.25.3"))
-    implementation(platform("org.ow2.asm:asm-bom:9.9.1"))
-    implementation(platform("org.junit:junit-bom:6.0.1"))
+    implementation(platform("org.apache.logging.log4j:log4j-bom:2.26.1"))
+    implementation(platform("org.ow2.asm:asm-bom:9.10.1"))
+    implementation(platform("org.junit:junit-bom:6.1.1"))
 
-    implementation("com.google.guava:guava:33.5.0-jre") {
+    implementation("com.google.guava:guava:33.6.0-jre") {
         // Incompatible versions for current commons-text
         exclude(group = "com.google.errorprone", module = "error_prone_annotations")
     }
-    implementation("com.ibm.icu:icu4j:78.1")
-    implementation("commons-io:commons-io:2.21.0")
+    implementation("com.ibm.icu:icu4j:78.3")
+    implementation("commons-io:commons-io:2.22.0")
     implementation("org.apache.commons:commons-collections4:4.5.0")
     implementation("org.apache.commons:commons-lang3:3.20.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
     implementation("org.apache.commons:commons-text:1.15.0")
-    implementation("org.apfloat:apfloat:1.15.0")
+    implementation("org.apfloat:apfloat:1.16.0")
     implementation("org.benf:cfr:0.152")
     implementation("org.ow2.asm:asm")
     implementation("org.ow2.asm:asm-util")
     implementation("info.picocli:picocli:4.7.7")
 
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    compileOnly("org.projectlombok:lombok:1.18.46")
+    annotationProcessor("org.projectlombok:lombok:1.18.46")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("org.assertj:assertj-core:3.27.6")
+    testImplementation("org.assertj:assertj-core:3.27.7")
 
     implementation("org.apache.logging.log4j:log4j-api")
     runtimeOnly("org.apache.logging.log4j:log4j-core")
@@ -326,6 +326,6 @@ tasks.jar {
 // ************************************************
 
 tasks.wrapper {
-    gradleVersion = "9.2.1"
+    gradleVersion = "9.6.1"
     distributionType = Wrapper.DistributionType.ALL
 }
